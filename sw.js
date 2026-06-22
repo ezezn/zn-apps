@@ -1,7 +1,7 @@
 const CACHE_NAME = 'portal-fallback-v1';
 const ASSETS = [
-  '/my-pwa-monorepo/',
-  '/my-pwa-monorepo/index.html'
+  '/zn-apps/',
+  '/zn-apps/index.html'
 ];
 
 // Instalar y Cachear recursos del Home
@@ -31,11 +31,11 @@ self.addEventListener('fetch', (e) => {
   const url = new URL(e.request.url);
 
   // El Service Worker global solo interviene en la raíz, dejando las subcarpetas a sus respectivos SW
-  if (url.pathname === '/my-pwa-monorepo/' || url.pathname === '/my-pwa-monorepo/index.html') {
+  if (url.pathname === '/zn-apps/' || url.pathname === '/zn-apps/index.html') {
     e.respondWith(
       fetch(e.request)
         .catch(() => {
-          return caches.match(e.request) || caches.match('/my-pwa-monorepo/index.html');
+          return caches.match(e.request) || caches.match('/zn-apps/index.html');
         })
     );
   }

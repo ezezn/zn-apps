@@ -53,7 +53,7 @@
     // Registro del Service Worker Global para la Landing Page
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js', { scope: '/my-pwa-monorepo/' });
+        navigator.serviceWorker.register('./sw.js', { scope: '/zn-apps/' });
       });
     }
 
