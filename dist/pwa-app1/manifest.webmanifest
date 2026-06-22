@@ -1,0 +1,1 @@
+{"name":"Sub Aplicación Uno","short_name":"App1","description":"PWA número uno independiente","start_url":"/zn-apps/pwa-app1/index.html","display":"standalone","background_color":"#ffffff","theme_color":"#2563eb","lang":"en","scope":"/zn-apps/pwa-app1/","icons":[{"src":"favicon.ico","sizes":"64x64","type":"image/x-icon"}]}

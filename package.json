@@ -1,8 +1,12 @@
 {
-  "name": "zn-apps",
+  "name": "zn-apps-monorepo",
   "version": "1.0.0",
   "private": true,
+  "workspaces": [
+    "pwa-app1",
+    "pwa-app2"
+  ],
   "scripts": {
-    "build:all": "rm -rf dist && mkdir dist && cp index.html dist/index.html && cp sw.js dist/sw.js && cd pwa-app1 && npm install && npm run build && cd .. && cd pwa-app2 && npm install && npm run build && cd .. && cp -r pwa-app1/dist dist/pwa-app1 && cp -r pwa-app2/dist dist/pwa-app2"
+    "build:all": "rm -rf dist && mkdir dist && cp index.html dist/index.html && cp sw.js dist/sw.js && npm run build --workspaces && cp -r pwa-app1/dist dist/pwa-app1 && cp -r pwa-app2/dist dist/pwa-app2"
   }
 }
