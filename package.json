@@ -7,6 +7,9 @@
     "pwa-app2"
   ],
   "scripts": {
-    "build:all": "rm -rf dist && mkdir dist && cp index.html dist/index.html && cp sw.js dist/sw.js && npm run build --workspaces && cp -r pwa-app1/dist dist/pwa-app1 && cp -r pwa-app2/dist dist/pwa-app2"
+    "build:all": "rm -rf dist && mkdir dist && cp index.html dist/index.html && cp sw.js dist/sw.js && vite build --config pwa-app1/vite.config.js && vite build --config pwa-app2/vite.config.js && cp -r pwa-app1/dist dist/pwa-app1 && cp -r pwa-app2/dist dist/pwa-app2"
+  },
+  "devDependencies": {
+    "vite": "^6.4.3"
   }
 }
