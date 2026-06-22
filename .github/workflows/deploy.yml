@@ -9,9 +9,10 @@ permissions:
   pages: write
   id-token: write
 
-# Forzar globalmente el entorno de ejecución recomendado por GitHub
+# Variables de entorno del servidor
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+  NODE_OPTIONS: '--no-deprecation' # <--- ESTO OCULTA LA ADVERTENCIA DE PUNYCODE
 
 jobs:
   build-and-deploy:
@@ -21,11 +22,10 @@ jobs:
       
       - uses: actions/setup-node@v4
         with:
-          node-version: 24 # Cambiado de 20 a 24 para tus aplicaciones Vue
+          node-version: 24
           cache: 'npm'
           
       - name: Ejecutar Compilación Unificada
-         # Corre el script de tu package.json raíz
         run: npm run build:all
            
       - name: Inyectar Enrutamientos Fallback 404
@@ -34,7 +34,7 @@ jobs:
           cp dist/pwa-app2/index.html dist/pwa-app2/404.html
           cp dist/index.html dist/404.html
              
-      - uses: actions/configure-pages@v5 # Actualizado a la versión más reciente compatible
+      - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
           path: './dist'
