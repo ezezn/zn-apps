@@ -9,31 +9,35 @@ permissions:
   pages: write
   id-token: write
 
+# Forzar globalmente el entorno de ejecución recomendado por GitHub
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
+      
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
-
+          node-version: 24 # Cambiado de 20 a 24 para tus aplicaciones Vue
+          cache: 'npm'
+          
       - name: Ejecutar Compilación Unificada
+         # Corre el script de tu package.json raíz
         run: npm run build:all
-
+           
       - name: Inyectar Enrutamientos Fallback 404
         run: |
-          # Si recargan dentro de App1, redirige a su propio index.html
           cp dist/pwa-app1/index.html dist/pwa-app1/404.html
-          # Si recargan dentro de App2, redirige a su propio index.html
           cp dist/pwa-app2/index.html dist/pwa-app2/404.html
-          # Si se rompe una ruta externa, se cae al Home / Offline Fallback Global
           cp dist/index.html dist/404.html
-
-      - uses: actions/configure-pages@v4
+             
+      - uses: actions/configure-pages@v5 # Actualizado a la versión más reciente compatible
       - uses: actions/upload-pages-artifact@v3
         with:
           path: './dist'
-
+          
       - uses: actions/deploy-pages@v4
+
