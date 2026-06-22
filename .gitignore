@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.DS_Store
+*.local
+pwa-app1/node_modules/
+pwa-app2/node_modules/
+pwa-app1/dist/
+pwa-app2/dist/
