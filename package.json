@@ -6,7 +6,7 @@
     "pwa-app1",
     "pwa-app2"
   ],
-  "scripts": {
-    "build:all": "rm -rf dist && mkdir dist && cp index.html dist/index.html && cp sw.js dist/sw.js && npx vite build --config pwa-app1/vite.config.js && npx vite build --config pwa-app2/vite.config.js && cp -r pwa-app1/dist dist/pwa-app1 && cp -r pwa-app2/dist dist/pwa-app2"
-  }
+"scripts": {
+  "build:all": "rm -rf dist && mkdir dist && cp index.html dist/index.html && cp sw.js dist/sw.js && npx vite build --config pwa-app1/vite.config.js && npx vite build --config pwa-app2/vite.config.js && cp -r pwa-app1/dist dist/pwa-app1 && cp -r pwa-app2/dist dist/pwa-app2"
+}
 }
