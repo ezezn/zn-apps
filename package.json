@@ -1,0 +1,8 @@
+{
+  "name": "zn-apps",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build:all": "rm -rf dist && mkdir dist && cp index.html dist/index.html && cp sw.js dist/sw.js && cd pwa-app1 && npm install && npm run build && cd .. && cd pwa-app2 && npm install && npm run build && cd .. && cp -r pwa-app1/dist dist/pwa-app1 && cp -r pwa-app2/dist dist/pwa-app2"
+  }
+}

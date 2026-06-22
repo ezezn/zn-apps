@@ -1,0 +1,39 @@
+name: Desplegar Multi-PWA Monorepo a GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Ejecutar Compilación Unificada
+        run: npm run build:all
+
+      - name: Inyectar Enrutamientos Fallback 404
+        run: |
+          # Si recargan dentro de App1, redirige a su propio index.html
+          cp dist/pwa-app1/index.html dist/pwa-app1/404.html
+          # Si recargan dentro de App2, redirige a su propio index.html
+          cp dist/pwa-app2/index.html dist/pwa-app2/404.html
+          # Si se rompe una ruta externa, se cae al Home / Offline Fallback Global
+          cp dist/index.html dist/404.html
+
+      - uses: actions/configure-pages@v4
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dist'
+
+      - uses: actions/deploy-pages@v4

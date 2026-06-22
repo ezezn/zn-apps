@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zink's Portal de Aplicaciones PWA</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      background-color: #f3f4f6;
+      color: #1f2937;
+    }
+    .container { text-align: center; padding: 20px; }
+    .grid { display: flex; gap: 20px; margin-top: 30px; justify-content: center; }
+    .card {
+      padding: 25px 40px;
+      background: white;
+      border-radius: 12px;
+      text-decoration: none;
+      color: #2563eb;
+      font-weight: bold;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+    /* Mensaje que aparecerá dinámicamente si el usuario está completamente offline */
+    #offline-status { display: none; margin-top: 20px; color: #dc2626; font-weight: 500; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Mis Aplicaciones PWA</h1>
+    <p>Selecciona la herramienta que deseas ejecutar:</p>
+
+    <div class="grid">
+      <!-- Rutas relativas respetando subcarpetas -->
+      <a class="card" href="./pwa-app1/">Ejecutar App 1</a>
+      <a class="card" href="./pwa-app2/">Ejecutar App 2</a>
+    </div>
+
+    <div id="offline-status">⚠️ Estás navegando sin conexión a internet. Las aplicaciones cargadas previamente seguirán funcionando.</div>
+  </div>
+
+  <script>
+    // Registro del Service Worker Global para la Landing Page
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js', { scope: '/my-pwa-monorepo/' });
+      });
+    }
+
+    // Detectar estado de conexión
+    if (!navigator.onLine) {
+      document.getElementById('offline-status').style.display = 'block';
+    }
+    window.addEventListener('offline', () => {
+      document.getElementById('offline-status').style.display = 'block';
+    });
+    window.addEventListener('online', () => {
+      document.getElementById('offline-status').style.display = 'none';
+    });
+  </script>
+</body>
+</html>
