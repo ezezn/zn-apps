@@ -3,7 +3,15 @@ import { ref } from 'vue'
 import viteLogo from '../assets/vite.svg'
 import heroImg from '../assets/hero.png'
 import vueLogo from '../assets/vue.svg'
+// Importamos el componente y el composable directamente desde el Workspace
+import { CustomButton, useOnlineStatus } from '@zn-apps/shared'
 
+// Usamos el composable reactivo
+const { isOnline } = useOnlineStatus()
+
+const mostrarAlerta = () => {
+  alert('¡Funciona! El botón compartido de la raíz ha respondido en pwa-app1.')
+}
 const count = ref(0)
 </script>
 
@@ -21,6 +29,9 @@ const count = ref(0)
     <button type="button" class="counter" @click="count++">
       Count is {{ count }}
     </button>
+    <div :class="['status-box', isOnline ? 'online' : 'offline']">
+      Estado de Red: {{ isOnline ? 'Conectado (Online)' : 'Desconectado (Offline)' }}
+    </div>
   </section>
 
   <div class="ticks"></div>

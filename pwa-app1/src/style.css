@@ -54,6 +54,7 @@ body {
   margin: 0;
 }
 
+
 h1,
 h2 {
   font-family: var(--heading);
@@ -293,4 +294,20 @@ code {
     right: 0;
     border-right-color: var(--border);
   }
+}
+
+.status-box {
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+  text-align: center;
+  font-weight: bold;
+}
+.online {
+  background-color: #d4edda;
+  color: #155724;
+}
+.offline {
+  background-color: #f8d7da;
+  color: #721c24;
 }

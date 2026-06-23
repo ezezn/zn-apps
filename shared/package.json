@@ -1,0 +1,24 @@
+{
+  "name": "@zn-apps/shared",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/shared.js",
+  "module": "./dist/shared.js",
+  "exports": {
+    ".": {
+      "import": "./dist/shared.js"
+    }
+  },
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite build --watch"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.0",
+    "vite": "^6.0.0"
+  },
+  "peerDependencies": {
+    "vue": "^3.0.0"
+  }
+}
