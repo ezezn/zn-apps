@@ -5,10 +5,11 @@
   "type": "module",
   "main": "./dist/shared.js",
   "module": "./dist/shared.js",
-  "exports": {
+"exports": {
     ".": {
       "import": "./dist/shared.js"
-    }
+    },
+    "./dist/*": "./dist/*"
   },
   "scripts": {
     "build": "vite build",
@@ -20,5 +21,8 @@
   },
   "peerDependencies": {
     "vue": "^3.0.0"
+  },
+  "dependencies": {
+    "@fontsource/roboto": "^5.2.10"
   }
 }

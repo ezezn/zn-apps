@@ -3,7 +3,7 @@ import vue from '@vitejs/plugin-vue'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
-  base: '/zn-apps/pwa-app1/',
+  base: '/zn-apps/zound-box/',
   plugins: [
     vue(),
     VitePWA({
@@ -12,8 +12,8 @@ export default defineConfig({
         name: 'Sub Aplicación Uno',
         short_name: 'App1',
         description: 'PWA número uno independiente',
-        start_url: '/zn-apps/pwa-app1/index.html',
-        scope: '/zn-apps/pwa-app1/',
+        start_url: '/zn-apps/zound-box/index.html',
+        scope: '/zn-apps/zound-box/',
         theme_color: '#2563eb',
         background_color: '#ffffff',
         display: 'standalone',

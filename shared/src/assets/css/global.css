@@ -1,0 +1,74 @@
+
+/* ==========================================================================
+   2. MODERN CSS RESET & NORMALIZATION
+   ========================================================================== */
+
+/* Garantizar que box-sizing sea heredado correctamente */
+html {
+  box-sizing: border-box;
+  -webkit-text-size-adjust: 100%; /* Evita cambios de fuente en iOS al rotar */
+  -moz-tab-size: 4;
+  tab-size: 4;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+/* Resetear márgenes y paddings por defecto */
+body,
+h1, h2, h3, h4, p,
+figure, blockquote, dl, dd {
+  margin: 0;
+  padding: 0;
+}
+
+/* Configuración base del Viewport e interfaz */
+html, body {
+  height: 100%;
+  min-height: 100dvh; /* Alto dinámico de pantalla */
+  width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Reset de elementos interactivos nativos */
+input, button, textarea, select {
+  font: inherit; /* Heredan Roboto automáticamente */
+}
+
+button {
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+/* Asegurar que las imágenes y elementos multimedia sean responsivos */
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Remover animaciones para usuarios con preferencias de movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+    scroll-behavior: auto;
+  }
+  
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

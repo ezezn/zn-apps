@@ -3,15 +3,15 @@
   "version": "1.0.0",
   "private": true,
   "workspaces": [
-    "pwa-app1",
+    "zound-box",
     "pwa-app2",
     "shared"
   ],
   "scripts": {
     "build:shared": "cd shared && npm run build",
-    "build:app1": "cd pwa-app1 && npm run build",
+    "build:zound-box": "cd zound-box && npm run build",
     "build:app2": "cd pwa-app2 && npm run build",
-    "build:all": "rm -rf dist && mkdir dist && cp index.html dist/index.html && cp sw.js dist/sw.js && npm run build:shared && npm run build:app1 && npm run build:app2 && cp -r pwa-app1/dist dist/pwa-app1 && cp -r pwa-app2/dist dist/pwa-app2"
+    "build:all": "rm -rf dist && mkdir dist && cp index.html dist/index.html && cp sw.js dist/sw.js && npm run build:shared && npm run build:zound-box && npm run build:app2 && cp -r zound-box/dist dist/zound-box && cp -r pwa-app2/dist dist/pwa-app2"
   },
   "devDependencies": {
     "vite": "^6.0.0"
