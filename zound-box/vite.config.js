@@ -9,7 +9,7 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
-        name: 'Sub Aplicación Uno',
+        name: 'Zound Box',
         short_name: 'App1',
         description: 'PWA número uno independiente',
         start_url: '/zn-apps/zound-box/index.html',

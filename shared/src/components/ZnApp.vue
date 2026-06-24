@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue' // <-- Importamos watch
 
 const props = defineProps({
   mode: {
@@ -23,6 +23,26 @@ const updateSystemTheme = (e) => {
   systemIsDark.value = e.matches
 }
 
+// Determina el tema final basándose en la prop o en el sistema
+const computedMode = computed(() => {
+  if (props.mode === 'system') {
+    return systemIsDark.value ? 'zn-theme-dark' : 'zn-theme-light'
+  }
+  return props.mode === 'dark' ? 'zn-theme-dark' : 'zn-theme-light'
+})
+
+// ==========================================================================
+// OPERACIÓN TRANSPARENTE: Sincronización automática con el body del navegador
+// ==========================================================================
+watch(computedMode, (newClass, oldClass) => {
+  if (typeof document !== 'undefined') {
+    // Limpiamos la clase anterior si existía para evitar duplicados
+    if (oldClass) document.body.classList.remove(oldClass)
+    // Inyectamos la nueva clase evaluada directamente en la raíz física del DOM
+    document.body.classList.add(newClass)
+  }
+}, { immediate: true })
+
 onMounted(() => {
   if (typeof window !== 'undefined') {
     mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
@@ -35,18 +55,26 @@ onUnmounted(() => {
   if (mediaQuery) {
     mediaQuery.removeEventListener('change', updateSystemTheme)
   }
-})
-
-// Determina el tema final basándose en la prop o en el sistema
-const computedMode = computed(() => {
-  if (props.mode === 'system') {
-    return systemIsDark.value ? 'zn-theme-dark' : 'zn-theme-light'
+  // Limpieza preventiva al destruir el componente raíz
+  if (typeof document !== 'undefined') {
+    document.body.classList.remove('zn-theme-light', 'zn-theme-dark')
   }
-  return props.mode === 'dark' ? 'zn-theme-dark' : 'zn-theme-light'
 })
 </script>
 
 <style>
+/* ==========================================================================
+   ESTILOS DE COBERTURA TOTAL PARA EL BODY NATIVO
+   ========================================================================== */
+body {
+  margin: 0;
+  padding: 0;
+  /* Al estar la clase zn-theme-* en el body, estas variables se resolverán inmediatamente */
+  background-color: var(--md-background);
+  color: var(--md-on-background);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 .zn-app-root {
   min-height: 100dvh;
   width: 100%;

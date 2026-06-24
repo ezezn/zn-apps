@@ -11,15 +11,15 @@
           <h2 class="zn-section__title">{{ title }}</h2>
         </slot>
       </div>
-      
       <ZnButton variant="text" icon-only tag="div" class="zn-section__chevron">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" class="zn-section__icon">
-          <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" fill="currentColor"/>
-        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" class="zn-section__icon"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" fill="currentColor"/></svg>
       </ZnButton>
     </summary>
     
-    <div class="zn-section__content">
+    <div 
+      :class="['zn-section__content', { 'zn-section__content--grid': columns > 0 }]"
+      :style="columns > 0 ? { '--zn-grid-cols': columns } : {}"
+    >
       <slot />
     </div>
   </details>
@@ -33,7 +33,10 @@
       </div>
     </header>
     
-    <div class="zn-section__content">
+    <div 
+      :class="['zn-section__content', { 'zn-section__content--grid': columns > 0 }]"
+      :style="columns > 0 ? { '--zn-grid-cols': columns } : {}"
+    >
       <slot />
     </div>
   </section>
@@ -41,12 +44,13 @@
 
 <script setup>
 import { ref } from 'vue'
-import ZnButton from './ZnButton.vue' // <-- Importamos el nuevo botón
+import ZnButton from './ZnButton.vue'
 
 const props = defineProps({
   title: { type: String, default: '' },
   collapsible: { type: Boolean, default: false },
-  expanded: { type: Boolean, default: true }
+  expanded: { type: Boolean, default: true },
+  columns: { type: [Number, String], default: 0 } // <-- NUEVA PROP
 })
 
 const emit = defineEmits(['toggle'])
@@ -72,7 +76,7 @@ function onToggle(event) {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 16px; /* Bajamos el padding vertical para balancear el tamaño del botón */
+  padding: 8px 16px;
   user-select: none;
   outline: none;
 }
@@ -97,7 +101,6 @@ function onToggle(event) {
   flex: 1;
 }
 
-/* Transición de rotación sobre el componente ZnButton */
 .zn-section__chevron {
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -109,5 +112,22 @@ function onToggle(event) {
 .zn-section__content {
   padding: 16px;
   color: var(--md-on-background);
+}
+
+/* ==========================================================================
+   NUEVO MOTOR DE LAYOUT GRIDS
+   ========================================================================== */
+.zn-section__content--grid {
+  display: grid;
+  /* Calcula las columnas exactas basadas en la variable inyectada */
+  grid-template-columns: repeat(var(--zn-grid-cols, 1), minmax(0, 1fr));
+  gap: 16px; /* Separación estándar Material Design entre bloques */
+}
+
+/* Responsive: En pantallas de celular menores a 600px la grilla colapsa a 1 columna automáticamente */
+@media (max-width: 600px) {
+  .zn-section__content--grid {
+    grid-template-columns: 1fr !important;
+  }
 }
 </style>

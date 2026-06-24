@@ -15,6 +15,9 @@ export { default as ZnScreen } from './components/ZnScreen.vue'
 export { default as ZnRow } from './components/ZnRow.vue'
 export { default as ZnSection } from './components/ZnSection.vue' //
 export { default as ZnButton } from './components/ZnButton.vue'
+export { default as ZnCard } from './components/ZnCard.vue'
+export { default as ZnBox } from './components/ZnBox.vue'
+export { default as ZnSwitch } from './components/ZnSwitch.vue'
 
 // Componentes Atómicos e Utilidades previos
 export { default as CustomButton } from './components/CustomButton.vue'

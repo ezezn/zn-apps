@@ -1,8 +1,4 @@
 
-/* ==========================================================================
-   2. MODERN CSS RESET & NORMALIZATION
-   ========================================================================== */
-
 /* Garantizar que box-sizing sea heredado correctamente */
 html {
   box-sizing: border-box;
@@ -72,3 +68,79 @@ img, picture, video, canvas, svg {
     scroll-behavior: auto !important;
   }
 }
+
+:root {
+  /* ==========================================================================
+     PALETA M3 - MODO CLARO (Por Defecto)
+     ========================================================================== */
+  --md-primary: #6750A4;
+  --md-on-primary: #FFFFFF;
+  --md-primary-container: #EADDFF;
+  --md-on-primary-container: #21005D;
+  
+  --md-background: #FEF7FF;
+  --md-on-background: #1D1B20;
+  
+  --md-surface: #FEF7FF;
+  --md-surface-container-low: #F7F2FA;
+  --md-surface-variant: #E7E0EC;
+  --md-on-surface-variant: #49454F;
+  
+  --md-outline: #79747E;
+  --md-section-gap: 24px;
+}
+
+/* El selector donde se inyecta la clase reactiva */
+body.dark-theme,.dark-theme {
+  /* ==========================================================================
+     PALETA M3 - MODO OSCURO (Inversión de Tokens)
+     ========================================================================== */
+  --md-primary: #D0BCFF;
+  --md-on-primary: #381E72;
+  --md-primary-container: #4F378B;
+  --md-on-primary-container: #EADDFF;
+  
+  --md-background: #141218;
+  --md-on-background: #E6E1E5;
+  
+  --md-surface: #141218;
+  --md-surface-container-low: #1D1B20;
+  --md-surface-variant: #49454F;
+  --md-on-surface-variant: #CAC4D0;
+  
+  --md-outline: #938F99;
+}
+
+/* ==========================================================================
+   ESTILOS BASE DEL BODY (NATIVO)
+   ========================================================================== */
+body, html {
+  margin: 0;
+  padding: 0;
+  /* Ahora sí evaluará las variables directamente en la raíz del documento */
+  background-color: var(--md-background);
+  color: var(--md-on-background);
+  font-family: 'Roboto', sans-serif;
+  
+  /* Transición global para cambios de tema suaves */
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Forzar que las fuentes sueltas dentro de la app hereden el color del tema */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+
+/*Grid system*/
+
+/* Clases de Utilidad de Expansión para Grillas (Span hasts 10 columnas) */
+.zn-span-2  { grid-column: span 2 / span 2; }
+.zn-span-3  { grid-column: span 3 / span 3; }
+.zn-span-4  { grid-column: span 4 / span 4; }
+.zn-span-5  { grid-column: span 5 / span 5; }
+.zn-span-6  { grid-column: span 6 / span 6; }
+.zn-span-7  { grid-column: span 7 / span 7; }
+.zn-span-8  { grid-column: span 8 / span 8; }
+.zn-span-9  { grid-column: span 9 / span 9; }
+.zn-span-10 { grid-column: span 10 / span 10; }
