@@ -5,13 +5,15 @@
   "workspaces": [
     "zound-box",
     "pwa-app2",
+    "kitchensink",
     "shared"
   ],
   "scripts": {
     "build:shared": "cd shared && npm run build",
     "build:zound-box": "cd zound-box && npm run build",
     "build:app2": "cd pwa-app2 && npm run build",
-    "build:all": "rm -rf dist && mkdir dist && cp index.html dist/index.html && cp sw.js dist/sw.js && npm run build:shared && npm run build:zound-box && npm run build:app2 && cp -r zound-box/dist dist/zound-box && cp -r pwa-app2/dist dist/pwa-app2"
+    "build:kitchensink": "cd kitchensink && npm run build",
+    "build:all": "rm -rf dist && mkdir dist && cp index.html dist/index.html && cp sw.js dist/sw.js && npm run build:shared && npm run build:zound-box && npm run build:app2 && npm run build:kitchensink && cp -r zound-box/dist dist/zound-box && cp -r pwa-app2/dist dist/pwa-app2 && cp -r kitchensink/dist dist/kitchensink"
   },
   "devDependencies": {
     "vite": "^6.0.0"

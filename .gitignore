@@ -2,8 +2,10 @@ node_modules/
 dist/
 .DS_Store
 *.local
-pwa-app1/node_modules/
+zound-box/node_modules/
 pwa-app2/node_modules/
+kitchensink/node_modules/
 shared/node_modules/
-pwa-app1/dist/
+zound-box/dist/
 pwa-app2/dist/
+kitchensink/dist/
