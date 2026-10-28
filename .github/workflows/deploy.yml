@@ -29,8 +29,12 @@ jobs:
       # Paso 3: ¡PRIMERO SE INSTALAN LAS DEPENDENCIAS! (Esto crea node_modules)
       - name: Instalar Dependencias del Monorrepo
         run: npm install
+
+      # Paso 4: Ejecutar Tests Unitarios en el Monorrepo
+      - name: Ejecutar Tests Unitarios
+        run: npm run test:run
         
-      # Paso 4: ¡AHORA SÍ SE HACE EL BUILD! (Vite ya existe en el servidor)
+      # Paso 5: ¡AHORA SÍ SE HACE EL BUILD! (Vite ya existe en el servidor)
       - name: Ejecutar Compilación Unificada
         run: npm run build:all
            

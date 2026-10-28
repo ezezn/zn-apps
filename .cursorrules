@@ -1,0 +1,18 @@
+# Cursor Rules for zn-apps Monorepo
+
+You are assisting in a Vue 3 + Vite monorepo for independent PWAs deployed to GitHub Pages.
+
+MANDATORY CONTEXT:
+Read files in `docs/` before making changes:
+- Architecture & conventions: `docs/00-overview.md`
+- Shared component API: `docs/01-shared.md`
+- Zound Box: `docs/02-app-zound-box.md`
+- Blueprint & catalog: `docs/03-app-kitchensink.md`
+- Unit testing: `docs/05-testing.md`
+- Developer guide: `README.md`
+
+RULES:
+- Shared components use `Zn*` prefix in `shared/src/components/` and Material Design 3 CSS tokens (`--md-*`).
+- Each PWA in subfolders is independent. Do NOT share Pinia store instances across apps.
+- When creating new apps, follow the pattern from `kitchensink/`, not legacy `pwa-app*`.
+- Always verify changes with `npm run test:run` and `npm run build:all`.
