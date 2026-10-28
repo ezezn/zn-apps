@@ -8,9 +8,12 @@ export default defineConfig({
     vue(),
     VitePWA({
       registerType: 'autoUpdate',
+      workbox: {
+        mode: 'development'
+      },
       manifest: {
         name: 'Zound Box',
-        short_name: 'App1',
+        short_name: 'Zound Box',
         description: 'PWA número uno independiente',
         start_url: '/zn-apps/zound-box/index.html',
         scope: '/zn-apps/zound-box/',

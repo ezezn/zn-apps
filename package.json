@@ -9,6 +9,12 @@
     "shared"
   ],
   "scripts": {
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:shared": "vitest --project shared",
+    "test:zound-box": "vitest --project zound-box",
+    "test:kitchensink": "vitest --project kitchensink",
     "build:shared": "cd shared && npm run build",
     "build:zound-box": "cd zound-box && npm run build",
     "build:app2": "cd pwa-app2 && npm run build",
@@ -16,7 +22,11 @@
     "build:all": "rm -rf dist && mkdir dist && cp index.html dist/index.html && cp sw.js dist/sw.js && npm run build:shared && npm run build:zound-box && npm run build:app2 && npm run build:kitchensink && cp -r zound-box/dist dist/zound-box && cp -r pwa-app2/dist dist/pwa-app2 && cp -r kitchensink/dist dist/kitchensink"
   },
   "devDependencies": {
-    "vite": "^6.0.0"
+    "@vitest/coverage-v8": "^5.0.5",
+    "@vue/test-utils": "^2.5.1",
+    "happy-dom": "^21.0.4",
+    "vite": "^6.0.0",
+    "vitest": "^5.0.5"
   },
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "*"

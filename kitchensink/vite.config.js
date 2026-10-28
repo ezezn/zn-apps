@@ -8,6 +8,9 @@ export default defineConfig({
     vue(),
     VitePWA({
       registerType: 'autoUpdate',
+      workbox: {
+        mode: 'development'
+      },
       manifest: {
         name: 'Dev Kitchensink',
         short_name: 'kitchensink',

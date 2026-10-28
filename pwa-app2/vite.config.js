@@ -8,6 +8,9 @@ export default defineConfig({
     vue(),
     VitePWA({
       registerType: 'autoUpdate',
+      workbox: {
+        mode: 'development'
+      },
       manifest: {
         name: 'Sub Aplicación Dos',
         short_name: 'App2',
