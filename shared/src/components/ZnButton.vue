@@ -77,10 +77,29 @@ defineProps({
   border-radius: 50%; /* Círculo perfecto */
 }
 
+/* ==========================================================================
+   HERENCIA DE COLOR DE ICONOS (MD3: el icono sigue el color del label)
+   ========================================================================== */
+.zn-button__icon-slot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  color: inherit;
+}
+
 .zn-button__icon-slot :deep(svg),
 .zn-button--icon-only :deep(svg) {
   width: 18px;
   height: 18px;
+  color: inherit;
+}
+
+.zn-button__icon-slot :deep(svg:not([fill="none"])),
+.zn-button--icon-only :deep(svg:not([fill="none"])),
+.zn-button__icon-slot :deep(svg:not([fill="none"]) path:not([fill="none"])),
+.zn-button--icon-only :deep(svg:not([fill="none"]) path:not([fill="none"])) {
+  fill: currentColor;
 }
 
 /* ==========================================================================

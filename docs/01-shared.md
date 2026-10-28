@@ -230,6 +230,8 @@ Se usan como clases en elementos hijos de `ZnSection` cuando esta tiene prop `co
 | `outlined` | Medio-bajo | Transparente con borde `--md-outline` | Acción alternativa |
 | `text` | Bajo | Transparente / `--md-primary` | Acción terciaria |
 
+> **Color de Iconos:** Según la especificación MD3, los iconos incrustados en `#icon` o modo `iconOnly` heredan automáticamente el color del texto (`fill: currentColor`), respetando el contraste de cada variante y el estado `:disabled`.
+
 **Uso:**
 ```vue
 <ZnButton variant="filled">
@@ -314,32 +316,47 @@ Se usan como clases en elementos hijos de `ZnSection` cuando esta tiene prop `co
 ---
 
 ### `ZnSwitch`
-**Propósito:** Toggle (interruptor) MD3 con soporte de labels bilaterales e íconos dentro del actuador (thumb).
+**Propósito:** Toggle (interruptor) MD3 con soporte de labels bilaterales, texto interno e íconos dentro del actuador (thumb).
 
 **Props:**
 | Prop | Tipo | Default | Descripción |
 |---|---|---|---|
 | `modelValue` | `Boolean` | `false` | Valor (compatible con `v-model`) |
-| `labelLeft` | `String` | `''` | Etiqueta a la izquierda |
-| `labelRight` | `String` | `''` | Etiqueta a la derecha |
-| `disabled` | `Boolean` | `false` | — |
+| `labelLeft` | `String` | `''` | Etiqueta exterior a la izquierda |
+| `labelRight` | `String` | `''` | Etiqueta exterior a la derecha |
+| `textOn` | `String` | `''` | Texto breve incrustado dentro del actuador al estar encendido (ej. `'ON'`, `'SÍ'`) |
+| `textOff` | `String` | `''` | Texto breve incrustado dentro del actuador al estar apagado (ej. `'OFF'`, `'NO'`) |
+| `disabled` | `Boolean` | `false` | Desactiva el control y aplica opacidad MD3 (38%) |
 
 **Slots:**
 | Slot | Descripción |
 |---|---|
 | `#labelLeft` | HTML personalizado para etiqueta izquierda |
 | `#labelRight` | HTML personalizado para etiqueta derecha |
-| `#iconOn` | SVG en el thumb cuando está encendido |
-| `#iconOff` | SVG en el thumb cuando está apagado |
+| `#iconOn` | SVG o contenido personalizado en el thumb cuando está encendido |
+| `#iconOff` | SVG o contenido personalizado en el thumb cuando está apagado |
 
 **Eventos:**
 - `@update:modelValue(Boolean)` — para `v-model`.
 - `@change(Boolean)` — emitido al cambiar.
 
-**Especificación MD3:** Si tiene slots de icono, el thumb apagado mide 24px (sin iconos: 16px).
+**Especificación MD3:**
+- **Sin contenido interior:** El thumb apagado mide 16px y al activarse se expande a 24px.
+- **Con iconos o texto interior (`textOn`/`textOff` o slots):** El thumb permanece en 24px en ambos estados para albergar el contenido con legibilidad.
+- **Standalone:** Si se omiten `labelLeft` y `labelRight`, renderiza únicamente el interruptor sin márgenes ni elementos adicionales.
 
 **Uso:**
 ```vue
+<!-- 1. Puro / Standalone (sin texto) -->
+<ZnSwitch v-model="estado" />
+
+<!-- 2. Con etiqueta exterior -->
+<ZnSwitch v-model="estado" labelRight="Notificaciones" />
+
+<!-- 3. Con texto interior -->
+<ZnSwitch v-model="estado" textOn="ON" textOff="OFF" />
+
+<!-- 4. Con iconos interiores -->
 <ZnSwitch v-model="isDark" labelLeft="Claro" labelRight="Oscuro">
   <template #iconOff><svg .../></template>
   <template #iconOn><svg .../></template>

@@ -65,4 +65,27 @@ describe('ZnSwitch Component', () => {
     expect(wrapper.find('.zn-switch').classes()).toContain('zn-switch--has-icons')
     expect(wrapper.find('.icon-on').text()).toBe('ON')
   })
+
+  it('soporta variantes con texto dentro mediante props textOn y textOff', () => {
+    const wrapperOn = mount(ZnSwitch, {
+      props: { modelValue: true, textOn: 'ON', textOff: 'OFF' }
+    })
+    expect(wrapperOn.find('.zn-switch').classes()).toContain('zn-switch--has-icons')
+    expect(wrapperOn.find('.zn-switch__icon').text()).toBe('ON')
+
+    const wrapperOff = mount(ZnSwitch, {
+      props: { modelValue: false, textOn: 'ON', textOff: 'OFF' }
+    })
+    expect(wrapperOff.find('.zn-switch').classes()).toContain('zn-switch--has-icons')
+    expect(wrapperOff.find('.zn-switch__icon').text()).toBe('OFF')
+  })
+
+  it('funciona como switch puro sin etiquetas exteriores (standalone)', () => {
+    const wrapper = mount(ZnSwitch, {
+      props: { modelValue: true }
+    })
+    expect(wrapper.find('.zn-switch__label--left').exists()).toBe(false)
+    expect(wrapper.find('.zn-switch__label--right').exists()).toBe(false)
+    expect(wrapper.find('.zn-switch').exists()).toBe(true)
+  })
 })

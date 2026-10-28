@@ -14,7 +14,7 @@
         'zn-switch', 
         { 
           'zn-switch--checked': modelValue,
-          'zn-switch--has-icons': $slots.iconOn || $slots.iconOff
+          'zn-switch--has-icons': hasInnerContent
         }
       ]"
     >
@@ -27,11 +27,11 @@
       />
       <div class="zn-switch__track">
         <div class="zn-switch__thumb">
-          <span v-if="modelValue && $slots.iconOn" class="zn-switch__icon">
-            <slot name="iconOn" />
+          <span v-if="modelValue && hasOnContent" class="zn-switch__icon">
+            <slot name="iconOn">{{ textOn }}</slot>
           </span>
-          <span v-if="!modelValue && $slots.iconOff" class="zn-switch__icon">
-            <slot name="iconOff" />
+          <span v-if="!modelValue && hasOffContent" class="zn-switch__icon">
+            <slot name="iconOff">{{ textOff }}</slot>
           </span>
         </div>
       </div>
@@ -44,6 +44,8 @@
 </template>
 
 <script setup>
+import { computed, useSlots } from 'vue'
+
 const props = defineProps({
   modelValue: {
     type: Boolean,
@@ -57,6 +59,14 @@ const props = defineProps({
     type: String,
     default: ''
   },
+  textOn: {
+    type: String,
+    default: ''
+  },
+  textOff: {
+    type: String,
+    default: ''
+  },
   disabled: {
     type: Boolean,
     default: false
@@ -64,6 +74,11 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['update:modelValue', 'change'])
+const slots = useSlots()
+
+const hasOnContent = computed(() => !!slots.iconOn || !!props.textOn)
+const hasOffContent = computed(() => !!slots.iconOff || !!props.textOff)
+const hasInnerContent = computed(() => hasOnContent.value || hasOffContent.value)
 
 function handleChange(event) {
   const isChecked = event.target.checked
@@ -150,7 +165,7 @@ function handleChange(event) {
   z-index: 2;
 }
 
-/* REGLA MD3: Si tiene iconos internos, el actuador apagado es más grande (24px) */
+/* REGLA MD3: Si tiene iconos o texto interno, el actuador apagado es más grande (24px) */
 .zn-switch--has-icons .zn-switch__thumb {
   width: 24px;
   height: 24px;
@@ -173,24 +188,33 @@ function handleChange(event) {
   background-color: var(--md-on-primary);
 }
 
-/* Ajuste de color para el icono interno */
+/* Ajuste de color y tipografía para el contenido interno (iconos o texto) */
 .zn-switch__icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--md-primary);
-  width: 16px;
-  height: 16px;
+  color: var(--md-outline);
+  width: 100%;
+  height: 100%;
+  max-width: 18px;
+  max-height: 18px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.65rem; /* ~10px */
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  user-select: none;
 }
 
-/* Si está encendido, el icono toma el color contrastante del fondo activo */
+/* Si está encendido, el contenido interno toma el color primario contrastante */
 .zn-switch--checked .zn-switch__icon {
-  color: var(--md-on-primary-container, #21005D);
+  color: var(--md-primary);
 }
 
 .zn-switch__icon :deep(svg) {
   width: 16px;
   height: 16px;
+  fill: currentColor;
 }
 
 /* ==========================================================================
