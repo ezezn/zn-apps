@@ -112,6 +112,7 @@ defineProps({
   color: var(--md-on-primary);
 }
 .zn-button--filled:hover {
+  color: var(--md-on-surface-variant);
   background-color: linear-gradient(0deg, rgba(255,255,255,0.08), rgba(255,255,255,0.08)), var(--md-primary);
   box-shadow: 0px 1px 3px rgba(0,0,0,0.12), 0px 1px 2px rgba(0,0,0,0.24);
 }
