@@ -11,7 +11,8 @@ El monorepo aloja un ecosistema de aplicaciones autónomas y una librería compa
 | Proyecto | Carpeta | Rol / Descripción | Estado | Ruta / Base URL |
 |---|---|---|---|---|
 | **Landing Portal** | `/` (`index.html`) | Portal de bienvenida para seleccionar y lanzar cada PWA | Producción | `/zn-apps/` |
-| **@zn-apps/shared** | [`shared/`](./shared) | Librería central de componentes UI (MD3), tokens CSS, composables y utilidades | Activo | N/A (librería ES) |
+| **@zn-apps/ui-core** | [`shared/ui-core/`](./shared/ui-core) | Librería central de componentes UI (MD3), tokens CSS, composables y utilidades | Activo | N/A (librería ES) |
+| **@zn-apps/storage** | [`shared/storage/`](./shared/storage) | Utilidades de persistencia compartidas sobre Web Storage | Activo | N/A (librería ES) |
 | **Zound Box** | [`zound-box/`](./zound-box) | Primera aplicación interactiva del monorepo (reproductor / caja de sonidos) | Activo | `/zn-apps/zound-box/` |
 | **Dev Kitchensink** | [`kitchensink/`](./kitchensink) | Catálogo interactivo de componentes y **plantilla oficial** para nuevas apps | Activo | `/zn-apps/kitchensink/` |
 | **PWA App 2** | [`pwa-app2/`](./pwa-app2) | Template legacy inicial de Vite (en proceso de retiro futuro) | Legacy | `/zn-apps/pwa-app2/` |
@@ -53,8 +54,9 @@ npm run dev --workspace=kitchensink
 # Levantar Zound Box
 npm run dev --workspace=zound-box
 
-# Compilar la librería shared en modo watch (detecta cambios en vivo)
-npm run dev --workspace=shared
+# Compilar las librerías compartidas en modo watch (detecta cambios en vivo)
+npm run dev --workspace=@zn-apps/ui-core
+npm run dev --workspace=@zn-apps/storage
 ```
 
 ### Opción 2: Navegando a la subcarpeta
@@ -68,12 +70,16 @@ npm run dev
 cd ../zound-box
 npm run dev
 
-# Para la librería shared
-cd ../shared
+# Para la librería ui-core
+cd ../shared/ui-core
+npm run dev
+
+# Para la librería storage
+cd ../shared/storage
 npm run dev
 ```
 
-> 💡 **Nota sobre la librería compartida:** Para el desarrollo de nuevas características en `@zn-apps/shared`, puedes correr `npm run dev --workspace=shared` para que Vite recompile automáticamente ante cualquier modificación en `shared/src/`.
+> 💡 **Nota sobre las librerías compartidas:** Cada librería es un workspace independiente. Para el desarrollo de nuevas características en `@zn-apps/ui-core`, corre `npm run dev --workspace=@zn-apps/ui-core` para que Vite recompile automáticamente ante cualquier modificación en `shared/ui-core/src/`. `shared/storage/` se recompila de la misma forma con su propio workspace.
 
 ---
 
@@ -92,7 +98,7 @@ npm run test:run
 npm run test:coverage
 
 # Ejecutar tests de un paquete en específico:
-npm run test:shared       # Solo componentes y utilidades de @zn-apps/shared
+npm run test:shared       # Solo las librerías @zn-apps/ui-core y @zn-apps/storage
 npm run test:zound-box    # Solo la aplicación Zound Box
 npm run test:kitchensink  # Solo la aplicación Kitchensink y su router
 ```
@@ -112,14 +118,14 @@ npm run build:all
 **¿Qué hace este script?**
 1. Limpia y crea la carpeta `dist/`.
 2. Copia la landing page (`index.html`) y el Service Worker raíz (`sw.js`).
-3. Compila `@zn-apps/shared` en modo librería.
+3. Compila `@zn-apps/ui-core` y `@zn-apps/storage` en modo librería.
 4. Compila `zound-box`, `pwa-app2` y `kitchensink`.
 5. Mueve cada `dist/` a su subcarpeta correspondiente dentro de la raíz `dist/`.
 
 ### Compilación Individual por Proyecto
 
 ```bash
-npm run build:shared       # Compila @zn-apps/shared -> shared/dist/
+npm run build:shared       # Compila @zn-apps/ui-core y @zn-apps/storage
 npm run build:zound-box    # Compila Zound Box -> zound-box/dist/
 npm run build:kitchensink  # Compila Kitchensink -> kitchensink/dist/
 npm run build:app2         # Compila pwa-app2 -> pwa-app2/dist/
@@ -162,13 +168,17 @@ zn-apps/
 ├── vitest.config.js          # Configuración global de Vitest (proyectos)
 ├── vitest.setup.js           # Mocks globales de entorno para tests
 │
-├── shared/                   # 📦 Librería de componentes y utilidades compartidas
-│   ├── src/
-│   │   ├── components/       # Componentes Vue 3 (ZnButton, ZnCard, ZnSwitch, etc.)
-│   │   ├── composables/      # useOnlineStatus
-│   │   ├── utils/            # helpers (formatDate)
-│   │   └── assets/css/       # global.css y tokens MD3
-│   └── vitest.config.js
+├── shared/                   # 📦 Contenedor de librerías compartidas aisladas
+│   ├── ui-core/              # @zn-apps/ui-core
+│   │   ├── src/
+│   │   │   ├── components/   # Componentes Vue 3 (ZnButton, ZnCard, ZnSwitch, etc.)
+│   │   │   ├── composables/  # useOnlineStatus
+│   │   │   ├── utils/        # helpers (formatDate)
+│   │   │   └── assets/css/   # global.css y tokens MD3
+│   │   └── vitest.config.js
+│   └── storage/              # @zn-apps/storage
+│       ├── src/              # createStorage (Web Storage)
+│       └── vitest.config.js
 │
 ├── zound-box/                # 🎵 App productiva de audio / PWA independiente
 │   ├── src/

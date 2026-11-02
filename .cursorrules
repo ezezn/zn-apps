@@ -12,7 +12,8 @@ Read files in `docs/` before making changes:
 - Developer guide: `README.md`
 
 RULES:
-- Shared components use `Zn*` prefix in `shared/src/components/` and Material Design 3 CSS tokens (`--md-*`).
+- `shared/` contains isolated libraries: `ui-core` (`@zn-apps/ui-core`, Vue/MD3) and `storage` (`@zn-apps/storage`, persistence). Libraries must not import from each other.
+- Shared components use `Zn*` prefix in `shared/ui-core/src/components/` and Material Design 3 CSS tokens (`--md-*`).
 - Each PWA in subfolders is independent. Do NOT share Pinia store instances across apps.
 - When creating new apps, follow the pattern from `kitchensink/`, not legacy `pwa-app*`.
 - Always verify changes with `npm run test:run` and `npm run build:all`.

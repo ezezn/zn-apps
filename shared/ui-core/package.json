@@ -1,0 +1,32 @@
+{
+  "name": "@zn-apps/ui-core",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/ui-core.js",
+  "module": "./dist/ui-core.js",
+  "exports": {
+    ".": {
+      "import": "./dist/ui-core.js"
+    },
+    "./dist/*": "./dist/*"
+  },
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite build --watch",
+    "generate:icons": "node scripts/generate-icons.mjs",
+    "scan:icons": "node scripts/scan-icons.mjs",
+    "build:icons": "npm run scan:icons && npm run generate:icons"
+  },
+  "devDependencies": {
+    "@material-design-icons/svg": "^0.14.15",
+    "@vitejs/plugin-vue": "^5.0.0",
+    "vite": "^6.0.0"
+  },
+  "peerDependencies": {
+    "vue": "^3.0.0"
+  },
+  "dependencies": {
+    "@fontsource/roboto": "^5.2.10"
+  }
+}

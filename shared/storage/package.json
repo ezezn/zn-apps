@@ -1,0 +1,21 @@
+{
+  "name": "@zn-apps/storage",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/storage.js",
+  "module": "./dist/storage.js",
+  "exports": {
+    ".": {
+      "import": "./dist/storage.js"
+    },
+    "./dist/*": "./dist/*"
+  },
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite build --watch"
+  },
+  "devDependencies": {
+    "vite": "^6.0.0"
+  }
+}

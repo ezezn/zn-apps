@@ -1,0 +1,90 @@
+/* ==========================================================================
+   Estilos de apoyo para el showroom de @zn-apps/ui-core.
+   El layout de las páginas se construye con los componentes compartidos
+   (ZnScreen, ZnSection, ZnBox, ZnRow); aquí solo viven helpers tipográficos.
+   ========================================================================== */
+
+.section-desc {
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--md-outline);
+  margin: 0 0 16px 0;
+}
+
+/* Hace que una descripción ocupe toda la fila dentro de una ZnSection con columns */
+.section-desc--full {
+  grid-column: 1 / -1;
+  margin-bottom: 0;
+}
+
+.showcase-label {
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--md-outline);
+}
+
+.helper-text {
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.8rem;
+  color: var(--md-outline);
+  line-height: 1.4;
+}
+
+.showcase-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.showcase-inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.state-chip {
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background-color: var(--md-surface-variant);
+  color: var(--md-on-surface-variant);
+}
+
+.screen-heading {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.screen-subtitle {
+  font-size: 0.8rem;
+  color: var(--md-outline);
+}
+
+code {
+  background-color: var(--md-surface-variant);
+  color: var(--md-on-surface-variant);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.85em;
+}
+
+.code-block {
+  margin: 12px 0 0 0;
+  padding: 12px 16px;
+  overflow-x: auto;
+  border-radius: 12px;
+  background-color: var(--md-surface-variant);
+  color: var(--md-on-surface-variant);
+  font-family: monospace;
+  font-size: 0.8rem;
+  line-height: 1.6;
+}

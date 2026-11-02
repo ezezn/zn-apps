@@ -3,7 +3,8 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig({
   test: {
     projects: [
-      'shared/vitest.config.js',
+      'shared/ui-core/vitest.config.js',
+      'shared/storage/vitest.config.js',
       'zound-box/vitest.config.js',
       'kitchensink/vitest.config.js',
     ],

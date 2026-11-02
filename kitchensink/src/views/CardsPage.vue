@@ -1,104 +1,143 @@
 <template>
-  <ZnScreen title="Componente: ZnCard">
-    <ZnSection title="6. Tarjetas Material Design 3 (ZnCard)">
-      <p class="section-desc">Las tarjetas agrupan contenidos relacionados. Soporta tres variantes nativas y dos variantes avanzadas de inyección de imágenes.</p>
-      
-      <div class="cards-showcase">
-        
-        <div class="card-box">
-          <span class="showcase-label">ELEVATED CARD</span>
-          <div class="mock-card elevated">
-            <h3>Título de Tarjeta</h3>
-            <p>Contenido interno secundario con elevación por sombra proyectada suave.</p>
-          </div>
-        </div>
-
-        <div class="card-box">
-          <span class="showcase-label">FILLED CARD</span>
-          <div class="mock-card filled">
-            <h3>Título de Tarjeta</h3>
-            <p>Variación con color contenedor sólido para emparejar elementos adyacentes.</p>
-          </div>
-        </div>
-
-        <div class="card-box">
-          <span class="showcase-label">OUTLINED CARD</span>
-          <div class="mock-card outlined">
-            <h3>Título de Tarjeta</h3>
-            <p>Enfoque minimalista delimitado por un borde sutil sin sombras de fondo.</p>
-          </div>
-        </div>
-
+  <ZnScreen title="Tarjetas (ZnCard)">
+    <template #title>
+      <div>
+        <h1 class="screen-heading">Tarjetas (ZnCard)</h1>
+        <span class="screen-subtitle">Material Design 3 · variantes e imágenes de cabecera o fondo completo</span>
       </div>
+    </template>
+
+    <ZnSection title="1. Variantes Nativas (Prop: variant)" collapsible :columns="3">
+      <p class="section-desc section-desc--full">
+        Las tarjetas agrupan contenidos relacionados. El componente admite las variantes <code>filled</code>, <code>elevated</code> y <code>outlined</code>.
+      </p>
+
+      <ZnCard title="Tarjeta Filled" variant="filled">
+        <p>Estilo por defecto de MD3. Fondo tonal sutil sin sombras, ideal para elementos secundarios.</p>
+        <div class="card-actions">
+          <ZnButton variant="text">Acción</ZnButton>
+        </div>
+      </ZnCard>
+
+      <ZnCard title="Tarjeta Elevated" variant="elevated">
+        <p>Usa sombras suaves para separarse del fondo. Excelente para destacar contenidos principales.</p>
+        <div class="card-actions">
+          <ZnButton variant="tonal">Revisar</ZnButton>
+        </div>
+      </ZnCard>
+
+      <ZnCard title="Tarjeta Outlined" variant="outlined">
+        <p>Borde limpio perimetral y diseño minimalista, perfecto para grillas densas de información.</p>
+      </ZnCard>
+    </ZnSection>
+
+    <ZnSection title="2. Imagen en Cabecera (Prop: imageVariant='header')" collapsible :columns="2">
+      <p class="section-desc section-desc--full">
+        Con <code>imageVariant="header"</code> la imagen se coloca detrás del título y aplica un scrim inferior para mantener la legibilidad.
+      </p>
+
+      <ZnCard
+        title="Álbum: Retro Wave 1988"
+        variant="outlined"
+        :image="headerImage"
+        image-variant="header"
+      >
+        <p class="helper-text">Pistas de audio cargadas localmente en la Pi.</p>
+        <div class="card-actions card-actions--end">
+          <ZnButton variant="filled" iconOnly>
+            <ZnIcon name="play_arrow" label="Reproducir" />
+          </ZnButton>
+        </div>
+      </ZnCard>
+
+      <ZnCard
+        title="Sesión Acústica"
+        variant="elevated"
+        :image="headerImageAlt"
+        image-variant="header"
+      >
+        <p class="helper-text">Grabaciones en directo con carátula personalizada.</p>
+        <div class="card-actions card-actions--end">
+          <ZnButton variant="tonal" iconOnly>
+            <ZnIcon name="play_arrow" label="Reproducir" />
+          </ZnButton>
+        </div>
+      </ZnCard>
+    </ZnSection>
+
+    <ZnSection title="3. Imagen de Fondo Completa (Prop: imageVariant='full')" collapsible :columns="2">
+      <p class="section-desc section-desc--full">
+        Con <code>imageVariant="full"</code> la imagen cubre toda la tarjeta y el texto se fuerza a blanco sobre un scrim completo.
+      </p>
+
+      <ZnCard
+        title="Zound Box Premium"
+        variant="elevated"
+        :image="fullImage"
+        image-variant="full"
+      >
+        <p>Accede a la ecualización avanzada en tiempo real desde el hardware embebido.</p>
+        <div class="card-actions">
+          <ZnButton variant="elevated">Activar modos</ZnButton>
+        </div>
+      </ZnCard>
+
+      <ZnCard
+        title="Radio Nocturna"
+        variant="filled"
+        :image="fullImageAlt"
+        image-variant="full"
+      >
+        <p>Listas de reproducción curadas para sesiones largas de madrugada.</p>
+        <div class="card-actions">
+          <ZnButton variant="outlined">Escuchar</ZnButton>
+        </div>
+      </ZnCard>
+    </ZnSection>
+
+    <ZnSection title="4. Slot de Título Personalizado (Slot: title)" collapsible :expanded="false" :columns="1">
+      <p class="section-desc section-desc--full">
+        El slot <code>#title</code> reemplaza el título y permite HTML enriquecido (por ejemplo, un badge junto al nombre).
+      </p>
+
+      <ZnCard variant="outlined" :image="headerImage" image-variant="header">
+        <template #title>
+          <div class="custom-title">
+            <span>Playlist Destacada</span>
+            <span class="state-chip">NUEVO</span>
+          </div>
+        </template>
+        <p class="helper-text">El contenido del slot convive con la imagen de cabecera y su scrim.</p>
+      </ZnCard>
     </ZnSection>
   </ZnScreen>
 </template>
 
 <script setup>
-import { ZnScreen, ZnSection } from '@zn-apps/shared'
-// Nota: Cuando construyas el componente ZnCard formal en la librería compartida,
-// lo sustituiremos directamente aquí.
+import { ZnScreen, ZnSection, ZnCard, ZnButton, ZnIcon } from '@zn-apps/ui-core'
+
+const headerImage = 'https://picsum.photos/id/1025/600/300'
+const headerImageAlt = 'https://picsum.photos/id/1050/600/300'
+const fullImage = 'https://picsum.photos/id/903/600/400'
+const fullImageAlt = 'https://picsum.photos/id/1069/600/400'
 </script>
 
 <style scoped>
-.section-desc {
-  font-family: 'Roboto', sans-serif;
-  font-size: 0.9rem;
-  color: var(--md-on-background);
-  opacity: 0.7;
-  margin-bottom: 20px;
-}
-
-.cards-showcase {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
-}
-
-.card-box {
+.card-actions {
+  margin-top: 12px;
   display: flex;
-  flex-direction: column;
   gap: 8px;
 }
 
-.showcase-label {
-  font-family: 'Roboto', sans-serif;
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--md-outline);
+.card-actions--end {
+  justify-content: flex-end;
 }
 
-/* Estilos de simulación MD3 para previsualizar */
-.mock-card {
-  font-family: 'Roboto', sans-serif;
-  padding: 16px;
-  border-radius: 12px;
-  transition: all 0.2s ease;
-}
-
-.mock-card h3 {
-  margin: 0 0 8px 0;
+.custom-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   font-size: 1.1rem;
-}
-
-.mock-card p {
-  margin: 0;
-  font-size: 0.9rem;
-  opacity: 0.8;
-}
-
-.elevated {
-  background-color: var(--md-surface);
-  box-shadow: 0px 1px 3px rgba(0,0,0,0.15), 0px 1px 2px rgba(0,0,0,0.1);
-}
-
-.filled {
-  background-color: var(--md-surface-variant);
-  color: var(--md-on-surface-variant);
-}
-
-.outlined {
-  background-color: var(--md-background);
-  border: 1px solid var(--md-outline);
+  font-weight: 500;
 }
 </style>

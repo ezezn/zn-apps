@@ -6,8 +6,8 @@ export default defineConfig({
   plugins: [vue()],
   resolve: {
     alias: [
-      { find: '@zn-apps/shared/dist/shared.css', replacement: resolve(__dirname, '../shared/src/assets/css/global.css') },
-      { find: '@zn-apps/shared', replacement: resolve(__dirname, '../shared/src/index.js') },
+      { find: '@zn-apps/ui-core/dist/ui-core.css', replacement: resolve(__dirname, '../shared/ui-core/src/assets/css/global.css') },
+      { find: '@zn-apps/ui-core', replacement: resolve(__dirname, '../shared/ui-core/src/index.js') },
     ],
   },
   test: {

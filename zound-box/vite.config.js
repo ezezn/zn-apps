@@ -1,9 +1,21 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue' 
 import { VitePWA } from 'vite-plugin-pwa'
+import { resolve } from 'path'
+import { fileURLToPath } from 'url'
+import { dirname } from 'path'
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 export default defineConfig({
   base: '/zn-apps/zound-box/',
+  resolve: {
+    alias: {
+      // Resolve @zn-apps/ui-core to the source (dev + build) to use the generated
+      // icon name catalogs and sprite chunks instead of the pre-built dist package.
+      '@zn-apps/ui-core': resolve(__dirname, '../shared/ui-core/src/index.js'),
+      '@zn-apps/ui-core/dist/ui-core.css': resolve(__dirname, '../shared/ui-core/src/assets/css/global.css'),
+    }
+  },
   plugins: [
     vue(),
     VitePWA({

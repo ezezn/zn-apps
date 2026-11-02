@@ -7,7 +7,7 @@ Esta carpeta contiene documentación de contexto rápido en Markdown para que cu
 | Archivo | Contenido |
 |---|---|
 | [`00-overview.md`](./00-overview.md) | **Visión general** del monorepo: stack, estructura, lineamientos de arquitectura, CI/CD, convenciones |
-| [`01-shared.md`](./01-shared.md) | **Librería `@zn-apps/shared`**: todos los componentes (API, props, slots, eventos), composables, utilidades, sistema de tokens MD3 |
+| [`01-shared.md`](./01-shared.md) | **Librerías compartidas**: `@zn-apps/ui-core` (componentes, composables, utilidades, tokens MD3) y `@zn-apps/storage` (persistencia) |
 | [`02-app-zound-box.md`](./02-app-zound-box.md) | **App Zound Box**: estructura, arquitectura de componentes, estado actual, lineamientos de desarrollo, tareas pendientes |
 | [`03-app-kitchensink.md`](./03-app-kitchensink.md) | **App Kitchensink**: catálogo de componentes + plantilla de referencia para nuevas apps |
 | [`04-legacy-templates.md`](./04-legacy-templates.md) | **Templates legacy** (pwa-app1/2): estado, plan de migración, qué ignorar |

@@ -27,7 +27,7 @@
 | Vue 3 | ~3.5.34 | Composition API + `<script setup>` |
 | Vite | ~5.0 | Build tool |
 | vite-plugin-pwa | ~0.20.0 | PWA manifest + Service Worker |
-| @zn-apps/shared | `*` (workspace) | Librería interna |
+| @zn-apps/ui-core | `*` (workspace) | Librería interna |
 | **Sin vue-router** | — | App de una sola pantalla |
 | **Sin Pinia** | — | Estado local con `ref()` |
 
@@ -56,6 +56,36 @@ zound-box/
 > **Nota:** No existe subcarpeta `views/` ni `router/` — toda la UI vive en `App.vue`.
 
 ---
+
+## Sistema de chunks de iconos
+
+`zound-box` usa `ZnIcon` en su interfaz. Al generar `npm run build`, el script
+`generate:icons` (definido en `package.json`) escanea los iconos de la app con
+`scan:icons` y escribe un chunk de iconos filtrado en `zound-box/dist/`:
+
+```
+zound-box/dist/
+├── zn-icon-core-filtered.svg   ← chunk shared de ui-core (en la app)
+├── zn-icon-core-filled.svg
+├── zn-icon-core-outlined.svg
+├── zn-icon-core-round.svg
+├── zn-icon-core-sharp.svg
+├── zn-icon-core-two-tone.svg
+├── zn-icon-zound-box-filtered.svg
+├── zn-icon-zound-box-filled.svg
+├── zn-icon-zound-box-outlined.svg
+└── ...
+```
+
+El chunk `ui-core` (shared) se genera en `shared/ui-core/dist/` y el chunk de
+`zound-box` se genera en `zound-box/dist/`. Cada app carga su propio chunk y el
+del `ui-core`, por lo que el consumo total de iconos es mínimo.
+
+Ver también: [`docs/01-shared.md` (**Sistema de chunks de iconos**)](/zn-apps/shared/ui-core/README.md) para el flujo completo.
+
+---
+
+
 
 ## Configuración PWA (vite.config.js)
 
@@ -120,15 +150,15 @@ const switchC = ref(false)      // Estado de switch de ejemplo C
 ### Imports
 
 ```js
-import '@zn-apps/shared/dist/shared.css'
-import { ZnApp, ZnScreen, ZnSection, ZnCard, ZnButton, ZnBox, ZnSwitch } from '@zn-apps/shared'
+import '@zn-apps/ui-core/dist/ui-core.css'
+import { ZnApp, ZnScreen, ZnSection, ZnCard, ZnButton, ZnBox, ZnSwitch } from '@zn-apps/ui-core'
 ```
 
 ---
 
 ## Funcionalidad Actual
 
-> **Importante para IA:** El estado actual de `zound-box` es un **showroom / demostración** de los componentes de `@zn-apps/shared`. Actualmente NO tiene funcionalidad real de audio/música más allá de los íconos y el nombre.
+> **Importante para IA:** El estado actual de `zound-box` es un **showroom / demostración** de los componentes de `@zn-apps/ui-core`. Actualmente NO tiene funcionalidad real de audio/música más allá de los íconos y el nombre.
 
 El contenido es prácticamente idéntico al `App.vue` del kitchensink, con ligeras variaciones en el texto de las secciones. Esto es temporal: la app debe evolucionar hacia su funcionalidad real de "caja de sonidos".
 
@@ -139,7 +169,7 @@ El contenido es prácticamente idéntico al `App.vue` del kitchensink, con liger
 Al desarrollar en `zound-box`:
 
 1. **No crear router:** si se necesitan múltiples vistas, crear componentes de vista e intercambiarlos con `v-if/v-show`, o añadir `vue-router` si la complejidad lo justifica.
-2. **Usar componentes de `@zn-apps/shared`:** NO crear estilos propios para patrones ya cubiertos (botones, cards, switches, layouts).
+2. **Usar componentes de `@zn-apps/ui-core`:** NO crear estilos propios para patrones ya cubiertos (botones, cards, switches, layouts).
 3. **Estado local:** usar `ref()` y `reactive()` de Vue. Si el estado se complejiza, añadir una store Pinia **local a la app** (no compartida).
 4. **No acoplar a otras apps:** zound-box es independiente. No importar de `kitchensink/` u otras apps.
 5. **PWA:** la app debe funcionar offline. Usar `useOnlineStatus()` de shared si es necesario mostrar estado de conexión.

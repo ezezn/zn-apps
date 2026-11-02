@@ -1,4 +1,4 @@
-// shared/src/index.js
+// shared/ui-core/src/index.js
 
 // Importación del CSS Global (Reset + Fuentes). 
 
@@ -19,6 +19,17 @@ export { default as ZnCard } from './components/ZnCard.vue'
 export { default as ZnBox } from './components/ZnBox.vue'
 export { default as ZnSwitch } from './components/ZnSwitch.vue'
 export { default as ZnNavigationLayout } from './components/ZnNavigationLayout.vue'
+
+// Iconos Material Design (sprites SVG)
+export { default as ZnIcon } from './components/ZnIcon.vue'
+export {
+  ICON_FAMILIES,
+  DEFAULT_ICON_FAMILY,
+  loadIconFamily,
+  iconExists,
+  iconNames,
+  iconSymbolId
+} from './icons/index.js'
 
 // Componentes Atómicos e Utilidades previos
 export { default as CustomButton } from './components/CustomButton.vue'

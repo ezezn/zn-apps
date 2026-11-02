@@ -253,8 +253,8 @@
 
 <script setup>
 import { ref } from 'vue'
-import '@zn-apps/shared/dist/shared.css'
-import { ZnApp, ZnScreen, ZnSection, ZnCard, ZnButton, ZnBox, ZnSwitch } from '@zn-apps/shared'
+import '../../shared/ui-core/src/assets/css/global.css'
+import { ZnApp, ZnScreen, ZnSection, ZnCard, ZnButton, ZnBox, ZnSwitch } from '@zn-apps/ui-core'
 
 // Estados reactivos
 const isDarkMode = ref(false)

@@ -1,6 +1,6 @@
 # Testing — Estrategia y Guía de Tests Unitarios
 
-> Contexto de IA para testing en el monorepo. Actualizado: 2026-10-28.
+> Contexto de IA para testing en el monorepo. Actualizado: 2026-11-02.
 
 ## Resumen del Stack de Testing
 
@@ -23,17 +23,22 @@ zn-apps/
 ├── vitest.setup.js           # Mocks globales (matchMedia, IntersectionObserver)
 │
 ├── shared/
-│   ├── vitest.config.js      # Configuración del paquete shared
-│   └── src/
-│       ├── components/__tests__/
-│       │   ├── ZnButton.spec.js
-│       │   ├── ZnSwitch.spec.js
-│       │   ├── ZnApp.spec.js
-│       │   └── ZnCard.spec.js
-│       ├── composables/__tests__/
-│       │   └── useOnlineStatus.spec.js
-│       └── utils/__tests__/
-│           └── helpers.spec.js
+│   ├── ui-core/
+│   │   ├── vitest.config.js  # Proyecto "ui-core"
+│   │   └── src/
+│   │       ├── components/__tests__/
+│   │       │   ├── ZnButton.spec.js
+│   │       │   ├── ZnSwitch.spec.js
+│   │       │   ├── ZnApp.spec.js
+│   │       │   └── ZnCard.spec.js
+│   │       ├── composables/__tests__/
+│   │       │   └── useOnlineStatus.spec.js
+│   │       └── utils/__tests__/
+│   │           └── helpers.spec.js
+│   └── storage/
+│       ├── vitest.config.js  # Proyecto "storage"
+│       └── src/__tests__/
+│           └── storage.spec.js
 │
 ├── zound-box/
 │   ├── vitest.config.js      # Configuración de Zound Box (con alias a shared src)
@@ -46,8 +51,8 @@ zn-apps/
         └── router.spec.js
 ```
 
-### Resolución de dependencias (`@zn-apps/shared`)
-En las configuraciones de `zound-box` y `kitchensink`, los tests resuelven `@zn-apps/shared` directamente a `../shared/src/index.js` y `@zn-apps/shared/dist/shared.css` a `../shared/src/assets/css/global.css`. Esto garantiza que los tests se puedan ejecutar de inmediato **sin necesidad de compilar previamente** la librería `shared`.
+### Resolución de dependencias (`@zn-apps/ui-core`)
+En las configuraciones de `zound-box` y `kitchensink`, los tests resuelven `@zn-apps/ui-core` directamente a `../shared/ui-core/src/index.js` y `@zn-apps/ui-core/dist/ui-core.css` a `../shared/ui-core/src/assets/css/global.css`. Esto garantiza que los tests se puedan ejecutar de inmediato **sin necesidad de compilar previamente** `ui-core`. `@zn-apps/storage` no requiere alias porque su código no depende de Vue ni de assets.
 
 ---
 
@@ -60,7 +65,7 @@ Desde la raíz del monorepo:
 | `npm test` | Inicia Vitest en modo observador interactivo (watch) |
 | `npm run test:run` | Ejecuta todos los tests una sola vez (modo CI) |
 | `npm run test:coverage` | Genera reporte de cobertura global con motor V8 |
-| `npm run test:shared` | Ejecuta únicamente los tests del paquete `shared` |
+| `npm run test:shared` | Ejecuta los tests de `ui-core` y `storage` |
 | `npm run test:zound-box` | Ejecuta únicamente los tests de `zound-box` |
 | `npm run test:kitchensink` | Ejecuta únicamente los tests de `kitchensink` |
 
@@ -98,4 +103,4 @@ Si algún test falla, el pipeline se detiene evitando desplegar código roto a G
 
 1. Crear archivo `[Nombre].spec.js` dentro de una subcarpeta `__tests__/`.
 2. Usar `mount` de `@vue/test-utils` y `describe, it, expect` de `vitest`.
-3. Para componentes que consumen `@zn-apps/shared`, no se requiere configuración extra; los alias del proyecto los resuelven automáticamente.
+3. Para componentes que consumen `@zn-apps/ui-core`, no se requiere configuración extra; los alias del proyecto los resuelven automáticamente.

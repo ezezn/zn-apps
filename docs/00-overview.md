@@ -37,17 +37,20 @@ zn-apps/
 ├── sw.js                     # Service Worker global para la landing
 ├── package.json              # Root: workspaces + script build:all
 │
-├── shared/                   # 📦 Librería de componentes Vue compartidos
-│   └── src/
-│       ├── index.js          # Entry point: exports públicos
-│       ├── components/       # Componentes Zn* (MD3)
-│       ├── composables/      # useOnlineStatus
-│       ├── utils/            # helpers.js (formatDate)
-│       └── assets/css/       # global.css + tokens CSS de MD3
+├── shared/                   # 📦 Contenedor de librerías compartidas aisladas
+│   ├── ui-core/              # @zn-apps/ui-core — componentes Vue/MD3, composables, utils
+│   │   └── src/
+│   │       ├── index.js      # Entry point: exports públicos
+│   │       ├── components/   # Componentes Zn* (MD3)
+│   │       ├── composables/  # useOnlineStatus
+│   │       ├── utils/        # helpers.js (formatDate)
+│   │       └── assets/css/   # global.css + tokens CSS de MD3
+│   └── storage/              # @zn-apps/storage — persistencia Web Storage
+│       └── src/index.js      # createStorage()
 │
 ├── zound-box/                # 🎵 App 1 — Primera app productiva (branch actual)
 ├── kitchensink/              # 🧬 App catálogo/showroom de componentes shared
-├── pwa-app2/                 # 🗂️  Template legacy (sin @zn-apps/shared todavía)
+├── pwa-app2/                 # 🗂️  Template legacy (sin @zn-apps/ui-core todavía)
 └── pwa-app1/                 # 🗂️  Template legacy (vacío/básico)
 ```
 
@@ -63,11 +66,13 @@ Cada app (`zound-box`, `kitchensink`, etc.) es una SPA **completamente independi
 - **No comparten estado entre sí** (no hay store Pinia cross-app).
 - Se despliegan en subcarpetas separadas: `/zn-apps/zound-box/`, `/zn-apps/kitchensink/`.
 
-### 2. Librería compartida (`@zn-apps/shared`)
-- Es una **librería de componentes** compilada como ES module (`vite build --lib`).
-- Las apps la consumen mediante el workspace de npm: `"@zn-apps/shared": "*"`.
-- Exporta **componentes Vue**, **composables** y **utilidades JS**.
-- Cada app importa `@zn-apps/shared/dist/shared.css` para los estilos globales.
+### 2. Librerías compartidas (`@zn-apps/ui-core`, `@zn-apps/storage`)
+- `shared/` agrupa **librerías aisladas**, cada una compilada como ES module (`vite build --lib`) con su propio `package.json`, `vite.config.js` y `vitest.config.js`.
+- `@zn-apps/ui-core` exporta **componentes Vue**, **composables**, **utilidades JS** y el CSS global.
+- `@zn-apps/storage` exporta utilidades de **persistencia** (`createStorage`) sin dependencia de Vue.
+- Las apps las consumen mediante npm workspaces: `"@zn-apps/ui-core": "*"` / `"@zn-apps/storage": "*"`.
+- Cada app importa `@zn-apps/ui-core/dist/ui-core.css` para los estilos globales.
+- Las librerías compartidas **no se importan entre sí**; solo las apps las componen.
 
 ### 3. Design System — Material Design 3
 - Todos los tokens de color y espaciado se definen como **variables CSS** (`--md-*`).
@@ -98,13 +103,13 @@ Cada app (`zound-box`, `kitchensink`, etc.) es una SPA **completamente independi
 1. `push` a `main` dispara el workflow.
 2. `npm install` en la raíz (resuelve todos los workspaces).
 3. `npm run test:run` (ejecuta todos los tests unitarios con Vitest y detiene el build si hay fallos).
-4. `npm run build:all` → compila `shared` primero, luego cada app, y copia los `dist/` a `dist/` raíz.
+4. `npm run build:all` → compila `ui-core` y `storage` primero, luego cada app, y copia los `dist/` a `dist/` raíz.
 5. Se inyectan archivos `404.html` (copia de `index.html`) para fallback en SPA.
 6. Se publica el directorio `dist/` en GitHub Pages.
 
 **Orden de build:**
 ```
-shared → zound-box → pwa-app2 → kitchensink
+@zn-apps/ui-core → @zn-apps/storage → zound-box → pwa-app2 → kitchensink
 ```
 
 ---
@@ -117,7 +122,7 @@ Para instrucciones paso a paso pensadas para desarrolladores humanos (instalaci�
 Comandos rápidos para desarrolladores:
 - Levantar app específica: `npm run dev --workspace=<app>` (ej. `npm run dev --workspace=zound-box`)
 - Correr tests: `npm test` (watch) o `npm run test:run` (CI)
-- Recompilar shared en vivo: `npm run dev --workspace=shared`
+- Recompilar librerías en vivo: `npm run dev --workspace=@zn-apps/ui-core` o `npm run dev --workspace=@zn-apps/storage`
 
 ---
 
@@ -137,14 +142,14 @@ Comandos rápidos para desarrolladores:
 - **Componentes:** prefijo `Zn` + PascalCase → `ZnButton`, `ZnCard`, `ZnScreen`.
 - **Variables CSS:** prefijo `--md-` siguiendo tokens de Material Design 3.
 - **Clases CSS de utilidad:** prefijo `zn-` → `zn-span-2`, `zn-theme-dark`.
-- **Paquete shared:** scope `@zn-apps/shared`.
+- **Paquetes shared:** scope `@zn-apps/<librería>` → `@zn-apps/ui-core`, `@zn-apps/storage`.
 - **Composables:** prefijo `use` → `useOnlineStatus`.
 
 ---
 
 ## Documentos Relacionados
 
-- [`01-shared.md`](./01-shared.md) — Librería compartida de componentes
+- [`01-shared.md`](./01-shared.md) — Librerías compartidas (`ui-core` y `storage`)
 - [`02-app-zound-box.md`](./02-app-zound-box.md) — App Zound Box
 - [`03-app-kitchensink.md`](./03-app-kitchensink.md) — App Kitchensink (catálogo)
 - [`04-legacy-templates.md`](./04-legacy-templates.md) — Templates legacy (pwa-app1/2)

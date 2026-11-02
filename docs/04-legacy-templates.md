@@ -4,7 +4,7 @@
 
 ## Propósito de este Documento
 
-`pwa-app1` y `pwa-app2` son las subcarpetas **legacy** que sirvieron de base inicial para el monorepo. Son plantillas boilerplate generadas por Vite + Vue que NO usan `@zn-apps/shared` ni tienen funcionalidad real de negocio.
+`pwa-app1` y `pwa-app2` son las subcarpetas **legacy** que sirvieron de base inicial para el monorepo. Son plantillas boilerplate generadas por Vite + Vue que NO usan `@zn-apps/ui-core` ni tienen funcionalidad real de negocio.
 
 **Su rol futuro es desaparecer.** `kitchensink` reemplazará su función como plantilla.
 
@@ -30,13 +30,13 @@
 ## pwa-app2
 
 ### Descripción
-Boilerplate puro de Vite + Vue 3. No usa ningún componente de `@zn-apps/shared`. Muestra la pantalla de bienvenida estándar de Vite.
+Boilerplate puro de Vite + Vue 3. No usa ningún componente de `@zn-apps/ui-core`. Muestra la pantalla de bienvenida estándar de Vite.
 
 ### Stack
 - Vue 3 ~3.5.34
 - Vite ~5.0
 - vite-plugin-pwa ~0.20.0
-- **Sin** `@zn-apps/shared`
+- **Sin** `@zn-apps/ui-core`
 - **Sin** vue-router
 - **Sin** Pinia
 
@@ -89,4 +89,4 @@ flowchart LR
 
 ## Nota para IA
 
-> Si recibes una tarea relacionada con `pwa-app1` o `pwa-app2`, ten en cuenta que **no representan el estado objetivo** del proyecto. Úsalos solo como referencia de lo que NO debe ser una app productiva en este monorepo. Toda app nueva debe seguir el patrón de `kitchensink` y usar `@zn-apps/shared`.
+> Si recibes una tarea relacionada con `pwa-app1` o `pwa-app2`, ten en cuenta que **no representan el estado objetivo** del proyecto. Úsalos solo como referencia de lo que NO debe ser una app productiva en este monorepo. Toda app nueva debe seguir el patrón de `kitchensink` y usar `@zn-apps/ui-core`.

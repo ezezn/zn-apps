@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue' 
+import vue from '@vitejs/plugin-vue'
 import { resolve } from 'path'
 
 export default defineConfig({
@@ -7,8 +7,8 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.js'),
-      name: 'ZnAppsShared',
-      fileName: 'shared',
+      name: 'ZnAppsUiCore',
+      fileName: 'ui-core',
       formats: ['es']
     },
     rollupOptions: {

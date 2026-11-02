@@ -1,10 +1,19 @@
-# @zn-apps/shared — Librería de Componentes Compartidos
+# @zn-apps/ui-core — Librería de Componentes Compartidos
 
-> Contexto de IA para el paquete `shared/`. Actualizado: 2026-10-28.
+> Contexto de IA para las librerías compartidas del monorepo. Actualizado: 2026-11-02.
 
 ## Propósito
 
-`@zn-apps/shared` es la **librería de componentes Vue 3 interna** del monorepo. Provee:
+`shared/` es un **contenedor de librerías aisladas**, cada una con su propio `package.json`, build y tests. Actualmente contiene:
+
+| Librería | Paquete | Contenido |
+|---|---|---|
+| `shared/ui-core/` | `@zn-apps/ui-core` | Componentes Vue 3 UI (MD3), composables, utilidades JS y estilos globales. |
+| `shared/storage/` | `@zn-apps/storage` | Utilidades de persistencia sobre Web Storage, sin dependencia de Vue. |
+
+Las librerías **no se importan entre sí**. Las apps consumen cada una por separado mediante npm workspaces.
+
+`@zn-apps/ui-core` provee:
 - Componentes de infraestructura UI (layout, pantallas, secciones).
 - Componentes atómicos MD3 (botones, tarjetas, switches).
 - Composables reutilizables.
@@ -17,46 +26,143 @@
 
 ```
 shared/
-├── package.json       # name: "@zn-apps/shared", peerDep: vue ^3
-├── vite.config.js     # Build mode: library, format ES, output: dist/shared.js
-└── src/
-    ├── index.js       # Punto de entrada — todos los exports públicos
-    ├── assets/
-    │   └── css/
-    │       └── global.css     # Reset CSS + tokens MD3 (modo claro y oscuro)
-    ├── components/
-    │   ├── ZnApp.vue
-    │   ├── ZnScreen.vue
-    │   ├── ZnNavigationLayout.vue
-    │   ├── ZnSection.vue
-    │   ├── ZnRow.vue
-    │   ├── ZnBox.vue
-    │   ├── ZnButton.vue
-    │   ├── ZnCard.vue
-    │   ├── ZnSwitch.vue
-    │   └── CustomButton.vue   # Legacy, a reemplazar por ZnButton
-    ├── composables/
-    │   └── useOnlineStatus.js
-    └── utils/
-        └── helpers.js
+├── README.md
+├── ui-core/
+│   ├── package.json       # name: "@zn-apps/ui-core", peerDep: vue ^3
+│   ├── vite.config.js     # Build mode: library, format ES, output: dist/ui-core.js
+│   ├── vitest.config.js   # Proyecto Vitest "ui-core"
+│   ├── scripts/
+│   │   └── generate-icons.mjs     # Genera los sprites desde @material-design-icons/svg
+│   └── src/
+│       ├── index.js       # Punto de entrada — todos los exports públicos
+│       ├── icons/         # Sprites SVG generados + loader de iconos
+│       │   ├── sprite-*.svg       # 5 familias × 2122 iconos (generados)
+│       │   ├── names-*.js         # Lista de nombres por familia (generados)
+│       │   └── index.js           # loadIconFamily / iconExists / iconNames
+│       ├── assets/
+│       │   └── css/
+│       │       └── global.css     # Reset CSS + tokens MD3 (modo claro y oscuro)
+│       ├── components/
+│       │   ├── ZnApp.vue
+│       │   ├── ZnScreen.vue
+│       │   ├── ZnNavigationLayout.vue
+│       │   ├── ZnSection.vue
+│       │   ├── ZnRow.vue
+│       │   ├── ZnBox.vue
+│       │   ├── ZnButton.vue
+│       │   ├── ZnCard.vue
+│       │   ├── ZnSwitch.vue
+│       │   ├── ZnIcon.vue
+│       │   └── CustomButton.vue   # Legacy, a reemplazar por ZnButton
+│       ├── composables/
+│       │   └── useOnlineStatus.js
+│       └── utils/
+│           └── helpers.js
+└── storage/
+    ├── package.json       # name: "@zn-apps/storage"
+    ├── vite.config.js     # Build mode: library, format ES, output: dist/storage.js
+    ├── vitest.config.js   # Proyecto Vitest "storage"
+    └── src/
+        ├── index.js
+        └── __tests__/storage.spec.js
 ```
 
-**Build:** `vite build --lib` genera `dist/shared.js` (ES module) y `dist/shared.css`.
+  **Iconos:** los sprites se generan con `npm run generate:icons --workspace=@zn-apps/ui-core` a partir de `@material-design-icons/svg` y se versionan en `src/icons/`. Solo hace falta regenerarlos al actualizar esa dependencia.
+  **Escaneo:** los iconos usados se detectan automáticamente con `npm run scan:icons --workspace=@zn-apps/ui-core` (o `node scripts/scan-icons.mjs` en cada proyecto). Escanea todas las etiquetas <ZnIcon name="..."/> y escribe un icon-profile.json con dos arrays: scanned (iconos descubiertos) y manual (iconos añadidos por el desarrollador).
+  **Chunk de sprite:** cada proyecto genera su propio sprite chunk y lo publica en dist/.
 
----
+## Sistema de_chunks de iconos (Sprite Chunk)
+
+Cada proyecto (librería `ui-core` o app) genera un chunk de iconos propio, filtrado
+a los nombres que ese proyecto realmente usa. El chunk está compuesto por un
+`sprite.svg` (con todos los símbolos de una familia) y un `names-*.js` (lista de
+nombres escaneados). Los chunks se escriben en la carpeta `dist/` del proyecto.
+
+El esquema de chunks es:
+
+| Proyecto | Chunk | Qué contiene |
+|---|---|---|
+| `@zn-apps/ui-core` | `ui-core` (shared) | Los iconos que usan varias apps comunes (home, settings, play_arrow, ...) — usado por todos los consumidores de `ui-core` |
+| `kitchensink` | `kitchensink` | Los iconos que usa su showroom (ButtonsPage, CardsPage, SwitchesPage, IconsPage, ...) |
+| `zound-box` | `zound-box` | Los iconos que usa su interfaz de reproducción |
+| `pwa-app2` | `pwa-app2` | Los iconos que usa su pantalla de bienvenida |
+
+Cada app importa `@zn-apps/ui-core/dist/ui-core.css` y carga los chunks de
+iconos del `ui-core` **y** del propio proyecto, por lo que el bundle total
+solo descarga los iconos que realmente necesita.
+
+## Escaneo de iconos (scan:icons)
+
+Se ejecuta `npm run scan:icons` en cada proyecto. El script:
+
+1. Recorre todos los archivos `.js`, `.vue`, `.ts`, `.jsx`, `.tsx` (salvo `scripts/`, `node_modules/`, `dist/`, `coverage/`, `.git/`).
+2. Busca etiquetas `<ZnIcon name="..." .../>`.
+3. Extrae el valor del atributo `name`.
+4. Escribe `icon-profile.json` con dos arrays:
+
+```json
+{
+  "scanned": [ "home", "play_arrow", "settings", ... ],
+  "manual":  [ "favorite", ... ]   // añadidos por el desarrollador
+}
+```
+
+- `scanned`: iconos descubiertos por el escáner.
+- `manual`: iconos añadidos por el desarrollador (no se sobrescriben ni se
+  eliminan en ejecuciones posteriores).
+
+El escáner descarta falsos positivos: `:name` / `$name` (v-bind), variables
+JavaScript, textos de `<pre>`, nombres no válidos (snake_case) y palabras
+reservadas.
+
+## Cómo generar los chunks (generate:icons)
+
+`npm run generate:icons` genera los chunks para todos los proyectos:
+
+```bash
+npm run generate:icons
+```
+
+Soporta perfiles:
+
+```bash
+node shared/ui-core/scripts/generate-icons.mjs --profile shared        # chunk shared de ui-core
+node shared/ui-core/scripts/generate-icons.mjs --profile app:zound-box # chunk de zound-box
+node shared/ui-core/scripts/generate-icons.mjs --profile app:kitchensink
+node shared/ui-core/scripts/generate-icons.mjs --profile app:pwa-app2
+```
+
+El generador lee los iconos alfanuméricos de
+`@material-design-icons/svg` (dependencia de desarrollo de `ui-core`) y escribe
+en `dist/`: `sprite-filled.svg`, `names-filled.js`, etc.
+
+## Integración Continua (GitHub Actions)
+
+El workflow `deploy.yml` entra en acción tras todos los tests y antes del
+despliegue. El flujo es:
+
+```text
+npm install
+npm run test:run
+npm run build:all          # → build:icons (scan + generate para todos los proyectos)
+```
+
+`build:all` ejecuta `scan:icons` y `generate:icons` en cada proyecto antes de
+su build propio, de modo que los chunks de iconos estén disponibles en `dist/`
+antes de ser publicados en GitHub Pages.
 
 ## Cómo Usar en una App
 
 ```js
 // 1. Importar estilos (en main.js o App.vue)
-import '@zn-apps/shared/dist/shared.css'
+import '@zn-apps/ui-core/dist/ui-core.css'
 
 // 2. Importar componentes
-import { ZnApp, ZnScreen, ZnButton, ZnCard, ZnSwitch } from '@zn-apps/shared'
+import { ZnApp, ZnScreen, ZnButton, ZnCard, ZnSwitch } from '@zn-apps/ui-core'
 
 // 3. Importar composables y utilidades
-import { useOnlineStatus } from '@zn-apps/shared'
-import { formatDate } from '@zn-apps/shared'
+import { useOnlineStatus } from '@zn-apps/ui-core'
+import { formatDate } from '@zn-apps/ui-core'
 ```
 
 ---
@@ -365,6 +471,45 @@ Se usan como clases en elementos hijos de `ZnSection` cuando esta tiene prop `co
 
 ---
 
+### `ZnIcon`
+**Propósito:** Icono Material Design renderizado mediante **sprites SVG** (`<symbol>` + `<use>`). El sprite de la familia se descarga e inyecta una sola vez en el documento (oculto en `#zn-icon-sprite-host`), así que cientos de iconos comparten un único recurso.
+
+**Props:**
+| Prop | Tipo | Default | Descripción |
+|---|---|---|---|
+| `name` | `String` | — (requerido) | Nombre del icono en snake_case (`'home'`, `'play_arrow'`, `'dark_mode'`) |
+| `family` | `String` | `'filled'` | `'filled'` \| `'outlined'` \| `'round'` \| `'sharp'` \| `'two-tone'` |
+| `size` | `Number\|String` | `24` | Número → px; string → cualquier unidad CSS (`'1.5rem'`, `'2em'`) |
+| `label` | `String` | `''` | Etiqueta accesible. Sin ella el icono es decorativo (`aria-hidden`, sin `role`) |
+
+**Color:** los trazos usan `fill: currentColor`, por lo que heredan el color del contenedor (botones, variantes MD3, estados `:disabled`).
+
+**Carga diferida:** cada familia es un chunk independiente (~700 KB de markup, ~150 KB gzip) que solo se descarga cuando aparece el primer icono de esa familia. En desarrollo, un `name` inexistente emite un `console.warn`.
+
+**API auxiliar** (exportada por el paquete):
+| Función | Descripción |
+|---|---|
+| `loadIconFamily(family)` | Carga e inyecta el sprite; resuelve con un `Set` de nombres disponibles |
+| `iconExists(family, name)` | `Promise<Boolean>` — indica si el icono existe |
+| `iconNames(family)` | `Promise<string[]>` — nombres ordenados de la familia (útil para galerías y buscadores) |
+| `iconSymbolId(family, name)` | Id del `<symbol>`, ej. `zn-icon-filled-home` |
+| `ICON_FAMILIES` | `['filled', 'outlined', 'round', 'sharp', 'two-tone']` |
+
+**Uso:**
+```vue
+<ZnIcon name="home" />
+<ZnIcon name="dark_mode" family="outlined" :size="32" />
+<ZnIcon name="play_arrow" label="Reproducir" />
+
+<!-- Dentro de un botón hereda el color de la variante -->
+<ZnButton variant="filled">
+  <template #icon><ZnIcon name="play_arrow" /></template>
+  Reproducir
+</ZnButton>
+```
+
+---
+
 ### `CustomButton` _(Legacy)_
 - **Estado:** Legacy. Estilos propios no MD3 (verde `#42b883`). A reemplazar por `ZnButton`.
 - **Props:** `label: String` (default: `'Botón Compartido'`).
@@ -386,7 +531,7 @@ Detecta si el navegador tiene conexión a internet en tiempo real.
 
 **Uso:**
 ```js
-import { useOnlineStatus } from '@zn-apps/shared'
+import { useOnlineStatus } from '@zn-apps/ui-core'
 
 const { isOnline } = useOnlineStatus()
 // En template: v-if="isOnline"
@@ -406,18 +551,58 @@ Formatea una fecha en español.
 **Retorna:** `string` — ej: `"28 de octubre de 2026"`. Retorna `''` si `date` es falsy.
 
 ```js
-import { formatDate } from '@zn-apps/shared'
+import { formatDate } from '@zn-apps/ui-core'
 formatDate(new Date()) // → "28 de octubre de 2026"
 formatDate('2024-01-15') // → "15 de enero de 2024"
 ```
 
 ---
 
+---
+
+## `@zn-apps/storage`
+
+Librería de persistencia **independiente de Vue y del DOM**, pensada para compartir entre apps sin acoplarlas a Pinia ni a un framework.
+
+### `createStorage(options?)`
+Crea un almacén con claves serializadas en JSON y namespacing opcional.
+
+| Opción | Tipo | Default | Descripción |
+|---|---|---|---|
+| `namespace` | `String` | `'zn-apps'` | Prefijo aplicado a cada clave. Con `''` se desactiva. |
+| `storage` | `Storage` | `localStorage` | Backend compatible con Web Storage (`getItem`, `setItem`, `removeItem`, `key`, `length`). |
+
+**Métodos:**
+| Método | Retorna | Descripción |
+|---|---|---|
+| `get(key, fallback?)` | `any` | Lee y deserializa. Devuelve el fallback si no existe (o el valor crudo si no es JSON válido). |
+| `set(key, value)` | `Boolean` | Serializa y guarda. `false` si no hay backend o falla la escritura. |
+| `remove(key)` | `Boolean` | Elimina una clave. |
+| `has(key)` | `Boolean` | Indica si la clave existe. |
+| `clear()` | `Boolean` | Elimina solo las claves del namespace. |
+
+**Uso:**
+```js
+import { createStorage } from '@zn-apps/storage'
+
+const storage = createStorage({ namespace: 'zound-box' })
+
+storage.set('prefs', { volume: 8, theme: 'dark' })
+storage.get('prefs', {})     // → { volume: 8, theme: 'dark' }
+storage.has('prefs')         // → true
+storage.remove('prefs')
+storage.clear()              // solo claves "zound-box:*"
+```
+
+---
+
 ## Dependencias del Paquete
 
-| Paquete | Tipo | Nota |
-|---|---|---|
-| `vue ^3` | peerDependency | Provista por la app consumidora |
-| `@fontsource/roboto` | dependency | Pesos 400 y 500 incluidos |
-| `@vitejs/plugin-vue ^5` | devDependency | Plugin para compilar SFCs |
-| `vite ^6` | devDependency | Build tool |
+| Librería | Paquete | Tipo | Nota |
+|---|---|---|---|
+| ui-core | `vue ^3` | peerDependency | Provista por la app consumidora |
+| ui-core | `@fontsource/roboto` | dependency | Pesos 400 y 500 incluidos |
+| ui-core | `@material-design-icons/svg` | devDependency | Solo para regenerar los sprites (`generate:icons`) |
+| ui-core | `@vitejs/plugin-vue ^5` | devDependency | Plugin para compilar SFCs |
+| ui-core | `vite ^6` | devDependency | Build tool |
+| storage | `vite ^6` | devDependency | Build tool |

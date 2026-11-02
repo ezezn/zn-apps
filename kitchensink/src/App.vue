@@ -1,16 +1,31 @@
 <template>
   <ZnApp :mode="isDarkMode ? 'dark' : 'light'">
-    
+
     <ZnNavigationLayout>
-      
+
       <template #aside-header>
         <span class="kitchensink-logo">🧬 ZnComponents Hub</span>
       </template>
 
       <template #aside>
+        <span class="nav-section-label">Componentes</span>
         <router-link to="/buttons" class="nav-item">Botones (ZnButton)</router-link>
         <router-link to="/cards" class="nav-item">Tarjetas (ZnCard)</router-link>
         <router-link to="/switches" class="nav-item">Selectores (ZnSwitch)</router-link>
+        <router-link to="/icons" class="nav-item">Iconos (ZnIcon)</router-link>
+
+        <span class="nav-section-label">Layout & Contenedores</span>
+        <router-link to="/layout" class="nav-item">Layout (ZnBox / ZnRow)</router-link>
+        <router-link to="/sections" class="nav-item">Secciones (ZnSection)</router-link>
+        <router-link to="/screen" class="nav-item">Pantallas (ZnScreen)</router-link>
+        <router-link to="/navigation-layout" class="nav-item">Navegación (ZnNavigationLayout)</router-link>
+
+        <span class="nav-section-label">Otros</span>
+        <router-link to="/legacy" class="nav-item">Legacy y utilidades</router-link>
+
+        <div class="nav-footer">
+          <ZnSwitch v-model="isDarkMode" labelRight="Modo oscuro" />
+        </div>
       </template>
 
       <router-view />
@@ -22,8 +37,8 @@
 
 <script setup>
 import { ref } from 'vue'
-import '@zn-apps/shared/dist/shared.css'
-import { ZnApp, ZnNavigationLayout } from '@zn-apps/shared'
+import '../../shared/ui-core/src/assets/css/global.css'
+import { ZnApp, ZnNavigationLayout, ZnSwitch } from '@zn-apps/ui-core'
 
 const isDarkMode = ref(false)
 </script>
@@ -35,6 +50,17 @@ const isDarkMode = ref(false)
   font-weight: 700;
   font-size: 1.1rem;
   color: var(--md-primary);
+}
+
+.nav-section-label {
+  display: block;
+  padding: 16px 16px 4px 16px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--md-outline);
 }
 
 .nav-item {
@@ -58,5 +84,11 @@ const isDarkMode = ref(false)
 .router-link-active {
   background-color: var(--md-primary);
   color: var(--md-on-primary) !important;
+}
+
+.nav-footer {
+  margin-top: auto;
+  padding: 16px;
+  border-top: 1px solid var(--md-surface-variant);
 }
 </style>

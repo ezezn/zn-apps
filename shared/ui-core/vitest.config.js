@@ -5,10 +5,10 @@ import { resolve } from 'path'
 export default defineConfig({
   plugins: [vue()],
   test: {
-    name: 'shared',
+    name: 'ui-core',
     environment: 'happy-dom',
     globals: true,
-    setupFiles: [resolve(__dirname, '../vitest.setup.js')],
-    include: ['src/**/*.{test,spec}.js'],
-  },
+    setupFiles: [resolve(__dirname, '../../vitest.setup.js')],
+    include: ['src/**/*.{test,spec}.js']
+  }
 })

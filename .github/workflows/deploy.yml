@@ -34,15 +34,23 @@ jobs:
       - name: Ejecutar Tests Unitarios
         run: npm run test:run
         
-      # Paso 5: ¡AHORA SÍ SE HACE EL BUILD! (Vite ya existe en el servidor)
+      # Paso 5: Generar los chunks de iconos de TODOS los proyectos (scan + generate)
+      # Este paso escanea ZnIcon name= en cada app y escribe los sprites filtrados
+      # en su propio dist/ (shared + app:zound-box + app:kitchensink + app:pwa-app2).
+      - name: Generar chunks de iconos
+        run: npm run build:icons
+
+      # Paso 6: ¡AHORA SÍ SE HACE EL BUILD! (Vite ya existe en el servidor)
+      # El script build:all compila cada app, con chunks de iconos ya presentes.
       - name: Ejecutar Compilación Unificada
         run: npm run build:all
            
-      # Paso 5: Copiar los enrutamientos de error 404
+      # Paso 6: Copiar los enrutamientos de error 404
       - name: Inyectar Enrutamientos Fallback 404
         run: |
-          cp dist/pwa-app1/index.html dist/pwa-app1/404.html
+          cp dist/zound-box/index.html dist/zound-box/404.html
           cp dist/pwa-app2/index.html dist/pwa-app2/404.html
+          cp dist/kitchensink/index.html dist/kitchensink/404.html
           cp dist/index.html dist/404.html
              
       # Paso 6: Subir y publicar en GitHub Pages
