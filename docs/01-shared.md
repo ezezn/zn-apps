@@ -143,7 +143,9 @@ npm run build:all          # cada app ejecuta scan + generate en su prebuild
 
 Cada app ejecuta `icons` en `predev` y `prebuild`; `ui-core` lo hace en
 `postbuild`. Así el chunk está en `dist/icons/` antes de publicar en GitHub
-Pages.
+Pages. Si una app generó sprites, VitePWA los incluye en el precache de Workbox
+para que estén disponibles desde la primera carga offline; las apps sin sprites
+no añaden patrones de iconos al precache.
 
 ## Cómo Usar en una App
 

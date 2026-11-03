@@ -1,10 +1,14 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { VitePWA } from 'vite-plugin-pwa'
+import { existsSync, readdirSync } from 'fs'
 import { resolve } from 'path'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
 const __dirname = dirname(fileURLToPath(import.meta.url))
+const publicIconsDir = resolve(__dirname, 'public/icons')
+const hasIconSprites = existsSync(publicIconsDir)
+  && readdirSync(publicIconsDir).some((file) => /^sprite-[a-z-]+\.svg$/.test(file))
 
 export default defineConfig({
   base: '/zn-apps/kitchensink/',
@@ -29,6 +33,13 @@ export default defineConfig({
       registerType: 'autoUpdate',
       workbox: {
         mode: 'development',
+        // Los sprites solo existen si el perfil de iconos genera alguno.
+        // Incluirlos en el precache permite usar los iconos desde la primera
+        // visita sin conexión, además del caché bajo demanda.
+        globPatterns: [
+          '**/*.{js,css,html,ico,png,webmanifest}',
+          ...(hasIconSprites ? ['icons/sprite-*.svg'] : [])
+        ],
         // Los sprites de iconos se descargan bajo demanda: se cachean en la
         // primera visita para que la app siga funcionando offline.
         runtimeCaching: [
