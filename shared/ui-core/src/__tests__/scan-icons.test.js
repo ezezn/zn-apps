@@ -17,11 +17,11 @@ function parseAttribute(attributes, attributeName) {
 /** Helper: strip comments as in scan-icons.mjs */
 function stripComments(source) {
   // strip comments as in scan-icons.mjs
-  return source.replace(/<!--[\s\S]*?-->/g, '').replace(/\/\*[\s\S]*?\*/g, '')
+  return source.replace(/<!--[\s\S]*?-->/g, '').replace(/\/\*[\s\S]*?\*\//g, '')
 }
 
 /** Helper: ICON_TAG_RE regex used in scan-icons.mjs */
-const ICON_TAG_RE = /<ZnIcon\b([^>]*)>/g
+const ICON_TAG_RE = /<ZnIcon\b([^>]*?)(?:\s*\/)?\s*>/g
 
 describe('scan-icons: attribute parsing', () => {
   it('reads static name attribute correctly', () => {
@@ -156,7 +156,7 @@ describe('scan-icons: full extractIconUsage flow', () => {
     const families = new Set()
     const clean = stripComments(source)
     let match
-    const ICON_TAG_RE = /<ZnIcon\b([^>]*)>/g
+    const ICON_TAG_RE = /<ZnIcon\b([^>]*?)(?:\s*\/)?\s*>/g
     while ((match = ICON_TAG_RE.exec(clean)) !== null) {
       const attributes = match[1]
       const ATTRIBUTE_RE = /([^\s"'<>/=]+)\s*=\s*(?:"([^"]*)"|'([^']*)')/g
@@ -193,8 +193,8 @@ describe('scan-icons: full extractIconUsage flow', () => {
   it('scans static name and family from <ZnIcon> tags', () => {
     const source = '<ZnIcon name="home" family="filled" /><ZnIcon name="play_arrow" family="outlined" />'
     const { names, families } = extractIconUsage(source)
-    expect(names).toEqual(expect.arrayContaining(['home', 'play_arrow']))
-    expect(families).toEqual(expect.arrayContaining(['filled', 'outlined']))
+    expect([...names]).toEqual(expect.arrayContaining(['home', 'play_arrow']))
+    expect([...families]).toEqual(expect.arrayContaining(['filled', 'outlined']))
   })
 
   it('ignores dynamic bindings :name and v-bind:name', () => {
@@ -204,15 +204,15 @@ describe('scan-icons: full extractIconUsage flow', () => {
     expect(names).not.toContain('icon')
     expect(names).not.toContain('other')
     // But static family should still be picked up
-    expect(families).toEqual(expect.arrayContaining(['filled', 'outlined']))
+    expect([...families]).toEqual(expect.arrayContaining(['filled', 'outlined']))
   })
 
   it('ignores commented-out ZnIcon tags', () => {
-    const source = '<!-- <ZnIcon name="home" /> --><ZnIcon name="favorite" family="rounded" />'
+    const source = '<!-- <ZnIcon name="home" /> --><ZnIcon name="favorite" family="round" />'
     const { names, families } = extractIconUsage(source)
     expect(names).not.toContain('home')
     expect(names).toContain('favorite')
-    expect(families).toEqual(expect.arrayContaining(['rounded']))
+    expect([...families]).toEqual(expect.arrayContaining(['round']))
   })
 
   it('rejects invalid icon names (uppercase, special chars)', () => {

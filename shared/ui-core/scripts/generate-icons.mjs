@@ -10,7 +10,6 @@
  *   kitchensink       → kitchensink/public/icons/ (+ dist/icons)  (catálogo completo,
  *                       declarado en el array `manual` de su icon-profile.json)
  *   zound-box         → zound-box/public/icons/     (vacío si no usa iconos)
- *   pwa-app2          → pwa-app2/public/icons/      (vacío si no usa iconos)
  *
  * Las apps también incorporan los iconos que usan los componentes de ui-core:
  * el chunk de la app es la unión de su perfil y el de la librería.

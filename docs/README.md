@@ -10,7 +10,6 @@ Esta carpeta contiene documentación de contexto rápido en Markdown para que cu
 | [`01-shared.md`](./01-shared.md) | **Librerías compartidas**: `@zn-apps/ui-core` (componentes, composables, utilidades, tokens MD3) y `@zn-apps/storage` (persistencia) |
 | [`02-app-zound-box.md`](./02-app-zound-box.md) | **App Zound Box**: estructura, arquitectura de componentes, estado actual, lineamientos de desarrollo, tareas pendientes |
 | [`03-app-kitchensink.md`](./03-app-kitchensink.md) | **App Kitchensink**: catálogo de componentes + plantilla de referencia para nuevas apps |
-| [`04-legacy-templates.md`](./04-legacy-templates.md) | **Templates legacy** (pwa-app1/2): estado, plan de migración, qué ignorar |
 | [`05-testing.md`](./05-testing.md) | **Testing**: arquitectura de Vitest, scripts, mocks globales y buenas prácticas |
 | [`../README.md`](../README.md) | **Manual para Humanos**: instalación, ejecución local con dev server, builds y comandos |
 | [`../AGENTS.md`](../AGENTS.md) | **Instrucciones para Agentes**: directivas de contexto automático para IAs (Antigravity, Cursor, etc.) |
@@ -29,5 +28,3 @@ Esta carpeta contiene documentación de contexto rápido en Markdown para que cu
 **Para crear una nueva app:**
 → Leer `00-overview.md` + `03-app-kitchensink.md` (sección "Rol como Plantilla").
 
-**Para entender qué ignorar:**
-→ Leer `04-legacy-templates.md`.

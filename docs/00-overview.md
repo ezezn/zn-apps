@@ -50,11 +50,8 @@ zn-apps/
 │
 ├── zound-box/                # 🎵 App 1 — Primera app productiva (branch actual)
 ├── kitchensink/              # 🧬 App catálogo/showroom de componentes shared
-├── pwa-app2/                 # 🗂️  Template legacy (sin @zn-apps/ui-core todavía)
-└── pwa-app1/                 # 🗂️  Template legacy (vacío/básico)
+└── kitchensink/              # 🧬 App catálogo/showroom de componentes shared
 ```
-
-> **Nota:** `pwa-app1` y `pwa-app2` son subcarpetas legacy que sirvieron de plantilla inicial. En el futuro, `kitchensink` reemplazará ese rol. Estos folders se limpiarán en iteraciones futuras.
 
 ---
 
@@ -109,7 +106,7 @@ Cada app (`zound-box`, `kitchensink`, etc.) es una SPA **completamente independi
 
 **Orden de build:**
 ```
-@zn-apps/ui-core → @zn-apps/storage → zound-box → pwa-app2 → kitchensink
+@zn-apps/ui-core → @zn-apps/storage → zound-box → kitchensink
 ```
 
 ---
@@ -133,7 +130,6 @@ Comandos rápidos para desarrolladores:
 | Portal / Landing | `/zn-apps/` |
 | Zound Box | `/zn-apps/zound-box/` |
 | Kitchensink | `/zn-apps/kitchensink/` |
-| PWA App 2 (legacy) | `/zn-apps/pwa-app2/` |
 
 ---
 
@@ -152,5 +148,4 @@ Comandos rápidos para desarrolladores:
 - [`01-shared.md`](./01-shared.md) — Librerías compartidas (`ui-core` y `storage`)
 - [`02-app-zound-box.md`](./02-app-zound-box.md) — App Zound Box
 - [`03-app-kitchensink.md`](./03-app-kitchensink.md) — App Kitchensink (catálogo)
-- [`04-legacy-templates.md`](./04-legacy-templates.md) — Templates legacy (pwa-app1/2)
 - [`05-testing.md`](./05-testing.md) — Arquitectura y ejecución de tests unitarios con Vitest

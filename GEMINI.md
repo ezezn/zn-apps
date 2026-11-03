@@ -10,7 +10,6 @@ Al trabajar en este monorepo, **debes consultar primero los archivos de contexto
 - [`docs/01-shared.md`](./docs/01-shared.md) — API completa de `@zn-apps/ui-core` (props, slots, eventos, tokens MD3).
 - [`docs/02-app-zound-box.md`](./docs/02-app-zound-box.md) — Arquitectura de Zound Box y estado actual.
 - [`docs/03-app-kitchensink.md`](./docs/03-app-kitchensink.md) — Catálogo de componentes y plantilla para nuevas apps.
-- [`docs/04-legacy-templates.md`](./docs/04-legacy-templates.md) — Carpetas legacy (pwa-app1/2) a ignorar o limpiar.
 - [`docs/05-testing.md`](./docs/05-testing.md) — Estrategia de tests unitarios, mocks y comandos.
 - [`README.md`](./README.md) — Guía humana de ejecución local, build y estructura.
 

@@ -82,7 +82,6 @@ nombres declarados.
 | `@zn-apps/ui-core` | Solo los iconos que usan sus componentes | `shared/ui-core/dist/icons/` |
 | `kitchensink` | Sus iconos + el catálogo completo (declarado en `manual`) | `kitchensink/public/icons/` → `dist/icons/` |
 | `zound-box` | Sus iconos (hoy no usa `ZnIcon`) | `zound-box/public/icons/` → `dist/icons/` |
-| `pwa-app2` | Sus iconos (hoy no usa `ZnIcon`) | `pwa-app2/public/icons/` → `dist/icons/` |
 
 Los chunks de las apps incluyen además los nombres del perfil de `ui-core`, de
 modo que los iconos usados por componentes de la librería están disponibles sin
@@ -127,7 +126,6 @@ puede invocar un perfil concreto:
 node shared/ui-core/scripts/generate-icons.mjs --profile shared         # ui-core
 node shared/ui-core/scripts/generate-icons.mjs --profile app:zound-box
 node shared/ui-core/scripts/generate-icons.mjs --profile app:kitchensink
-node shared/ui-core/scripts/generate-icons.mjs --profile app:pwa-app2
 ```
 
 El generador lee los perfiles, filtra los nombres contra

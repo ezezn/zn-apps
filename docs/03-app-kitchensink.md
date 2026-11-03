@@ -99,4 +99,3 @@ The app is a standard Vite SPA. The production build outputs to `dist/`, and `vi
 
 ## 8. Legacy templates to ignore
 
-`pwa-app1` and `pwa-app2` are legacy templates scheduled for removal. New apps must not be created from them.

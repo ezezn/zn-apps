@@ -12,7 +12,6 @@ Before making modifications, generating components, or refactoring code in this 
 | **Component Library (@zn-apps/ui-core API)** | [`docs/01-shared.md`](./docs/01-shared.md) |
 | **Zound Box Application** | [`docs/02-app-zound-box.md`](./docs/02-app-zound-box.md) |
 | **Kitchensink (Blueprint for New Apps)** | [`docs/03-app-kitchensink.md`](./docs/03-app-kitchensink.md) |
-| **Legacy Templates to Ignore** | [`docs/04-legacy-templates.md`](./docs/04-legacy-templates.md) |
 | **Testing Guidelines & Mock Setup** | [`docs/05-testing.md`](./docs/05-testing.md) |
 | **General Developer Guide** | [`README.md`](./README.md) |
 
@@ -35,7 +34,7 @@ Before making modifications, generating components, or refactoring code in this 
    - Uses CSS custom properties prefixed with `--md-*` (e.g. `--md-primary`, `--md-surface`).
    - Root theme switching is handled exclusively by `ZnApp` (`mode="light | dark | system"`).
 4. **Templates & New Apps**:
-   - When creating a new application, use `kitchensink/` as the blueprint, **never** `pwa-app1` or `pwa-app2` (which are legacy templates scheduled for removal).
+   - When creating a new application, use `kitchensink/` as the blueprint.
 
 ---
 
@@ -62,7 +61,6 @@ proyecto la declare explícitamente en `manual`.
 | `@zn-apps/ui-core` | `shared` | `shared/ui-core/dist/icons/` | Solo los iconos usados por sus componentes |
 | `zound-box` | `app:zound-box` | `zound-box/public/icons/` → `dist/icons/` | Sus iconos (hoy ninguno) |
 | `kitchensink` | `app:kitchensink` | `kitchensink/public/icons/` → `dist/icons/` | Sus iconos + el catálogo completo declarado en `manual` |
-| `pwa-app2` | `app:pwa-app2` | `pwa-app2/public/icons/` → `dist/icons/` | Sus iconos (hoy ninguno) |
 
 `ZnIcon` descarga el sprite de cada familia desde
 `<BASE_URL>icons/sprite-<familia>.svg` la primera vez que lo necesita y lo
@@ -92,8 +90,7 @@ La orden de `build:all` es:
 
 1. `build:shared` (ui-core + storage; `postbuild` genera el chunk de ui-core)
 2. `build:zound-box` (prebuild: scan + generate)
-3. `build:app2` (prebuild: scan + generate)
-4. `build:kitchensink` (prebuild: scan + generate)
+3. `build:kitchensink` (prebuild: scan + generate)
 
 Este orden asegura que cada chunk esté en `dist/icons/` antes de publicar en
 GitHub Pages.

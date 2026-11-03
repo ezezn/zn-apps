@@ -15,7 +15,6 @@ El monorepo aloja un ecosistema de aplicaciones autónomas y una librería compa
 | **@zn-apps/storage** | [`shared/storage/`](./shared/storage) | Utilidades de persistencia compartidas sobre Web Storage | Activo | N/A (librería ES) |
 | **Zound Box** | [`zound-box/`](./zound-box) | Primera aplicación interactiva del monorepo (reproductor / caja de sonidos) | Activo | `/zn-apps/zound-box/` |
 | **Dev Kitchensink** | [`kitchensink/`](./kitchensink) | Catálogo interactivo de componentes y **plantilla oficial** para nuevas apps | Activo | `/zn-apps/kitchensink/` |
-| **PWA App 2** | [`pwa-app2/`](./pwa-app2) | Template legacy inicial de Vite (en proceso de retiro futuro) | Legacy | `/zn-apps/pwa-app2/` |
 
 ---
 
@@ -119,7 +118,7 @@ npm run build:all
 1. Limpia y crea la carpeta `dist/`.
 2. Copia la landing page (`index.html`) y el Service Worker raíz (`sw.js`).
 3. Compila `@zn-apps/ui-core` y `@zn-apps/storage` en modo librería.
-4. Compila `zound-box`, `pwa-app2` y `kitchensink`.
+4. Compila `zound-box` y `kitchensink`.
 5. Mueve cada `dist/` a su subcarpeta correspondiente dentro de la raíz `dist/`.
 
 ### Compilación Individual por Proyecto
@@ -128,7 +127,6 @@ npm run build:all
 npm run build:shared       # Compila @zn-apps/ui-core y @zn-apps/storage
 npm run build:zound-box    # Compila Zound Box -> zound-box/dist/
 npm run build:kitchensink  # Compila Kitchensink -> kitchensink/dist/
-npm run build:app2         # Compila pwa-app2 -> pwa-app2/dist/
 ```
 
 ---
@@ -190,7 +188,6 @@ zn-apps/
 │   │   └── views/            # Vistas demostrativas
 │   └── vitest.config.js
 │
-└── pwa-app2/                 # 🗂️ Plantilla boilerplate legacy
 ```
 
 ---
@@ -203,7 +200,6 @@ Para más detalles sobre la arquitectura interna, componentes y convenciones, co
 - [**`docs/01-shared.md`**](./docs/01-shared.md): API completa de componentes, props, slots, eventos y tokens CSS.
 - [**`docs/02-app-zound-box.md`**](./docs/02-app-zound-box.md): Contexto y arquitectura de la aplicación Zound Box.
 - [**`docs/03-app-kitchensink.md`**](./docs/03-app-kitchensink.md): Guía de Kitchensink y checklist para crear nuevas apps.
-- [**`docs/04-legacy-templates.md`**](./docs/04-legacy-templates.md): Información sobre las plantillas legacy y su retiro.
 - [**`docs/05-testing.md`**](./docs/05-testing.md): Guía completa de testing unitario y mocks con Vitest.
 
 ---

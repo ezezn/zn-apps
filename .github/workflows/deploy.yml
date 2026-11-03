@@ -34,9 +34,8 @@ jobs:
       - name: Ejecutar Tests Unitarios
         run: npm run test:run
         
-      # Paso 5: Generar los chunks de iconos de TODOS los proyectos (scan + generate)
-      # Este paso escanea ZnIcon name= en cada app y escribe los sprites filtrados
-      # en su propio dist/ (shared + app:zound-box + app:kitchensink + app:pwa-app2).
+      # Paso 5: Generar los chunks de iconos de todos los proyectos (scan + generate)
+      # Este paso escanea ZnIcon name= en cada app y escribe los sprites filtrados.
       - name: Generar chunks de iconos
         run: npm run build:icons
 
@@ -49,7 +48,6 @@ jobs:
       - name: Inyectar Enrutamientos Fallback 404
         run: |
           cp dist/zound-box/index.html dist/zound-box/404.html
-          cp dist/pwa-app2/index.html dist/pwa-app2/404.html
           cp dist/kitchensink/index.html dist/kitchensink/404.html
           cp dist/index.html dist/404.html
              

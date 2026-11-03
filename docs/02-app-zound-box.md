@@ -37,7 +37,7 @@
 
 ```
 zound-box/
-├── index.html            # HTML root (título: "pwa-app1" — pendiente actualizar)
+├── index.html            # HTML root (título: "Zound Box")
 ├── package.json          # name: "zound-box"
 ├── vite.config.js        # base: '/zn-apps/zound-box/', VitePWA config
 ├── public/
@@ -173,6 +173,5 @@ Al desarrollar en `zound-box`:
 ## Tareas Pendientes Identificadas
 
 - [ ] Actualizar `short_name` del manifest PWA de `'App1'` a `'Zound Box'`.
-- [ ] Actualizar `<title>` del `index.html` (actualmente dice `'pwa-app1'`).
 - [ ] Implementar funcionalidad real de audio (reproducción, gestión de sonidos).
 - [ ] Separar el showroom de componentes de la lógica real de la app.
