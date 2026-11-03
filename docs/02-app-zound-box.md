@@ -4,7 +4,7 @@
 
 ## Descripción
 
-**Zound Box** es la **primera aplicación productiva** del monorepo. Es una PWA de una sola pantalla orientada a mostrar/reproducir contenido de audio. Su nombre y el ícono de nota musical sugieren una app de gestión o reproducción de sonidos/música.
+**Zound Box** es la **primera aplicación productiva** del monorepo. Es una PWA de una sola pantalla para combinar un sonido en primer plano con varios sonidos ambientales de fondo. La interfaz actual presenta interruptores para ambas capas; la reproducción de audio se implementará después.
 
 **Estado:** Primera app en producción real. Branch principal activo.
 
@@ -59,17 +59,18 @@ zound-box/
 
 ## Sistema de chunks de iconos
 
-Hoy `zound-box` **no usa `ZnIcon`**: su interfaz no renderiza iconos Material.
-Por eso su `icon-profile.json` queda vacío (`scanned: []`, `manual: []`) y
-`generate:icons` no escribe ningún sprite; los scripts `icons` / `predev` /
-`prebuild` solo dejan el perfil al día.
+La interfaz usa `ZnIcon` para identificar el sonido principal y los sonidos de
+fondo. El escáner detecta iconos declarados literalmente en el template; los
+iconos de la lista dinámica se declaran en `manual` dentro de
+`icon-profile.json`.
 
-Cuando la app empiece a usar `<ZnIcon name="…" />`, el flujo es automático:
+El flujo de sprites es automático:
 
 1. `predev` / `prebuild` ejecutan `scan:icons` → `icon-profile.json`.
 2. `generate:icons --profile app:zound-box` escribe
    `zound-box/public/icons/sprite-<familia>.svg` con solo esos iconos.
 3. Vite copia `public/icons/` a `zound-box/dist/icons/` en el build.
+4. VitePWA agrega los sprites generados al precache de Workbox.
 
 Los iconos que usan los componentes de `ui-core` se suman automáticamente al
 chunk de la app; no hace falta declararlos.
@@ -90,8 +91,8 @@ VitePWA({
   registerType: 'autoUpdate',
   manifest: {
     name: 'Zound Box',
-    short_name: 'App1',           // pendiente actualizar a 'zound-box'
-    description: 'PWA número uno independiente',
+    short_name: 'Zound Box',
+    description: 'Combina un sonido principal con sonidos ambientales de fondo.',
     start_url: '/zn-apps/zound-box/index.html',
     scope: '/zn-apps/zound-box/',
     theme_color: '#2563eb',
@@ -101,7 +102,6 @@ VitePWA({
 })
 ```
 
-> **Pendiente:** `short_name` dice 'App1' — debería ser 'Zound Box'.
 
 ---
 
@@ -114,31 +114,18 @@ ZnApp (modo controlado por isDarkMode)
   └── ZnScreen (title="Zound Box", icon=nota musical SVG)
         ├── [slot #actions] → ZnSwitch (v-model=isDarkMode, icons sol/luna)
         └── [contenido principal]
-              ├── ZnSection "1. Variantes de Énfasis" (collapsible)
-              │     └── showcase-grid con 5 ZnButton (filled/tonal/elevated/outlined/text)
-              ├── ZnSection "2. Botones con Iconos" (collapsible, expanded=true)
-              │     └── showcase-grid con ZnButton+icon (filled+play, outlined+download)
-              ├── ZnSection "3. Botones de Icono Puro" (collapsible)
-              │     └── ZnButton iconOnly (filled/tonal/text)
-              ├── ZnSection "4. Estado Deshabilitado" (collapsible)
-              │     └── ZnButton :disabled=true (filled/outlined)
-              ├── ZnSection "5. Variantes de ZnCard" (collapsible)
-              │     └── card-showcase-grid con ZnCard (filled/elevated/outlined)
-              ├── ZnSection "6. Selectores ZnSwitch" (collapsible)
-              │     └── ZnSwitch x3 (switchA/B/C con labels e iconos)
-              ├── ZnSection "7. Sistema de Grilla" (collapsible, columns=4)
-              │     └── ZnBox + ZnCard con zn-span-2 / zn-span-3
-              └── ZnSection "8. Grilla de Alta Densidad" (collapsible, columns=6, expanded=false)
-                    └── 6 ZnButton variantes + iconOnly
+              ├── ZnSection "Sonido en primer plano"
+              │     └── ZnCard con ZnSwitch para el sonido principal
+              └── ZnSection "Sonidos de fondo"
+                    └── ZnCard + ZnSwitch por sonido ambiental
 ```
 
 ### Estado local reactivo
 
 ```js
 const isDarkMode = ref(false)   // Controla el modo visual de ZnApp
-const switchA = ref(true)       // Estado de switch de ejemplo A
-const switchB = ref(false)      // Estado de switch de ejemplo B
-const switchC = ref(false)      // Estado de switch de ejemplo C
+const foregroundEnabled = ref(false)
+const backgroundSounds = reactive([...])
 ```
 
 ### Imports
@@ -152,9 +139,7 @@ import { ZnApp, ZnScreen, ZnSection, ZnCard, ZnButton, ZnBox, ZnSwitch } from '@
 
 ## Funcionalidad Actual
 
-> **Importante para IA:** El estado actual de `zound-box` es un **showroom / demostración** de los componentes de `@zn-apps/ui-core`. Actualmente NO tiene funcionalidad real de audio/música más allá de los íconos y el nombre.
-
-El contenido es prácticamente idéntico al `App.vue` del kitchensink, con ligeras variaciones en el texto de las secciones. Esto es temporal: la app debe evolucionar hacia su funcionalidad real de "caja de sonidos".
+La app presenta dos grupos de controles: un interruptor para el sonido principal y varios interruptores independientes para sonidos ambientales. Los controles reflejan el estado en la interfaz; la reproducción de audio en segundo plano aún no está implementada.
 
 ---
 
@@ -172,6 +157,5 @@ Al desarrollar en `zound-box`:
 
 ## Tareas Pendientes Identificadas
 
-- [ ] Actualizar `short_name` del manifest PWA de `'App1'` a `'Zound Box'`.
-- [ ] Implementar funcionalidad real de audio (reproducción, gestión de sonidos).
-- [ ] Separar el showroom de componentes de la lógica real de la app.
+- [ ] Implementar reproducción de audio en primer plano y en segundo plano.
+- [ ] Persistir la selección de sonidos del usuario.

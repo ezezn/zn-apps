@@ -1,4 +1,11 @@
 {
-  "scanned": [],
-  "manual": []
+  "scanned": [
+    "music_note"
+  ],
+  "manual": [
+    "forest",
+    "local_fire_department",
+    "water_drop",
+    "waves"
+  ]
 }

@@ -16,8 +16,8 @@ export default defineConfig({
     alias: {
       // Resolve @zn-apps/ui-core to the source (dev + build) to use the generated
       // icon name catalogs and sprite chunks instead of the pre-built dist package.
-      '@zn-apps/ui-core': resolve(__dirname, '../shared/ui-core/src/index.js'),
       '@zn-apps/ui-core/dist/ui-core.css': resolve(__dirname, '../shared/ui-core/src/assets/css/global.css'),
+      '@zn-apps/ui-core': resolve(__dirname, '../shared/ui-core/src/index.js'),
     }
   },
   plugins: [
@@ -49,7 +49,7 @@ export default defineConfig({
       manifest: {
         name: 'Zound Box',
         short_name: 'Zound Box',
-        description: 'PWA número uno independiente',
+        description: 'Combina un sonido principal con sonidos ambientales de fondo.',
         start_url: '/zn-apps/zound-box/index.html',
         scope: '/zn-apps/zound-box/',
         theme_color: '#2563eb',
