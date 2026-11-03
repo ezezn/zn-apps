@@ -1,40 +1,31 @@
 /**
- * Registro y carga bajo demanda de los sprites de iconos Material Design.
+ * Carga bajo demanda de los sprites de iconos Material Design.
  *
- * Cada familia (`filled`, `outlined`, `round`, `sharp`, `two-tone`) se genera en
- * `sprite-<familia>.svg` y se importa como texto crudo (`?raw`). El sprite se
- * inyecta una sola vez en el documento, dentro de un contenedor oculto, para que
- * cualquier `<ZnIcon>` pueda referenciarlo con `<use href="#…">`.
+ * Cada proyecto (app o librería) genera su propio chunk filtrado en
+ * `public/icons/sprite-<familia>.svg` (publicado en `dist/icons/` al compilar).
+ * `ZnIcon` descarga el sprite de una familia la primera vez que aparece un icono
+ * de esa familia, lo inyecta una única vez en un contenedor oculto y lo reutiliza
+ * en todos los `<use href="#…">` del documento.
  *
- * La carga es diferida: el sprite de una familia solo se descarga y se inyecta
- * cuando aparece el primer icono de esa familia.
+ * La URL se resuelve con `import.meta.env.BASE_URL`, así que funciona igual en
+ * desarrollo que desplegado bajo `/zn-apps/<app>/`.
  */
 
 export const ICON_FAMILIES = ['filled', 'outlined', 'round', 'sharp', 'two-tone']
 
 export const DEFAULT_ICON_FAMILY = 'filled'
 
-/** Contenedor oculto donde viven los sprites inyectados. */
+/** Contenedor oculto donde se inyectan los sprites. */
 const SPRITE_HOST_ID = 'zn-icon-sprite-host'
 
-const spriteLoaders = {
-  filled: () => import('./zn-icon-filled.svg?raw'),
-  outlined: () => import('./zn-icon-outlined.svg?raw'),
-  round: () => import('./zn-icon-round.svg?raw'),
-  sharp: () => import('./zn-icon-sharp.svg?raw'),
-  'two-tone': () => import('./zn-icon-two-tone.svg?raw'),
-}
+/** Carpeta (dentro del proyecto) donde viven los chunks de iconos. */
+const SPRITE_DIR = 'icons'
 
-const namesLoaders = {
-  filled: () => import('./zn-icon-names-filled.js'),
-  outlined: () => import('./zn-icon-names-outlined.js'),
-  round: () => import('./zn-icon-names-round.js'),
-  sharp: () => import('./zn-icon-names-sharp.js'),
-  'two-tone': () => import('./zn-icon-names-two-tone.js'),
-}
-
-/** familia → Promise<Set<nombres de iconos disponibles>> */
+/** familia → Promise<Set<nombres disponibles>> */
 const loadedFamilies = new Map()
+
+/** Familias cuyo sprite no se pudo descargar (para avisar una sola vez). */
+const failedFamilies = new Set()
 
 /** Devuelve la familia válida más cercana (por defecto `filled`). */
 export function normalizeFamily(family) {
@@ -44,6 +35,13 @@ export function normalizeFamily(family) {
 /** Id del `<symbol>` correspondiente a un icono. */
 export function iconSymbolId(family, name) {
   return `zn-icon-${normalizeFamily(family)}-${name}`
+}
+
+/** URL del chunk de la familia, relativa al base del proyecto consumidor. */
+export function iconSpriteUrl(family) {
+  const base = import.meta.env.BASE_URL || '/'
+  const normalizedBase = base.endsWith('/') ? base : `${base}/`
+  return `${normalizedBase}${SPRITE_DIR}/sprite-${normalizeFamily(family)}.svg`
 }
 
 function getSpriteHost() {
@@ -64,39 +62,73 @@ function getSpriteHost() {
 function injectSprite(family, sprite) {
   const host = getSpriteHost()
   if (!host) return
-
-  // El sprite generado ya lleva id="zn-icon-sprite-<familia>", lo usamos para
-  // no duplicar símbolos si la familia se inyecta desde otro punto de la app.
   if (document.getElementById(`zn-icon-sprite-${family}`)) return
 
   host.insertAdjacentHTML('beforeend', sprite)
 }
 
+/** Nombres de iconos disponibles en un sprite ya inyectado. */
+function readSpriteNames(family) {
+  if (typeof document === 'undefined') return new Set()
+
+  const sprite = document.getElementById(`zn-icon-sprite-${family}`)
+  if (!sprite) return new Set()
+
+  const prefix = `zn-icon-${family}-`
+  const names = new Set()
+  for (const symbol of sprite.querySelectorAll('symbol[id]')) {
+    if (symbol.id.startsWith(prefix)) names.add(symbol.id.slice(prefix.length))
+  }
+  return names
+}
+
+async function fetchSprite(family) {
+  const url = iconSpriteUrl(family)
+  const response = await fetch(url)
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status} en ${url}`)
+  }
+  return response.text()
+}
+
 /**
  * Asegura que el sprite de una familia esté cargado e inyectado en el documento.
+ * Si el chunk no existe (proyecto que no lo ha generado) devuelve un conjunto
+ * vacío y avisa una sola vez, sin romper el render.
+ *
  * @param {string} family
  * @returns {Promise<Set<string>>} nombres de iconos disponibles en la familia
  */
 export function loadIconFamily(family) {
   const key = normalizeFamily(family)
 
-  if (!loadedFamilies.has(key)) {
-    loadedFamilies.set(
-      key,
-      Promise.all([spriteLoaders[key](), namesLoaders[key]()])
-        .then(([spriteModule, namesModule]) => {
-          injectSprite(key, spriteModule.default)
-          return new Set(namesModule.default)
-        })
-        .catch((error) => {
-          // Permite reintentar en el siguiente montaje.
-          loadedFamilies.delete(key)
-          throw error
-        })
-    )
-  }
+  if (loadedFamilies.has(key)) return loadedFamilies.get(key)
 
-  return loadedFamilies.get(key)
+  const promise = (async () => {
+    // Ya inyectado por otro bundle/montaje: no volvemos a descargarlo.
+    const injected = readSpriteNames(key)
+    if (injected.size > 0) return injected
+
+    try {
+      injectSprite(key, await fetchSprite(key))
+      return readSpriteNames(key)
+    } catch (error) {
+      // Permite reintentar en el siguiente montaje.
+      loadedFamilies.delete(key)
+      if (!failedFamilies.has(key)) {
+        failedFamilies.add(key)
+        console.warn(
+          `[ZnIcon] No se pudo cargar el sprite "${key}" (${iconSpriteUrl(key)}). ` +
+            'Ejecuta "npm run icons" en el proyecto para generarlo.',
+          error?.message || error
+        )
+      }
+      return new Set()
+    }
+  })()
+
+  loadedFamilies.set(key, promise)
+  return promise
 }
 
 /**

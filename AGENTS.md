@@ -53,15 +53,21 @@ Before making modifications, generating components, or refactoring code in this 
 
 ## 📦 Icon Chunk System
 
-Todos los proyectos generan un chunk de iconos (`ZnIcon`), filtrado a los
-nombres que realmente usa cada proyecto. El esquema:
+Cada proyecto genera su propio chunk de iconos (`ZnIcon`), filtrado a los nombres
+de su `icon-profile.json`. Nunca se publica la colección completa salvo que el
+proyecto la declare explícitamente en `manual`.
 
-| Proyecto | Chunk | Destino |
-|---|---|---|
-| `@zn-apps/ui-core` | `shared` (shared) | `shared/ui-core/dist/` |
-| `zound-box` | `app:zound-box` | `zound-box/dist/` |
-| `kitchensink` | `app:kitchensink` | `kitchensink/dist/` |
-| `pwa-app2` | `app:pwa-app2` | `pwa-app2/dist/` |
+| Proyecto | Perfil | Destino del chunk | Contenido |
+|---|---|---|---|
+| `@zn-apps/ui-core` | `shared` | `shared/ui-core/dist/icons/` | Solo los iconos usados por sus componentes |
+| `zound-box` | `app:zound-box` | `zound-box/public/icons/` → `dist/icons/` | Sus iconos (hoy ninguno) |
+| `kitchensink` | `app:kitchensink` | `kitchensink/public/icons/` → `dist/icons/` | Sus iconos + el catálogo completo declarado en `manual` |
+| `pwa-app2` | `app:pwa-app2` | `pwa-app2/public/icons/` → `dist/icons/` | Sus iconos (hoy ninguno) |
+
+`ZnIcon` descarga el sprite de cada familia desde
+`<BASE_URL>icons/sprite-<familia>.svg` la primera vez que lo necesita y lo
+inyecta una sola vez en el documento. Los chunks de las apps incluyen además los
+iconos que usan los componentes de `ui-core`.
 
 ### Comandos
 
@@ -71,24 +77,26 @@ npm run generate:icons      # genera todos los chunks de sprite (shared + apps)
 npm run build:icons         # scan + generate (modo local)
 ```
 
+Cada app ejecuta `icons` (scan + generate) en `predev` y `prebuild`, así que el
+chunk está en `public/icons/` antes de arrancar Vite y Vite lo copia a `dist/`.
+
 ### Flujo de CI (deploy.yml)
 
 ```text
 npm install
 npm run test:run
-npm run build:all          # build:icons (scan + generate) para cada proyecto antes de su build
+npm run build:all          # los prefijos prebuild de cada app generan su chunk
 ```
 
-`generate:icons` escribe los sprites en `dist/` de cada proyecto. La orden de
-build:all es:
+La orden de `build:all` es:
 
-1. `build:shared` (ui-core + storage)
-2. `build:zound-box` + `generate:icons --profile app:zound-box`
-3. `build:app2` + `generate:icons --profile app:pwa-app2`
-4. `build:kitchensink` + `generate:icons --profile app:kitchensink`
+1. `build:shared` (ui-core + storage; `postbuild` genera el chunk de ui-core)
+2. `build:zound-box` (prebuild: scan + generate)
+3. `build:app2` (prebuild: scan + generate)
+4. `build:kitchensink` (prebuild: scan + generate)
 
-Este orden asegura que los chunks de iconos estén en `dist/` después del build y
-antes de publicar en GitHub Pages.
+Este orden asegura que cada chunk esté en `dist/icons/` antes de publicar en
+GitHub Pages.
 
 ---
 

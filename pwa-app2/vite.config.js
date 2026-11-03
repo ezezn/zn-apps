@@ -28,7 +28,19 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       workbox: {
-        mode: 'development'
+        mode: 'development',
+        // Los sprites de iconos se descargan bajo demanda: se cachean en la
+        // primera visita para que la app siga funcionando offline.
+        runtimeCaching: [
+          {
+            urlPattern: /\/icons\/sprite-[a-z-]+\.svg$/,
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'zn-icon-sprites',
+              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 30 }
+            }
+          }
+        ]
       },
       manifest: {
         name: 'Sub Aplicación Dos',

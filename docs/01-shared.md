@@ -32,13 +32,11 @@ shared/
 │   ├── vite.config.js     # Build mode: library, format ES, output: dist/ui-core.js
 │   ├── vitest.config.js   # Proyecto Vitest "ui-core"
 │   ├── scripts/
-│   │   └── generate-icons.mjs     # Genera los sprites desde @material-design-icons/svg
+│   │   └── generate-icons.mjs     # Genera el chunk filtrado desde @material-design-icons/svg
 │   └── src/
 │       ├── index.js       # Punto de entrada — todos los exports públicos
-│       ├── icons/         # Sprites SVG generados + loader de iconos
-│       │   ├── sprite-*.svg       # 5 familias × 2122 iconos (generados)
-│       │   ├── names-*.js         # Lista de nombres por familia (generados)
-│       │   └── index.js           # loadIconFamily / iconExists / iconNames
+│       ├── icons/
+│       │   └── index.js           # loadIconFamily / iconExists / iconNames (fetch + inyección)
 │       ├── assets/
 │       │   └── css/
 │       │       └── global.css     # Reset CSS + tokens MD3 (modo claro y oscuro)
@@ -67,37 +65,42 @@ shared/
         └── __tests__/storage.spec.js
 ```
 
-  **Iconos:** los sprites se generan con `npm run generate:icons --workspace=@zn-apps/ui-core` a partir de `@material-design-icons/svg` y se versionan en `src/icons/`. Solo hace falta regenerarlos al actualizar esa dependencia.
-  **Escaneo:** los iconos usados se detectan automáticamente con `npm run scan:icons --workspace=@zn-apps/ui-core` (o `node scripts/scan-icons.mjs` en cada proyecto). Escanea todas las etiquetas <ZnIcon name="..."/> y escribe un icon-profile.json con dos arrays: scanned (iconos descubiertos) y manual (iconos añadidos por el desarrollador).
-  **Chunk de sprite:** cada proyecto genera su propio sprite chunk y lo publica en dist/.
+  **Iconos:** cada proyecto genera su propio chunk filtrado con `npm run generate:icons` (perfil `shared` para la librería). Ya no se versionan sprites en `src/icons/`; el loader vive en `src/icons/index.js`.
+  **Escaneo:** los iconos usados se detectan con `npm run scan:icons` en cada proyecto (script único en `<raíz>/scripts/scan-icons.mjs`). Escribe el `icon-profile.json` con dos arrays: `scanned` (detectados) y `manual` (declarados por el desarrollador).
+  **Chunk de sprite:** cada proyecto publica el suyo en `public/icons/`, que Vite copia a `dist/icons/`.
 
-## Sistema de_chunks de iconos (Sprite Chunk)
+## Chunks de iconos (Sprite Chunk)
 
-Cada proyecto (librería `ui-core` o app) genera un chunk de iconos propio, filtrado
-a los nombres que ese proyecto realmente usa. El chunk está compuesto por un
-`sprite.svg` (con todos los símbolos de una familia) y un `names-*.js` (lista de
-nombres escaneados). Los chunks se escriben en la carpeta `dist/` del proyecto.
+Cada proyecto (librería `ui-core` o app) genera solo los iconos que usa, tomados
+de su `icon-profile.json`. El chunk son cinco ficheros, uno por familia:
+`sprite-filled.svg`, `sprite-outlined.svg`, `sprite-round.svg`, `sprite-sharp.svg`
+y `sprite-two-tone.svg`. Cada fichero contiene únicamente los `<symbol>` de los
+nombres declarados.
 
-El esquema de chunks es:
-
-| Proyecto | Chunk | Qué contiene |
+| Proyecto | Qué contiene | Destino |
 |---|---|---|
-| `@zn-apps/ui-core` | `ui-core` (shared) | Los iconos que usan varias apps comunes (home, settings, play_arrow, ...) — usado por todos los consumidores de `ui-core` |
-| `kitchensink` | `kitchensink` | Los iconos que usa su showroom (ButtonsPage, CardsPage, SwitchesPage, IconsPage, ...) |
-| `zound-box` | `zound-box` | Los iconos que usa su interfaz de reproducción |
-| `pwa-app2` | `pwa-app2` | Los iconos que usa su pantalla de bienvenida |
+| `@zn-apps/ui-core` | Solo los iconos que usan sus componentes | `shared/ui-core/dist/icons/` |
+| `kitchensink` | Sus iconos + el catálogo completo (declarado en `manual`) | `kitchensink/public/icons/` → `dist/icons/` |
+| `zound-box` | Sus iconos (hoy no usa `ZnIcon`) | `zound-box/public/icons/` → `dist/icons/` |
+| `pwa-app2` | Sus iconos (hoy no usa `ZnIcon`) | `pwa-app2/public/icons/` → `dist/icons/` |
 
-Cada app importa `@zn-apps/ui-core/dist/ui-core.css` y carga los chunks de
-iconos del `ui-core` **y** del propio proyecto, por lo que el bundle total
-solo descarga los iconos que realmente necesita.
+Los chunks de las apps incluyen además los nombres del perfil de `ui-core`, de
+modo que los iconos usados por componentes de la librería están disponibles sin
+que la app tenga que declararlos.
+
+`ZnIcon` resuelve el chunk con `import.meta.env.BASE_URL`, por lo que en
+desarrollo descarga `/icons/sprite-<familia>.svg` y en producción
+`/zn-apps/<app>/icons/sprite-<familia>.svg`. La familia se descarga una sola vez
+y se inyecta en `#zn-icon-sprite-host`.
 
 ## Escaneo de iconos (scan:icons)
 
-Se ejecuta `npm run scan:icons` en cada proyecto. El script:
+`npm run scan:icons` en la raíz escanea cada proyecto (o
+`node scripts/scan-icons.mjs <proyecto>` para uno concreto). El script:
 
-1. Recorre todos los archivos `.js`, `.vue`, `.ts`, `.jsx`, `.tsx` (salvo `scripts/`, `node_modules/`, `dist/`, `coverage/`, `.git/`).
-2. Busca etiquetas `<ZnIcon name="..." .../>`.
-3. Extrae el valor del atributo `name`.
+1. Recorre los `.js`, `.vue`, `.ts`, `.jsx`, `.tsx` del proyecto (salvo `scripts/`, `node_modules/`, `dist/`, `coverage/`, `.git/`, `__tests__/` y ficheros `*.spec.*`).
+2. Busca las etiquetas `<ZnIcon …>` de apertura.
+3. Extrae los atributos estáticos `name` y `family`.
 4. Escribe `icon-profile.json` con dos arrays:
 
 ```json
@@ -107,49 +110,42 @@ Se ejecuta `npm run scan:icons` en cada proyecto. El script:
 }
 ```
 
-- `scanned`: iconos descubiertos por el escáner.
-- `manual`: iconos añadidos por el desarrollador (no se sobrescriben ni se
-  eliminan en ejecuciones posteriores).
+- `scanned`: nombres detectados; se recalcula en cada ejecución.
+- `manual`: nombres declarados por el desarrollador; nunca se sobrescriben ni se
+  eliminan. Útil para `:name="…"` dinámicos o para publicar una colección
+  completa (kitchensink).
 
-El escáner descarta falsos positivos: `:name` / `$name` (v-bind), variables
-JavaScript, textos de `<pre>`, nombres no válidos (snake_case) y palabras
-reservadas.
+El escáner descarta falsos positivos: bindings (`:name`, `v-bind:name`), valores
+no estáticos, comentarios, nombres que no sean snake_case y palabras reservadas.
 
 ## Cómo generar los chunks (generate:icons)
 
-`npm run generate:icons` genera los chunks para todos los proyectos:
+`npm run generate:icons` genera los chunks de todos los proyectos. También se
+puede invocar un perfil concreto:
 
 ```bash
-npm run generate:icons
-```
-
-Soporta perfiles:
-
-```bash
-node shared/ui-core/scripts/generate-icons.mjs --profile shared        # chunk shared de ui-core
-node shared/ui-core/scripts/generate-icons.mjs --profile app:zound-box # chunk de zound-box
+node shared/ui-core/scripts/generate-icons.mjs --profile shared         # ui-core
+node shared/ui-core/scripts/generate-icons.mjs --profile app:zound-box
 node shared/ui-core/scripts/generate-icons.mjs --profile app:kitchensink
 node shared/ui-core/scripts/generate-icons.mjs --profile app:pwa-app2
 ```
 
-El generador lee los iconos alfanuméricos de
-`@material-design-icons/svg` (dependencia de desarrollo de `ui-core`) y escribe
-en `dist/`: `sprite-filled.svg`, `names-filled.js`, etc.
+El generador lee los perfiles, filtra los nombres contra
+`@material-design-icons/svg` (devDependency de `ui-core`) y escribe los sprites
+en `public/icons/` (apps) o `dist/icons/` (ui-core). Si `dist/` ya existe
+también se refresca allí. Si el perfil no declara iconos, no genera nada.
 
 ## Integración Continua (GitHub Actions)
-
-El workflow `deploy.yml` entra en acción tras todos los tests y antes del
-despliegue. El flujo es:
 
 ```text
 npm install
 npm run test:run
-npm run build:all          # → build:icons (scan + generate para todos los proyectos)
+npm run build:all          # cada app ejecuta scan + generate en su prebuild
 ```
 
-`build:all` ejecuta `scan:icons` y `generate:icons` en cada proyecto antes de
-su build propio, de modo que los chunks de iconos estén disponibles en `dist/`
-antes de ser publicados en GitHub Pages.
+Cada app ejecuta `icons` en `predev` y `prebuild`; `ui-core` lo hace en
+`postbuild`. Así el chunk está en `dist/icons/` antes de publicar en GitHub
+Pages.
 
 ## Cómo Usar en una App
 
@@ -484,15 +480,16 @@ Se usan como clases en elementos hijos de `ZnSection` cuando esta tiene prop `co
 
 **Color:** los trazos usan `fill: currentColor`, por lo que heredan el color del contenedor (botones, variantes MD3, estados `:disabled`).
 
-**Carga diferida:** cada familia es un chunk independiente (~700 KB de markup, ~150 KB gzip) que solo se descarga cuando aparece el primer icono de esa familia. En desarrollo, un `name` inexistente emite un `console.warn`.
+**Carga diferida:** cada familia es un chunk independiente en `icons/sprite-<familia>.svg` y solo se descarga cuando aparece el primer icono de esa familia. El tamaño depende del proyecto: un par de iconos pesan unos pocos KB; el catálogo completo de kitchensink ronda los 600-950 KB por familia. En desarrollo, un `name` inexistente (o un chunk que falta) emite un `console.warn` una sola vez.
 
 **API auxiliar** (exportada por el paquete):
 | Función | Descripción |
 |---|---|
-| `loadIconFamily(family)` | Carga e inyecta el sprite; resuelve con un `Set` de nombres disponibles |
+| `loadIconFamily(family)` | Descarga e inyecta el sprite; resuelve con un `Set` de nombres disponibles |
 | `iconExists(family, name)` | `Promise<Boolean>` — indica si el icono existe |
 | `iconNames(family)` | `Promise<string[]>` — nombres ordenados de la familia (útil para galerías y buscadores) |
 | `iconSymbolId(family, name)` | Id del `<symbol>`, ej. `zn-icon-filled-home` |
+| `iconSpriteUrl(family)` | URL del chunk resuelta con `BASE_URL`, ej. `/icons/sprite-filled.svg` |
 | `ICON_FAMILIES` | `['filled', 'outlined', 'round', 'sharp', 'two-tone']` |
 
 **Uso:**

@@ -9,6 +9,6 @@ export default defineConfig({
     environment: 'happy-dom',
     globals: true,
     setupFiles: [resolve(__dirname, '../../vitest.setup.js')],
-    include: ['src/**/*.{test,spec}.js']
+    include: ['src/**/*.{test,spec}{.js,.mjs}', '__tests__/**/*.{test,spec}{.js,.mjs}', 'scripts/__tests__/**/*.{test,spec}{.js,.mjs}']
   }
 })

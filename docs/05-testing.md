@@ -77,6 +77,7 @@ Se ejecutan automáticamente antes de cada suite de tests:
 
 1. **`window.matchMedia`**: Utilizado por `ZnApp.vue` para detectar el tema del sistema (`prefers-color-scheme`).
 2. **`IntersectionObserver`**: Utilizado por `ZnScreen.vue` para detectar el scroll del centinela y aplicar la clase de cabecera condensada/elevada.
+3. **`fetch`**: `ZnIcon` descarga los chunks `icons/sprite-<familia>.svg`. El mock devuelve un sprite vacío para que los componentes se monten sin red ni servidor de desarrollo. Los tests de `ZnIcon` lo sobrescriben con un sprite de fixture.
 
 ---
 

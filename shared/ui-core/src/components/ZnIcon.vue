@@ -55,7 +55,8 @@ const sizeValue = computed(() => (typeof props.size === 'number' ? `${props.size
 function ensureFamily() {
   loadIconFamily(familyName.value)
     .then((names) => {
-      if (import.meta.env?.DEV && !names.has(props.name)) {
+      // Si el sprite está vacío el aviso ya lo dio el loader (chunk ausente).
+      if (import.meta.env?.DEV && names.size > 0 && !names.has(props.name)) {
         console.warn(
           `[ZnIcon] El icono "${props.name}" no existe en la familia "${familyName.value}".`
         )

@@ -28,7 +28,8 @@ export {
   loadIconFamily,
   iconExists,
   iconNames,
-  iconSymbolId
+  iconSymbolId,
+  iconSpriteUrl
 } from './icons/index.js'
 
 // Componentes Atómicos e Utilidades previos

@@ -30,4 +30,17 @@ if (typeof window !== 'undefined') {
 
   global.IntersectionObserver = MockIntersectionObserver
   window.IntersectionObserver = MockIntersectionObserver
+
+  // ZnIcon descarga los chunks de sprites con fetch. En tests devolvemos un
+  // sprite vacío (sin red) para que los componentes puedan montarse sin un
+  // servidor que sirva public/icons/.
+  globalThis.fetch = vi.fn(async (url) => {
+    const family = String(url).match(/sprite-([a-z-]+)\.svg$/)?.[1]
+    return {
+      ok: Boolean(family),
+      status: family ? 200 : 404,
+      text: async () =>
+        `<svg xmlns="http://www.w3.org/2000/svg" id="zn-icon-sprite-${family}" aria-hidden="true"></svg>`,
+    }
+  })
 }

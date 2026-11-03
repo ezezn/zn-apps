@@ -5,11 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host",
+    "predev": "npm run icons",
     "build": "vite build",
+    "prebuild": "npm run icons",
     "preview": "vite preview",
-    "scan:icons": "node scripts/scan-icons.mjs",
+    "icons": "npm run scan:icons && npm run generate:icons",
+    "scan:icons": "node ../scripts/scan-icons.mjs .",
     "generate:icons": "node ../shared/ui-core/scripts/generate-icons.mjs --profile app:pwa-app2",
-    "build:icons": "npm run scan:icons && npm run generate:icons"
+    "build:icons": "npm run icons"
   },
   "dependencies": {
     "vue": "^3.5.34"

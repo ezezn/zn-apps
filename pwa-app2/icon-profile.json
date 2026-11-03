@@ -1,18 +1,4 @@
 {
-  "scanned": [
-    "home",
-    "menu",
-    "next_week",
-    "pause",
-    "play_arrow",
-    "settings"
-  ],
-  "manual": [
-    "home",
-    "menu",
-    "next_week",
-    "pause",
-    "play_arrow",
-    "settings"
-  ]
+  "scanned": [],
+  "manual": []
 }

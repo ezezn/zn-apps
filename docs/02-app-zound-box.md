@@ -59,29 +59,23 @@ zound-box/
 
 ## Sistema de chunks de iconos
 
-`zound-box` usa `ZnIcon` en su interfaz. Al generar `npm run build`, el script
-`generate:icons` (definido en `package.json`) escanea los iconos de la app con
-`scan:icons` y escribe un chunk de iconos filtrado en `zound-box/dist/`:
+Hoy `zound-box` **no usa `ZnIcon`**: su interfaz no renderiza iconos Material.
+Por eso su `icon-profile.json` queda vacío (`scanned: []`, `manual: []`) y
+`generate:icons` no escribe ningún sprite; los scripts `icons` / `predev` /
+`prebuild` solo dejan el perfil al día.
 
-```
-zound-box/dist/
-├── zn-icon-core-filtered.svg   ← chunk shared de ui-core (en la app)
-├── zn-icon-core-filled.svg
-├── zn-icon-core-outlined.svg
-├── zn-icon-core-round.svg
-├── zn-icon-core-sharp.svg
-├── zn-icon-core-two-tone.svg
-├── zn-icon-zound-box-filtered.svg
-├── zn-icon-zound-box-filled.svg
-├── zn-icon-zound-box-outlined.svg
-└── ...
-```
+Cuando la app empiece a usar `<ZnIcon name="…" />`, el flujo es automático:
 
-El chunk `ui-core` (shared) se genera en `shared/ui-core/dist/` y el chunk de
-`zound-box` se genera en `zound-box/dist/`. Cada app carga su propio chunk y el
-del `ui-core`, por lo que el consumo total de iconos es mínimo.
+1. `predev` / `prebuild` ejecutan `scan:icons` → `icon-profile.json`.
+2. `generate:icons --profile app:zound-box` escribe
+   `zound-box/public/icons/sprite-<familia>.svg` con solo esos iconos.
+3. Vite copia `public/icons/` a `zound-box/dist/icons/` en el build.
 
-Ver también: [`docs/01-shared.md` (**Sistema de chunks de iconos**)](/zn-apps/shared/ui-core/README.md) para el flujo completo.
+Los iconos que usan los componentes de `ui-core` se suman automáticamente al
+chunk de la app; no hace falta declararlos.
+
+Ver también: [`docs/01-shared.md`](./01-shared.md#chunks-de-iconos-sprite-chunk)
+para el flujo completo.
 
 ---
 

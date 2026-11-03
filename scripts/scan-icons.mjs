@@ -1,230 +1,195 @@
 #!/usr/bin/env node
 /**
- * scan:icons — Escanea la codebase de una app/librería buscando el uso de
- * ZnIcon y recupera el valor de su prop `name`.
+ * scan-icons — Detecta los iconos de Material Design que usa un proyecto
+ * (app o librería) mediante las etiquetas `<ZnIcon>` de su código fuente.
  *
- * Genera (o actualiza) un icon-profile.json en la raíz del proyecto:
+ * Escribe/actualiza `icon-profile.json` en la raíz del proyecto escaneado:
  *
  *   {
- *     "scanned": [ "nombres recuperados..." ],
- *     "manual":  [ "nombres añadidos por el desarrollador..." ]
+ *     "scanned": ["home", "play_arrow", ...],   // detectados por el escáner
+ *     "manual":  ["favorite", ...]              // añadidos por el desarrollador
  *   }
  *
+ * `scanned` se recalcula en cada ejecución. `manual` nunca se modifica: sirve
+ * para iconos que el escáner no puede resolver (por ejemplo `:name="icon"` con
+ * una variable) o para declarar una colección completa a propósito, como hace
+ * kitchensink con el catálogo de Material Icons.
+ *
  * Uso:
- *   node scripts/scan-icons.mjs                 # escanea el proyecto actual
- *   node scripts/scan-icons.mjs <dir>           # escanea un directorio
- *   node scripts/scan-icons.mjs --dir <dir>     # variante con --dir
- *   node scripts/scan-icons.mjs --file <path>   # escanea un único fichero
+ *   node scripts/scan-icons.mjs               # escanea el directorio actual
+ *   node scripts/scan-icons.mjs <dir>         # escanea otro proyecto
  *
- * El escáner coincide únicamente con la etiqueta <ZnIcon ...> y extrae el
- * atributo `name` (no :name, ni $name, ni coincidencias de otros componentes).
- * Ignora los comentarios, los bloques <pre> y cualquier atributo que no sea
- * el nombre de un ícono real.
- *
- * Nota: el directorio scripts/ se salta siempre para evitar que este
- * mismo script se Escanee sobre sí mismo.
+ * Solo se aceptan valores estáticos (`name="home"`). Los bindings dinámicos
+ * (`:name`, `v-bind:name`) y `@` se ignoran, porque su valor no puede
+ * determinarse sin ejecutar la aplicación.
  */
 
 import { readFileSync, writeFileSync, readdirSync, statSync, existsSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 
-const DEFAULT_FILE = 'icon-profile.json'
+const PROFILE_FILE = 'icon-profile.json'
+const SCANNED_KEY = 'scanned'
 const MANUAL_KEY = 'manual'
 
-// Palabras reservadas / comunes que no son nombres de íconos.
+/** Familias válidas de Material Icons (deben coincidir con ui-core). */
+const ICON_FAMILIES = ['filled', 'outlined', 'round', 'sharp', 'two-tone']
+
+/** Carpetas que nunca contienen código de la app. */
+const SKIPPED_DIRS = new Set(['node_modules', 'dist', 'coverage', '.git', 'scripts', '__tests__'])
+
+const SOURCE_EXTENSIONS = new Set(['js', 'vue', 'ts', 'jsx', 'tsx', 'mjs', 'cjs'])
+
+/** Nombres válidos de iconos Material (snake_case, sin puntos). */
+const ICON_NAME_RE = /^[a-z0-9]+(?:_[a-z0-9]+)*$/
+
+/** Palabras que nunca son nombres de iconos. */
 const RESERVED_WORDS = new Set([
   'name', 'icon', 'btn', 'class', 'type', 'value', 'ref', 'key',
   'function', 'const', 'let', 'var', 'return', 'import', 'export',
   'from', 'as', 'await', 'async', 'new', 'delete', 'void', 'typeof',
   'instanceof', 'in', 'of', 'if', 'else', 'switch', 'case', 'break',
   'while', 'do', 'for', 'try', 'catch', 'finally', 'throw', 'debugger',
-  'this', 'super', 'extends', 'window', 'document', 'exportDefault',
+  'this', 'super', 'extends', 'window', 'document',
   'router', 'route', 'routes', 'Vue', 'createApp', 'mount', 'createRouter'
 ])
 
+/** Atributos estáticos de una etiqueta: `key="value"` o `key='value'`. */
+const ATTRIBUTE_RE = /([^\s"'<>/=]+)\s*=\s*(?:"([^"]*)"|'([^']*)')/g
+
+/** Etiqueta de apertura de ZnIcon (no cruza un `>`). */
+const ICON_TAG_RE = /<ZnIcon\b([^>]*)>/g
+
 /**
- * Extrae los iconos usados en un archivo Vue/JS.
- *
- * Solo considera la etiqueta <ZnIcon ...> y su atributo `name`.
- * El regex requiere:
- *   - <ZnIcon seguido de cualquier cosa excepto '>' (los atributos del tag)
- *   - luego la palabra 'name'
- *   - luego = y una comilla simple o doble
- *   - el valor dentro de la misma etiqueta (no cruzando '>')
- *
- * El valor solo se acepta si es un nombre de ícono real (snake_case, sin
- * puntos ni caractéres especiales), para descartar falsos positivos de
- * variables JS, código en <pre>, o :name / $name v-bind.
+ * Lee un atributo estático. Las claves con prefijo (`:name`, `v-bind:name`,
+ * `@name`) no coinciden, por lo que quedan fuera automáticamente.
  */
-function extractIconNames(sourceText) {
-  const names = new Set()
-
-  // /<ZnIcon\b          → abre el tag ZnIcon
-  // (?:[^>]*?\bname\b)?  → opcionalmente coincide con cualquier cosa hasta
-  //                        la palabra 'name' (evitando :name / $name)
-  // \s*=\s*              → '='
-  // (["'])               → captura el tipo de comilla
-  // ([^"']*)            → el valor del nombre (sin comillas internas)
-  // \1                   → cierra con la misma comilla
-  const ICON_TAG_RE = /<ZnIcon\b(?:[^>]*?\bname\b\s*=\s*["']([^"']*)["'])?/g
-
-  // Solo los nombres de íconos válidos en Material Design (snake_case, sin '.').
-  const ICON_NAME_RE = /^[a-z0-9]+(?:_[a-z0-9]+)*$/
-
+function readStaticAttribute(attributes, attributeName) {
+  ATTRIBUTE_RE.lastIndex = 0
   let match
-  while ((match = ICON_TAG_RE.exec(sourceText)) !== null) {
-    const tag = match[0]
-    // Ignorar etiquetas que usan :name o $name (v-bind / dynamic vars)
-    if (/\bname\s*=/i.test(tag) === false) continue
-
-    // Capturar el valor del nombre de la etiqueta
-    const nameMatch = tag.match(/\bname\s*=\s*["']([^"']*)["']/)
-    if (!nameMatch) continue
-
-    const name = nameMatch[1].trim()
-    // Validar que sea un nombre de ícono real (snake_case sin puntos).
-    // Esto elimina falsos positivos como "..." (puntos), "btn.icon"
-    // o cualquier cadena que no cumpla el patrón de nombre de icono.
-    if (!ICON_NAME_RE.test(name)) continue
-
-    // Descartar palabras reservadas / comunes que no son nombres de íconos.
-    if (RESERVED_WORDS.has(name)) continue
-
-    names.add(name)
+  while ((match = ATTRIBUTE_RE.exec(attributes)) !== null) {
+    if (match[1] !== attributeName) continue
+    return (match[2] ?? match[3] ?? '').trim()
   }
+  return ''
+}
 
-  return names
+/** Elimina comentarios HTML y de bloque para no escanear ejemplos comentados. */
+function stripComments(source) {
+  return source.replace(/<!--[\s\S]*?-->/g, '').replace(/\/\*[\s\S]*?\*\//g, '')
 }
 
 /**
- * Escanea un directorio recursivamente buscando archivos fuente.
+ * Extrae los iconos y las familias declaradas en un fichero fuente.
  *
- * Se salta el directorio scripts/ para evitar que este mismo script se
- * Escanee sobre sí mismo.
+ * @param {string} source
+ * @returns {{ names: Set<string>, families: Set<string> }}
  */
-function scanDirectory(dir) {
-  const files = []
-  const entries = readdirSync(dir, { withFileTypes: true })
-  for (const entry of entries) {
-    const full = join(dir, entry.name)
-    if (entry.isDirectory()) {
-      // Saltarnos node_modules, dist, coverage, .git, scripts
-      if (
-        entry.name === 'node_modules' ||
-        entry.name === 'dist' ||
-        entry.name === 'coverage' ||
-        entry.name === '.git' ||
-        entry.name === 'scripts'
-      ) {
-        continue
-      }
-      files.push(...scanDirectory(full))
-    } else if (entry.isFile()) {
-      const ext = entry.name.split('.').pop().toLowerCase()
-      if (['js', 'vue', 'ts', 'jsx', 'tsx', 'mjs', 'cjs'].includes(ext)) {
-        files.push(full)
-      }
+function extractIconUsage(source) {
+  const names = new Set()
+  const families = new Set()
+  const clean = stripComments(source)
+
+  let match
+  while ((match = ICON_TAG_RE.exec(clean)) !== null) {
+    const attributes = match[1]
+
+    const name = readStaticAttribute(attributes, 'name')
+    if (name && ICON_NAME_RE.test(name) && !RESERVED_WORDS.has(name)) {
+      names.add(name)
     }
+
+    const family = readStaticAttribute(attributes, 'family')
+    if (family && ICON_FAMILIES.includes(family)) {
+      families.add(family)
+    }
+  }
+
+  return { names, families }
+}
+
+/** Recorre recursivamente un proyecto y devuelve sus ficheros fuente. */
+function collectSourceFiles(dir) {
+  const files = []
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const full = join(dir, entry.name)
+
+    if (entry.isDirectory()) {
+      if (SKIPPED_DIRS.has(entry.name)) continue
+      files.push(...collectSourceFiles(full))
+      continue
+    }
+
+    if (!entry.isFile()) continue
+    const extension = entry.name.split('.').pop().toLowerCase()
+    if (!SOURCE_EXTENSIONS.has(extension)) continue
+    if (/\.(test|spec)\.[^.]+$/.test(entry.name)) continue
+    files.push(full)
   }
   return files
 }
 
-/**
- * Analiza un fichero y devuelve los nombres de icono distintos.
- */
-function scanFile(filePath) {
-  try {
-    const stat = statSync(filePath)
-    if (stat.size > 2 * 1024 * 1024) return new Set()
-  } catch {
-    return new Set()
+function scanProject(root) {
+  const names = new Set()
+  const families = new Set()
+
+  const files = collectSourceFiles(root)
+  for (const file of files) {
+    // Protección ante ficheros enormes (bundles, fixtures, etc.).
+    if (statSync(file).size > 2 * 1024 * 1024) continue
+
+    const usage = extractIconUsage(readFileSync(file, 'utf8'))
+    for (const name of usage.names) names.add(name)
+    for (const family of usage.families) families.add(family)
   }
 
-  let content
-  try {
-    content = readFileSync(filePath, 'utf8')
-  } catch {
-    return new Set()
-  }
+  return { files, names, families }
+}
 
-  return extractIconNames(content)
+function readManualIcons(profileFile) {
+  const manual = new Set()
+  if (!existsSync(profileFile)) return manual
+
+  try {
+    const data = JSON.parse(readFileSync(profileFile, 'utf8'))
+    if (Array.isArray(data?.[MANUAL_KEY])) {
+      for (const item of data[MANUAL_KEY]) {
+        if (typeof item === 'string' && item.trim()) manual.add(item.trim())
+      }
+    }
+  } catch {
+    console.warn(`⚠️  ${profileFile} no es JSON válido; se reconstruye solo con "scanned".`)
+  }
+  return manual
+}
+
+function sortNames(values) {
+  return [...values].sort((a, b) => a.localeCompare(b, 'en'))
 }
 
 function main() {
-  const args = process.argv.slice(2)
-  let root = process.cwd()
-  let singleFile = null
+  const rootArg = process.argv.slice(2).find((arg) => !arg.startsWith('-'))
+  const root = resolve(rootArg || process.cwd())
+  const profileFile = join(root, PROFILE_FILE)
 
-  for (let i = 0; i < args.length; i++) {
-    const a = args[i]
-    if (a === '--dir' || a === '--file') {
-      const val = args[i + 1]
-      if (val) {
-        if (a === '--dir') root = resolve(val)
-        else singleFile = resolve(val)
-        i++
-      }
-    } else if (!a.startsWith('-')) {
-      root = resolve(a)
-    }
+  const { files, names, families } = scanProject(root)
+  const manual = readManualIcons(profileFile)
+
+  const profile = {
+    [SCANNED_KEY]: sortNames(names),
+    [MANUAL_KEY]: sortNames(manual)
   }
 
-  if (singleFile) {
-    const names = scanFile(singleFile)
-    const namesArr = [...names].sort((a, b) => a.localeCompare(b, 'es-ES'))
-    console.log(`\n📋 Íconos encontrados en ${singleFile}: ${namesArr.join(', ') || '(ninguno)'}`)
-    return
+  writeFileSync(profileFile, JSON.stringify(profile, null, 2) + '\n', 'utf8')
+
+  console.log(`\n🔍 ${root}`)
+  console.log(`   Archivos fuente escaneados: ${files.length}`)
+  console.log(`   Iconos en "scanned": ${profile.scanned.length}`)
+  console.log(`   Iconos en "manual":  ${profile.manual.length}`)
+  if (profile.scanned.length > 0) {
+    console.log(`   Nombres: ${profile.scanned.join(', ')}`)
   }
-
-  const profileFile = join(root, DEFAULT_FILE)
-
-  const files = scanDirectory(root)
-  const scanned = new Set()
-
-  for (const file of files) {
-    const names = scanFile(file)
-    for (const name of names) {
-      scanned.add(name)
-    }
-  }
-
-  // Cargar manuales ya existentes (si los hay)
-  const manual = new Set()
-  let exists = false
-  if (existsSync(profileFile)) {
-    exists = true
-    try {
-      const data = JSON.parse(readFileSync(profileFile, 'utf8'))
-      if (Array.isArray(data?.[MANUAL_KEY])) {
-        for (const item of data[MANUAL_KEY]) {
-          if (typeof item === 'string' && item.trim()) manual.add(item.trim())
-        }
-      }
-    } catch {
-      // El fichero está corrupto; empezamos de cero
-    }
-  }
-
-  // Unimos: scanned + manual. Los manuales nunca se sobrescriben ni se eliminan.
-  const finalScanned = new Set(scanned)
-  for (const m of manual) finalScanned.add(m)
-
-  const output = {
-    scanned: [...finalScanned].sort((a, b) => a.localeCompare(b, 'es-ES')),
-    manual: [...manual].sort((a, b) => a.localeCompare(b, 'es-ES')),
-  }
-
-  writeFileSync(profileFile, JSON.stringify(output, null, 2) + '\n', 'utf8')
-
-  console.log(`\n✅ icon-profile.json actualizado en ${profileFile}`)
-  console.log(`   Proyecto: ${root}`)
-  console.log(`   Archivos escaneados: ${files.length}`)
-  console.log(`   Iconos en "scanned": ${output.scanned.length}`)
-  console.log(`   Iconos en "manual":  ${output.manual.length}`)
-  if (exists) {
-    console.log(`   (El fichero ya existía; los manuales se preservan y los nuevos íconos se añaden a "scanned".)`)
-  }
-  console.log()
+  console.log(`   Familias usadas: ${[...families].sort().join(', ') || '(filled por defecto)'}`)
+  console.log(`   → ${profileFile}\n`)
 }
 
 main()

@@ -10,3 +10,8 @@ coverage/
 zound-box/dist/
 pwa-app2/dist/
 kitchensink/dist/
+
+# Sprite chunks de iconos (generados por npm run build:icons)
+zound-box/public/icons/
+pwa-app2/public/icons/
+kitchensink/public/icons/
