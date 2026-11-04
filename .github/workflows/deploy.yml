@@ -34,15 +34,10 @@ jobs:
       - name: Ejecutar Tests Unitarios
         run: npm run test:run
         
-      # Paso 5: Generar los chunks de iconos de todos los proyectos (scan + generate)
-      # Este paso escanea ZnIcon name= en cada app y escribe los sprites filtrados.
-      - name: Generar chunks de iconos
-        run: npm run build:icons
-
-      # Paso 6: ¡AHORA SÍ SE HACE EL BUILD! (Vite ya existe en el servidor)
-      # El script build:all compila cada app, con chunks de iconos ya presentes.
+      # Los sprites se generan localmente con `npm run build:icons` y se versionan.
+      # El build de producción solo consume los archivos del repositorio.
       - name: Ejecutar Compilación Unificada
-        run: npm run build:all
+        run: npm run build:production
            
       # Paso 6: Copiar los enrutamientos de error 404
       - name: Inyectar Enrutamientos Fallback 404

@@ -65,11 +65,13 @@ npm run generate:icons
 npm run build
 ```
 
-`npm run dev` and `npm run build` already run both steps automatically through
-`predev` / `prebuild`. The shorthand is:
+The dev server and production build use the versioned sprites in `public/icons/`
+without regenerating them. Before committing icon changes, regenerate and review
+the profile and sprites from the repository root:
 
 ```bash
-npm run icons && npm run build
+npm run build:icons
+npm run build:production
 ```
 
 ## 5. File layout

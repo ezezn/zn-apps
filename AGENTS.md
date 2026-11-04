@@ -58,8 +58,8 @@ proyecto la declare explícitamente en `manual`.
 
 | Proyecto | Perfil | Destino del chunk | Contenido |
 |---|---|---|---|
-| `@zn-apps/ui-core` | `shared` | `shared/ui-core/dist/icons/` | Solo los iconos usados por sus componentes |
-| `zound-box` | `app:zound-box` | `zound-box/public/icons/` → `dist/icons/` | Sus iconos (hoy ninguno) |
+| `@zn-apps/ui-core` | `shared` | Distribución de la librería | Solo los iconos usados por sus componentes |
+| `zound-box` | `app:zound-box` | `zound-box/public/icons/` → `dist/icons/` | Sus iconos |
 | `kitchensink` | `app:kitchensink` | `kitchensink/public/icons/` → `dist/icons/` | Sus iconos + el catálogo completo declarado en `manual` |
 
 `ZnIcon` descarga el sprite de cada familia desde
@@ -72,28 +72,29 @@ iconos que usan los componentes de `ui-core`.
 ```bash
 npm run scan:icons          # escanea cada proyecto → icon-profile.json (scanned + manual)
 npm run generate:icons      # genera todos los chunks de sprite (shared + apps)
-npm run build:icons         # scan + generate (modo local)
+npm run build:icons         # scan + generate; luego subir perfiles/sprites por Git
+npm run build:production    # build sin escanear ni regenerar iconos
 ```
 
-Cada app ejecuta `icons` (scan + generate) en `predev` y `prebuild`, así que el
-chunk está en `public/icons/` antes de arrancar Vite y Vite lo copia a `dist/`.
+La generación de iconos es manual. Los sprites versionados en `public/icons/`
+se usan en desarrollo y producción; Vite los copia a `dist/`.
 
 ### Flujo de CI (deploy.yml)
 
 ```text
 npm install
 npm run test:run
-npm run build:all          # los prefijos prebuild de cada app generan su chunk
+npm run build:production   # consume sprites versionados, no genera iconos
 ```
 
-La orden de `build:all` es:
+La orden de `build:production` es:
 
-1. `build:shared` (ui-core + storage; `postbuild` genera el chunk de ui-core)
-2. `build:zound-box` (prebuild: scan + generate)
-3. `build:kitchensink` (prebuild: scan + generate)
+1. `build:shared` (ui-core, storage y ui-about)
+2. `build:zound-box`
+3. `build:kitchensink`
 
-Este orden asegura que cada chunk esté en `dist/icons/` antes de publicar en
-GitHub Pages.
+Antes de integrar usos nuevos, ejecuta `npm run build:icons` y sube los perfiles
+y sprites actualizados al repositorio.
 
 ---
 

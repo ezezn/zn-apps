@@ -67,12 +67,13 @@ fondo. El escáner detecta iconos declarados literalmente en el template; los
 iconos de la lista dinámica se declaran en `manual` dentro de
 `icon-profile.json`.
 
-El flujo de sprites es automático:
+La actualización de sprites es manual:
 
-1. `predev` / `prebuild` ejecutan `scan:icons` → `icon-profile.json`.
-2. `generate:icons --profile app:zound-box` escribe
+1. Ejecuta `npm run build:icons` desde la raíz para actualizar perfiles y sprites.
+2. Versiona `zound-box/icon-profile.json` y los sprites generados en
    `zound-box/public/icons/sprite-<familia>.svg` con solo esos iconos.
-3. Vite copia `public/icons/` a `zound-box/dist/icons/` en el build.
+3. El build de producción no regenera iconos; Vite copia los sprites versionados
+   de `public/icons/` a `zound-box/dist/icons/`.
 4. VitePWA agrega los sprites generados al precache de Workbox.
 
 Los iconos que usan los componentes de `ui-core` se suman automáticamente al

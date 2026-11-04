@@ -32,10 +32,10 @@ El monorepo actúa como paraguas de múltiples aplicaciones independientes, toda
 zn-apps/
 ├── .github/
 │   └── workflows/
-│       └── deploy.yml        # CI/CD: build:all → GitHub Pages
+│       └── deploy.yml        # CI/CD: build:production → GitHub Pages
 ├── index.html                # Landing portal (HTML estático, lista las apps)
 ├── sw.js                     # Service Worker global para la landing
-├── package.json              # Root: workspaces + script build:all
+├── package.json              # Root: workspaces + script build:production
 │
 ├── shared/                   # 📦 Contenedor de librerías compartidas aisladas
 │   ├── ui-core/              # @zn-apps/ui-core — componentes Vue/MD3, composables, utils
@@ -101,7 +101,7 @@ Cada app (`zound-box`, `kitchensink`, etc.) es una SPA **completamente independi
 1. `push` a `main` dispara el workflow.
 2. `npm install` en la raíz (resuelve todos los workspaces).
 3. `npm run test:run` (ejecuta todos los tests unitarios con Vitest y detiene el build si hay fallos).
-4. `npm run build:all` → compila `ui-core` y `storage` primero, luego cada app, y copia los `dist/` a `dist/` raíz.
+4. `npm run build:production` → compila librerías y apps usando sprites versionados y copia los `dist/` a `dist/` raíz. No genera iconos.
 5. Se inyectan archivos `404.html` (copia de `index.html`) para fallback en SPA.
 6. Se publica el directorio `dist/` en GitHub Pages.
 

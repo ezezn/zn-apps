@@ -179,12 +179,12 @@ también se refresca allí. Si el perfil no declara iconos, no genera nada.
 ```text
 npm install
 npm run test:run
-npm run build:all          # cada app ejecuta scan + generate en su prebuild
+npm run build:production   # usa sprites versionados; no genera iconos
 ```
 
-Cada app ejecuta `icons` en `predev` y `prebuild`; `ui-core` lo hace en
-`postbuild`. Así el chunk está en `dist/icons/` antes de publicar en GitHub
-Pages. Si una app generó sprites, VitePWA los incluye en el precache de Workbox
+La generación es explícita: ejecuta `npm run build:icons` localmente y sube los
+perfiles y sprites generados. El build de producción solo copia los sprites
+versionados a `dist/icons/`. Si una app tiene sprites, VitePWA los incluye en el precache de Workbox
 para que estén disponibles desde la primera carga offline; las apps sin sprites
 no añaden patrones de iconos al precache.
 

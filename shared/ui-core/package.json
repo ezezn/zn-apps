@@ -13,8 +13,6 @@
   },
   "scripts": {
     "build": "vite build",
-    "prebuild": "npm run scan:icons",
-    "postbuild": "npm run generate:icons",
     "dev": "vite build --watch",
     "generate:icons": "node scripts/generate-icons.mjs --profile shared",
     "scan:icons": "node ../../scripts/scan-icons.mjs .",

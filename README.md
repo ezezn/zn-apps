@@ -113,7 +113,7 @@ npm run test:kitchensink  # Solo la aplicación Kitchensink y su router
 Para generar la distribución completa lista para producción en la carpeta `dist/`:
 
 ```bash
-npm run build:all
+npm run build:production
 ```
 
 **¿Qué hace este script?**
@@ -122,6 +122,10 @@ npm run build:all
 3. Compila `@zn-apps/ui-core` y `@zn-apps/storage` en modo librería.
 4. Compila `zound-box` y `kitchensink`.
 5. Mueve cada `dist/` a su subcarpeta correspondiente dentro de la raíz `dist/`.
+
+El build no escanea ni genera iconos. Cuando cambien los iconos, ejecuta
+`npm run build:icons` localmente y sube `icon-profile.json` y los sprites de
+`zound-box/public/icons/` y `kitchensink/public/icons/` junto con los cambios.
 
 ### Compilación Individual por Proyecto
 
@@ -141,7 +145,7 @@ El repositorio cuenta con un flujo automatizado de integración y despliegue con
 flowchart LR
   A[Push a main] --> B[npm install]
   B --> C[npm run test:run\nTests Unitarios]
-  C --> D[npm run build:all\nCompilación Unificada]
+  C --> D[npm run build:production\nCompilación Unificada]
   D --> E[Inyección Fallbacks 404]
   E --> F[Deploy a GitHub Pages]
 ```
