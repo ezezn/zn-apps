@@ -105,12 +105,6 @@ import { ZnSection, ZnBox, ZnRow, ZnButton, ZnScreen, ZnMasterSlaveLayout } from
   height: 100%;
 }
 
-.demo-logo {
-  font-weight: 700;
-  font-size: 1rem;
-  color: var(--md-primary);
-}
-
 .demo-nav-item {
   display: block;
   padding: 10px 16px;
@@ -124,10 +118,6 @@ import { ZnSection, ZnBox, ZnRow, ZnButton, ZnScreen, ZnMasterSlaveLayout } from
 .demo-nav-item--active {
   background-color: var(--md-primary);
   color: var(--md-on-primary);
-}
-
-.demo-content {
-  padding: 24px;
 }
 
 </style>

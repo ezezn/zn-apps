@@ -21,8 +21,6 @@ export { default as ZnBox } from './components/ZnBox.vue'
 export { default as ZnSwitch } from './components/ZnSwitch.vue'
 export { default as ZnDialog } from './components/ZnDialog.vue'
 export { default as ZnDialogHost } from './components/ZnDialogHost.vue'
-/** @deprecated Use ZnMasterSlaveLayout for responsive master/detail navigation. */
-export { default as ZnNavigationLayout } from './components/ZnNavigationLayout.vue'
 export { default as ZnMasterSlaveLayout } from './components/ZnMasterSlaveLayout.vue'
 
 // Iconos Material Design (sprites SVG)

@@ -47,10 +47,6 @@ zound-box/
     ├── main.js           # createApp(App).mount('#app')
     ├── App.vue           # Componente raíz — UI completa
     ├── style.css         # (archivo existente, estilos overrideados por shared)
-    └── assets/
-        ├── hero.png
-        ├── vite.svg
-        └── vue.svg
 ```
 
 > **Nota:** No existe subcarpeta `views/` ni `router/` — toda la UI vive en `App.vue`.

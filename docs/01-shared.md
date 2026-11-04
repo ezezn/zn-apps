@@ -336,9 +336,6 @@ En móvil, el layout muestra inicialmente el master. Al cambiar `viewKey` o acti
 </ZnMasterSlaveLayout>
 ```
 
-`ZnNavigationLayout` sigue exportado temporalmente por compatibilidad con apps
-existentes; para nuevas implementaciones usa `ZnMasterSlaveLayout`.
-
 ---
 
 ### `ZnSection`

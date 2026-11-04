@@ -6,20 +6,20 @@
         <ZnScreen title="ZnComponents Hub" subtitle="Catálogo de componentes">
           <nav aria-label="Navegación principal">
         <span class="nav-section-label">Componentes</span>
-        <router-link to="/buttons" class="nav-item">Botones (ZnButton)</router-link>
-        <router-link to="/cards" class="nav-item">Tarjetas (ZnCard)</router-link>
-        <router-link to="/switches" class="nav-item">Selectores (ZnSwitch)</router-link>
-        <router-link to="/dialogs" class="nav-item">Diálogos (ZnDialog)</router-link>
-        <router-link to="/icons" class="nav-item">Iconos (ZnIcon)</router-link>
+        <router-link to="/buttons">Botones (ZnButton)</router-link>
+        <router-link to="/cards">Tarjetas (ZnCard)</router-link>
+        <router-link to="/switches">Selectores (ZnSwitch)</router-link>
+        <router-link to="/dialogs">Diálogos (ZnDialog)</router-link>
+        <router-link to="/icons">Iconos (ZnIcon)</router-link>
 
         <span class="nav-section-label">Layout & Contenedores</span>
-        <router-link to="/layout" class="nav-item">Layout (ZnBox / ZnRow)</router-link>
-        <router-link to="/sections" class="nav-item">Secciones (ZnSection)</router-link>
-        <router-link to="/screen" class="nav-item">Pantallas (ZnScreen)</router-link>
-        <router-link to="/navigation-layout" class="nav-item">Navegación (ZnMasterSlaveLayout)</router-link>
+        <router-link to="/layout">Layout (ZnBox / ZnRow)</router-link>
+        <router-link to="/sections">Secciones (ZnSection)</router-link>
+        <router-link to="/screen">Pantallas (ZnScreen)</router-link>
+        <router-link to="/navigation-layout">Navegación (ZnMasterSlaveLayout)</router-link>
 
         <span class="nav-section-label">Otros</span>
-        <router-link to="/legacy" class="nav-item">Utilidades</router-link>
+        <router-link to="/legacy">Utilidades</router-link>
 
         <div class="nav-footer">
           <ZnSwitch v-model="isDarkMode" labelRight="Modo oscuro" />

@@ -1,7 +1,5 @@
 <script setup>
 import DemoView from '../components/DemoView.vue'
-import { ref, computed } from 'vue'
-import { useRoute } from 'vue-router'
 import {
   ZnSection, ZnBox, ZnButton, ZnIcon, ZnRow
 } from '@zn-apps/ui-core'
