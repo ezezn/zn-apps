@@ -49,6 +49,11 @@ defineProps({
    ========================================================================== */
 .zn-button {
   display: inline-flex;
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
+  min-height: 40px;
+  height: auto;
   align-items: center;
   justify-content: center;
   gap: 8px;
@@ -57,8 +62,7 @@ defineProps({
   font-weight: 500; /* Medium */
   letter-spacing: 0.1px;
   line-height: 20px;
-  height: 40px;
-  padding: 0 24px;
+  padding: 8px 24px;
   border-radius: 20px; /* Completamente redondeado (Pill) */
   border: none;
   cursor: pointer;
@@ -67,12 +71,22 @@ defineProps({
               box-shadow 0.2s cubic-bezier(0.2, 0, 0, 1),
               color 0.2s cubic-bezier(0.2, 0, 0, 1);
   text-decoration: none;
+  text-align: center;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.zn-button__text {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 /* Ajustes estructurales para Botón de Icono Puro */
 .zn-button--icon-only {
   width: 40px;
   height: 40px;
+  min-width: 40px;
+  min-height: 40px;
   padding: 0;
   border-radius: 50%; /* Círculo perfecto */
 }
@@ -86,6 +100,7 @@ defineProps({
   justify-content: center;
   line-height: 0;
   color: inherit;
+  flex: 0 0 auto;
 }
 
 .zn-button__icon-slot :deep(svg),
@@ -112,8 +127,9 @@ defineProps({
   color: var(--md-on-primary);
 }
 .zn-button--filled:hover {
-  color: var(--md-on-surface-variant);
-  background-color: linear-gradient(0deg, rgba(255,255,255,0.08), rgba(255,255,255,0.08)), var(--md-primary);
+  color: var(--md-on-primary);
+  background-color: var(--md-primary);
+  background-image: linear-gradient(rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.08));
   box-shadow: 0px 1px 3px rgba(0,0,0,0.12), 0px 1px 2px rgba(0,0,0,0.24);
 }
 
@@ -123,6 +139,7 @@ defineProps({
   color: var(--md-on-surface-variant);
 }
 .zn-button--tonal:hover {
+  background-color: color-mix(in srgb, var(--md-on-surface-variant) 8%, var(--md-surface-variant));
   box-shadow: 0px 1px 2px rgba(0,0,0,0.1);
 }
 
@@ -133,6 +150,7 @@ defineProps({
   box-shadow: 0px 1px 3px rgba(0,0,0,0.15);
 }
 .zn-button--elevated:hover {
+  background-color: color-mix(in srgb, var(--md-primary) 8%, var(--md-surface));
   box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
 }
 
@@ -143,7 +161,7 @@ defineProps({
   border: 1px solid var(--md-outline);
 }
 .zn-button--outlined:hover {
-  background-color: rgba(103, 80, 164, 0.08); /* Tinte primario suave */
+  background-color: color-mix(in srgb, var(--md-primary) 8%, transparent);
 }
 
 /* 5. TEXT (Énfasis Bajo / Botón Plano) */
@@ -157,7 +175,7 @@ defineProps({
   color: var(--md-outline); /* El indicador del colapsable usa este tono */
 }
 .zn-button--text:hover {
-  background-color: var(--md-surface-variant);
+  background-color: color-mix(in srgb, var(--md-primary) 8%, transparent);
 }
 
 /* ==========================================================================

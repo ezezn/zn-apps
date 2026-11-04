@@ -42,8 +42,10 @@ shared/
 │       │       └── global.css     # Reset CSS + tokens MD3 (modo claro y oscuro)
 │       ├── components/
 │       │   ├── ZnApp.vue
+│       │   ├── ZnDialog.vue / ZnDialogHost.vue
 │       │   ├── ZnScreen.vue
-│       │   ├── ZnNavigationLayout.vue
+│       │   ├── ZnScrollArea.vue
+│       │   ├── ZnMasterSlaveLayout.vue
 │       │   ├── ZnSection.vue
 │       │   ├── ZnRow.vue
 │       │   ├── ZnBox.vue
@@ -51,8 +53,8 @@ shared/
 │       │   ├── ZnCard.vue
 │       │   ├── ZnSwitch.vue
 │       │   ├── ZnIcon.vue
-│       │   └── CustomButton.vue   # Legacy, a reemplazar por ZnButton
 │       ├── composables/
+│       │   ├── useDialogs.js
 │       │   └── useOnlineStatus.js
 │       └── utils/
 │           └── helpers.js
@@ -64,6 +66,38 @@ shared/
         ├── index.js
         └── __tests__/storage.spec.js
 ```
+
+### Diálogos
+
+`ZnDialog` usa el elemento nativo `<dialog>` y expone slots para título,
+contenido y acciones. Para alertas, confirmaciones y preguntas con entrada de
+texto, monta un `ZnDialogHost` una vez en la raíz de la app y usa
+`useDialogs()`:
+
+```vue
+<script setup>
+import { ZnDialogHost, useDialogs } from '@zn-apps/ui-core'
+
+const { alert, confirm, prompt } = useDialogs()
+async function confirmDelete() {
+  const accepted = await confirm('¿Eliminar este elemento?')
+  if (accepted) await alert('El elemento fue eliminado.')
+}
+
+async function askForName() {
+  const name = await prompt('¿Cómo quieres llamarlo?', { required: true })
+  if (name !== null) console.log(name)
+}
+</script>
+
+<template>
+  <ZnDialogHost />
+</template>
+```
+
+`alert()` resuelve al cerrarse, `confirm()` devuelve `true` o `false`, y
+`prompt()` devuelve el texto ingresado o `null` al cancelar. Las llamadas se
+encolan y se muestran de una en una.
 
   **Iconos:** cada proyecto genera su propio chunk filtrado con `npm run generate:icons` (perfil `shared` para la librería). Ya no se versionan sprites en `src/icons/`; el loader vive en `src/icons/index.js`.
   **Escaneo:** los iconos usados se detectan con `npm run scan:icons` en cada proyecto (script único en `<raíz>/scripts/scan-icons.mjs`). Escribe el `icon-profile.json` con dos arrays: `scanned` (detectados) y `manual` (declarados por el desarrollador).
@@ -232,6 +266,7 @@ Se usan como clases en elementos hijos de `ZnSection` cuando esta tiene prop `co
 | Prop | Tipo | Default | Descripción |
 |---|---|---|---|
 | `title` | `String` | `''` | Título de la barra superior |
+| `subtitle` | `String` | `''` | Subtítulo opcional debajo del título |
 
 **Slots:**
 | Slot | Descripción |
@@ -247,37 +282,62 @@ Se usan como clases en elementos hijos de `ZnSection` cuando esta tiene prop `co
 
 **Uso:**
 ```vue
-<ZnScreen title="Mi Pantalla">
+<ZnScreen title="Mi Pantalla" subtitle="Descripción breve">
   <template #icon><svg .../></template>
   <template #actions><ZnSwitch v-model="isDark" /></template>
   <!-- contenido -->
 </ZnScreen>
 ```
 
+`ZnScreen` usa `ZnScrollArea` para ocultar el scrollbar nativo y mostrar un
+indicador vertical breve mientras hay desplazamiento.
+
+### `ZnScrollArea`
+
+Contenedor reutilizable para contenido desplazable. Oculta la barra nativa y
+superpone un thumb indicador que aparece al desplazarse y se desvanece al parar.
+El contenedor padre debe limitar su altura (por ejemplo, con `height`, `max-height`
+o un layout flex) para que el área pueda desplazarse.
+
+```vue
+<ZnScrollArea label="Resultados">
+  <!-- contenido largo -->
+</ZnScrollArea>
+```
+
 ---
 
-### `ZnNavigationLayout`
-**Propósito:** Layout de dos columnas: Navigation Drawer (280px) + área de contenido. Para apps multi-página con vue-router.
+### `ZnMasterSlaveLayout`
+**Propósito:** Coordina una pantalla maestra (navegación) y una pantalla esclava (contenido). En escritorio ambas quedan visibles en dos columnas; en móvil se muestra primero el master y, al cambiar de vista o seleccionar un enlace, se muestra el contenido con una acción para volver.
+
+**Props:**
+| Prop | Tipo | Default | Descripción |
+|---|---|---|---|
+| `viewKey` | `String\|Number` | `null` | Identificador de vista activa. Enlázalo con `$route.fullPath` para detectar cambios de ruta sin acoplar ui-core a Vue Router. |
+| `breakpoint` | `Number` | `768` | Ancho máximo, en píxeles, para el comportamiento móvil. |
 
 **Slots:**
 | Slot | Descripción |
 |---|---|
-| `#aside-header` | Cabecera del drawer (logo, nombre de app) |
-| `#aside` | Links de navegación (`<router-link>`) |
-| `default` | Contenido principal (`<router-view>`) |
+| `#master` | La pantalla maestra; suele contener navegación y debe incluir un `ZnScreen`. |
+| `default` | La pantalla esclava; comúnmente un `<router-view />` cuyas vistas declaran su propio `ZnScreen`. |
 
-**Responsividad:** En pantallas ≤ 768px el drawer pasa a posición superior (flex-direction: column).
+En móvil, el layout muestra inicialmente el master. Al cambiar `viewKey` o activar un enlace del master, el master se desliza a la izquierda y el slave entra desde la derecha. El botón de regreso de `ZnScreen` reproduce el movimiento inverso. El panel fuera de vista queda inerte y la transición respeta `prefers-reduced-motion`.
 
 **Uso:**
 ```vue
-<ZnNavigationLayout>
-  <template #aside-header>Mi App</template>
-  <template #aside>
-    <router-link to="/home">Inicio</router-link>
+<ZnMasterSlaveLayout :view-key="$route.fullPath">
+  <template #master>
+    <ZnScreen title="Mi App">
+      <router-link to="/home">Inicio</router-link>
+    </ZnScreen>
   </template>
   <router-view />
-</ZnNavigationLayout>
+</ZnMasterSlaveLayout>
 ```
+
+`ZnNavigationLayout` sigue exportado temporalmente por compatibilidad con apps
+existentes; para nuevas implementaciones usa `ZnMasterSlaveLayout`.
 
 ---
 
@@ -504,13 +564,6 @@ Se usan como clases en elementos hijos de `ZnSection` cuando esta tiene prop `co
   Reproducir
 </ZnButton>
 ```
-
----
-
-### `CustomButton` _(Legacy)_
-- **Estado:** Legacy. Estilos propios no MD3 (verde `#42b883`). A reemplazar por `ZnButton`.
-- **Props:** `label: String` (default: `'Botón Compartido'`).
-- **Eventos:** `@click`.
 
 ---
 

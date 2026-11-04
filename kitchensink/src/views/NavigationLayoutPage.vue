@@ -1,11 +1,5 @@
 <template>
-  <ZnScreen title="Navegación (ZnNavigationLayout)">
-    <template #title>
-      <div>
-        <h1 class="screen-heading">Navegación (ZnNavigationLayout)</h1>
-        <span class="screen-subtitle">Navigation Drawer de 280px + área de contenido para apps con router</span>
-      </div>
-    </template>
+  <DemoView view="navigation-layout">
 
     <ZnSection title="1. Previsualización del Layout" collapsible :columns="1">
       <p class="section-desc section-desc--full">
@@ -13,69 +7,68 @@
       </p>
 
       <div class="preview">
-        <ZnNavigationLayout>
-          <template #aside-header>
-            <span class="demo-logo">🎧 Demo App</span>
+        <ZnMasterSlaveLayout>
+          <template #master>
+            <ZnScreen title="Demo App" subtitle="Navegación principal">
+              <nav class="demo-nav" aria-label="Navegación de ejemplo">
+                <a href="#" @click.prevent class="demo-nav-item demo-nav-item--active">Inicio</a>
+                <a href="#" @click.prevent class="demo-nav-item">Biblioteca</a>
+                <a href="#" @click.prevent class="demo-nav-item">Ajustes</a>
+              </nav>
+            </ZnScreen>
           </template>
 
-          <template #aside>
-            <span class="demo-nav-item demo-nav-item--active">Inicio</span>
-            <span class="demo-nav-item">Biblioteca</span>
-            <span class="demo-nav-item">Ajustes</span>
-          </template>
-
-          <div class="demo-content">
-            <h2 class="demo-content__title">Contenido principal</h2>
+          <ZnScreen title="Contenido principal" subtitle="Vista seleccionada">
             <p class="helper-text">
-              Aquí se renderiza el <code>&lt;router-view /&gt;</code> de la aplicación. El drawer solo aporta la estructura, no gestiona las rutas.
+              En escritorio, el contenido comparte el espacio con la pantalla maestra. En móvil, aparece al seleccionar una opción y ofrece una flecha para volver.
             </p>
             <ZnRow padding="0" gap="8px" style="margin-top: 16px;">
               <ZnButton variant="filled">Acción primaria</ZnButton>
               <ZnButton variant="outlined">Secundaria</ZnButton>
             </ZnRow>
-          </div>
-        </ZnNavigationLayout>
+          </ZnScreen>
+        </ZnMasterSlaveLayout>
       </div>
     </ZnSection>
 
     <ZnSection title="2. Slots Disponibles" collapsible :columns="3">
       <p class="section-desc section-desc--full">
-        El componente es puramente estructural: recibe tres slots y no conoce el router.
+        El slot <code>#master</code> contiene la navegación y el slot por defecto muestra la vista seleccionada. La prop <code>viewKey</code> puede enlazarse con la ruta actual para activar la vista de contenido en móvil.
       </p>
 
       <ZnBox variant="filled" class="showcase-stack">
-        <span class="showcase-label">#aside-header</span>
-        <p class="helper-text">Cabecera del drawer: logo, nombre de la app o menú de cuenta.</p>
+        <span class="showcase-label">#master</span>
+        <p class="helper-text">Pantalla maestra con navegación, visible junto al contenido en escritorio.</p>
       </ZnBox>
 
       <ZnBox variant="outlined" class="showcase-stack">
-        <span class="showcase-label">#aside</span>
-        <p class="helper-text">Lista de navegación. Normalmente contiene <code>&lt;router-link&gt;</code> con la clase <code>nav-item</code>.</p>
+        <span class="showcase-label">default</span>
+        <p class="helper-text">Pantalla de contenido. Puede ser un <code>&lt;router-view /&gt;</code> cuyas vistas definan su propio <code>ZnScreen</code>.</p>
       </ZnBox>
 
       <ZnBox variant="elevated" class="showcase-stack">
-        <span class="showcase-label">default</span>
-        <p class="helper-text">Área principal de contenido, habitualmente un <code>&lt;router-view /&gt;</code>.</p>
+        <span class="showcase-label">viewKey</span>
+        <p class="helper-text">Al cambiar, muestra el contenido en móvil. La flecha de la barra superior permite volver al master.</p>
       </ZnBox>
     </ZnSection>
 
     <ZnSection title="3. Integración con vue-router" collapsible :expanded="false" :columns="1">
-      <pre class="code-block">&lt;ZnNavigationLayout&gt;
-  &lt;template #aside-header&gt;Mi App&lt;/template&gt;
-
-  &lt;template #aside&gt;
-    &lt;router-link to="/home" class="nav-item"&gt;Inicio&lt;/router-link&gt;
-    &lt;router-link to="/settings" class="nav-item"&gt;Ajustes&lt;/router-link&gt;
+      <pre class="code-block">&lt;ZnMasterSlaveLayout :view-key="$route.fullPath"&gt;
+  &lt;template #master&gt;
+    &lt;ZnScreen title="Mi App"&gt;
+      &lt;router-link to="/home"&gt;Inicio&lt;/router-link&gt;
+      &lt;router-link to="/settings"&gt;Ajustes&lt;/router-link&gt;
+    &lt;/ZnScreen&gt;
   &lt;/template&gt;
-
   &lt;router-view /&gt;
-&lt;/ZnNavigationLayout&gt;</pre>
+&lt;/ZnMasterSlaveLayout&gt;</pre>
     </ZnSection>
-  </ZnScreen>
+  </DemoView>
 </template>
 
 <script setup>
-import { ZnScreen, ZnSection, ZnBox, ZnRow, ZnButton, ZnNavigationLayout } from '@zn-apps/ui-core'
+import DemoView from '../components/DemoView.vue'
+import { ZnSection, ZnBox, ZnRow, ZnButton, ZnScreen, ZnMasterSlaveLayout } from '@zn-apps/ui-core'
 </script>
 
 <style scoped>
@@ -86,18 +79,30 @@ import { ZnScreen, ZnSection, ZnBox, ZnRow, ZnButton, ZnNavigationLayout } from 
   border-radius: 16px;
 }
 
-.preview :deep(.zn-nav-layout) {
+.preview :deep(.zn-master-slave-layout) {
   height: 100%;
   min-height: 0;
 }
 
-.preview :deep(.zn-nav-layout__aside) {
+.preview :deep(.zn-master-slave-layout__master) {
   height: 100%;
+  min-height: 0;
   position: relative;
 }
 
-.preview :deep(.zn-nav-layout__content) {
+.preview :deep(.zn-master-slave-layout__slave) {
+  height: 100%;
+  min-height: 0;
   overflow-y: auto;
+}
+
+.preview :deep(.zn-screen) {
+  height: 100%;
+  min-height: 0;
+}
+
+.preview :deep(.zn-scroll-area) {
+  height: 100%;
 }
 
 .demo-logo {
@@ -113,6 +118,7 @@ import { ZnScreen, ZnSection, ZnBox, ZnRow, ZnButton, ZnNavigationLayout } from 
   font-size: 0.9rem;
   font-weight: 500;
   color: var(--md-on-surface-variant);
+  text-decoration: none;
 }
 
 .demo-nav-item--active {
@@ -124,10 +130,4 @@ import { ZnScreen, ZnSection, ZnBox, ZnRow, ZnButton, ZnNavigationLayout } from 
   padding: 24px;
 }
 
-.demo-content__title {
-  margin: 0 0 8px 0;
-  font-size: 1.2rem;
-  font-weight: 500;
-  color: var(--md-on-background);
-}
 </style>

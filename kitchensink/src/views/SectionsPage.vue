@@ -1,11 +1,5 @@
 <template>
-  <ZnScreen title="Secciones (ZnSection)">
-    <template #title>
-      <div>
-        <h1 class="screen-heading">Secciones (ZnSection)</h1>
-        <span class="screen-subtitle">Agrupación de contenido, modo colapsable y grillas internas</span>
-      </div>
-    </template>
+  <DemoView view="sections">
 
     <ZnSection title="1. Sección Simple (Sin colapsar)">
       <p class="section-desc">
@@ -68,12 +62,13 @@
         El slot <code>#title</code> reemplaza el texto plano del encabezado y admite badges, iconos o cualquier markup.
       </p>
     </ZnSection>
-  </ZnScreen>
+  </DemoView>
 </template>
 
 <script setup>
+import DemoView from '../components/DemoView.vue'
 import { ref } from 'vue'
-import { ZnScreen, ZnSection, ZnBox, ZnRow } from '@zn-apps/ui-core'
+import { ZnSection, ZnBox, ZnRow } from '@zn-apps/ui-core'
 
 const lastToggle = ref(null)
 const toggleCount = ref(0)

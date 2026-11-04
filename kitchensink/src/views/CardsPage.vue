@@ -1,11 +1,5 @@
 <template>
-  <ZnScreen title="Tarjetas (ZnCard)">
-    <template #title>
-      <div>
-        <h1 class="screen-heading">Tarjetas (ZnCard)</h1>
-        <span class="screen-subtitle">Material Design 3 · variantes e imágenes de cabecera o fondo completo</span>
-      </div>
-    </template>
+  <DemoView view="cards">
 
     <ZnSection title="1. Variantes Nativas (Prop: variant)" collapsible :columns="3">
       <p class="section-desc section-desc--full">
@@ -110,11 +104,12 @@
         <p class="helper-text">El contenido del slot convive con la imagen de cabecera y su scrim.</p>
       </ZnCard>
     </ZnSection>
-  </ZnScreen>
+  </DemoView>
 </template>
 
 <script setup>
-import { ZnScreen, ZnSection, ZnCard, ZnButton, ZnIcon } from '@zn-apps/ui-core'
+import DemoView from '../components/DemoView.vue'
+import { ZnSection, ZnCard, ZnButton, ZnIcon } from '@zn-apps/ui-core'
 
 const headerImage = 'https://picsum.photos/id/1025/600/300'
 const headerImageAlt = 'https://picsum.photos/id/1050/600/300'

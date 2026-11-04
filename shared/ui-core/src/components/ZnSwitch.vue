@@ -93,7 +93,10 @@ function handleChange(event) {
    ========================================================================== */
 .zn-switch-wrapper {
   display: inline-flex;
+  max-width: 100%;
+  min-width: 0;
   align-items: center;
+  flex-wrap: wrap;
   gap: 12px;
   cursor: pointer;
   user-select: none;
@@ -103,7 +106,9 @@ function handleChange(event) {
 }
 
 .zn-switch__label {
+  min-width: 0;
   line-height: 1;
+  overflow-wrap: anywhere;
 }
 
 /* ==========================================================================
@@ -111,7 +116,10 @@ function handleChange(event) {
    ========================================================================== */
 .zn-switch {
   position: relative;
+  box-sizing: border-box;
+  flex: 0 0 52px;
   width: 52px;
+  min-width: 52px;
   height: 32px;
   display: inline-block;
 }

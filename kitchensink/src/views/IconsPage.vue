@@ -1,16 +1,7 @@
 <template>
-  <ZnScreen title="Iconos (ZnIcon)">
+  <DemoView view="icons">
     <template #icon>
       <ZnIcon name="palette" />
-    </template>
-
-    <template #title>
-      <div>
-        <h1 class="screen-heading">Iconos (ZnIcon)</h1>
-        <span class="screen-subtitle">
-          Material Icons vía sprites SVG · {{ ICON_FAMILIES.length }} familias
-        </span>
-      </div>
     </template>
 
     <ZnSection title="1. Uso Básico (Props: name / family / size)" collapsible :columns="3">
@@ -150,12 +141,13 @@ if (await iconExists('filled', 'play_arrow')) { /* … */ }</pre>
       <pre class="code-block">&lt;ZnIcon name="play_arrow" /&gt;
 &lt;ZnIcon name="dark_mode" family="outlined" :size="32" label="Modo oscuro" /&gt;</pre>
     </ZnSection>
-  </ZnScreen>
+  </DemoView>
 </template>
 
 <script setup>
+import DemoView from '../components/DemoView.vue'
 import { computed, onMounted, ref, watch } from 'vue'
-import { ICON_FAMILIES, ZnButton, ZnBox, ZnIcon, ZnRow, ZnScreen, ZnSection, iconNames } from '@zn-apps/ui-core'
+import { ICON_FAMILIES, ZnButton, ZnBox, ZnIcon, ZnRow, ZnSection, iconNames } from '@zn-apps/ui-core'
 
 const PAGE_SIZE = 120
 

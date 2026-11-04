@@ -1,11 +1,5 @@
 <template>
-  <ZnScreen title="Selectores (ZnSwitch)">
-    <template #title>
-      <div>
-        <h1 class="screen-heading">Selectores (ZnSwitch)</h1>
-        <span class="screen-subtitle">Material Design 3 · etiquetas, texto interior e iconos en el actuador</span>
-      </div>
-    </template>
+  <DemoView view="switches">
 
     <!-- SECCIÓN 1: INTERRUPTORES ESTÁNDAR (SIN TEXTO DENTRO) -->
     <ZnSection title="1. Interruptores Estándar (Sin texto dentro)" collapsible :columns="3">
@@ -114,12 +108,13 @@
         <ZnSwitch :model-value="true" disabled textOn="ON" textOff="OFF" labelRight="Modo forzado" />
       </ZnBox>
     </ZnSection>
-  </ZnScreen>
+  </DemoView>
 </template>
 
 <script setup>
+import DemoView from '../components/DemoView.vue'
 import { ref } from 'vue'
-import { ZnScreen, ZnSection, ZnBox, ZnSwitch, ZnIcon } from '@zn-apps/ui-core'
+import { ZnSection, ZnBox, ZnSwitch, ZnIcon } from '@zn-apps/ui-core'
 
 // Estados reactivos individuales para cada ejemplo
 const switchPuro = ref(false)

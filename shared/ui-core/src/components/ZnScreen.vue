@@ -1,40 +1,62 @@
 <template>
-  <div class="zn-screen">
-    <div ref="sentinelRef" class="zn-screen__sentinel"></div>
+  <section class="zn-screen">
+    <ZnScrollArea class="zn-screen__scroll-area" :label="title || 'Contenido de pantalla'">
+      <div ref="sentinelRef" class="zn-screen__sentinel"></div>
 
-    <header 
-      v-if="title || $slots.title || $slots.icon || $slots.actions" 
-      :class="[
-        'zn-screen__header', 
-        { 'zn-screen__header--scrolled': isScrolled }
-      ]"
-    >
-      <div class="zn-screen__branding">
-        <div v-if="$slots.icon" class="zn-screen__icon">
-          <slot name="icon" />
+      <header
+        v-if="title || subtitle || $slots.title || $slots.icon || $slots.actions || showBackButton"
+        :class="[
+          'zn-screen__header',
+          { 'zn-screen__header--scrolled': isScrolled }
+        ]"
+      >
+        <div class="zn-screen__branding">
+          <button
+            v-if="showBackButton"
+            type="button"
+            class="zn-screen__back"
+            aria-label="Volver a la navegación"
+            @click="navigation.goBack"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+            </svg>
+          </button>
+          <div v-if="$slots.icon" class="zn-screen__icon">
+            <slot name="icon" />
+          </div>
+
+          <div class="zn-screen__heading">
+            <h1 v-if="$slots.title || title" class="zn-screen__title">
+              <slot name="title">{{ title }}</slot>
+            </h1>
+            <p v-if="subtitle" class="zn-screen__subtitle">{{ subtitle }}</p>
+          </div>
         </div>
-        
-        <h1 class="zn-screen__title">
-          <slot name="title">{{ title }}</slot>
-        </h1>
-      </div>
 
-      <div v-if="$slots.actions" class="zn-screen__actions">
-        <slot name="actions" />
-      </div>
-    </header>
+        <div v-if="$slots.actions" class="zn-screen__actions">
+          <slot name="actions" />
+        </div>
+      </header>
 
-    <main class="zn-screen__content">
-      <slot />
-    </main>
-  </div>
+      <div class="zn-screen__content">
+        <slot />
+      </div>
+    </ZnScrollArea>
+  </section>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { computed, inject, ref, onMounted, onUnmounted } from 'vue'
+import { screenNavigationKey } from './screenNavigation.js'
+import ZnScrollArea from './ZnScrollArea.vue'
 
 defineProps({
   title: {
+    type: String,
+    default: ''
+  },
+  subtitle: {
     type: String,
     default: ''
   }
@@ -42,6 +64,10 @@ defineProps({
 
 const isScrolled = ref(false)
 const sentinelRef = ref(null)
+const navigation = inject(screenNavigationKey, null)
+const showBackButton = computed(() => Boolean(
+  navigation?.isMobile.value && navigation?.isSlaveVisible.value
+))
 let observer = null
 
 onMounted(() => {
@@ -72,23 +98,29 @@ onUnmounted(() => {
 .zn-screen {
   position: relative;
   width: 100%;
-  min-height: 100vh;
+  height: 100dvh;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  overflow: hidden;
   background-color: var(--md-background);
   color: var(--md-on-background);
+}
+
+.zn-screen__scroll-area {
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 /* ==========================================================================
    ESTILOS DEL CENTINELA
    ========================================================================== */
 .zn-screen__sentinel {
-  position: absolute;
-  top: 0;
-  left: 0;
+  flex: 0 0 1px;
   width: 100%;
   height: 1px;
+  margin-bottom: -1px;
   pointer-events: none;
   visibility: hidden;
 }
@@ -130,6 +162,44 @@ onUnmounted(() => {
   gap: 16px;
 }
 
+.zn-screen__back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--md-on-surface);
+  cursor: pointer;
+}
+
+.zn-screen__back:hover {
+  background: color-mix(in srgb, var(--md-on-surface) 8%, transparent);
+}
+
+.zn-screen__back:focus-visible {
+  outline: 2px solid var(--md-primary);
+  outline-offset: 2px;
+}
+
+.zn-screen__back svg {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
+
+.zn-screen__heading {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  gap: 2px;
+}
+
 .zn-screen__icon {
   display: flex;
   align-items: center;
@@ -152,6 +222,14 @@ onUnmounted(() => {
   margin: 0;
   color: var(--md-on-background);
   transition: font-size 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.zn-screen__subtitle {
+  margin: 0;
+  color: var(--md-on-surface-variant);
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.8rem;
+  line-height: 1.25;
 }
 
 .zn-screen__actions {
@@ -185,7 +263,7 @@ onUnmounted(() => {
    ÁREA DE CONTENIDO
    ========================================================================== */
 .zn-screen__content {
-  flex: 1;
+  flex: 1 0 auto;
   padding: 24px;
   box-sizing: border-box;
 }

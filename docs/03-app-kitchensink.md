@@ -20,7 +20,8 @@ This document describes the **kitchensink** application, which acts as the bluep
 
 Kitchensink is an autonomous SPA. It consumes **only** `shared/ui-core` and never shares Pinia state with other apps.
 
-- The UI is composed of `ZnApp` (theme wrapper), `ZnScreen` (layout), `ZnSection` (grouped content) and the concrete components (`ZnButton`, `ZnCard`, `ZnSwitch`, `ZnIcon`, `ZnBox`, `ZnRow`, `ZnNavigationLayout`).
+- The UI is composed of `ZnApp` (theme wrapper), `ZnMasterSlaveLayout` (responsive navigation), `ZnScreen` (screen structure), `ZnSection` (grouped content) and the concrete components (`ZnButton`, `ZnCard`, `ZnSwitch`, `ZnDialog`, `ZnIcon`, `ZnBox`, `ZnRow`).
+- The dialogs page demonstrates the native `ZnDialog` base and the `useDialogs()` alert, confirmation, and prompt helpers.
 - Icons are not bundled as static PNG/SVG files. The app references them through `ZnIcon`, which loads a `<symbol>` from the **generated per-project sprite** in `public/icons/` (copied to `dist/icons/`).
 - The app ships its own `icon-profile.json`. Its `manual` array declares the **full Material Design catalog** (that is what makes kitchensink the developer icon library); `scanned` holds the icons the pages actually use.
 

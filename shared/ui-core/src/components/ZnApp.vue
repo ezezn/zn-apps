@@ -87,6 +87,8 @@ body {
 .zn-theme-light {
   --md-primary: #6750A4;
   --md-on-primary: #FFFFFF;
+  --md-primary-container: #EADDFF;
+  --md-on-primary-container: #21005D;
   --md-surface: #F3EDF7;
   --md-on-surface: #1D1B20;
   --md-surface-variant: #E7E0EC;
@@ -100,6 +102,8 @@ body {
 .zn-theme-dark {
   --md-primary: #D0BCFF;
   --md-on-primary: #381E72;
+  --md-primary-container: #4F378B;
+  --md-on-primary-container: #EADDFF;
   --md-surface: #211F26;
   --md-on-surface: #E6E1E5;
   --md-surface-variant: #49454F;

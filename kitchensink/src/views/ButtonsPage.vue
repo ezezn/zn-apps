@@ -1,8 +1,9 @@
 <script setup>
+import DemoView from '../components/DemoView.vue'
 import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import {
-  ZnScreen, ZnSection, ZnBox, ZnButton, ZnIcon, ZnRow
+  ZnSection, ZnBox, ZnButton, ZnIcon, ZnRow
 } from '@zn-apps/ui-core'
 
 // --- Sección 1: 5 variantes de énfasis ---
@@ -16,7 +17,7 @@ const variantShowcase = [
 </script>
 
 <template>
-  <ZnScreen title="Botones">
+  <DemoView view="buttons">
     <template #icon>
       <ZnIcon name="menu" />
     </template>
@@ -35,5 +36,5 @@ const variantShowcase = [
         </ZnButton>
       </ZnSection>
     </section>
-  </ZnScreen>
+  </DemoView>
 </template>

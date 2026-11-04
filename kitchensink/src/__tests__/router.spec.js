@@ -11,6 +11,7 @@ import SectionsPage from '../views/SectionsPage.vue'
 import ScreenPage from '../views/ScreenPage.vue'
 import NavigationLayoutPage from '../views/NavigationLayoutPage.vue'
 import LegacyPage from '../views/LegacyPage.vue'
+import DialogsPage from '../views/DialogsPage.vue'
 
 function createTestRouter() {
   return createRouter({
@@ -20,6 +21,7 @@ function createTestRouter() {
       { path: '/buttons', name: 'buttons', component: ButtonsPage },
       { path: '/cards', name: 'cards', component: CardsPage },
       { path: '/switches', name: 'switches', component: SwitchesPage },
+      { path: '/dialogs', name: 'dialogs', component: DialogsPage },
       { path: '/icons', name: 'icons', component: IconsPage },
       { path: '/layout', name: 'layout', component: LayoutPage },
       { path: '/sections', name: 'sections', component: SectionsPage },
@@ -50,12 +52,13 @@ describe('Kitchensink App & Router', () => {
     expect(wrapper.text()).toContain('Botones (ZnButton)')
     expect(wrapper.text()).toContain('Tarjetas (ZnCard)')
     expect(wrapper.text()).toContain('Selectores (ZnSwitch)')
+    expect(wrapper.text()).toContain('Diálogos (ZnDialog)')
     expect(wrapper.text()).toContain('Iconos (ZnIcon)')
     expect(wrapper.text()).toContain('Layout (ZnBox / ZnRow)')
     expect(wrapper.text()).toContain('Secciones (ZnSection)')
     expect(wrapper.text()).toContain('Pantallas (ZnScreen)')
-    expect(wrapper.text()).toContain('Navegación (ZnNavigationLayout)')
-    expect(wrapper.text()).toContain('Legacy y utilidades')
+    expect(wrapper.text()).toContain('Navegación (ZnMasterSlaveLayout)')
+    expect(wrapper.text()).toContain('Utilidades')
   })
 
   it('navega a la vista de Cards al cambiar de ruta', async () => {
@@ -68,6 +71,12 @@ describe('Kitchensink App & Router', () => {
     const wrapper = await mountAt('/switches')
 
     expect(wrapper.findComponent(SwitchesPage).exists()).toBe(true)
+  })
+
+  it('navega a la vista de diálogos al cambiar de ruta', async () => {
+    const wrapper = await mountAt('/dialogs')
+
+    expect(wrapper.findComponent(DialogsPage).exists()).toBe(true)
   })
 
   it('navega a la vista de Icons al cambiar de ruta', async () => {

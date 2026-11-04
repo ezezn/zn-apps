@@ -1,11 +1,5 @@
 <template>
-  <ZnScreen title="Pantallas (ZnScreen)">
-    <template #title>
-      <div>
-        <h1 class="screen-heading">Pantallas (ZnScreen)</h1>
-        <span class="screen-subtitle">Top App Bar sticky con icono, título y acciones</span>
-      </div>
-    </template>
+  <DemoView view="screen">
 
     <ZnSection title="1. Uso Básico (Prop: title)">
       <p class="section-desc">
@@ -23,20 +17,13 @@
 
     <ZnSection title="2. Slots: icon, title y actions" collapsible :columns="1">
       <p class="section-desc section-desc--full">
-        El slot <code>#icon</code> añade un <code>ZnIcon</code> junto al título, <code>#title</code> reemplaza el texto (permite HTML) y <code>#actions</code> coloca controles a la derecha.
+        Las props <code>title</code> y <code>subtitle</code> componen el encabezado común. El slot <code>#icon</code> añade un <code>ZnIcon</code>, <code>#title</code> permite contenido personalizado y <code>#actions</code> coloca controles a la derecha.
       </p>
 
       <ZnBox variant="outlined" class="preview">
-        <ZnScreen>
+        <ZnScreen title="Zound Box" subtitle="Un reproductor de sonidos">
           <template #icon>
             <ZnIcon name="music_note" label="Música" />
-          </template>
-
-          <template #title>
-            <div>
-              <span class="custom-screen-title">Zound Box</span>
-              <span class="helper-text">Slot #title con subtítulo</span>
-            </div>
           </template>
 
           <template #actions>
@@ -55,7 +42,7 @@
       <p class="section-desc section-desc--full">
         Patrón recomendado: una <code>ZnScreen</code> por ruta, con <code>ZnSection</code> para agrupar el contenido.
       </p>
-      <pre class="code-block">&lt;ZnScreen title="Mi Pantalla"&gt;
+      <pre class="code-block">&lt;ZnScreen title="Mi Pantalla" subtitle="Descripción breve"&gt;
   &lt;template #icon&gt;&lt;ZnIcon name="music_note" /&gt;&lt;/template&gt;
   &lt;template #actions&gt;&lt;ZnSwitch v-model="activo" /&gt;&lt;/template&gt;
 
@@ -64,10 +51,11 @@
   &lt;/ZnSection&gt;
 &lt;/ZnScreen&gt;</pre>
     </ZnSection>
-  </ZnScreen>
+  </DemoView>
 </template>
 
 <script setup>
+import DemoView from '../components/DemoView.vue'
 import { ref } from 'vue'
 import { ZnScreen, ZnSection, ZnBox, ZnRow, ZnButton, ZnSwitch, ZnIcon } from '@zn-apps/ui-core'
 
@@ -76,19 +64,19 @@ const screenSwitch = ref(true)
 
 <style scoped>
 .preview :deep(.zn-screen) {
+  height: 320px;
   min-height: auto;
   border-radius: 16px;
   overflow: hidden;
   border: 1px solid var(--md-surface-variant);
 }
 
+.preview :deep(.zn-scroll-area) {
+  height: 100%;
+}
+
 .preview :deep(.zn-screen__content) {
   padding: 16px;
 }
 
-.custom-screen-title {
-  display: block;
-  font-size: 1.2rem;
-  font-weight: 500;
-}
 </style>

@@ -1,11 +1,5 @@
 <template>
-  <ZnScreen title="Layout (ZnBox / ZnRow)">
-    <template #title>
-      <div>
-        <h1 class="screen-heading">Layout (ZnBox / ZnRow)</h1>
-        <span class="screen-subtitle">Contenedores base y distribución horizontal para componer páginas</span>
-      </div>
-    </template>
+  <DemoView view="layout">
 
     <ZnSection title="1. ZnBox · Variantes Visuales (Prop: variant)" collapsible :columns="3">
       <p class="section-desc section-desc--full">
@@ -113,9 +107,10 @@
         <ZnButton variant="outlined">Saber más</ZnButton>
       </ZnBox>
     </ZnSection>
-  </ZnScreen>
+  </DemoView>
 </template>
 
 <script setup>
-import { ZnScreen, ZnSection, ZnBox, ZnRow, ZnButton, ZnCard, ZnIcon } from '@zn-apps/ui-core'
+import DemoView from '../components/DemoView.vue'
+import { ZnSection, ZnBox, ZnRow, ZnButton, ZnCard, ZnIcon } from '@zn-apps/ui-core'
 </script>
