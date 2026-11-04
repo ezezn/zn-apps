@@ -12,6 +12,7 @@ import ScreenPage from '../views/ScreenPage.vue'
 import NavigationLayoutPage from '../views/NavigationLayoutPage.vue'
 import LegacyPage from '../views/LegacyPage.vue'
 import DialogsPage from '../views/DialogsPage.vue'
+import TabsPage from '../views/TabsPage.vue'
 
 function createTestRouter() {
   return createRouter({
@@ -26,6 +27,7 @@ function createTestRouter() {
       { path: '/layout', name: 'layout', component: LayoutPage },
       { path: '/sections', name: 'sections', component: SectionsPage },
       { path: '/screen', name: 'screen', component: ScreenPage },
+      { path: '/tabs', name: 'tabs', component: TabsPage },
       { path: '/navigation-layout', name: 'navigation-layout', component: NavigationLayoutPage },
       { path: '/legacy', name: 'legacy', component: LegacyPage }
     ]
@@ -57,6 +59,7 @@ describe('Kitchensink App & Router', () => {
     expect(wrapper.text()).toContain('Layout (ZnBox / ZnRow)')
     expect(wrapper.text()).toContain('Secciones (ZnSection)')
     expect(wrapper.text()).toContain('Pantallas (ZnScreen)')
+    expect(wrapper.text()).toContain('Pestañas (ZnTabs)')
     expect(wrapper.text()).toContain('Navegación (ZnMasterSlaveLayout)')
     expect(wrapper.text()).toContain('Utilidades')
   })
@@ -101,6 +104,14 @@ describe('Kitchensink App & Router', () => {
     const wrapper = await mountAt('/screen')
 
     expect(wrapper.findComponent(ScreenPage).exists()).toBe(true)
+  })
+
+  it('navega a la vista de Tabs al cambiar de ruta', async () => {
+    const wrapper = await mountAt('/tabs')
+
+    expect(wrapper.findComponent(TabsPage).exists()).toBe(true)
+    expect(wrapper.text()).toContain('Pestañas principales')
+    expect(wrapper.text()).toContain('Información general del catálogo.')
   })
 
   it('navega a la vista de NavigationLayout al cambiar de ruta', async () => {

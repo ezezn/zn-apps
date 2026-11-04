@@ -32,6 +32,10 @@ export const demoViews = [
     sections: [{ title: 'Pantallas', content: 'Una pantalla combina encabezado, acciones y contenido desplazable.' }]
   },
   {
+    key: 'tabs', title: 'Pestañas (ZnTabs)', subtitle: 'Organiza contenido relacionado en grupos pares',
+    sections: [{ title: 'Pestañas', content: 'Cambia entre paneles relacionados con navegación por teclado y estados accesibles.' }]
+  },
+  {
     key: 'navigation-layout', title: 'Navegación (ZnMasterSlaveLayout)', subtitle: 'Pantalla maestra y vista de contenido para apps con router',
     sections: [{ title: 'Navegación', content: 'Revisa el layout de navegación y su adaptación a pantallas pequeñas.' }]
   },

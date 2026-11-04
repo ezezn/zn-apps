@@ -10,6 +10,7 @@ import ScreenPage from '../views/ScreenPage.vue'
 import NavigationLayoutPage from '../views/NavigationLayoutPage.vue'
 import LegacyPage from '../views/LegacyPage.vue'
 import DialogsPage from '../views/DialogsPage.vue'
+import TabsPage from '../views/TabsPage.vue'
 
 const routes = [
   { path: '/', redirect: '/buttons' },
@@ -21,6 +22,7 @@ const routes = [
   { path: '/layout', name: 'layout', component: LayoutPage },
   { path: '/sections', name: 'sections', component: SectionsPage },
   { path: '/screen', name: 'screen', component: ScreenPage },
+  { path: '/tabs', name: 'tabs', component: TabsPage },
   { path: '/navigation-layout', name: 'navigation-layout', component: NavigationLayoutPage },
   { path: '/legacy', name: 'legacy', component: LegacyPage }
 ]

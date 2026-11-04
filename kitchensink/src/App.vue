@@ -16,6 +16,7 @@
         <router-link to="/layout">Layout (ZnBox / ZnRow)</router-link>
         <router-link to="/sections">Secciones (ZnSection)</router-link>
         <router-link to="/screen">Pantallas (ZnScreen)</router-link>
+        <router-link to="/tabs">Pestañas (ZnTabs)</router-link>
         <router-link to="/navigation-layout">Navegación (ZnMasterSlaveLayout)</router-link>
 
         <span class="nav-section-label">Otros</span>

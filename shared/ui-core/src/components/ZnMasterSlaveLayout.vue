@@ -62,6 +62,13 @@ onMounted(() => {
 
   mediaQuery = window.matchMedia(`(max-width: ${props.breakpoint}px)`)
   isMobile.value = mediaQuery.matches
+  // If the router resolved before this component mounted, the view key is
+  // already set and its watcher will not run. Treat that active route as the
+  // initial mobile selection so the user sees its content instead of a blank
+  // detail panel. A null key still starts on the master screen.
+  if (mediaQuery.matches && props.viewKey !== null) {
+    isSlaveVisible.value = true
+  }
   if (mediaQuery.addEventListener) {
     mediaQuery.addEventListener('change', handleBreakpointChange)
   } else {

@@ -47,6 +47,7 @@ shared/
 │       │   ├── ZnScrollArea.vue
 │       │   ├── ZnMasterSlaveLayout.vue
 │       │   ├── ZnSection.vue
+│       │   ├── ZnTabs.vue
 │       │   ├── ZnRow.vue
 │       │   ├── ZnBox.vue
 │       │   ├── ZnButton.vue
@@ -322,7 +323,7 @@ o un layout flex) para que el área pueda desplazarse.
 | `#master` | La pantalla maestra; suele contener navegación y debe incluir un `ZnScreen`. |
 | `default` | La pantalla esclava; comúnmente un `<router-view />` cuyas vistas declaran su propio `ZnScreen`. |
 
-En móvil, el layout muestra inicialmente el master. Al cambiar `viewKey` o activar un enlace del master, el master se desliza a la izquierda y el slave entra desde la derecha. El botón de regreso de `ZnScreen` reproduce el movimiento inverso. El panel fuera de vista queda inerte y la transición respeta `prefers-reduced-motion`.
+En móvil, el layout muestra inicialmente el master si `viewKey` es `null`. Si se proporciona una vista activa al montar (por ejemplo, una ruta ya resuelta), muestra el slave directamente. Al cambiar `viewKey` o activar un enlace del master, el master se desliza a la izquierda y el slave entra desde la derecha. El botón de regreso de `ZnScreen` reproduce el movimiento inverso. El panel fuera de vista queda inerte y la transición respeta `prefers-reduced-motion`.
 
 **Uso:**
 ```vue
@@ -359,6 +360,37 @@ En móvil, el layout muestra inicialmente el master. Al cambiar `viewKey` o acti
   <ZnButton>Dos</ZnButton>
   <ZnButton>Tres</ZnButton>
 </ZnSection>
+```
+
+### `ZnTabs`
+
+Organiza contenido relacionado con pestañas primarias o secundarias. Las
+primarias representan destinos pares bajo la barra superior; las secundarias
+separan contenido relacionado dentro de una sección. La fila puede desplazarse
+horizontalmente cuando no caben todas las opciones. Usa flechas izquierda y
+derecha, `Home` y `End` para cambiar de pestaña; las opciones deshabilitadas se
+omiten.
+
+**Props:** `tabs` (requerida; objetos `{ value, label, content?, icon?, badge?, disabled? }`),
+`modelValue` (`v-model`, controlado) y `variant` (`primary` o `secondary`).
+Proporciona `aria-label` o `aria-labelledby` para nombrar la lista de pestañas.
+El slot `#panel` recibe `{ tab, index }` para renderizar el panel seleccionado.
+
+```vue
+<script setup>
+import { ref } from 'vue'
+import { ZnTabs } from '@zn-apps/ui-core'
+
+const activeTab = ref('overview')
+const tabs = [
+  { value: 'overview', label: 'Resumen', content: 'Descripción general' },
+  { value: 'details', label: 'Detalles', content: 'Más información' }
+]
+</script>
+
+<template>
+  <ZnTabs v-model="activeTab" :tabs="tabs" aria-label="Información del producto" />
+</template>
 ```
 
 ---

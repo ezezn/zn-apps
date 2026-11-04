@@ -15,6 +15,7 @@ export { default as ZnScreen } from './components/ZnScreen.vue'
 export { default as ZnScrollArea } from './components/ZnScrollArea.vue'
 export { default as ZnRow } from './components/ZnRow.vue'
 export { default as ZnSection } from './components/ZnSection.vue' //
+export { default as ZnTabs } from './components/ZnTabs.vue'
 export { default as ZnButton } from './components/ZnButton.vue'
 export { default as ZnCard } from './components/ZnCard.vue'
 export { default as ZnBox } from './components/ZnBox.vue'
