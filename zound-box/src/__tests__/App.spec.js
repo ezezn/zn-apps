@@ -8,15 +8,19 @@ describe('Zound Box App', () => {
     expect(wrapper.text()).toContain('Zound Box')
   })
 
-  it('muestra controles separados para sonidos principales y ambientales', () => {
+  it('muestra las dos secciones con cuatro sonidos de fondo y tres variantes de seseo', () => {
     const wrapper = mount(App)
-    expect(wrapper.text()).toContain('Sonido en primer plano')
     expect(wrapper.text()).toContain('Sonidos de fondo')
-    expect(wrapper.text()).toContain('Piano suave')
-    expect(wrapper.text()).toContain('Lluvia suave')
-    expect(wrapper.text()).toContain('Bosque')
-    expect(wrapper.text()).toContain('Chimenea')
-    expect(wrapper.text()).toContain('Olas del mar')
+    expect(wrapper.text()).toContain('Sonidos de seseo')
+    expect(wrapper.text()).toContain('Ruido blanco')
+    expect(wrapper.text()).toContain('Lluvia')
+    expect(wrapper.text()).toContain('Viento')
+    expect(wrapper.text()).toContain('Canción de cuna')
+    expect(wrapper.findAll('[aria-pressed]')).toHaveLength(7)
+    expect(wrapper.findAll('.sound-toggle__card--image')).toHaveLength(4)
+    expect(wrapper.text()).toContain('×2')
+    expect(wrapper.text()).toContain('×3')
+    expect(wrapper.text()).toContain('×5')
   })
 
   it('permite alternar el estado del switch de modo oscuro', async () => {
@@ -29,15 +33,51 @@ describe('Zound Box App', () => {
     expect(switchInput.element.checked).toBe(true)
   })
 
-  it('actualiza el resumen al activar sonidos de fondo', async () => {
+  it('alterna de forma independiente sonidos de fondo y variantes de seseo', async () => {
     const wrapper = mount(App)
-    const switches = wrapper.findAll('input[type="checkbox"]')
+    const sounds = wrapper.findAll('[aria-pressed]')
 
-    expect(switches).toHaveLength(6)
-    expect(wrapper.text()).toContain('0 sonidos de fondo activos')
+    expect(sounds).toHaveLength(7)
+    expect(sounds[0].attributes('aria-pressed')).toBe('false')
+    expect(sounds[6].attributes('aria-pressed')).toBe('false')
 
-    await switches[2].setValue(true)
+    await sounds[0].trigger('click')
+    await sounds[6].trigger('click')
 
-    expect(wrapper.text()).toContain('1 sonido de fondo activo')
+    expect(wrapper.findAll('[aria-pressed="true"]')).toHaveLength(2)
+    expect(wrapper.findAll('.zn-card--filled')).toHaveLength(2)
+    expect(wrapper.findAll('.zn-card--outlined')).toHaveLength(5)
+  })
+
+  it('shows ambient sound images in grayscale until the sound is activated', async () => {
+    const wrapper = mount(App)
+    const imageCards = wrapper.findAll('.sound-toggle__card--image')
+
+    expect(imageCards).toHaveLength(4)
+    expect(imageCards[0].classes()).not.toContain('sound-toggle__card--active')
+
+    await imageCards[0].trigger('click')
+
+    expect(wrapper.findAll('.sound-toggle__card--image.sound-toggle__card--active')).toHaveLength(1)
+  })
+
+  it('opens the about dialog with metadata from package.json', async () => {
+    const wrapper = mount(App, {
+      global: {
+        stubs: {
+          ZnDialog: {
+            props: ['modelValue', 'title'],
+            template: '<section v-if="modelValue" role="dialog"><h2>{{ title }}</h2><slot /></section>'
+          }
+        }
+      }
+    })
+
+    await wrapper.get('[aria-label="Acerca de Zound Box"]').trigger('click')
+
+    expect(wrapper.get('[role="dialog"]').text()).toContain('Zound Box')
+    expect(wrapper.get('[role="dialog"]').text()).toContain('0.0.0')
+    expect(wrapper.get('[role="dialog"]').text()).toContain('Combina sonidos ambientales y sonidos de seseo para relajarse.')
+    expect(wrapper.get('[role="dialog"]').text()).toContain('ZN Apps')
   })
 })

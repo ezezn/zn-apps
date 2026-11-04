@@ -10,8 +10,10 @@
 |---|---|---|
 | `shared/ui-core/` | `@zn-apps/ui-core` | Componentes Vue 3 UI (MD3), composables, utilidades JS y estilos globales. |
 | `shared/storage/` | `@zn-apps/storage` | Utilidades de persistencia sobre Web Storage, sin dependencia de Vue. |
+| `shared/ui-about/` | `@zn-apps/ui-about` | Componente de información de app compuesto con `@zn-apps/ui-core`. |
 
 Las librerías **no se importan entre sí**. Las apps consumen cada una por separado mediante npm workspaces.
+`ui-about` depende explícitamente de `ui-core` para componer su panel `ZnAbout`.
 
 `@zn-apps/ui-core` provee:
 - Componentes de infraestructura UI (layout, pantallas, secciones).
@@ -66,6 +68,10 @@ shared/
     └── src/
         ├── index.js
         └── __tests__/storage.spec.js
+└── ui-about/
+    ├── package.json       # name: "@zn-apps/ui-about", dependency: @zn-apps/ui-core
+    ├── vite.config.js      # Build mode: library, output: dist/ui-about.js
+    └── src/components/ZnAbout.vue
 ```
 
 ### Diálogos
@@ -194,6 +200,40 @@ import { ZnApp, ZnScreen, ZnButton, ZnCard, ZnSwitch } from '@zn-apps/ui-core'
 // 3. Importar composables y utilidades
 import { useOnlineStatus } from '@zn-apps/ui-core'
 import { formatDate } from '@zn-apps/ui-core'
+import { ZnAbout } from '@zn-apps/ui-about'
+import '@zn-apps/ui-about/dist/ui-about.css'
+```
+
+`ZnAbout` displays application metadata supplied by the consuming app:
+
+```vue
+<ZnAbout
+  name="My App"
+  version="1.2.0"
+  description="What the app does"
+  author="App author"
+  icon="widgets"
+/>
+```
+
+The optional `image` prop can supply an app image instead of an icon. If both
+`image` and `icon` are supplied, the image is used. `imageAlt` optionally sets
+its alternative text; by default it uses the app name. Without an image, the
+optional Material icon is used (defaults to `info`).
+
+It uses a neutral two-row layout: the first row places the app image or icon
+beside the app heading and version subtitle; the second row contains the
+description and author. It does not add a card, background, or border, so the
+consuming app controls its surrounding style.
+
+Import the app's `package.json` and pass it to `getAppMetadata`; the helper
+normalizes the `author` field and returns props ready for `ZnAbout`:
+
+```js
+import packageJson from './package.json'
+import { getAppMetadata, ZnAbout } from '@zn-apps/ui-about'
+
+const appMetadata = getAppMetadata(packageJson)
 ```
 
 ---

@@ -21,6 +21,7 @@
 
         <span class="nav-section-label">Otros</span>
         <router-link to="/legacy">Utilidades</router-link>
+        <router-link to="/about">Acerca de la app (ZnAbout)</router-link>
 
         <div class="nav-footer">
           <ZnSwitch v-model="isDarkMode" labelRight="Modo oscuro" />

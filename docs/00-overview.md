@@ -46,6 +46,7 @@ zn-apps/
 │   │       ├── utils/        # helpers.js (formatDate)
 │   │       └── assets/css/   # global.css + tokens CSS de MD3
 │   └── storage/              # @zn-apps/storage — persistencia Web Storage
+│   └── ui-about/             # @zn-apps/ui-about — panel de información de la app
 │       └── src/index.js      # createStorage()
 │
 ├── zound-box/                # 🎵 App 1 — Primera app productiva (branch actual)
@@ -145,7 +146,7 @@ Comandos rápidos para desarrolladores:
 
 ## Documentos Relacionados
 
-- [`01-shared.md`](./01-shared.md) — Librerías compartidas (`ui-core` y `storage`)
+- [`01-shared.md`](./01-shared.md) — Librerías compartidas (`ui-core`, `storage` y `ui-about`)
 - [`02-app-zound-box.md`](./02-app-zound-box.md) — App Zound Box
 - [`03-app-kitchensink.md`](./03-app-kitchensink.md) — App Kitchensink (catálogo)
 - [`05-testing.md`](./05-testing.md) — Arquitectura y ejecución de tests unitarios con Vitest

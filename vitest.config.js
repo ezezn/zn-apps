@@ -5,6 +5,7 @@ export default defineConfig({
     projects: [
       'shared/ui-core/vitest.config.js',
       'shared/storage/vitest.config.js',
+      'shared/ui-about/vitest.config.js',
       'zound-box/vitest.config.js',
       'kitchensink/vitest.config.js',
     ],

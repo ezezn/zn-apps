@@ -11,6 +11,7 @@ import NavigationLayoutPage from '../views/NavigationLayoutPage.vue'
 import LegacyPage from '../views/LegacyPage.vue'
 import DialogsPage from '../views/DialogsPage.vue'
 import TabsPage from '../views/TabsPage.vue'
+import AboutPage from '../views/AboutPage.vue'
 
 const routes = [
   { path: '/', redirect: '/buttons' },
@@ -24,7 +25,8 @@ const routes = [
   { path: '/screen', name: 'screen', component: ScreenPage },
   { path: '/tabs', name: 'tabs', component: TabsPage },
   { path: '/navigation-layout', name: 'navigation-layout', component: NavigationLayoutPage },
-  { path: '/legacy', name: 'legacy', component: LegacyPage }
+  { path: '/legacy', name: 'legacy', component: LegacyPage },
+  { path: '/about', name: 'about', component: AboutPage }
 ]
 
 export const router = createRouter({

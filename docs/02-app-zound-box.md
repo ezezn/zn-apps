@@ -4,7 +4,12 @@
 
 ## Descripción
 
-**Zound Box** es la **primera aplicación productiva** del monorepo. Es una PWA de una sola pantalla para combinar un sonido en primer plano con varios sonidos ambientales de fondo. La interfaz actual presenta interruptores para ambas capas; la reproducción de audio se implementará después.
+**Zound Box** es la **primera aplicación productiva** del monorepo. Es una PWA de una sola pantalla con tarjetas activables para sonidos de fondo (ruido blanco, lluvia, viento y canción de cuna) y sonidos de seseo (×2, ×3 y ×5). La reproducción de audio se implementará después.
+
+Las tarjetas de fondo usan imágenes locales en `src/assets/sounds/`. En estado
+inactivo se muestran oscurecidas y en escala de grises; al activarlas recuperan
+el color y brillo normal. Las fuentes y atribuciones están en el README de esa
+carpeta.
 
 **Estado:** Primera app en producción real. Branch principal activo.
 
@@ -46,6 +51,8 @@ zound-box/
 └── src/
     ├── main.js           # createApp(App).mount('#app')
     ├── App.vue           # Componente raíz — UI completa
+    ├── components/
+    │   └── SoundToggle.vue # Tarjeta accesible para activar/desactivar un sonido
     ├── style.css         # (archivo existente, estilos overrideados por shared)
 ```
 
@@ -110,18 +117,16 @@ ZnApp (modo controlado por isDarkMode)
   └── ZnScreen (title="Zound Box", icon=nota musical SVG)
         ├── [slot #actions] → ZnSwitch (v-model=isDarkMode, icons sol/luna)
         └── [contenido principal]
-              ├── ZnSection "Sonido en primer plano"
-              │     └── ZnCard con ZnSwitch para el sonido principal
-              └── ZnSection "Sonidos de fondo"
-                    └── ZnCard + ZnSwitch por sonido ambiental
+              ├── ZnSection "Sonidos de fondo" (4 SoundToggle)
+              └── ZnSection "Sonidos de seseo" (3 SoundToggle: ×2, ×3, ×5)
 ```
 
 ### Estado local reactivo
 
 ```js
 const isDarkMode = ref(false)   // Controla el modo visual de ZnApp
-const foregroundEnabled = ref(false)
 const backgroundSounds = reactive([...])
+const hissSounds = reactive([...])
 ```
 
 ### Imports
@@ -135,7 +140,7 @@ import { ZnApp, ZnScreen, ZnSection, ZnCard, ZnButton, ZnBox, ZnSwitch } from '@
 
 ## Funcionalidad Actual
 
-La app presenta dos grupos de controles: un interruptor para el sonido principal y varios interruptores independientes para sonidos ambientales. Los controles reflejan el estado en la interfaz; la reproducción de audio en segundo plano aún no está implementada.
+La pantalla presenta únicamente dos secciones. Cada `SoundToggle` es un botón accesible que alterna entre `ZnCard` `outlined` (inactivo) y `filled` (activo). Los siete estados se mantienen de forma independiente en estado reactivo local; la reproducción de audio aún no está implementada.
 
 ---
 

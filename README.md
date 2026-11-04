@@ -13,6 +13,7 @@ El monorepo aloja un ecosistema de aplicaciones autónomas y una librería compa
 | **Landing Portal** | `/` (`index.html`) | Portal de bienvenida para seleccionar y lanzar cada PWA | Producción | `/zn-apps/` |
 | **@zn-apps/ui-core** | [`shared/ui-core/`](./shared/ui-core) | Librería central de componentes UI (MD3), tokens CSS, composables y utilidades | Activo | N/A (librería ES) |
 | **@zn-apps/storage** | [`shared/storage/`](./shared/storage) | Utilidades de persistencia compartidas sobre Web Storage | Activo | N/A (librería ES) |
+| **@zn-apps/ui-about** | [`shared/ui-about/`](./shared/ui-about) | Componente de información de la app construido con `ui-core` | Activo | N/A (librería ES) |
 | **Zound Box** | [`zound-box/`](./zound-box) | Primera aplicación interactiva del monorepo (reproductor / caja de sonidos) | Activo | `/zn-apps/zound-box/` |
 | **Dev Kitchensink** | [`kitchensink/`](./kitchensink) | Catálogo interactivo de componentes y **plantilla oficial** para nuevas apps | Activo | `/zn-apps/kitchensink/` |
 
@@ -56,6 +57,7 @@ npm run dev --workspace=zound-box
 # Compilar las librerías compartidas en modo watch (detecta cambios en vivo)
 npm run dev --workspace=@zn-apps/ui-core
 npm run dev --workspace=@zn-apps/storage
+npm run dev --workspace=@zn-apps/ui-about
 ```
 
 ### Opción 2: Navegando a la subcarpeta

@@ -42,5 +42,9 @@ export const demoViews = [
   {
     key: 'legacy', title: 'Utilidades', subtitle: 'Estado de conexión y formato de fechas',
     sections: [{ title: 'Utilidades', content: 'Consulta las funciones auxiliares compartidas por las aplicaciones.' }]
+  },
+  {
+    key: 'about', title: 'Acerca de la app (ZnAbout)', subtitle: 'Presenta los metadatos de una aplicación',
+    sections: [{ title: 'Información de la aplicación', content: 'ZnAbout presenta nombre, versión, descripción y autor desde el package.json de cada app.' }]
   }
 ]

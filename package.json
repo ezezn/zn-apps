@@ -6,16 +6,17 @@
     "zound-box",
     "kitchensink",
     "shared/ui-core",
-    "shared/storage"
+    "shared/storage",
+    "shared/ui-about"
   ],
   "scripts": {
     "test": "vitest",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "test:shared": "vitest --project ui-core --project storage",
+    "test:shared": "vitest --project ui-core --project storage --project ui-about",
     "test:zound-box": "vitest --project zound-box",
     "test:kitchensink": "vitest --project kitchensink",
-    "build:shared": "npm run build --workspace=@zn-apps/ui-core && npm run build --workspace=@zn-apps/storage",
+    "build:shared": "npm run build --workspace=@zn-apps/ui-core && npm run build --workspace=@zn-apps/storage && npm run build --workspace=@zn-apps/ui-about",
     "generate:icons": "node shared/ui-core/scripts/generate-icons.mjs --profile shared && node shared/ui-core/scripts/generate-icons.mjs --profile app:zound-box && node shared/ui-core/scripts/generate-icons.mjs --profile app:kitchensink",
     "scan:icons": "node scripts/scan-icons.mjs shared/ui-core && node scripts/scan-icons.mjs zound-box && node scripts/scan-icons.mjs kitchensink",
     "build:icons": "npm run scan:icons && npm run generate:icons",

@@ -13,6 +13,7 @@ import NavigationLayoutPage from '../views/NavigationLayoutPage.vue'
 import LegacyPage from '../views/LegacyPage.vue'
 import DialogsPage from '../views/DialogsPage.vue'
 import TabsPage from '../views/TabsPage.vue'
+import AboutPage from '../views/AboutPage.vue'
 
 function createTestRouter() {
   return createRouter({
@@ -29,7 +30,8 @@ function createTestRouter() {
       { path: '/screen', name: 'screen', component: ScreenPage },
       { path: '/tabs', name: 'tabs', component: TabsPage },
       { path: '/navigation-layout', name: 'navigation-layout', component: NavigationLayoutPage },
-      { path: '/legacy', name: 'legacy', component: LegacyPage }
+      { path: '/legacy', name: 'legacy', component: LegacyPage },
+      { path: '/about', name: 'about', component: AboutPage }
     ]
   })
 }
@@ -62,6 +64,7 @@ describe('Kitchensink App & Router', () => {
     expect(wrapper.text()).toContain('Pestañas (ZnTabs)')
     expect(wrapper.text()).toContain('Navegación (ZnMasterSlaveLayout)')
     expect(wrapper.text()).toContain('Utilidades')
+    expect(wrapper.text()).toContain('Acerca de la app (ZnAbout)')
   })
 
   it('navega a la vista de Cards al cambiar de ruta', async () => {
@@ -124,5 +127,14 @@ describe('Kitchensink App & Router', () => {
     const wrapper = await mountAt('/legacy')
 
     expect(wrapper.findComponent(LegacyPage).exists()).toBe(true)
+  })
+
+  it('navega a About y muestra los metadatos del package.json', async () => {
+    const wrapper = await mountAt('/about')
+
+    expect(wrapper.findComponent(AboutPage).exists()).toBe(true)
+    expect(wrapper.text()).toContain('kitchensink')
+    expect(wrapper.text()).toContain('A catalog of shared ZN Apps components and utilities.')
+    expect(wrapper.text()).toContain('ZN Apps')
   })
 })

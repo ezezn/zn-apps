@@ -2,6 +2,8 @@
   "name": "kitchensink",
   "private": true,
   "version": "0.0.0",
+  "description": "A catalog of shared ZN Apps components and utilities.",
+  "author": "ZN Apps",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -16,6 +18,7 @@
   },
   "dependencies": {
     "@zn-apps/ui-core": "*",
+    "@zn-apps/ui-about": "*",
     "vue": "^3.5.34",
     "vue-router": "^4.6.4"
   },

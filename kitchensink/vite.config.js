@@ -25,6 +25,7 @@ export default defineConfig({
         }
         return request
       },
+      '@zn-apps/ui-about': resolve(__dirname, '../shared/ui-about/src/index.js'),
     }
   },
   plugins: [

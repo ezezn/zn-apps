@@ -18,6 +18,7 @@ export default defineConfig({
       // icon name catalogs and sprite chunks instead of the pre-built dist package.
       '@zn-apps/ui-core/dist/ui-core.css': resolve(__dirname, '../shared/ui-core/src/assets/css/global.css'),
       '@zn-apps/ui-core': resolve(__dirname, '../shared/ui-core/src/index.js'),
+      '@zn-apps/ui-about': resolve(__dirname, '../shared/ui-about/src/index.js'),
     }
   },
   plugins: [
@@ -49,7 +50,7 @@ export default defineConfig({
       manifest: {
         name: 'Zound Box',
         short_name: 'Zound Box',
-        description: 'Combina un sonido principal con sonidos ambientales de fondo.',
+        description: 'Combina sonidos ambientales y sonidos de seseo para relajarse.',
         start_url: '/zn-apps/zound-box/index.html',
         scope: '/zn-apps/zound-box/',
         theme_color: '#2563eb',
