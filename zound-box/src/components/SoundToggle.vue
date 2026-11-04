@@ -7,7 +7,8 @@ const props = defineProps({
   title: { type: String, required: true },
   description: { type: String, default: '' },
   indicator: { type: String, default: '' },
-  image: { type: String, default: '' }
+  image: { type: String, default: '' },
+  playing: { type: Boolean, default: false }
 })
 
 const emit = defineEmits(['update:modelValue', 'change'])
@@ -40,7 +41,7 @@ function toggle() {
         <span v-if="indicator" class="sound-toggle__indicator">{{ indicator }}</span>
         <span class="sound-toggle__title">{{ title }}</span>
         <span v-if="description" class="sound-toggle__description">{{ description }}</span>
-        <span class="sound-toggle__state">{{ modelValue ? 'Activado' : 'Desactivado' }}</span>
+        <span class="sound-toggle__state">{{ playing ? 'Reproduciendo' : modelValue ? 'Seleccionado' : 'Desactivado' }}</span>
       </div>
     </ZnCard>
   </button>

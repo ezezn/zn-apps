@@ -4,7 +4,7 @@
 
 ## Descripción
 
-**Zound Box** es la **primera aplicación productiva** del monorepo. Es una PWA de una sola pantalla con tarjetas activables para sonidos de fondo (ruido blanco, lluvia, viento y canción de cuna) y sonidos de seseo (×2, ×3 y ×5). La reproducción de audio se implementará después.
+**Zound Box** es la **primera aplicación productiva** del monorepo. Es una PWA de una sola pantalla con tarjetas para seleccionar sonidos de fondo (ruido blanco, lluvia, viento y canción de cuna) y sonidos de seseo (×2, ×3 y ×5). Cada sección funciona como un canal de audio independiente con reproducción en loop.
 
 Las tarjetas de fondo usan imágenes locales en `src/assets/sounds/`. En estado
 inactivo se muestran oscurecidas y en escala de grises; al activarlas recuperan
@@ -117,6 +117,8 @@ ZnApp (modo controlado por isDarkMode)
   └── ZnScreen (title="Zound Box", icon=nota musical SVG)
         ├── [slot #actions] → ZnSwitch (v-model=isDarkMode, icons sol/luna)
         └── [contenido principal]
+              ├── SoundChannelPlayer por canal (audio oculto, loop, precarga)
+              ├── ZnSection de controles generales (reproducir/pausar, volumen)
               ├── ZnSection "Sonidos de fondo" (4 SoundToggle)
               └── ZnSection "Sonidos de seseo" (3 SoundToggle: ×2, ×3, ×5)
 ```
@@ -125,8 +127,9 @@ ZnApp (modo controlado por isDarkMode)
 
 ```js
 const isDarkMode = ref(false)   // Controla el modo visual de ZnApp
-const backgroundSounds = reactive([...])
-const hissSounds = reactive([...])
+const channels = reactive([...])
+const isPlaying = ref(false)
+const volume = ref(1) // 0.1 cuando se activa el control de volumen reducido
 ```
 
 ### Imports
@@ -140,7 +143,7 @@ import { ZnApp, ZnScreen, ZnSection, ZnCard, ZnButton, ZnBox, ZnSwitch } from '@
 
 ## Funcionalidad Actual
 
-La pantalla presenta únicamente dos secciones. Cada `SoundToggle` es un botón accesible que alterna entre `ZnCard` `outlined` (inactivo) y `filled` (activo). Los siete estados se mantienen de forma independiente en estado reactivo local; la reproducción de audio aún no está implementada.
+La pantalla presenta dos secciones de sonidos y una tarjeta inicial de controles generales. Cada canal permite seleccionar un solo sonido y tiene un `SoundChannelPlayer` con un elemento `<audio>` oculto, precargado y en loop. Cambiar la fuente emite `source-change`; al seleccionar mientras el control general está activo, el canal comienza a reproducir. El control general inicia o pausa todos los canales seleccionados. El control de volumen alterna entre 100 % y 10 %.
 
 ---
 
@@ -158,5 +161,5 @@ Al desarrollar en `zound-box`:
 
 ## Tareas Pendientes Identificadas
 
-- [ ] Implementar reproducción de audio en primer plano y en segundo plano.
+- [ ] Mejorar el soporte de reproducción en segundo plano según las limitaciones de cada navegador y sistema operativo.
 - [ ] Persistir la selección de sonidos del usuario.

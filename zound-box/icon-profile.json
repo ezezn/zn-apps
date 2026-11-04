@@ -1,11 +1,20 @@
 {
   "scanned": [
+    "dark_mode",
     "info",
+    "light_mode",
     "music_note"
   ],
   "manual": [
+    "dark_mode",
     "forest",
+    "light_mode",
     "local_fire_department",
+    "pause",
+    "play_arrow",
+    "volume_down",
+    "volume_off",
+    "volume_up",
     "water_drop",
     "waves"
   ]

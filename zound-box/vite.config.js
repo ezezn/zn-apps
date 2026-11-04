@@ -31,7 +31,7 @@ export default defineConfig({
         // Incluirlos en el precache permite usar los iconos desde la primera
         // visita sin conexión, además del caché bajo demanda.
         globPatterns: [
-          '**/*.{js,css,html,ico,png,webmanifest}',
+          '**/*.{js,css,html,ico,png,ogg,webmanifest}',
           ...(hasIconSprites ? ['icons/sprite-*.svg'] : [])
         ],
         // Los sprites de iconos se descargan bajo demanda: se cachean en la

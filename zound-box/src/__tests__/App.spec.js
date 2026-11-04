@@ -49,6 +49,38 @@ describe('Zound Box App', () => {
     expect(wrapper.findAll('.zn-card--outlined')).toHaveLength(5)
   })
 
+  it('mantiene un solo sonido seleccionado por canal y asigna la nueva fuente', async () => {
+    const wrapper = mount(App)
+    const sounds = wrapper.findAll('[aria-pressed]')
+    const players = wrapper.findAll('audio')
+
+    expect(players).toHaveLength(2)
+    expect(players.every((player) => player.attributes('loop') !== undefined)).toBe(true)
+    expect(players.every((player) => player.attributes('preload') === 'auto')).toBe(true)
+
+    await sounds[0].trigger('click')
+    await sounds[1].trigger('click')
+
+    expect(sounds[0].attributes('aria-pressed')).toBe('false')
+    expect(sounds[1].attributes('aria-pressed')).toBe('true')
+    expect(players[0].attributes('src')).toContain('rain.ogg')
+  })
+
+  it('inicia y pausa los canales y aplica el volumen reducido al 10%', async () => {
+    const wrapper = mount(App)
+    await wrapper.findAll('[aria-pressed]')[0].trigger('click')
+    await wrapper.get('[aria-label="Iniciar reproducción"]').trigger('click')
+
+    expect(wrapper.get('[aria-label="Pausar reproducción"]').exists()).toBe(true)
+
+    await wrapper.get('[aria-label="Reducir volumen al 10%"]').trigger('click')
+    expect(wrapper.get('.playback-card__subtitle').text()).toBe('Volumen reducido al 10%')
+    expect(wrapper.findComponent({ name: 'SoundChannelPlayer' }).props('volume')).toBe(0.1)
+
+    await wrapper.get('[aria-label="Pausar reproducción"]').trigger('click')
+    expect(wrapper.get('[aria-label="Iniciar reproducción"]').exists()).toBe(true)
+  })
+
   it('shows ambient sound images in grayscale until the sound is activated', async () => {
     const wrapper = mount(App)
     const imageCards = wrapper.findAll('.sound-toggle__card--image')

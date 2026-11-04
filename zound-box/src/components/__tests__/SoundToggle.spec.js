@@ -25,7 +25,7 @@ describe('SoundToggle', () => {
     expect(wrapper.attributes('aria-pressed')).toBe('true')
     expect(wrapper.find('.zn-card--filled').exists()).toBe(true)
     expect(wrapper.text()).toContain('×3')
-    expect(wrapper.text()).toContain('Activado')
+    expect(wrapper.text()).toContain('Seleccionado')
   })
 
   it('marks image cards for grayscale inactive and full-color active styling', async () => {

@@ -1,0 +1,87 @@
+[
+  {
+    "id": "background",
+    "title": "Sonidos de fondo",
+    "order": 1,
+    "sounds": [
+      {
+        "id": "white-noise",
+        "label": "Ruido blanco",
+        "description": "Un sonido constante para cubrir el ruido ambiente.",
+        "cardType": "imagen",
+        "image": "white-noise.jpg",
+        "audio": "white-noise.ogg",
+        "durationSeconds": 28.648,
+        "fadeInEndSeconds": 3.0,
+        "fadeOutStartSeconds": 25.5
+      },
+      {
+        "id": "rain",
+        "label": "Lluvia",
+        "description": "Lluvia suave y continua.",
+        "cardType": "imagen",
+        "image": "rain.jpg",
+        "audio": "rain.ogg",
+        "durationSeconds": 21.583,
+        "fadeInEndSeconds": 3.0,
+        "fadeOutStartSeconds": 18.5
+      },
+      {
+        "id": "wind",
+        "label": "Viento",
+        "description": "Una brisa tranquila de fondo.",
+        "cardType": "imagen",
+        "image": "wind.jpg",
+        "audio": "wind.ogg",
+        "durationSeconds": 35.996,
+        "fadeInEndSeconds": 4.0,
+        "fadeOutStartSeconds": 32.5
+      },
+      {
+        "id": "lullaby",
+        "label": "Canción de cuna",
+        "description": "Una melodía suave para relajarse.",
+        "cardType": "imagen",
+        "image": "lullaby.jpg",
+        "audio": "lullaby.ogg",
+        "durationSeconds": 37.685,
+        "fadeInEndSeconds": 0.3,
+        "fadeOutStartSeconds": 34.0
+      }
+    ]
+  },
+  {
+    "id": "hiss",
+    "title": "Sonidos de seseo",
+    "order": 2,
+    "sounds": [
+      {
+        "id": "hiss-x2",
+        "label": "Seseo",
+        "description": "Sonido de seseo, variante ×2.",
+        "cardType": "texto",
+        "audio": "shh_shh.ogg",
+        "durationSeconds": 5.667,
+        "indicator": "×2"
+      },
+      {
+        "id": "hiss-x3",
+        "label": "Seseo",
+        "description": "Sonido de seseo, variante ×3.",
+        "cardType": "texto",
+        "audio": "shh_shh_shh.ogg",
+        "durationSeconds": 5.883,
+        "indicator": "×3"
+      },
+      {
+        "id": "hiss-x5",
+        "label": "Seseo",
+        "description": "Sonido de seseo, variante ×5.",
+        "cardType": "texto",
+        "audio": "shh_shh_shh_shh_shh.ogg",
+        "durationSeconds": 7.866,
+        "indicator": "×5"
+      }
+    ]
+  }
+]
