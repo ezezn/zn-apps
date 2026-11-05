@@ -93,7 +93,7 @@ El workflow en `.github/workflows/deploy.yml` incluye el paso de validación ant
   run: npm run test:run
 
 - name: Ejecutar Compilación Unificada
-  run: npm run build:production
+  run: npm run build:production # incluye npm run validate:pwa
 ```
 
 Si algún test falla, el pipeline se detiene evitando desplegar código roto a GitHub Pages.

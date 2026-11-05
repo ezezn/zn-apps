@@ -22,7 +22,8 @@
     "build:icons": "npm run scan:icons && npm run generate:icons",
     "build:zound-box": "cd zound-box && npm run build",
     "build:kitchensink": "cd kitchensink && npm run build",
-    "build:production": "rm -rf dist && mkdir dist && cp index.html dist/index.html && cp sw.js dist/sw.js && npm run build:shared && npm run build:zound-box && npm run build:kitchensink && cp -r zound-box/dist dist/zound-box && cp -r kitchensink/dist dist/kitchensink",
+    "validate:pwa": "node scripts/validate-pwa.mjs",
+    "build:production": "rm -rf dist && mkdir dist && cp index.html dist/index.html && cp sw.js dist/sw.js && npm run build:shared && npm run build:zound-box && npm run build:kitchensink && cp -r zound-box/dist dist/zound-box && cp -r kitchensink/dist dist/kitchensink && npm run validate:pwa",
     "build:all": "npm run build:production"
   },
   "devDependencies": {

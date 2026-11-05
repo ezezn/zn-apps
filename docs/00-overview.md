@@ -79,6 +79,10 @@ Cada app (`zound-box`, `kitchensink`, etc.) es una SPA **completamente independi
 
 ### 4. PWA por app
 - Cada app registra su propio service worker con `vite-plugin-pwa`.
+- Cada app declara iconos PNG locales de `192x192` y `512x512` en su manifiesto,
+  con `purpose: "any maskable"` y rutas relativas a la app.
+- Para una nueva app, incluye esos iconos en `public/`; el build valida que cada
+  manifiesto generado tenga ambos archivos y que sus dimensiones coincidan.
 - La landing (`index.html` raíz) tiene un SW global (`sw.js`) para cachear el portal.
 - El SW global **no interfiere** con los SWs de subcarpetas.
 
@@ -101,9 +105,10 @@ Cada app (`zound-box`, `kitchensink`, etc.) es una SPA **completamente independi
 1. `push` a `main` dispara el workflow.
 2. `npm install` en la raíz (resuelve todos los workspaces).
 3. `npm run test:run` (ejecuta todos los tests unitarios con Vitest y detiene el build si hay fallos).
-4. `npm run build:production` → compila librerías y apps usando sprites versionados y copia los `dist/` a `dist/` raíz. No genera iconos.
-5. Se inyectan archivos `404.html` (copia de `index.html`) para fallback en SPA.
-6. Se publica el directorio `dist/` en GitHub Pages.
+4. `npm run build:production` → compila librerías y apps usando sprites versionados y copia los `dist/` a `dist/` raíz. No genera sprites.
+5. Se valida que cada app compilada tenga manifiesto e iconos de instalación válidos.
+6. Se inyectan archivos `404.html` (copia de `index.html`) para fallback en SPA.
+7. Se publica el directorio `dist/` en GitHub Pages.
 
 **Orden de build:**
 ```

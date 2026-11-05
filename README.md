@@ -122,10 +122,13 @@ npm run build:production
 3. Compila `@zn-apps/ui-core` y `@zn-apps/storage` en modo librería.
 4. Compila `zound-box` y `kitchensink`.
 5. Mueve cada `dist/` a su subcarpeta correspondiente dentro de la raíz `dist/`.
+6. Valida los manifiestos y los PNG de instalación de 192×192 y 512×512 de cada app.
 
 El build no escanea ni genera iconos. Cuando cambien los iconos, ejecuta
 `npm run build:icons` localmente y sube `icon-profile.json` y los sprites de
 `zound-box/public/icons/` y `kitchensink/public/icons/` junto con los cambios.
+Cada app también incluye `public/pwa-icon.svg` y sus PNG derivados de 192×192 y
+512×512, declarados en el manifiesto.
 
 ### Compilación Individual por Proyecto
 

@@ -25,6 +25,16 @@ Kitchensink is an autonomous SPA. It consumes **only** `shared/ui-core` and neve
 - The dialogs page demonstrates the native `ZnDialog` base and the `useDialogs()` alert, confirmation, and prompt helpers.
 - Icons are not bundled as static PNG/SVG files. The app references them through `ZnIcon`, which loads a `<symbol>` from the **generated per-project sprite** in `public/icons/` (copied to `dist/icons/`).
 - The app ships its own `icon-profile.json`. Its `manual` array declares the **full Material Design catalog** (that is what makes kitchensink the developer icon library); `scanned` holds the icons the pages actually use.
+- `public/pwa-icon.svg` is the editable installation-icon source. The manifest
+  uses the generated `pwa-icon-192.png` and `pwa-icon-512.png` files.
+
+### PWA installation icons
+
+Every app manifest must include local PNG icons at `192x192` and `512x512`,
+both with `purpose: "any maskable"`. Keep the artwork inside the central safe
+area so it remains legible when a platform masks the image. Use paths relative
+to the app, such as `pwa-icon-192.png`. The production build validates every
+app manifest and checks the PNG files and dimensions.
 
 ## 3. Icon pipeline
 
@@ -85,7 +95,9 @@ npm run build:production
 | `scripts/scan-icons.mjs` (repo root) | Scans `<ZnIcon>` tags and updates the project's `icon-profile.json` |
 | `kitchensink/vite.config.js` | Vite + PWA config (alias to the shared library source) |
 | `kitchensink/icon-profile.json` | `scanned` icons + `manual` full catalog |
-| `kitchensink/public/icons/` | Generated sprite chunk (gitignored, copied to `dist/icons/`) |
+| `kitchensink/public/icons/` | Versioned generated sprite chunk, copied to `dist/icons/` |
+| `kitchensink/public/pwa-icon.svg` | Editable source for installation icons |
+| `kitchensink/public/pwa-icon-192.png`, `pwa-icon-512.png` | Manifest icons required for installation |
 
 ## 6. Testing
 

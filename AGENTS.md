@@ -96,6 +96,19 @@ La orden de `build:production` es:
 Antes de integrar usos nuevos, ejecuta `npm run build:icons` y sube los perfiles
 y sprites actualizados al repositorio.
 
+## 📲 PWA Installability for New Apps
+
+When adding an app from `kitchensink/`, keep it independently installable:
+
+- Add an editable `public/pwa-icon.svg` and local PNG exports at 192×192 and
+  512×512. Keep artwork inside the maskable safe area.
+- Declare both PNG files in `VitePWA({ manifest: { icons } })` with their exact
+  sizes, `type: "image/png"`, `purpose: "any maskable"`, and app-relative paths.
+- Keep `name` or `short_name`, `start_url`, `scope`, and `display: "standalone"`
+  valid for the app's `/zn-apps/<app-name>/` deployment path.
+- Add the app to the monorepo production build so `npm run validate:pwa` checks
+  its generated manifest and verifies that both PNGs exist with correct sizes.
+
 ---
 
 ## 📦 Build Verification

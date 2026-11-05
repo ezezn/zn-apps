@@ -47,6 +47,9 @@ zound-box/
 ├── vite.config.js        # base: '/zn-apps/zound-box/', VitePWA config
 ├── public/
 │   ├── favicon.svg
+│   ├── pwa-icon.svg
+│   ├── pwa-icon-192.png
+│   ├── pwa-icon-512.png
 │   └── icons.svg
 └── src/
     ├── main.js           # createApp(App).mount('#app')
@@ -101,7 +104,11 @@ VitePWA({
     scope: '/zn-apps/zound-box/',
     theme_color: '#2563eb',
     background_color: '#ffffff',
-    display: 'standalone'
+    display: 'standalone',
+    icons: [
+      { src: 'pwa-icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any maskable' },
+      { src: 'pwa-icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' }
+    ]
   }
 })
 ```
