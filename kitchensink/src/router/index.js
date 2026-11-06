@@ -12,8 +12,11 @@ import LegacyPage from '../views/LegacyPage.vue'
 import DialogsPage from '../views/DialogsPage.vue'
 import TabsPage from '../views/TabsPage.vue'
 import AboutPage from '../views/AboutPage.vue'
+import ColorSchemePage from '../views/ColorSchemePage.vue'
+import PwaMetaPage from '../views/PwaMetaPage.vue'
+import PwaInstallPage from '../views/PwaInstallPage.vue'
 
-const routes = [
+export const routes = [
   { path: '/', redirect: '/buttons' },
   { path: '/buttons', name: 'buttons', component: ButtonsPage },
   { path: '/cards', name: 'cards', component: CardsPage },
@@ -26,7 +29,22 @@ const routes = [
   { path: '/tabs', name: 'tabs', component: TabsPage },
   { path: '/navigation-layout', name: 'navigation-layout', component: NavigationLayoutPage },
   { path: '/legacy', name: 'legacy', component: LegacyPage },
-  { path: '/about', name: 'about', component: AboutPage }
+  { path: '/about', name: 'about', component: AboutPage },
+  {
+    path: '/pwa/color-scheme',
+    name: 'pwa-color-scheme',
+    component: ColorSchemePage
+  },
+  {
+    path: '/pwa/bar-styling',
+    name: 'pwa-bar-styling',
+    component: PwaMetaPage
+  },
+  {
+    path: '/pwa/install',
+    name: 'pwa-install',
+    component: PwaInstallPage
+  }
 ]
 
 export const router = createRouter({

@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
 
 const props = defineProps({
   channelId: { type: String, required: true },
@@ -10,6 +10,14 @@ const props = defineProps({
 
 const emit = defineEmits(['source-change', 'play', 'pause', 'stop', 'error'])
 const audioElement = ref(null)
+
+let intervalId = null
+
+function resetTime() {
+  if (audioElement.value) {
+    audioElement.value.currentTime = 0
+  }
+}
 
 async function start() {
   if (!audioElement.value || !props.source) return
@@ -49,20 +57,33 @@ watch(() => [props.source, props.playing], async ([source, playing], [previousSo
   }
 }, { flush: 'post', immediate: true })
 
-onMounted(() => {
-  if (audioElement.value) {
-    audioElement.value.volume = Math.min(1, Math.max(0, props.volume))
-    if (props.source && props.playing) start()
-  }
-})
-
 watch(() => props.volume, (volume) => {
   if (audioElement.value) {
     audioElement.value.volume = Math.min(1, Math.max(0, volume))
   }
 }, { flush: 'post' })
 
-defineExpose({ start, pause, stop })
+onMounted(() => {
+  if (audioElement.value) {
+    audioElement.value.volume = Math.min(1, Math.max(0, props.volume))
+    if (props.source && props.playing) start()
+  }
+
+  intervalId = setInterval(() => {
+    if (!audioElement.value || !props.playing) return
+    if (audioElement.value.currentTime >= audioElement.value.duration) {
+      resetTime()
+    }
+  }, 250)
+})
+
+onUnmounted(() => {
+  if (intervalId) {
+    clearInterval(intervalId)
+  }
+})
+
+defineExpose({ start, pause, stop, resetTime })
 </script>
 
 <template>

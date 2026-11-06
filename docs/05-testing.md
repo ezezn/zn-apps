@@ -35,10 +35,15 @@ zn-apps/
 │   │       │   └── useOnlineStatus.spec.js
 │   │       └── utils/__tests__/
 │   │           └── helpers.spec.js
-│   └── storage/
-│       ├── vitest.config.js  # Proyecto "storage"
-│       └── src/__tests__/
-│           └── storage.spec.js
+│   ├── storage/
+│   │   ├── vitest.config.js  # Proyecto "storage"
+│   │   └── src/__tests__/
+│   │       └── storage.spec.js
+│   └── ui-about/
+│       ├── vitest.config.js  # Proyecto "ui-about"
+│       └── src/
+│           ├── components/__tests__/ZnAbout.spec.js
+│           └── utils/__tests__/packageMetadata.spec.js
 │
 ├── zound-box/
 │   ├── vitest.config.js      # Configuración de Zound Box (con alias a shared src)
@@ -57,6 +62,8 @@ En las configuraciones de `zound-box` y `kitchensink`, los tests resuelven `@zn-
 ---
 
 ## Comandos Disponibles
+
+> 💡 **Criterio de Ejecución:** Ejecuta los tests **únicamente cuando haya modificaciones relacionadas con código** (Vue, JS, CSS, configs). Si la tarea comprende exclusivamente cambios en documentación (`.md`), omite la ejecución de tests.
 
 Desde la raíz del monorepo:
 

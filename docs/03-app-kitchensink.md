@@ -1,117 +1,19 @@
-# Kitsinksink (Blueprint for New Apps)
+# App: Kitchensink — Resumen y Enlaces
 
-This document describes the **kitchensink** application, which acts as the blueprint for new apps and as the icon catalog.
+> ⚠️ **Documentación Reubicada**: La documentación detallada de arquitectura, showroom de componentes, catálogo exhaustivo de iconos y guía paso a paso de blueprint para nuevas apps reside en:
+> - 👉 [**`kitchensink/docs/README.md`**](../kitchensink/docs/README.md)
 
-## 1. Overview
+---
 
-- **Name**: `kitchensink`
-- **Role**: Documentação de componentes e **catálogo completo de ícones**.
-- **Stack**: Vue 3 + Vite + Vue Router + `vite-plugin-pwa`.
-- **Dependencies**:
-  - `@zn-apps/ui-core` (`@zn-apps/ui-core`: `"*"`)
-  - `@zn-apps/ui-about` (`@zn-apps/ui-about`: `"*"`)
-  - `vue` (`^3.5.34`)
-  - `vue-router` (`^4.6.4`)
-- **DevDependencies**:
-  - `@vitejs/plugin-vue` (`^5.0.0`)
-  - `vite` (`^5.0.0`)
-  - `vite-plugin-pwa` (`^0.20.0`)
+## Resumen Ejecutivo
 
-## 2. Architecture
+- **Ubicación**: `kitchensink/`
+- **Ruta de Despliegue**: `/zn-apps/kitchensink/`
+- **Tipo de Aplicación**: Showroom de Componentes, Catálogo de Iconos y Blueprint para Nuevas Apps.
+- **Función Principal**:
+  1. Catálogo visual interactivo de `@zn-apps/ui-core` y `@zn-apps/ui-about`.
+  2. Biblioteca completa de iconos Material Design en 5 familias (declarada en `manual` de `icon-profile.json`).
+  3. Plantilla viva para crear nuevas aplicaciones multi-pantalla con `vue-router` y `ZnMasterSlaveLayout`.
+- **Stack**: Vue 3, Vite 5, `vue-router 4`, `vite-plugin-pwa`, `@zn-apps/ui-core`, `@zn-apps/ui-about`.
 
-Kitchensink is an autonomous SPA. It consumes **only** `shared/ui-core` and never shares Pinia state with other apps.
-
-- The UI is composed of `ZnApp` (theme wrapper), `ZnMasterSlaveLayout` (responsive navigation), `ZnScreen` (screen structure), `ZnSection` (grouped content) and the concrete components (`ZnButton`, `ZnCard`, `ZnSwitch`, `ZnDialog`, `ZnIcon`, `ZnBox`, `ZnRow`, `ZnAbout`).
-- The dialogs page demonstrates the native `ZnDialog` base and the `useDialogs()` alert, confirmation, and prompt helpers.
-- Icons are not bundled as static PNG/SVG files. The app references them through `ZnIcon`, which loads a `<symbol>` from the **generated per-project sprite** in `public/icons/` (copied to `dist/icons/`).
-- The app ships its own `icon-profile.json`. Its `manual` array declares the **full Material Design catalog** (that is what makes kitchensink the developer icon library); `scanned` holds the icons the pages actually use.
-- `public/pwa-icon.svg` is the editable installation-icon source. The manifest
-  uses the generated `pwa-icon-192.png` and `pwa-icon-512.png` files.
-
-### PWA installation icons
-
-Every app manifest must include local PNG icons at `192x192` and `512x512`,
-both with `purpose: "any maskable"`. Keep the artwork inside the central safe
-area so it remains legible when a platform masks the image. Use paths relative
-to the app, such as `pwa-icon-192.png`. The production build validates every
-app manifest and checks the PNG files and dimensions.
-
-## 3. Icon pipeline
-
-```
-node shared/ui-core/scripts/generate-icons.mjs --profile app:kitchensink
-```
-
-The script:
-
-1. Reads `kitchensink/icon-profile.json` and unions `scanned` + `manual` (2122 names).
-2. Adds the names from `shared/ui-core/icon-profile.json` (icons used by the library components).
-3. Loads every family (`filled`, `outlined`, `round`, `sharp`, `two-tone`) from `@material-design-icons/svg`.
-4. Filters each family to the declared names and writes one sprite per family to `kitchensink/public/icons/` (and `dist/icons/` when it exists):
-
-   ```
-   public/icons/
-   ├── sprite-filled.svg      ← filled family sprite
-   ├── sprite-outlined.svg
-   ├── sprite-round.svg
-   ├── sprite-sharp.svg
-   └── sprite-two-tone.svg
-   ```
-
-Each file contains only `<symbol id="zn-icon-<familia>-<nombre>" viewBox="…">` elements — no names module is needed; `ZnIcon` derives the available names from the injected sprite.
-
-`ZnIcon` calls `loadIconFamily(family)` the first time an icon of a family appears. That function fetches `<BASE_URL>icons/sprite-<familia>.svg`, injects it **once** into `#zn-icon-sprite-host`, and reuses it for every `<use href="#zn-icon-filled-…">` reference.
-
-## 4. Running the icon pipeline
-
-```bash
-# 1) Scan the app for ZnIcon usages and refresh icon-profile.json
-npm run scan:icons
-
-# 2) Generate the app-specific chunk into public/icons/
-npm run generate:icons
-
-# 3) Build the app (public/icons/ is copied to dist/icons/)
-npm run build
-```
-
-The dev server and production build use the versioned sprites in `public/icons/`
-without regenerating them. Before committing icon changes, regenerate and review
-the profile and sprites from the repository root:
-
-```bash
-npm run build:icons
-npm run build:production
-```
-
-## 5. File layout
-
-| Path | Purpose |
-|---|---|
-| `kitchensink/src/App.vue` | Root component, theme toggle, layout shell |
-| `kitchensink/src/main.js` | App bootstrap + router |
-| `kitchensink/src/router/index.js` | Vue Router definition |
-| `kitchensink/src/views/*.vue` | All feature pages |
-| `scripts/scan-icons.mjs` (repo root) | Scans `<ZnIcon>` tags and updates the project's `icon-profile.json` |
-| `kitchensink/vite.config.js` | Vite + PWA config (alias to the shared library source) |
-| `kitchensink/icon-profile.json` | `scanned` icons + `manual` full catalog |
-| `kitchensink/public/icons/` | Versioned generated sprite chunk, copied to `dist/icons/` |
-| `kitchensink/public/pwa-icon.svg` | Editable source for installation icons |
-| `kitchensink/public/pwa-icon-192.png`, `pwa-icon-512.png` | Manifest icons required for installation |
-
-## 6. Testing
-
-Run the unit tests with Vitest:
-
-```bash
-npm run test:run
-```
-
-Tests live in `kitchensink/src/__tests__/`. The shared setup (`vitest.setup.js`) mocks `window.matchMedia` and `IntersectionObserver`, which are used by `ZnApp` and `ZnScreen`.
-
-## 7. Deployment
-
-The app is a standard Vite SPA. The production build outputs to `dist/`, and `vite-plugin-pwa` generates the service worker (`sw.js`) that is responsible for precaching. When deployed to a subpath (e.g. `/zn-apps/kitchensink/`), set `base` accordingly in `vite.config.js`.
-
-## 8. Legacy templates to ignore
-
+Consulta la [documentación completa en `kitchensink/docs/README.md`](../kitchensink/docs/README.md).

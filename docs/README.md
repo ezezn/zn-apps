@@ -1,30 +1,77 @@
-# ZN-Apps — Documentación para IA
+# ZN-Apps — Índice Maestro de Documentación
 
-Esta carpeta contiene documentación de contexto rápido en Markdown para que cualquier IA pueda entender rápidamente la arquitectura, los componentes y las reglas del monorepo `zn-apps`.
+Bienvenido a la raíz de la documentación del monorepo `zn-apps`.  
+Este directorio (`docs/`) es el **punto de entrada unificado** para desarrolladores y **agentes de Inteligencia Artificial** (Antigravity, Cursor, Claude Code, Copilot, Gemini).
 
-## Índice de Documentos
+---
 
-| Archivo | Contenido |
-|---|---|
-| [`00-overview.md`](./00-overview.md) | **Visión general** del monorepo: stack, estructura, lineamientos de arquitectura, CI/CD, convenciones |
-| [`01-shared.md`](./01-shared.md) | **Librerías compartidas**: `@zn-apps/ui-core` (componentes, composables, utilidades, tokens MD3) y `@zn-apps/storage` (persistencia) |
-| [`02-app-zound-box.md`](./02-app-zound-box.md) | **App Zound Box**: estructura, arquitectura de componentes, estado actual, lineamientos de desarrollo, tareas pendientes |
-| [`03-app-kitchensink.md`](./03-app-kitchensink.md) | **App Kitchensink**: catálogo de componentes + plantilla de referencia para nuevas apps |
-| [`05-testing.md`](./05-testing.md) | **Testing**: arquitectura de Vitest, scripts, mocks globales y buenas prácticas |
-| [`../README.md`](../README.md) | **Manual para Humanos**: instalación, ejecución local con dev server, builds y comandos |
-| [`../AGENTS.md`](../AGENTS.md) | **Instrucciones para Agentes**: directivas de contexto automático para IAs (Antigravity, Cursor, etc.) |
+## 🧭 Arquitectura de la Documentación
 
-## Cómo usar esta documentación
+La documentación del monorepo sigue un esquema estructurado en dos niveles:
 
-**Para entender el proyecto:**
-→ Leer `00-overview.md` primero.
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                   NIVEL 1: DOCUMENTACIÓN RAÍZ (docs/)                  │
+│  Lineamientos globales, arquitectura monorepo, tipos de apps, CI/CD,   │
+│               estrategia de testing y flujos operativos.               │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+       ┌────────────────────────────┴────────────────────────────┐
+       ▼                                                         ▼
+┌───────────────────────────────┐         ┌──────────────────────────────┐
+│  NIVEL 2: APPS (<app>/docs/)  │         │  NIVEL 2: SHARED (lib/docs/) │
+│  - zound-box/docs/            │         │  - shared/ui-core/docs/      │
+│  - kitchensink/docs/          │         │  - shared/storage/docs/      │
+│  - Dominio, DTOs, reglas de   │         │  - shared/ui-about/docs/     │
+│    negocio y overrides.       │         │  - API de componentes y lib. │
+└───────────────────────────────┘         └──────────────────────────────┘
+```
 
-**Para trabajar en la librería de componentes:**
-→ Leer `01-shared.md` para API completa de cada componente.
+---
 
-**Para desarrollar en Zound Box:**
-→ Leer `00-overview.md` + `01-shared.md` + `02-app-zound-box.md`.
+## 📚 Directorio de Documentos
 
-**Para crear una nueva app:**
-→ Leer `00-overview.md` + `03-app-kitchensink.md` (sección "Rol como Plantilla").
+### Nivel 1: Lineamientos Globales del Monorepo (`docs/`)
 
+| Documento | Contenido y Propósito | Audiencia Principal |
+|---|---|---|
+| [**`00-overview.md`**](./00-overview.md) | **Visión General de Arquitectura**: Stack central, estructura de carpetas, principios de aislamiento y CI/CD. | IAs y nuevos desarrolladores |
+| [**`01-app-types.md`**](./01-app-types.md) | **Tipología de Aplicaciones**: Arquetipos (Single-screen, Multi-screen routed, Showroom/Catalog), matriz de decisiones y reglas de override. | IAs al planificar o crear apps |
+| [**`02-workflow.md`**](./02-workflow.md) | **Flujo de Trabajo Operativo**: Comandos de desarrollo local, pipeline de iconos, compilación de producción y validación PWA. | Humanos e IAs en ejecución de tareas |
+| [**`05-testing.md`**](./05-testing.md) | **Estrategia de Testing**: Configuración centralizada de Vitest, proyectos modulares, mocks globales y cobertura. | IAs y desarrolladores al probar código |
+
+---
+
+### Nivel 2: Documentación de Aplicaciones (`<app>/docs/`)
+
+Cada aplicación contiene su propia carpeta `docs/` con su modelo de dominio, reglas de negocio, DTOs y decisiones de override arquitectónico:
+
+| Aplicación | Documento Local | Tipo de App | Foco del Documento |
+|---|---|---|---|
+| **Zound Box** | [`zound-box/docs/README.md`](../zound-box/docs/README.md) | Single-Screen Utility | Motor de audio multicanal en bucle, DTOs (`SoundItem`, `SoundChannel`), reglas de atenuación, override sin router. |
+| **Kitchensink** | [`kitchensink/docs/README.md`](../kitchensink/docs/README.md) | Showroom & Blueprint | Catálogo exhaustivo de iconos, layout maestro-esclavo con `vue-router`, guía paso a paso para crear nuevas apps. |
+
+---
+
+### Nivel 2: Documentación de Librerías Compartidas (`shared/<lib>/docs/`)
+
+Cada librería compartida contiene su propia carpeta `docs/` detallando su API, componentes, contratos y utilidades:
+
+| Librería | Paquete npm | Documento Local | Foco del Documento |
+|---|---|---|---|
+| **ui-core** | `@zn-apps/ui-core` | [`shared/ui-core/docs/README.md`](../shared/ui-core/docs/README.md) | Design System Material Design 3, tokens `--md-*`, API completa de componentes (`Zn*`), composables (`useDialogs`, `useOnlineStatus`) y pipeline de chunks SVG. |
+| **storage** | `@zn-apps/storage` | [`shared/storage/docs/README.md`](../shared/storage/docs/README.md) | Capa de persistencia agnóstica de framework, serialización JSON, namespacing seguro para aislamiento de apps y manejo de cuotas. |
+| **ui-about** | `@zn-apps/ui-about` | [`shared/ui-about/docs/README.md`](../shared/ui-about/docs/README.md) | Componente neutral de "Acerca de" (`ZnAbout`) y extractor de metadatos de aplicación desde `package.json`. |
+| **pwa-integration** | `@zn-apps/pwa-integration` | [`shared/pwa-integration/docs/README.md`](../shared/pwa-integration/docs/README.md) | Detección de PWA, esquema de color del sistema, sincronización dinámica de barras (`theme-color`, fondo) y popup interactivo de instalación (`ZnPwaInstallPrompt`). |
+
+---
+
+## 🤖 Guía de Consulta Rápida para Agentes de IA
+
+Cuando recibas una tarea en este repositorio:
+1. **Para entender la arquitectura monorepo o flujos generales**: Lee [`docs/00-overview.md`](./00-overview.md) y [`docs/02-workflow.md`](./02-workflow.md).
+2. **Para crear o categorizar una aplicación**: Lee [`docs/01-app-types.md`](./01-app-types.md) y [`kitchensink/docs/README.md`](../kitchensink/docs/README.md).
+3. **Para usar o modificar componentes de UI**: Consulta [`shared/ui-core/docs/README.md`](../shared/ui-core/docs/README.md).
+4. **Para persistencia de datos en una app**: Consulta [`shared/storage/docs/README.md`](../shared/storage/docs/README.md).
+5. **Para trabajar en Zound Box**: Lee [`zound-box/docs/README.md`](../zound-box/docs/README.md).
+6. **Para escribir o ejecutar tests**: Consulta [`docs/05-testing.md`](./05-testing.md).

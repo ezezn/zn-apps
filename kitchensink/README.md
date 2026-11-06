@@ -1,5 +1,23 @@
-# Vue 3 + Vite
+# Kitchensink
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Showroom de componentes Material Design 3, catálogo exhaustivo de iconos y **blueprint** para nuevas aplicaciones en el monorepo `zn-apps`.
 
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
+- **Documentación Completa**: Consulta [`docs/README.md`](./docs/README.md) para detalles sobre arquitectura maestro-esclavo, `vue-router`, integración del catálogo completo de iconos y guía paso a paso para crear nuevas apps.
+- **Ruta de Despliegue**: `/zn-apps/kitchensink/`
+
+## Scripts
+
+```bash
+# Desarrollo local
+npm run dev --workspace=kitchensink
+
+# Tests unitarios
+npm run test:kitchensink
+
+# Escanear y generar iconos
+npm run scan:icons
+npm run generate:icons
+
+# Compilación de producción
+npm run build
+```

@@ -2,7 +2,7 @@
   <ZnApp :mode="isDarkMode ? 'dark' : 'light'">
     <ZnScreen title="Zound Box">
       <template #icon>
-        <ZnIcon name="music_note" label="Zound Box" />
+        <ZnImage :src="appLogo" alt="Zound Box" />
       </template>
 
       <template #actions>
@@ -93,7 +93,7 @@
     </ZnScreen>
 
     <ZnDialog v-model="isAboutOpen" title="Acerca de Zound Box">
-      <ZnAbout v-bind="appMetadata" icon="music_note" />
+      <ZnAbout v-bind="appMetadata" :image="appLogo" />
       <template #actions>
         <ZnButton variant="text" @click="isAboutOpen = false">Cerrar</ZnButton>
       </template>
@@ -110,6 +110,7 @@ import { ZnAbout, getAppMetadata } from '@zn-apps/ui-about'
 import SoundToggle from './components/SoundToggle.vue'
 import SoundChannelPlayer from './components/SoundChannelPlayer.vue'
 import soundChannelData from './data/sound-channels.json'
+import appLogo from './assets/logo.svg'
 
 const soundAssets = import.meta.glob('./assets/sounds/*', {
   eager: true,

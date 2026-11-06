@@ -3,11 +3,12 @@
 `shared/` no longer contains a single package. It is a container for isolated,
 independently built libraries consumed by the apps in this monorepo.
 
-| Library | Package | Purpose |
-|---|---|---|
-| [`ui-core/`](./ui-core) | `@zn-apps/ui-core` | Vue 3 UI components (MD3), composables, helpers and global CSS tokens. |
-| [`storage/`](./storage) | `@zn-apps/storage` | Framework-agnostic persistence helpers over Web Storage. |
-| [`ui-about/`](./ui-about) | `@zn-apps/ui-about` | Neutral two-row About component composed with `@zn-apps/ui-core` icons. |
+| Library | Package | Purpose | Docs |
+|---|---|---|---|
+| [`ui-core/`](./ui-core) | `@zn-apps/ui-core` | Vue 3 UI components (MD3), composables, helpers and global CSS tokens. | [`ui-core/docs/`](./ui-core/docs/README.md) |
+| [`storage/`](./storage) | `@zn-apps/storage` | Framework-agnostic persistence helpers over Web Storage. | [`storage/docs/`](./storage/docs/README.md) |
+| [`ui-about/`](./ui-about) | `@zn-apps/ui-about` | Neutral two-row About component composed with `@zn-apps/ui-core` icons. | [`ui-about/docs/`](./ui-about/docs/README.md) |
+| [`pwa-integration/`](./pwa-integration) | `@zn-apps/pwa-integration` | PWA state detection, system color scheme, dynamic bar styling & install popup. | [`pwa-integration/docs/`](./pwa-integration/docs/README.md) |
 
 ## Rules
 

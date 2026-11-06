@@ -203,13 +203,21 @@ zn-apps/
 
 ## 📚 Documentación Técnica Adicional
 
-Para más detalles sobre la arquitectura interna, componentes y convenciones, consulta los documentos en la carpeta [`docs/`](./docs):
+La documentación del proyecto se organiza en **dos niveles**:
 
+### Nivel 1: Lineamientos Globales del Monorepo ([`docs/`](./docs))
+- [**`docs/README.md`**](./docs/README.md): Índice maestro de documentación y mapa de navegación para IA y humanos.
 - [**`docs/00-overview.md`**](./docs/00-overview.md): Visión general de arquitectura, dependencias y reglas de monorepo.
-- [**`docs/01-shared.md`**](./docs/01-shared.md): API completa de componentes, props, slots, eventos y tokens CSS.
-- [**`docs/02-app-zound-box.md`**](./docs/02-app-zound-box.md): Contexto y arquitectura de la aplicación Zound Box.
-- [**`docs/03-app-kitchensink.md`**](./docs/03-app-kitchensink.md): Guía de Kitchensink y checklist para crear nuevas apps.
+- [**`docs/01-app-types.md`**](./docs/01-app-types.md): Tipología de aplicaciones (single-screen, multi-screen, catalog) y matriz de decisiones/overrides.
+- [**`docs/02-workflow.md`**](./docs/02-workflow.md): Flujo operativo, desarrollo local, pipeline de iconos, validación PWA y CI/CD.
 - [**`docs/05-testing.md`**](./docs/05-testing.md): Guía completa de testing unitario y mocks con Vitest.
+
+### Nivel 2: Documentación Específica por Proyecto (`docs/` en cada carpeta)
+- [**`shared/ui-core/docs/`**](./shared/ui-core/docs/README.md): API completa de componentes MD3 (`Zn*`), tokens CSS, composables y chunks SVG.
+- [**`shared/storage/docs/`**](./shared/storage/docs/README.md): Persistencia desacoplada sobre Web Storage y namespacing.
+- [**`shared/ui-about/docs/`**](./shared/ui-about/docs/README.md): Componente "Acerca de" y metadatos de aplicación.
+- [**`zound-box/docs/`**](./zound-box/docs/README.md): Motor de audio, DTOs (`SoundChannel`, `SoundItem`), overrides y reglas de negocio.
+- [**`kitchensink/docs/`**](./kitchensink/docs/README.md): Showroom, catálogo exhaustivo de iconos y blueprint para nuevas apps.
 
 ---
 

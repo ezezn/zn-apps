@@ -1,157 +1,103 @@
-# ZN-Apps Monorepo — Visión General
+# ZN-Apps Monorepo — Visión General de Arquitectura
 
-> Documento de contexto rápido para IA. Actualizado: 2026-10-28.
-
-## ¿Qué es este repositorio?
-
-`zn-apps` es un **monorepo de PWAs** (Progressive Web Applications) construidas con **Vue 3**, alojado en GitHub y desplegado automáticamente en **GitHub Pages** mediante GitHub Actions.
-
-El monorepo actúa como paraguas de múltiples aplicaciones independientes, todas publicadas bajo la raíz `/zn-apps/` del Pages del repositorio.
+> Documento raíz de arquitectura para desarrolladores e IAs.
 
 ---
 
-## Stack Tecnológico Central
+## 1. ¿Qué es este repositorio?
+
+`zn-apps` es un **monorepo de aplicaciones web progresivas (PWAs)** construidas con **Vue 3**, diseñadas para funcionar de manera independiente, compartiendo un sistema de diseño común basado en **Material Design 3 (MD3)** y utilidades compartidas.
+El monorepo está alojado en GitHub y se compila y despliega de manera automatizada a **GitHub Pages** mediante GitHub Actions bajo la URL base `/zn-apps/`.
+
+---
+
+## 2. Stack Tecnológico Central
 
 | Capa | Tecnología | Notas |
 |---|---|---|
-| UI Framework | **Vue 3** (Composition API + `<script setup>`) | Versión ~3.5 |
-| Build Tool | **Vite 6** | Config por subproyecto |
-| Gestión de estado | **Pinia** | Disponible, aún no implementado en apps actuales |
-| Routing | **vue-router 4** | Solo en apps multi-página (kitchensink) |
-| Empaquetado PWA | **vite-plugin-pwa** | Cada app genera su propio SW |
-| Sistema de paquetes | **npm workspaces** | Node 24 |
-| CI/CD | **GitHub Actions** | Deploy en `push` a `main` |
-| Tipografía | **Roboto** (via `@fontsource/roboto`) | Pesos 400 y 500 |
-| Design System | **Material Design 3 (MD3)** | Tokens como variables CSS |
+| UI Framework | **Vue 3** | Composition API + `<script setup>` (v~3.5) |
+| Build Tool | **Vite 6** | Configuración independiente por subproyecto |
+| Sistema de Paquetes | **npm workspaces** | Gestión unificada de dependencias (Node >= 20) |
+| Sistema de Diseño | **Material Design 3 (MD3)** | Variables CSS (`--md-*`) y componentes compartidos |
+| PWA Engine | **vite-plugin-pwa** | Service worker y manifiesto independiente por app |
+| Testing | **Vitest 5 + happy-dom** | Suite modular centralizada con proyectos Vitest |
+| Routing | **vue-router 4** | Opcional, reservado para apps multi-pantalla |
+| Tipografía | **Roboto** (`@fontsource/roboto`) | Pesos 400 y 500 provistos por `ui-core` |
+| CI/CD | **GitHub Actions** | Validación, build y deploy automático en `push: main` |
 
 ---
 
-## Estructura del Monorepo
+## 3. Estructura del Monorepo y Modelo de Documentación
+
+El repositorio utiliza una arquitectura de documentación en dos niveles:
 
 ```
 zn-apps/
-├── .github/
-│   └── workflows/
-│       └── deploy.yml        # CI/CD: build:production → GitHub Pages
-├── index.html                # Landing portal (HTML estático, lista las apps)
-├── sw.js                     # Service Worker global para la landing
-├── package.json              # Root: workspaces + script build:production
+├── docs/                     # 📚 NIVEL 1: DOCUMENTACIÓN RAÍZ DEL MONOREPO
+│   ├── README.md             # Índice maestro de documentación para IA y humanos
+│   ├── 00-overview.md        # Visión general y arquitectura del monorepo (este archivo)
+│   ├── 01-app-types.md       # Tipología de apps y criterios de override de arquitectura
+│   ├── 02-workflow.md        # Guía operativa: desarrollo, builds, iconos, PWA y CI/CD
+│   └── 05-testing.md         # Estrategia de testing, mocks globales y configuración Vitest
 │
-├── shared/                   # 📦 Contenedor de librerías compartidas aisladas
-│   ├── ui-core/              # @zn-apps/ui-core — componentes Vue/MD3, composables, utils
-│   │   └── src/
-│   │       ├── index.js      # Entry point: exports públicos
-│   │       ├── components/   # Componentes Zn* (MD3)
-│   │       ├── composables/  # useOnlineStatus
-│   │       ├── utils/        # helpers.js (formatDate)
-│   │       └── assets/css/   # global.css + tokens CSS de MD3
-│   └── storage/              # @zn-apps/storage — persistencia Web Storage
-│   └── ui-about/             # @zn-apps/ui-about — panel de información de la app
-│       └── src/index.js      # createStorage()
+├── shared/                   # 📦 LIBRERÍAS COMPARTIDAS (AISLADAS)
+│   ├── ui-core/              # @zn-apps/ui-core (Componentes MD3, temas, iconos)
+│   │   └── docs/README.md    # 📖 Docs propias: API de componentes, tokens MD3, iconos
+│   ├── storage/              # @zn-apps/storage (Persistencia framework-agnostic)
+│   │   └── docs/README.md    # 📖 Docs propias: API de storage, DTOs, namespaces
+│   ├── ui-about/             # @zn-apps/ui-about (Componente de información de app)
+│   │   └── docs/README.md    # 📖 Docs propias: ZnAbout, extracción de package.json
+│   └── pwa-integration/      # @zn-apps/pwa-integration (Detección PWA, tema de sistema, barras e install popup)
+│       └── docs/README.md    # 📖 Docs propias: useColorScheme, usePwaMeta, ZnPwaInstallPrompt
 │
-├── zound-box/                # 🎵 App 1 — Primera app productiva (branch actual)
-├── kitchensink/              # 🧬 App catálogo/showroom de componentes shared
-└── kitchensink/              # 🧬 App catálogo/showroom de componentes shared
+├── zound-box/                # 🎵 APLICACIÓN PRODUCTIVA: ZOUND BOX
+│   └── docs/README.md        # 📖 Docs propias: Dominio de audio, DTOs, reglas y overrides
+│
+├── kitchensink/              # 🧬 APLICACIÓN SHOWROOM Y BLUEPRINT
+│   └── docs/README.md        # 📖 Docs propias: Catálogo total de iconos, blueprint nueva app
+│
+├── scripts/                  # Scripts de utilidades (escaneo de iconos, validación PWA)
+├── index.html                # Portal/Landing institucional (HTML estático)
+├── sw.js                     # Service Worker del portal
+├── package.json              # Configuración raíz de npm workspaces y scripts de orquestación
+└── vitest.config.js          # Configuración de Vitest que orquesta todos los proyectos
 ```
 
 ---
 
-## Lineamientos de Arquitectura
+## 4. Principios Fundamentales de Arquitectura
 
-### 1. Independencia de aplicaciones
-Cada app (`zound-box`, `kitchensink`, etc.) es una SPA **completamente independiente**:
-- Tiene su propio `package.json`, `vite.config.js`, `index.html` y service worker.
-- **No comparten estado entre sí** (no hay store Pinia cross-app).
-- Se despliegan en subcarpetas separadas: `/zn-apps/zound-box/`, `/zn-apps/kitchensink/`.
+### 1. Independencia Total de Aplicaciones
+- Cada app (`zound-box`, `kitchensink`, etc.) es una SPA/PWA autónoma con su propio `package.json`, `vite.config.js`, `index.html` y Service Worker.
+- **Prohibido compartir Pinia cross-app**: Las aplicaciones no deben compartir instancias de store. Cada aplicación es un silo funcional.
+- Se publican bajo subrutas independientes: `/zn-apps/<nombre-app>/`.
 
-### 2. Librerías compartidas (`@zn-apps/ui-core`, `@zn-apps/storage`)
-- `shared/` agrupa **librerías aisladas**, cada una compilada como ES module (`vite build --lib`) con su propio `package.json`, `vite.config.js` y `vitest.config.js`.
-- `@zn-apps/ui-core` exporta **componentes Vue**, **composables**, **utilidades JS** y el CSS global.
-- `@zn-apps/storage` exporta utilidades de **persistencia** (`createStorage`) sin dependencia de Vue.
-- Las apps las consumen mediante npm workspaces: `"@zn-apps/ui-core": "*"` / `"@zn-apps/storage": "*"`.
-- Cada app importa `@zn-apps/ui-core/dist/ui-core.css` para los estilos globales.
-- Las librerías compartidas **no se importan entre sí**; solo las apps las componen.
+### 2. Librerías Compartidas Aisladas (`shared/`)
+- Cada librería en `shared/` (`ui-core`, `storage`, `ui-about`) tiene su propio ciclo de build como ES module (`vite build --lib`), su propio `package.json` y tests unitarios.
+- Las librerías de infraestructura no dependen de Vue ni del DOM (`storage`), mientras que las de UI (`ui-core`) encapsulan el diseño MD3.
+- Las librerías no se importan circularmente entre sí; solo se componen explícitamente donde corresponda (ej. `ui-about` consume `ui-core`).
 
-### 3. Design System — Material Design 3
-- Todos los tokens de color y espaciado se definen como **variables CSS** (`--md-*`).
-- El tema claro/oscuro se gestiona inyectando `zn-theme-light` o `zn-theme-dark` en el elemento raíz.
-- El componente `ZnApp` es el **único responsable** de detectar el tema del sistema y cambiar las clases.
+### 3. Sistema de Diseño Material Design 3
+- Variables CSS `--md-*` gestionadas de forma centralizada por `shared/ui-core`.
+- La alternancia de tema claro/oscuro es gestionada de manera exclusiva por el componente raíz `<ZnApp>`.
 
-### 4. PWA por app
-- Cada app registra su propio service worker con `vite-plugin-pwa`.
-- Cada app declara iconos PNG locales de `192x192` y `512x512` en su manifiesto,
-  con `purpose: "any maskable"` y rutas relativas a la app.
-- Para una nueva app, incluye esos iconos en `public/`; el build valida que cada
-  manifiesto generado tenga ambos archivos y que sus dimensiones coincidan.
-- La landing (`index.html` raíz) tiene un SW global (`sw.js`) para cachear el portal.
-- El SW global **no interfiere** con los SWs de subcarpetas.
+### 4. Pipeline de Iconos Optimizado
+- Los iconos Material Design se consumen a través de chunks SVG locales generados por proyecto (`ZnIcon`), precacheados por el Service Worker de cada app sin cargar la colección de glifos completa.
 
-### 5. Routing
-- Apps con múltiples vistas usan `vue-router` con `createWebHistory()`.
-- Apps simples de una sola pantalla (como `zound-box`) no usan router.
-
-### 6. Estado con Pinia
-- Pinia está planificado como gestor de estado.
-- **Estado no compartido entre apps**.
-- Posibilidad de tener stores base reutilizables en `shared/` como plantillas.
+### 5. Política de Ejecución de Builds y Tests
+- **Solo ante cambios de código**: Los scripts de testing (`npm run test:run`) y construcción de producción (`npm run build:all` / `npm run build:production`) se deben ejecutar **ÚNICAMENTE cuando se modifique código ejecutable** (componentes Vue, scripts JS/MJS, hojas de estilo CSS, configuraciones de empaquetado o dependencias).
+- **Exclusión para documentación**: En tareas de documentación pura (archivos Markdown `.md`, notas, diagramas de texto o comentarios), **NO** se deben ejecutar builds ni tests, evitando consumo innecesario de tiempo y recursos.
 
 ---
 
-## CI/CD — GitHub Actions
+## 5. Índice de Documentación Relacionada
 
-**Archivo:** `.github/workflows/deploy.yml`
-
-**Flujo:**
-1. `push` a `main` dispara el workflow.
-2. `npm install` en la raíz (resuelve todos los workspaces).
-3. `npm run test:run` (ejecuta todos los tests unitarios con Vitest y detiene el build si hay fallos).
-4. `npm run build:production` → compila librerías y apps usando sprites versionados y copia los `dist/` a `dist/` raíz. No genera sprites.
-5. Se valida que cada app compilada tenga manifiesto e iconos de instalación válidos.
-6. Se inyectan archivos `404.html` (copia de `index.html`) para fallback en SPA.
-7. Se publica el directorio `dist/` en GitHub Pages.
-
-**Orden de build:**
-```
-@zn-apps/ui-core → @zn-apps/storage → zound-box → kitchensink
-```
-
----
-
-## Guía de Desarrollo Local y Comandos de Consola
-
-Para instrucciones paso a paso pensadas para desarrolladores humanos (instalación, scripts de ejecución por workspace, puertos y builds individuales), consulta el archivo:
-- [**`../README.md`**](../README.md) — Manual de desarrollo local y guía operativa.
-
-Comandos rápidos para desarrolladores:
-- Levantar app específica: `npm run dev --workspace=<app>` (ej. `npm run dev --workspace=zound-box`)
-- Correr tests: `npm test` (watch) o `npm run test:run` (CI)
-- Recompilar librerías en vivo: `npm run dev --workspace=@zn-apps/ui-core` o `npm run dev --workspace=@zn-apps/storage`
-
----
-
-## URLs de Producción (GitHub Pages)
-
-| Recurso | URL |
-|---|---|
-| Portal / Landing | `/zn-apps/` |
-| Zound Box | `/zn-apps/zound-box/` |
-| Kitchensink | `/zn-apps/kitchensink/` |
-
----
-
-## Convenciones de Nomenclatura
-
-- **Componentes:** prefijo `Zn` + PascalCase → `ZnButton`, `ZnCard`, `ZnScreen`.
-- **Variables CSS:** prefijo `--md-` siguiendo tokens de Material Design 3.
-- **Clases CSS de utilidad:** prefijo `zn-` → `zn-span-2`, `zn-theme-dark`.
-- **Paquetes shared:** scope `@zn-apps/<librería>` → `@zn-apps/ui-core`, `@zn-apps/storage`.
-- **Composables:** prefijo `use` → `useOnlineStatus`.
-
----
-
-## Documentos Relacionados
-
-- [`01-shared.md`](./01-shared.md) — Librerías compartidas (`ui-core`, `storage` y `ui-about`)
-- [`02-app-zound-box.md`](./02-app-zound-box.md) — App Zound Box
-- [`03-app-kitchensink.md`](./03-app-kitchensink.md) — App Kitchensink (catálogo)
-- [`05-testing.md`](./05-testing.md) — Arquitectura y ejecución de tests unitarios con Vitest
+- [**Lineamientos de Tipos de Apps**](./01-app-types.md) — Arquetipos de aplicaciones y matriz de decisiones.
+- [**Flujo de Trabajo del Monorepo**](./02-workflow.md) — Scripts, builds, iconos y despliegue.
+- [**Estrategia de Testing**](./05-testing.md) — Vitest, mocks globales y ejecución de pruebas.
+- [**Docs de @zn-apps/ui-core**](../shared/ui-core/docs/README.md) — API completa de componentes y tokens.
+- [**Docs de @zn-apps/storage**](../shared/storage/docs/README.md) — Capa de persistencia con namespace.
+- [**Docs de @zn-apps/ui-about**](../shared/ui-about/docs/README.md) — Componente Acerca de y utilidades.
+- [**Docs de @zn-apps/pwa-integration**](../shared/pwa-integration/docs/README.md) — Integración PWA, tema del sistema, barras y popup de instalación.
+- [**Docs de Zound Box**](../zound-box/docs/README.md) — Arquitectura de audio, DTOs y reglas de negocio.
+- [**Docs de Kitchensink**](../kitchensink/docs/README.md) — Showroom y blueprint para nuevas apps.

@@ -4,16 +4,32 @@
 
 ## 🚨 Mandatory: Read Documentation First
 
-Before making modifications, generating components, or refactoring code in this monorepo, **you MUST inspect the relevant documentation files in the `docs/` folder**:
+Before making modifications, generating components, or refactoring code in this monorepo, **you MUST inspect the relevant documentation**.
+Documentation follows a **two-tier architecture**:
 
-| Topic | Primary Document to Read |
+### Tier 1: Monorepo Root Documentation (`docs/`)
+Lineamientos generales de arquitectura, taxonomía de aplicaciones y procesos del monorepo:
+
+| Topic | Document |
 |---|---|
+| **Master Documentation Index** | [`docs/README.md`](./docs/README.md) |
 | **Monorepo Architecture & Conventions** | [`docs/00-overview.md`](./docs/00-overview.md) |
-| **Component Library (@zn-apps/ui-core API)** | [`docs/01-shared.md`](./docs/01-shared.md) |
-| **Zound Box Application** | [`docs/02-app-zound-box.md`](./docs/02-app-zound-box.md) |
-| **Kitchensink (Blueprint for New Apps)** | [`docs/03-app-kitchensink.md`](./docs/03-app-kitchensink.md) |
+| **App Typology & Override Guidelines** | [`docs/01-app-types.md`](./docs/01-app-types.md) |
+| **Workflow, Builds, Icons & PWA** | [`docs/02-workflow.md`](./docs/02-workflow.md) |
 | **Testing Guidelines & Mock Setup** | [`docs/05-testing.md`](./docs/05-testing.md) |
 | **General Developer Guide** | [`README.md`](./README.md) |
+
+### Tier 2: Project-Specific Documentation (`<app>/docs/` & `shared/<lib>/docs/`)
+Contiene la arquitectura local, decisiones de override, dominio, DTOs y reglas de negocio encapsuladas en cada proyecto:
+
+| Project | Specific Documentation | Focus & Scope |
+|---|---|---|
+| **@zn-apps/ui-core** | [`shared/ui-core/docs/README.md`](./shared/ui-core/docs/README.md) | MD3 Design System, tokens `--md-*`, complete component API, composables, SVG sprite chunks |
+| **@zn-apps/storage** | [`shared/storage/docs/README.md`](./shared/storage/docs/README.md) | Agnostic Web Storage persistence, namespacing isolation, error handling & DTOs |
+| **@zn-apps/ui-about** | [`shared/ui-about/docs/README.md`](./shared/ui-about/docs/README.md) | Neutral `ZnAbout` panel, package.json metadata extraction & app integration |
+| **@zn-apps/pwa-integration** | [`shared/pwa-integration/docs/README.md`](./shared/pwa-integration/docs/README.md) | PWA state detection, system color scheme, dynamic bar styling & install popup |
+| **Zound Box** | [`zound-box/docs/README.md`](./zound-box/docs/README.md) | Audio mixer architecture, sound channels domain, DTOs (`SoundItem`, `SoundChannel`), overrides (no-router, local reactive state) |
+| **Kitchensink** | [`kitchensink/docs/README.md`](./kitchensink/docs/README.md) | Showroom, full icon catalog integration, master-slave layout, step-by-step blueprint for new apps |
 
 ---
 
@@ -41,10 +57,11 @@ Before making modifications, generating components, or refactoring code in this 
 ## 🧪 Testing Policy (Vitest)
 
 - Unit and component tests are run with Vitest and happy-dom.
-- **Always run tests** after modifying code:
+- **Run tests ONLY when modifying code**:
   ```bash
   npm run test:run
   ```
+- **Documentation-only changes**: If a task ONLY touches documentation (`.md` files, READMEs), **DO NOT run tests**.
 - If you add or modify a component in `ui-core`, add/update its corresponding unit test in `shared/ui-core/src/components/__tests__/`. Add storage tests in `shared/storage/src/__tests__/`.
 - Do not bypass mocks: `window.matchMedia` and `IntersectionObserver` are mocked in `vitest.setup.js`.
 
@@ -113,9 +130,11 @@ When adding an app from `kitchensink/`, keep it independently installable:
 
 ## 📦 Build Verification
 
-Before concluding a task that alters build configurations or code, verify that:
+Before concluding a task that alters build configurations or executable code (Vue SFCs, JS/TS, CSS, packages):
 ```bash
 npm run test:run
 npm run build:all
 ```
 Both commands must exit with code 0.
+
+> ⚠️ **Documentation tasks**: For tasks that only modify markdown files (`.md`) or documentation, **DO NOT run builds or tests**.

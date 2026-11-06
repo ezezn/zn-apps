@@ -3,17 +3,24 @@
 You are assisting in a Vue 3 + Vite monorepo for independent PWAs deployed to GitHub Pages.
 
 MANDATORY CONTEXT:
-Read files in `docs/` before making changes:
-- Architecture & conventions: `docs/00-overview.md`
-- Shared component API: `docs/01-shared.md`
-- Zound Box: `docs/02-app-zound-box.md`
-- Blueprint & catalog: `docs/03-app-kitchensink.md`
-- Unit testing: `docs/05-testing.md`
-- Developer guide: `README.md`
+Read documentation organized in two tiers before making changes:
+- Monorepo root guidelines (`docs/`):
+  - Index: `docs/README.md`
+  - Architecture & conventions: `docs/00-overview.md`
+  - App types & overrides: `docs/01-app-types.md`
+  - Workflow & PWA: `docs/02-workflow.md`
+  - Unit testing: `docs/05-testing.md`
+  - Developer guide: `README.md`
+- Project-specific docs (`<subproject>/docs/README.md`):
+  - UI library: `shared/ui-core/docs/README.md`
+  - Storage: `shared/storage/docs/README.md`
+  - About: `shared/ui-about/docs/README.md`
+  - Zound Box: `zound-box/docs/README.md`
+  - Kitchensink: `kitchensink/docs/README.md`
 
 RULES:
 - `shared/` contains isolated libraries: `ui-core` (`@zn-apps/ui-core`, Vue/MD3) and `storage` (`@zn-apps/storage`, persistence). Libraries must not import from each other.
 - Shared components use `Zn*` prefix in `shared/ui-core/src/components/` and Material Design 3 CSS tokens (`--md-*`).
 - Each PWA in subfolders is independent. Do NOT share Pinia store instances across apps.
 - When creating new apps, follow the pattern from `kitchensink/`, not legacy `pwa-app*`.
-- Always verify changes with `npm run test:run` and `npm run build:all`.
+- Verify changes with `npm run test:run` and `npm run build:all` ONLY when modifying code (skip tests/builds for pure documentation tasks).

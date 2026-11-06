@@ -46,5 +46,17 @@ export const demoViews = [
   {
     key: 'about', title: 'Acerca de la app (ZnAbout)', subtitle: 'Presenta los metadatos de una aplicación',
     sections: [{ title: 'Información de la aplicación', content: 'ZnAbout presenta nombre, versión, descripción y autor desde el package.json de cada app.' }]
+  },
+  {
+    key: 'pwa-color-scheme', title: 'Esquema de color (useColorScheme)', subtitle: 'Sigue el tema del sistema o fija una preferencia clara/oscuro',
+    sections: [{ title: 'Esquema de color', content: 'Detección de prefers-color-scheme en tiempo real con preferencia system, light o dark.' }, { title: 'Cambiar preferencia', content: 'Alterna entre seguimiento automático del sistema y temas fijados manualmente.' }]
+  },
+  {
+    key: 'pwa-bar-styling', title: 'Barras del sistema (usePwaMeta)', subtitle: 'theme-color, fondo de carga y sincronización con ZnScreen',
+    sections: [{ title: 'Barras del sistema', content: 'Ajusta la barra superior con preset de colores y sincroniza su tono con el header de ZnScreen.' }]
+  },
+  {
+    key: 'pwa-install', title: 'Instalación PWA (usePwaInstall)', subtitle: 'Detección de instalación, diálogo nativo y popup ZnPwaInstallPrompt',
+    sections: [{ title: 'Instalación', content: 'Estado instalada/navegador, activación del diálogo nativo y ciclo de eventos del popup.' }]
   }
 ]
