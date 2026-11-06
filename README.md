@@ -12,7 +12,7 @@ El monorepo aloja un ecosistema de aplicaciones autónomas y una librería compa
 |---|---|---|---|---|
 | **Landing Portal** | `/` (`index.html`) | Portal de bienvenida para seleccionar y lanzar cada PWA | Producción | `/zn-apps/` |
 | **@zn-apps/ui-core** | [`shared/ui-core/`](./shared/ui-core) | Librería central de componentes UI (MD3), tokens CSS, composables y utilidades | Activo | N/A (librería ES) |
-| **@zn-apps/storage** | [`shared/storage/`](./shared/storage) | Utilidades de persistencia compartidas sobre Web Storage | Activo | N/A (librería ES) |
+| **@zn-apps/settings-core** | [`shared/settings-core/`](./shared/settings-core) | Documento JSON de settings con proxy profundo y persistencia local | Activo | N/A (librería ES) |
 | **@zn-apps/ui-about** | [`shared/ui-about/`](./shared/ui-about) | Componente de información de la app construido con `ui-core` | Activo | N/A (librería ES) |
 | **Zound Box** | [`zound-box/`](./zound-box) | Primera aplicación interactiva del monorepo (reproductor / caja de sonidos) | Activo | `/zn-apps/zound-box/` |
 | **Dev Kitchensink** | [`kitchensink/`](./kitchensink) | Catálogo interactivo de componentes y **plantilla oficial** para nuevas apps | Activo | `/zn-apps/kitchensink/` |
@@ -56,7 +56,6 @@ npm run dev --workspace=zound-box
 
 # Compilar las librerías compartidas en modo watch (detecta cambios en vivo)
 npm run dev --workspace=@zn-apps/ui-core
-npm run dev --workspace=@zn-apps/storage
 npm run dev --workspace=@zn-apps/ui-about
 ```
 
@@ -75,12 +74,10 @@ npm run dev
 cd ../shared/ui-core
 npm run dev
 
-# Para la librería storage
-cd ../shared/storage
 npm run dev
 ```
 
-> 💡 **Nota sobre las librerías compartidas:** Cada librería es un workspace independiente. Para el desarrollo de nuevas características en `@zn-apps/ui-core`, corre `npm run dev --workspace=@zn-apps/ui-core` para que Vite recompile automáticamente ante cualquier modificación en `shared/ui-core/src/`. `shared/storage/` se recompila de la misma forma con su propio workspace.
+> 💡 **Nota sobre las librerías compartidas:** Cada librería es un workspace independiente. Para el desarrollo de nuevas características en `@zn-apps/ui-core`, corre `npm run dev --workspace=@zn-apps/ui-core` para que Vite recompile automáticamente ante cualquier modificación en `shared/ui-core/src/`.
 
 ---
 
@@ -99,10 +96,12 @@ npm run test:run
 npm run test:coverage
 
 # Ejecutar tests de un paquete en específico:
-npm run test:shared       # Solo las librerías @zn-apps/ui-core y @zn-apps/storage
+npm run test:shared       # Librerías compartidas, incluido @zn-apps/settings-core
 npm run test:zound-box    # Solo la aplicación Zound Box
 npm run test:kitchensink  # Solo la aplicación Kitchensink y su router
 ```
+
+En el desarrollo local, elige el alcance de tests según el cambio: puedes ejecutar el proyecto o archivo afectado; la suite completa no es obligatoria para cada modificación. CI sí corre `npm run test:run` antes de desplegar. Para cambios solo de documentación, omite tests y builds.
 
 ---
 
@@ -119,7 +118,7 @@ npm run build:production
 **¿Qué hace este script?**
 1. Limpia y crea la carpeta `dist/`.
 2. Copia la landing page (`index.html`) y el Service Worker raíz (`sw.js`).
-3. Compila `@zn-apps/ui-core` y `@zn-apps/storage` en modo librería.
+3. Compila las librerías compartidas en modo librería.
 4. Compila `zound-box` y `kitchensink`.
 5. Mueve cada `dist/` a su subcarpeta correspondiente dentro de la raíz `dist/`.
 6. Valida los manifiestos y los PNG de instalación de 192×192 y 512×512 de cada app.
@@ -133,7 +132,7 @@ Cada app también incluye `public/pwa-icon.svg` y sus PNG derivados de 192×192 
 ### Compilación Individual por Proyecto
 
 ```bash
-npm run build:shared       # Compila @zn-apps/ui-core y @zn-apps/storage
+npm run build:shared       # Compila las librerías compartidas
 npm run build:zound-box    # Compila Zound Box -> zound-box/dist/
 npm run build:kitchensink  # Compila Kitchensink -> kitchensink/dist/
 ```
@@ -183,8 +182,8 @@ zn-apps/
 │   │   │   ├── utils/        # helpers (formatDate)
 │   │   │   └── assets/css/   # global.css y tokens MD3
 │   │   └── vitest.config.js
-│   └── storage/              # @zn-apps/storage
-│       ├── src/              # createStorage (Web Storage)
+│   └── settings-core/        # @zn-apps/settings-core
+│       ├── src/              # Proxy de settings JSON persistidos
 │       └── vitest.config.js
 │
 ├── zound-box/                # 🎵 App productiva de audio / PWA independiente
@@ -214,7 +213,7 @@ La documentación del proyecto se organiza en **dos niveles**:
 
 ### Nivel 2: Documentación Específica por Proyecto (`docs/` en cada carpeta)
 - [**`shared/ui-core/docs/`**](./shared/ui-core/docs/README.md): API completa de componentes MD3 (`Zn*`), tokens CSS, composables y chunks SVG.
-- [**`shared/storage/docs/`**](./shared/storage/docs/README.md): Persistencia desacoplada sobre Web Storage y namespacing.
+- [**`shared/settings-core/docs/`**](./shared/settings-core/docs/README.md): Proxy profundo de settings JSON persistidos y definiciones por defecto.
 - [**`shared/ui-about/docs/`**](./shared/ui-about/docs/README.md): Componente "Acerca de" y metadatos de aplicación.
 - [**`zound-box/docs/`**](./zound-box/docs/README.md): Motor de audio, DTOs (`SoundChannel`, `SoundItem`), overrides y reglas de negocio.
 - [**`kitchensink/docs/`**](./kitchensink/docs/README.md): Showroom, catálogo exhaustivo de iconos y blueprint para nuevas apps.

@@ -10,12 +10,12 @@ describe('Zound Box App', () => {
 
   it('muestra las dos secciones con cuatro sonidos de fondo y tres variantes de seseo', () => {
     const wrapper = mount(App)
-    expect(wrapper.text()).toContain('Sonidos de fondo')
-    expect(wrapper.text()).toContain('Sonidos de seseo')
-    expect(wrapper.text()).toContain('Ruido blanco')
-    expect(wrapper.text()).toContain('Lluvia')
-    expect(wrapper.text()).toContain('Viento')
-    expect(wrapper.text()).toContain('Canción de cuna')
+    expect(wrapper.text()).toContain('Background sounds')
+    expect(wrapper.text()).toContain('Hissing sounds')
+    expect(wrapper.text()).toContain('White noise')
+    expect(wrapper.text()).toContain('Rain')
+    expect(wrapper.text()).toContain('Wind')
+    expect(wrapper.text()).toContain('Lullaby')
     expect(wrapper.findAll('[aria-pressed]')).toHaveLength(7)
     expect(wrapper.findAll('.sound-toggle__card--image')).toHaveLength(4)
     expect(wrapper.text()).toContain('×2')
@@ -69,16 +69,16 @@ describe('Zound Box App', () => {
   it('inicia y pausa los canales y aplica el volumen reducido al 10%', async () => {
     const wrapper = mount(App)
     await wrapper.findAll('[aria-pressed]')[0].trigger('click')
-    await wrapper.get('[aria-label="Iniciar reproducción"]').trigger('click')
+    await wrapper.get('[aria-label="Play"]').trigger('click')
 
-    expect(wrapper.get('[aria-label="Pausar reproducción"]').exists()).toBe(true)
+    expect(wrapper.get('[aria-label="Pause"]').exists()).toBe(true)
 
-    await wrapper.get('[aria-label="Reducir volumen al 10%"]').trigger('click')
-    expect(wrapper.get('.playback-card__subtitle').text()).toBe('Volumen reducido al 10%')
+    await wrapper.get('[aria-label="Reduce volume to 10%"]').trigger('click')
+    expect(wrapper.get('.playback-card__subtitle').text()).toBe('Volume reduced to 10%')
     expect(wrapper.findComponent({ name: 'SoundChannelPlayer' }).props('volume')).toBe(0.1)
 
-    await wrapper.get('[aria-label="Pausar reproducción"]').trigger('click')
-    expect(wrapper.get('[aria-label="Iniciar reproducción"]').exists()).toBe(true)
+    await wrapper.get('[aria-label="Pause"]').trigger('click')
+    expect(wrapper.get('[aria-label="Play"]').exists()).toBe(true)
   })
 
   it('shows ambient sound images in grayscale until the sound is activated', async () => {
@@ -105,7 +105,7 @@ describe('Zound Box App', () => {
       }
     })
 
-    await wrapper.get('[aria-label="Acerca de Zound Box"]').trigger('click')
+    await wrapper.get('[aria-label="About Zound Box"]').trigger('click')
 
     expect(wrapper.get('[role="dialog"]').text()).toContain('Zound Box')
     expect(wrapper.get('[role="dialog"]').text()).toContain('0.0.0')

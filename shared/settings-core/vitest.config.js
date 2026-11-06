@@ -3,7 +3,7 @@ import { resolve } from 'path'
 
 export default defineConfig({
   test: {
-    name: 'storage',
+    name: 'settings-core',
     environment: 'happy-dom',
     globals: true,
     setupFiles: [resolve(__dirname, '../../vitest.setup.js')],

@@ -15,4 +15,4 @@ Always consult the documentation inside `docs/`:
 1. **Shared Libraries**: `shared/` contains isolated workspaces — `shared/ui-core/` (`@zn-apps/ui-core`) and `shared/storage/` (`@zn-apps/storage`). Do not import one library from the other.
 2. **Component Design**: Components in `@zn-apps/ui-core` use the `Zn` prefix and Material Design 3 tokens (`--md-*`). Use Vue 3 Composition API with `<script setup>`.
 3. **App Isolation**: Every app in subfolders is independent. Do not share Pinia stores between different apps.
-4. **Quality**: Write unit tests for new shared components under `shared/ui-core/src/**/__tests__/` and for storage helpers under `shared/storage/src/__tests__/`. Always verify with `npm run test:run`.
+4. **Quality**: Write unit tests for new shared components under `shared/ui-core/src/**/__tests__/` and for storage helpers under `shared/storage/src/__tests__/`. Select verification based on the change; the full `npm run test:run` suite is for cross-project, shared, or broad regression checks, not an automatic requirement for every code change. CI runs the full suite before deployment.

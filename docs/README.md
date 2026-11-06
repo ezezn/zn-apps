@@ -21,7 +21,7 @@ La documentación del monorepo sigue un esquema estructurado en dos niveles:
 ┌───────────────────────────────┐         ┌──────────────────────────────┐
 │  NIVEL 2: APPS (<app>/docs/)  │         │  NIVEL 2: SHARED (lib/docs/) │
 │  - zound-box/docs/            │         │  - shared/ui-core/docs/      │
-│  - kitchensink/docs/          │         │  - shared/storage/docs/      │
+│  - kitchensink/docs/          │         │  - shared/settings-core/docs/│
 │  - Dominio, DTOs, reglas de   │         │  - shared/ui-about/docs/     │
 │    negocio y overrides.       │         │  - API de componentes y lib. │
 └───────────────────────────────┘         └──────────────────────────────┘
@@ -60,7 +60,7 @@ Cada librería compartida contiene su propia carpeta `docs/` detallando su API, 
 | Librería | Paquete npm | Documento Local | Foco del Documento |
 |---|---|---|---|
 | **ui-core** | `@zn-apps/ui-core` | [`shared/ui-core/docs/README.md`](../shared/ui-core/docs/README.md) | Design System Material Design 3, tokens `--md-*`, API completa de componentes (`Zn*`), composables (`useDialogs`, `useOnlineStatus`) y pipeline de chunks SVG. |
-| **storage** | `@zn-apps/storage` | [`shared/storage/docs/README.md`](../shared/storage/docs/README.md) | Capa de persistencia agnóstica de framework, serialización JSON, namespacing seguro para aislamiento de apps y manejo de cuotas. |
+| **settings-core** | `@zn-apps/settings-core` | [`shared/settings-core/docs/README.md`](../shared/settings-core/docs/README.md) | Documento JSON de settings con proxy profundo, definiciones por defecto y persistencia en `localStorage`. |
 | **ui-about** | `@zn-apps/ui-about` | [`shared/ui-about/docs/README.md`](../shared/ui-about/docs/README.md) | Componente neutral de "Acerca de" (`ZnAbout`) y extractor de metadatos de aplicación desde `package.json`. |
 | **pwa-integration** | `@zn-apps/pwa-integration` | [`shared/pwa-integration/docs/README.md`](../shared/pwa-integration/docs/README.md) | Detección de PWA, esquema de color del sistema, sincronización dinámica de barras (`theme-color`, fondo) y popup interactivo de instalación (`ZnPwaInstallPrompt`). |
 
@@ -72,6 +72,6 @@ Cuando recibas una tarea en este repositorio:
 1. **Para entender la arquitectura monorepo o flujos generales**: Lee [`docs/00-overview.md`](./00-overview.md) y [`docs/02-workflow.md`](./02-workflow.md).
 2. **Para crear o categorizar una aplicación**: Lee [`docs/01-app-types.md`](./01-app-types.md) y [`kitchensink/docs/README.md`](../kitchensink/docs/README.md).
 3. **Para usar o modificar componentes de UI**: Consulta [`shared/ui-core/docs/README.md`](../shared/ui-core/docs/README.md).
-4. **Para persistencia de datos en una app**: Consulta [`shared/storage/docs/README.md`](../shared/storage/docs/README.md).
+4. **Para trabajar con settings persistidos**: Consulta [`shared/settings-core/docs/README.md`](../shared/settings-core/docs/README.md).
 5. **Para trabajar en Zound Box**: Lee [`zound-box/docs/README.md`](../zound-box/docs/README.md).
 6. **Para escribir o ejecutar tests**: Consulta [`docs/05-testing.md`](./05-testing.md).

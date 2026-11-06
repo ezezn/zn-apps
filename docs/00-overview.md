@@ -23,6 +23,7 @@ El monorepo está alojado en GitHub y se compila y despliega de manera automatiz
 | Testing | **Vitest 5 + happy-dom** | Suite modular centralizada con proyectos Vitest |
 | Routing | **vue-router 4** | Opcional, reservado para apps multi-pantalla |
 | Tipografía | **Roboto** (`@fontsource/roboto`) | Pesos 400 y 500 provistos por `ui-core` |
+| Internacionalización | **Vue I18n** (`vue-i18n`) | Inglés y español en todas las aplicaciones, con resolución por settings, sistema e inglés |
 | CI/CD | **GitHub Actions** | Validación, build y deploy automático en `push: main` |
 
 ---
@@ -43,8 +44,8 @@ zn-apps/
 ├── shared/                   # 📦 LIBRERÍAS COMPARTIDAS (AISLADAS)
 │   ├── ui-core/              # @zn-apps/ui-core (Componentes MD3, temas, iconos)
 │   │   └── docs/README.md    # 📖 Docs propias: API de componentes, tokens MD3, iconos
-│   ├── storage/              # @zn-apps/storage (Persistencia framework-agnostic)
-│   │   └── docs/README.md    # 📖 Docs propias: API de storage, DTOs, namespaces
+│   ├── settings-core/        # @zn-apps/settings-core (Settings JSON persistidos)
+│   │   └── docs/README.md    # 📖 Docs propias: proxy profundo y definiciones
 │   ├── ui-about/             # @zn-apps/ui-about (Componente de información de app)
 │   │   └── docs/README.md    # 📖 Docs propias: ZnAbout, extracción de package.json
 │   └── pwa-integration/      # @zn-apps/pwa-integration (Detección PWA, tema de sistema, barras e install popup)
@@ -73,8 +74,8 @@ zn-apps/
 - Se publican bajo subrutas independientes: `/zn-apps/<nombre-app>/`.
 
 ### 2. Librerías Compartidas Aisladas (`shared/`)
-- Cada librería en `shared/` (`ui-core`, `storage`, `ui-about`) tiene su propio ciclo de build como ES module (`vite build --lib`), su propio `package.json` y tests unitarios.
-- Las librerías de infraestructura no dependen de Vue ni del DOM (`storage`), mientras que las de UI (`ui-core`) encapsulan el diseño MD3.
+- Cada librería en `shared/` (`ui-core`, `settings-core`, `ui-about`) tiene su propio ciclo de build como ES module (`vite build --lib`), su propio `package.json` y tests unitarios.
+- Las librerías de infraestructura no dependen de Vue ni del DOM, mientras que las de UI (`ui-core`) encapsulan el diseño MD3.
 - Las librerías no se importan circularmente entre sí; solo se componen explícitamente donde corresponda (ej. `ui-about` consume `ui-core`).
 
 ### 3. Sistema de Diseño Material Design 3
@@ -84,9 +85,16 @@ zn-apps/
 ### 4. Pipeline de Iconos Optimizado
 - Los iconos Material Design se consumen a través de chunks SVG locales generados por proyecto (`ZnIcon`), precacheados por el Service Worker de cada app sin cargar la colección de glifos completa.
 
+### 5. Internacionalización
+- Todas las aplicaciones deben integrar **Vue I18n** y declarar mensajes para inglés (`en`) y español (`es`).
+- Cada aplicación registra sus preferencias con `@zn-apps/settings-core`, usando `i18n.locale` como configuración opcional. Los valores admitidos son `en`, `es` o `null`/ausente.
+- La prioridad de resolución inicial es: idioma explícito guardado en settings, idioma del sistema (`navigator.language`), y `en` como fallback. Los idiomas regionales se normalizan por su código base (`es-MX` → `es`).
+
 ### 5. Política de Ejecución de Builds y Tests
-- **Solo ante cambios de código**: Los scripts de testing (`npm run test:run`) y construcción de producción (`npm run build:all` / `npm run build:production`) se deben ejecutar **ÚNICAMENTE cuando se modifique código ejecutable** (componentes Vue, scripts JS/MJS, hojas de estilo CSS, configuraciones de empaquetado o dependencias).
-- **Exclusión para documentación**: En tareas de documentación pura (archivos Markdown `.md`, notas, diagramas de texto o comentarios), **NO** se deben ejecutar builds ni tests, evitando consumo innecesario de tiempo y recursos.
+- La verificación local se elige según el alcance y el riesgo del cambio. Cuando sea útil, ejecuta los tests o builds más cercanos al código afectado (por ejemplo, `npm run test:zound-box` o `npm run build:zound-box`).
+- La suite completa (`npm run test:run`) y el build completo (`npm run build:all`) **no son obligatorios para cada cambio de código**. Úsalos para cambios que atraviesan proyectos, modifican comportamiento compartido o requieren verificación amplia/de release.
+- CI conserva su validación completa: antes de desplegar ejecuta la suite completa y el build de producción.
+- Para tareas que solo cambian documentación Markdown, no ejecutes tests ni builds.
 
 ---
 
@@ -96,7 +104,7 @@ zn-apps/
 - [**Flujo de Trabajo del Monorepo**](./02-workflow.md) — Scripts, builds, iconos y despliegue.
 - [**Estrategia de Testing**](./05-testing.md) — Vitest, mocks globales y ejecución de pruebas.
 - [**Docs de @zn-apps/ui-core**](../shared/ui-core/docs/README.md) — API completa de componentes y tokens.
-- [**Docs de @zn-apps/storage**](../shared/storage/docs/README.md) — Capa de persistencia con namespace.
+- [**Docs de @zn-apps/settings-core**](../shared/settings-core/docs/README.md) — Proxy profundo de configuración JSON persistida.
 - [**Docs de @zn-apps/ui-about**](../shared/ui-about/docs/README.md) — Componente Acerca de y utilidades.
 - [**Docs de @zn-apps/pwa-integration**](../shared/pwa-integration/docs/README.md) — Integración PWA, tema del sistema, barras y popup de instalación.
 - [**Docs de Zound Box**](../zound-box/docs/README.md) — Arquitectura de audio, DTOs y reglas de negocio.

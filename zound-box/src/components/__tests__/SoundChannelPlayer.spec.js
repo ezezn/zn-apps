@@ -41,4 +41,53 @@ describe('SoundChannelPlayer', () => {
     expect(pause).toHaveBeenCalled()
     expect(wrapper.emitted('pause')).toEqual([['hiss']])
   })
+
+  it('repite la sección estable desde el final del fade in', async () => {
+    vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue()
+    vi.spyOn(HTMLMediaElement.prototype, 'load').mockImplementation(() => {})
+
+    const wrapper = mount(SoundChannelPlayer, {
+      props: {
+        channelId: 'background',
+        source: '/sounds/rain.ogg',
+        playing: true,
+        loopStart: 3,
+        loopEnd: 18.5
+      }
+    })
+    await flushPromises()
+
+    const audio = wrapper.get('audio')
+    expect(audio.attributes('loop')).toBeUndefined()
+    audio.element.currentTime = 18.6
+    await audio.trigger('timeupdate')
+    expect(audio.element.currentTime).toBe(3)
+  })
+
+  it('reproduce la cola de fade out al deseleccionar un sonido', async () => {
+    const play = vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue()
+    vi.spyOn(HTMLMediaElement.prototype, 'load').mockImplementation(() => {})
+
+    const wrapper = mount(SoundChannelPlayer, {
+      props: {
+        channelId: 'background',
+        source: '/sounds/rain.ogg',
+        playing: true,
+        loopStart: 3,
+        loopEnd: 18.5
+      }
+    })
+    await flushPromises()
+
+    await wrapper.setProps({ source: '', playing: false })
+    await flushPromises()
+
+    expect(play).toHaveBeenCalledTimes(2)
+    expect(wrapper.get('audio').element.currentTime).toBe(18.5)
+    expect(wrapper.get('audio').attributes('src')).toBe('/sounds/rain.ogg')
+
+    await wrapper.get('audio').trigger('ended')
+    expect(wrapper.get('audio').attributes('src')).toBeUndefined()
+    expect(wrapper.emitted('stop')).toEqual([['background']])
+  })
 })

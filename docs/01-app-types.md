@@ -62,7 +62,8 @@ Usa esta matriz al planificar una nueva app en el monorepo:
 | **¿Incluye `vue-router`?** | ❌ No (innecesario) | ✅ Sí (`createWebHistory`) | ✅ Sí |
 | **¿Usa `ZnMasterSlaveLayout`?** | ❌ No (usa `ZnScreen` directo) | ✅ Sí (recomendado) | ✅ Sí |
 | **Gestión de Estado** | `ref()` / `reactive()` local | `ref()` o Pinia local de app | `ref()` local |
-| **Persistencia (`@zn-apps/storage`)** | Opcional (namespace propio) | Opcional (namespace propio) | Opcional |
+| **Persistencia (`@zn-apps/settings-core`)** | Opcional (namespace propio) | Opcional (namespace propio) | Opcional |
+| **Internacionalización** | Vue I18n (`en`/`es`) | Vue I18n (`en`/`es`) | Vue I18n (`en`/`es`) |
 | **Perfil de Iconos (`icon-profile.json`)** | Solo `scanned` | Solo `scanned` + manual específico | `manual` completo (~2100 iconos) |
 | **Panel Acerca de (`@zn-apps/ui-about`)** | ✅ Dentro de `ZnDialog` | ✅ Vista `/about` o diálogo | ✅ Vista `/about` |
 | **Manifest PWA e Iconos** | ✅ Obligatorio (192 y 512 PNGs) | ✅ Obligatorio (192 y 512 PNGs) | ✅ Obligatorio (192 y 512 PNGs) |

@@ -50,18 +50,18 @@ describe('Kitchensink App & Router', () => {
     const { wrapper } = await mountAt('/buttons')
 
     expect(wrapper.text()).toContain('ZnComponents Hub')
-    expect(wrapper.text()).toContain('Botones (ZnButton)')
-    expect(wrapper.text()).toContain('Tarjetas (ZnCard)')
-    expect(wrapper.text()).toContain('Selectores (ZnSwitch)')
-    expect(wrapper.text()).toContain('Diálogos (ZnDialog)')
-    expect(wrapper.text()).toContain('Iconos (ZnIcon)')
+    expect(wrapper.text()).toContain('Buttons (ZnButton)')
+    expect(wrapper.text()).toContain('Cards (ZnCard)')
+    expect(wrapper.text()).toContain('Switches (ZnSwitch)')
+    expect(wrapper.text()).toContain('Dialogs (ZnDialog)')
+    expect(wrapper.text()).toContain('Icons (ZnIcon)')
     expect(wrapper.text()).toContain('Layout (ZnBox / ZnRow)')
-    expect(wrapper.text()).toContain('Secciones (ZnSection)')
-    expect(wrapper.text()).toContain('Pantallas (ZnScreen)')
-    expect(wrapper.text()).toContain('Pestañas (ZnTabs)')
-    expect(wrapper.text()).toContain('Layout maestro (ZnMasterSlaveLayout)')
-    expect(wrapper.text()).toContain('Utilidades')
-    expect(wrapper.text()).toContain('Acerca de la app (ZnAbout)')
+    expect(wrapper.text()).toContain('Sections (ZnSection)')
+    expect(wrapper.text()).toContain('Screens (ZnScreen)')
+    expect(wrapper.text()).toContain('Tabs (ZnTabs)')
+    expect(wrapper.text()).toContain('Master layout (ZnMasterSlaveLayout)')
+    expect(wrapper.text()).toContain('Utilities')
+    expect(wrapper.text()).toContain('About app (ZnAbout)')
   })
 
   it('agrupa la navegación por librería con subsecciones', async () => {
@@ -72,14 +72,14 @@ describe('Kitchensink App & Router', () => {
     expect(wrapper.text()).toContain('@zn-apps/pwa-integration')
 
     // Subsecciones de ui-core
-    expect(wrapper.text()).toContain('Navegación')
+    expect(wrapper.text()).toContain('Navigation')
     expect(wrapper.text()).toContain('Layout')
-    expect(wrapper.text()).toContain('Controles')
-    expect(wrapper.text()).toContain('Recursos y utilidades')
+    expect(wrapper.text()).toContain('Controls')
+    expect(wrapper.text()).toContain('Resources and utilities')
 
     // Subsecciones de pwa-integration
-    expect(wrapper.text()).toContain('Tema y barras')
-    expect(wrapper.text()).toContain('Instalación')
+    expect(wrapper.text()).toContain('Theme and bars')
+    expect(wrapper.text()).toContain('Installation')
   })
 
   it('colapsa y expande grupos desde el encabezado', async () => {
@@ -126,7 +126,7 @@ describe('Kitchensink App & Router', () => {
 
     const darkOption = wrapper
       .findAll('.nav-theme-options button')
-      .find((node) => node.text().includes('Oscuro'))
+      .find((node) => node.text().includes('Dark'))
     expect(darkOption).toBeTruthy()
 
     await darkOption.trigger('click')

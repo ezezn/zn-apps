@@ -6,7 +6,7 @@ independently built libraries consumed by the apps in this monorepo.
 | Library | Package | Purpose | Docs |
 |---|---|---|---|
 | [`ui-core/`](./ui-core) | `@zn-apps/ui-core` | Vue 3 UI components (MD3), composables, helpers and global CSS tokens. | [`ui-core/docs/`](./ui-core/docs/README.md) |
-| [`storage/`](./storage) | `@zn-apps/storage` | Framework-agnostic persistence helpers over Web Storage. | [`storage/docs/`](./storage/docs/README.md) |
+| [`settings-core/`](./settings-core) | `@zn-apps/settings-core` | Deep JSON settings proxy with localStorage persistence and defaults. | [`settings-core/docs/`](./settings-core/docs/README.md) |
 | [`ui-about/`](./ui-about) | `@zn-apps/ui-about` | Neutral two-row About component composed with `@zn-apps/ui-core` icons. | [`ui-about/docs/`](./ui-about/docs/README.md) |
 | [`pwa-integration/`](./pwa-integration) | `@zn-apps/pwa-integration` | PWA state detection, system color scheme, dynamic bar styling & install popup. | [`pwa-integration/docs/`](./pwa-integration/docs/README.md) |
 
@@ -25,11 +25,8 @@ import '@zn-apps/ui-core/dist/ui-core.css'
 import { ZnApp, ZnScreen, ZnButton, useOnlineStatus, formatDate } from '@zn-apps/ui-core'
 
 // Persistence
-import { createStorage } from '@zn-apps/storage'
 import { ZnAbout } from '@zn-apps/ui-about'
 import '@zn-apps/ui-about/dist/ui-about.css'
-
-const storage = createStorage({ namespace: 'mi-app' })
 
 // Pass the app's package.json metadata into the component.
 // Puede recibir icon="widgets" o image="/app-icon.png" (image tiene prioridad).

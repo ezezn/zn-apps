@@ -25,7 +25,7 @@ Contiene la arquitectura local, decisiones de override, dominio, DTOs y reglas d
 | Project | Specific Documentation | Focus & Scope |
 |---|---|---|
 | **@zn-apps/ui-core** | [`shared/ui-core/docs/README.md`](./shared/ui-core/docs/README.md) | MD3 Design System, tokens `--md-*`, complete component API, composables, SVG sprite chunks |
-| **@zn-apps/storage** | [`shared/storage/docs/README.md`](./shared/storage/docs/README.md) | Agnostic Web Storage persistence, namespacing isolation, error handling & DTOs |
+| **@zn-apps/settings-core** | [`shared/settings-core/docs/README.md`](./shared/settings-core/docs/README.md) | Deep JSON settings proxy, nested definitions and localStorage persistence |
 | **@zn-apps/ui-about** | [`shared/ui-about/docs/README.md`](./shared/ui-about/docs/README.md) | Neutral `ZnAbout` panel, package.json metadata extraction & app integration |
 | **@zn-apps/pwa-integration** | [`shared/pwa-integration/docs/README.md`](./shared/pwa-integration/docs/README.md) | PWA state detection, system color scheme, dynamic bar styling & install popup |
 | **Zound Box** | [`zound-box/docs/README.md`](./zound-box/docs/README.md) | Audio mixer architecture, sound channels domain, DTOs (`SoundItem`, `SoundChannel`), overrides (no-router, local reactive state) |
@@ -42,14 +42,18 @@ Contiene la arquitectura local, decisiones de override, dominio, DTOs y reglas d
 2. **Shared libraries (isolated workspaces)**:
    - `shared/` contains isolated libraries. Each has its own `package.json`, `vite.config.js` and `vitest.config.js`.
    - `shared/ui-core/` (`@zn-apps/ui-core`): all shared components live in `shared/ui-core/src/components/` and are prefixed with `Zn` (e.g. `ZnButton`, `ZnCard`, `ZnSwitch`, `ZnScreen`, `ZnSection`, `ZnApp`).
-   - `shared/storage/` (`@zn-apps/storage`): framework-agnostic persistence helpers (`createStorage`).
-   - Apps consume the libraries via npm workspaces: `"@zn-apps/ui-core": "*"`, `"@zn-apps/storage": "*"`.
+   - `shared/settings-core/` (`@zn-apps/settings-core`): deep settings proxy with nested defaults and a single persisted JSON document.
+   - Apps consume the libraries via npm workspaces.
    - Never duplicate buttons, cards, or theme logic inside individual apps if an existing `Zn*` component covers it.
    - Shared libraries must not import from each other; only apps compose them.
 3. **Design System (Material Design 3)**:
    - Uses CSS custom properties prefixed with `--md-*` (e.g. `--md-primary`, `--md-surface`).
    - Root theme switching is handled exclusively by `ZnApp` (`mode="light | dark | system"`).
-4. **Templates & New Apps**:
+4. **Internationalization**:
+   - All applications use Vue I18n with `en` and `es` messages.
+   - Initial locale priority is `settings.i18n.locale`, then the system language, then `en`.
+   - Each app uses its own `@zn-apps/settings-core` namespace.
+5. **Templates & New Apps**:
    - When creating a new application, use `kitchensink/` as the blueprint.
 
 ---
@@ -57,12 +61,9 @@ Contiene la arquitectura local, decisiones de override, dominio, DTOs y reglas d
 ## 🧪 Testing Policy (Vitest)
 
 - Unit and component tests are run with Vitest and happy-dom.
-- **Run tests ONLY when modifying code**:
-  ```bash
-  npm run test:run
-  ```
+- **Run tests when they help verify the change**. Choose the narrowest relevant project or test file; run the full `npm run test:run` suite when the change spans projects, affects shared behavior, or carries broader regression risk. Code changes do not automatically require the full suite.
 - **Documentation-only changes**: If a task ONLY touches documentation (`.md` files, READMEs), **DO NOT run tests**.
-- If you add or modify a component in `ui-core`, add/update its corresponding unit test in `shared/ui-core/src/components/__tests__/`. Add storage tests in `shared/storage/src/__tests__/`.
+- If you add or modify a component in `ui-core`, add/update its corresponding unit test in `shared/ui-core/src/components/__tests__/`.
 - Do not bypass mocks: `window.matchMedia` and `IntersectionObserver` are mocked in `vitest.setup.js`.
 
 ---
@@ -106,7 +107,7 @@ npm run build:production   # consume sprites versionados, no genera iconos
 
 La orden de `build:production` es:
 
-1. `build:shared` (ui-core, storage y ui-about)
+1. `build:shared` (ui-core, settings-core, ui-about y pwa-integration)
 2. `build:zound-box`
 3. `build:kitchensink`
 
@@ -130,11 +131,10 @@ When adding an app from `kitchensink/`, keep it independently installable:
 
 ## 📦 Build Verification
 
-Before concluding a task that alters build configurations or executable code (Vue SFCs, JS/TS, CSS, packages):
+For changes to executable code or build configuration, select verification that matches the scope and regression risk. A full test suite and monorepo build are not mandatory for every code change. Use `npm run test:run` and `npm run build:all` for cross-project or release-level verification. CI still runs the full suite and production build before deployment.
 ```bash
-npm run test:run
-npm run build:all
+npm run test:zound-box
+npm run build:zound-box
 ```
-Both commands must exit with code 0.
 
-> ⚠️ **Documentation tasks**: For tasks that only modify markdown files (`.md`) or documentation, **DO NOT run builds or tests**.
+> **Documentation-only tasks**: Do not run builds or tests when a task changes only Markdown documentation.

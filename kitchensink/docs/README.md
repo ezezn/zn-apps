@@ -24,6 +24,10 @@
 | **Perfil de Iconos Completo** | `manual` con catálogo total | A diferencia de apps productivas (que solo incluyen sus iconos escaneados), `kitchensink/icon-profile.json` declara más de 2000 nombres en su array `manual` para disponibilizar toda la biblioteca. |
 | **Panel Acerca de** | `ZnAbout` integrado | Vista `/about` que muestra la integración con `@zn-apps/ui-about` usando los metadatos de `package.json`. |
 
+### Internacionalización — implementación inicial pendiente de completar
+
+Kitchensink integra Vue I18n con mensajes en inglés y español, resolución desde `settings.i18n.locale`, idioma del sistema y fallback inglés. El shell principal, navegación, selector de tema y popup de instalación ya usan traducciones. Queda pendiente migrar las cadenas estáticas internas de todas las vistas demostrativas; esta nota debe retirarse cuando ese catálogo quede completamente traducido.
+
 ---
 
 ## 3. Modelo de Dominio y DTOs
@@ -114,7 +118,6 @@ mi-app/
   "dependencies": {
     "@zn-apps/ui-core": "*",
     "@zn-apps/ui-about": "*",
-    "@zn-apps/storage": "*",
     "vue": "^3.5.34"
   }
 }
@@ -149,10 +152,10 @@ export default defineConfig({
 1. Añade `"mi-app"` a `workspaces` en el `package.json` raíz.
 2. Añade los scripts de escaneo y generación de iconos si la app usa `ZnIcon`.
 3. Añade la orden de compilación a `build:production` en el `package.json` raíz.
-4. Verifica con:
+4. Verifica según el alcance del cambio. Para una modificación de esta app, ejecuta sus tests y build; reserva la suite completa y el build del monorepo para cambios transversales o verificación de release:
    ```bash
-   npm run test:run
-   npm run build:all
+   npm run test:kitchensink
+   npm run build:kitchensink
    ```
 
 ---

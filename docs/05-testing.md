@@ -35,10 +35,6 @@ zn-apps/
 │   │       │   └── useOnlineStatus.spec.js
 │   │       └── utils/__tests__/
 │   │           └── helpers.spec.js
-│   ├── storage/
-│   │   ├── vitest.config.js  # Proyecto "storage"
-│   │   └── src/__tests__/
-│   │       └── storage.spec.js
 │   └── ui-about/
 │       ├── vitest.config.js  # Proyecto "ui-about"
 │       └── src/
@@ -57,13 +53,13 @@ zn-apps/
 ```
 
 ### Resolución de dependencias (`@zn-apps/ui-core`)
-En las configuraciones de `zound-box` y `kitchensink`, los tests resuelven `@zn-apps/ui-core` directamente a `../shared/ui-core/src/index.js` y `@zn-apps/ui-core/dist/ui-core.css` a `../shared/ui-core/src/assets/css/global.css`. Esto garantiza que los tests se puedan ejecutar de inmediato **sin necesidad de compilar previamente** `ui-core`. `@zn-apps/storage` no requiere alias porque su código no depende de Vue ni de assets.
+En las configuraciones de `zound-box` y `kitchensink`, los tests resuelven `@zn-apps/ui-core` directamente a `../shared/ui-core/src/index.js` y `@zn-apps/ui-core/dist/ui-core.css` a `../shared/ui-core/src/assets/css/global.css`. Esto garantiza que los tests se puedan ejecutar de inmediato **sin necesidad de compilar previamente** `ui-core`.
 
 ---
 
 ## Comandos Disponibles
 
-> 💡 **Criterio de Ejecución:** Ejecuta los tests **únicamente cuando haya modificaciones relacionadas con código** (Vue, JS, CSS, configs). Si la tarea comprende exclusivamente cambios en documentación (`.md`), omite la ejecución de tests.
+> 💡 **Criterio de Ejecución:** Ejecuta tests cuando aporten verificación útil para el cambio y selecciona el alcance mínimo relevante. Las modificaciones de código no requieren automáticamente la suite completa; úsala para cambios transversales, compartidos o de riesgo amplio. Si la tarea solo cambia documentación (`.md`), omite tests.
 
 Desde la raíz del monorepo:
 
@@ -72,9 +68,11 @@ Desde la raíz del monorepo:
 | `npm test` | Inicia Vitest en modo observador interactivo (watch) |
 | `npm run test:run` | Ejecuta todos los tests una sola vez (modo CI) |
 | `npm run test:coverage` | Genera reporte de cobertura global con motor V8 |
-| `npm run test:shared` | Ejecuta los tests de `ui-core` y `storage` |
+| `npm run test:shared` | Ejecuta los tests de las librerías compartidas, incluido `settings-core` |
 | `npm run test:zound-box` | Ejecuta únicamente los tests de `zound-box` |
 | `npm run test:kitchensink` | Ejecuta únicamente los tests de `kitchensink` |
+
+Para cambios acotados también puedes ejecutar Vitest sobre el archivo de prueba pertinente, por ejemplo `npx vitest run shared/ui-core/src/components/__tests__/ZnImage.spec.js`. La integración continua sí ejecuta `npm run test:run` en cada despliegue.
 
 ---
 

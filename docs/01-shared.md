@@ -2,7 +2,7 @@
 
 > ⚠️ **Documentación Reubicada**: La documentación detallada, API de componentes, tokens y utilidades de cada librería compartida ahora reside directamente dentro del subproyecto correspondiente:
 > - **`@zn-apps/ui-core`**: [**`shared/ui-core/docs/README.md`**](../shared/ui-core/docs/README.md)
-> - **`@zn-apps/storage`**: [**`shared/storage/docs/README.md`**](../shared/storage/docs/README.md)
+> - **`@zn-apps/settings-core`**: [**`shared/settings-core/docs/README.md`**](../shared/settings-core/docs/README.md)
 > - **`@zn-apps/ui-about`**: [**`shared/ui-about/docs/README.md`**](../shared/ui-about/docs/README.md)
 
 ---
@@ -12,7 +12,7 @@
 | Librería | Paquete npm | Propósito Principal | Documentación Detallada |
 |---|---|---|---|
 | `shared/ui-core/` | `@zn-apps/ui-core` | Componentes Vue 3 MD3, tokens CSS, composables, pipeline de iconos SVG | [`shared/ui-core/docs/README.md`](../shared/ui-core/docs/README.md) |
-| `shared/storage/` | `@zn-apps/storage` | Persistencia framework-agnostic sobre Web Storage con namespacing | [`shared/storage/docs/README.md`](../shared/storage/docs/README.md) |
+| `shared/settings-core/` | `@zn-apps/settings-core` | Proxy profundo de settings JSON con definiciones por defecto y persistencia en localStorage | [`shared/settings-core/docs/README.md`](../shared/settings-core/docs/README.md) |
 | `shared/ui-about/` | `@zn-apps/ui-about` | Panel estandarizado "Acerca de" (`ZnAbout`) y extracción de `package.json` | [`shared/ui-about/docs/README.md`](../shared/ui-about/docs/README.md) |
 
 ---
@@ -26,4 +26,4 @@
    import '@zn-apps/ui-core/dist/ui-core.css'
    import '@zn-apps/ui-about/dist/ui-about.css'
    ```
-4. **No Importar entre sí arbitrariamente**: Las librerías de infraestructura (`storage`) no dependen de UI ni de Vue; solo las apps o componentes de más alto nivel componen las primitivas.
+4. **No Importar entre sí arbitrariamente**: Las librerías de infraestructura no dependen de UI ni de Vue; solo las apps o componentes de más alto nivel componen las primitivas.

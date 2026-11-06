@@ -3,8 +3,8 @@
 
     <ZnMasterSlaveLayout :view-key="$route.fullPath">
       <template #master>
-        <ZnScreen title="ZnComponents Hub" subtitle="Catálogo de componentes">
-          <nav aria-label="Navegación principal">
+        <ZnScreen :title="t('shell.title')" :subtitle="t('shell.subtitle')">
+          <nav :aria-label="t('shell.navigation')">
             <section
               v-for="group in navGroups"
               :key="group.key"
@@ -27,18 +27,18 @@
 
               <div v-show="expandedGroups[group.key]" class="nav-group-body">
                 <template v-for="section in group.sections" :key="section.key">
-                  <span class="nav-section-label">{{ section.label }}</span>
+                  <span class="nav-section-label">{{ navLabel('section', section.key, section.label) }}</span>
                   <router-link
                     v-for="item in section.items"
                     :key="item.key"
                     :to="item.to"
-                  >{{ item.label }}</router-link>
+                  >{{ navLabel('item', item.key, item.label) }}</router-link>
                 </template>
               </div>
             </section>
 
             <div class="nav-footer">
-              <span class="nav-section-label">Tema · useColorScheme()</span>
+                  <span class="nav-section-label">{{ t('shell.theme') }}</span>
               <div class="nav-theme-options">
                 <ZnButton
                   v-for="option in themeOptions"
@@ -65,8 +65,8 @@
 
     <!-- Popup de instalación PWA (persistencia de descarte por sesión) -->
     <ZnPwaInstallPrompt
-      title="Instalar Kitchensink"
-      message="Lleva el catálogo de componentes a tu escritorio o móvil y consúltalo sin conexión."
+      :title="t('shell.installTitle')"
+      :message="t('shell.installMessage')"
       :image="pwaIconUrl"
       :delay-ms="2000"
     />
@@ -75,14 +75,26 @@
 </template>
 
 <script setup>
-import { reactive, watch } from 'vue'
+import { computed, reactive, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import '../../shared/ui-core/src/assets/css/global.css'
 import { ZnApp, ZnScreen, ZnMasterSlaveLayout, ZnButton, ZnIcon, ZnDialogHost } from '@zn-apps/ui-core'
 import { ZnPwaInstallPrompt, useColorScheme } from '@zn-apps/pwa-integration'
 import { navGroups, findGroupByPath } from './data/nav-groups.js'
+import { i18n } from './i18n.js'
 
 const route = useRoute()
+const t = (...args) => i18n.global.t(...args)
+
+const navTranslationKeys = {
+  section: { navigation: 'nav.navigation', layout: 'nav.layout', controls: 'nav.controls', resources: 'nav.resources', about: 'nav.application', 'pwa-theme': 'nav.themeBars', 'pwa-install': 'nav.installation' },
+  item: { tabs: 'nav.tabs', 'navigation-layout': 'nav.navigationLayout', layout: 'nav.layoutView', sections: 'nav.sections', screen: 'nav.screen', buttons: 'nav.buttons', cards: 'nav.cards', switches: 'nav.switches', dialogs: 'nav.dialogs', icons: 'nav.icons', legacy: 'nav.utilities', about: 'nav.about', 'pwa-color-scheme': 'nav.colorScheme', 'pwa-bar-styling': 'nav.barStyling', 'pwa-install': 'nav.pwaInstall' }
+}
+
+function navLabel(type, key, fallback) {
+  const translationKey = navTranslationKeys[type]?.[key]
+  return translationKey ? t(translationKey) : fallback
+}
 
 // Estado colapsable de cada grupo del menú (todos abiertos por defecto)
 const expandedGroups = reactive(
@@ -108,11 +120,11 @@ watch(
 // Tema de la app gestionado por @zn-apps/pwa-integration
 const { resolvedTheme, preference, setPreference } = useColorScheme({ defaultPreference: 'system' })
 
-const themeOptions = [
-  { value: 'system', label: 'Sistema', icon: 'contrast' },
-  { value: 'light', label: 'Claro', icon: 'light_mode' },
-  { value: 'dark', label: 'Oscuro', icon: 'dark_mode' }
-]
+const themeOptions = computed(() => [
+  { value: 'system', label: t('shell.system'), icon: 'contrast' },
+  { value: 'light', label: t('shell.light'), icon: 'light_mode' },
+  { value: 'dark', label: t('shell.dark'), icon: 'dark_mode' }
+])
 
 // Ruta al icono de la PWA resuelta con el base path de la app
 const pwaIconUrl = `${import.meta.env.BASE_URL}pwa-icon.svg`

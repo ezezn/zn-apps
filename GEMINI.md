@@ -16,7 +16,6 @@ Al trabajar en este monorepo, **debes consultar la documentación organizada en 
 
 ### Nivel 2: Documentación Específica por Proyecto (`docs/` en cada subproyecto)
 - [`shared/ui-core/docs/README.md`](./shared/ui-core/docs/README.md) — API completa de `@zn-apps/ui-core` (props, slots, eventos, tokens MD3).
-- [`shared/storage/docs/README.md`](./shared/storage/docs/README.md) — Persistencia agnóstica `@zn-apps/storage` con namespacing.
 - [`shared/ui-about/docs/README.md`](./shared/ui-about/docs/README.md) — Componente neutral `ZnAbout` y utilidades de metadatos.
 - [`shared/pwa-integration/docs/README.md`](./shared/pwa-integration/docs/README.md) — Detección PWA, tema del sistema, barras y popup de instalación.
 - [`zound-box/docs/README.md`](./zound-box/docs/README.md) — Arquitectura de audio, DTOs (`SoundItem`, `SoundChannel`), overrides y reglas de negocio.
@@ -25,7 +24,7 @@ Al trabajar en este monorepo, **debes consultar la documentación organizada en 
 ## 📌 Reglas Clave de Desarrollo
 
 1. **Librerías Compartidas Aisladas:**
-   - `shared/` contiene librerías independientes: `shared/ui-core/` (`@zn-apps/ui-core`) y `shared/storage/` (`@zn-apps/storage`).
+   - `shared/` contiene librerías independientes como `shared/ui-core/` y `shared/settings-core/`.
    - Todo componente compartido debe vivir en `shared/ui-core/src/components/` con prefijo `Zn` (ej. `ZnButton`, `ZnCard`).
    - Respetar los tokens de Material Design 3 (`--md-*`).
    - Las librerías compartidas no deben importarse entre sí.
@@ -35,4 +34,4 @@ Al trabajar en este monorepo, **debes consultar la documentación organizada en 
 3. **Calidad, Tests y Builds:**
    - Ejecutar `npm run test:run` y `npm run build:all` **ÚNICAMENTE ante cambios relacionados con código** (archivos `.vue`, `.js`, `.css`, configs o dependencias).
    - En tareas de **documentación exclusiva** (archivos `.md`), **NO ejecutar tests ni compilación**.
-   - Si creas o modificas componentes en `ui-core`, crea o actualiza su test en `shared/ui-core/src/**/__tests__/`; para `storage`, usa `shared/storage/src/__tests__/`.
+   - Si creas o modificas componentes en `ui-core`, crea o actualiza su test en `shared/ui-core/src/**/__tests__/`.

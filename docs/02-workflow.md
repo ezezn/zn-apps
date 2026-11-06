@@ -20,7 +20,7 @@ npm install
   "zound-box",
   "kitchensink",
   "shared/ui-core",
-  "shared/storage",
+  "shared/settings-core",
   "shared/ui-about"
 ]
 ```
@@ -47,8 +47,6 @@ Si estás realizando cambios simultáneos en una librería compartida y deseas r
 # Observar cambios en ui-core
 npm run dev --workspace=@zn-apps/ui-core
 
-# Observar cambios en storage
-npm run dev --workspace=@zn-apps/storage
 ```
 
 > **Nota para Testing:** Las configuraciones de Vitest de las apps (`vitest.config.js`) resuelven `@zn-apps/ui-core` directamente al código fuente `shared/ui-core/src/index.js`, de modo que puedes ejecutar tests inmediatamente sin recompilar la librería.
@@ -104,13 +102,23 @@ Para que una aplicación sea reconocida como PWA instalable de forma autónoma:
    ```
    Valida que los manifiestos generados existan, apunten a rutas relativas correctas y que las imágenes existan con dimensiones exactas.
 
+## 5. Internacionalización de Aplicaciones
+
+Cada aplicación nueva debe instalar `vue-i18n`, crear sus mensajes `en` y `es`, y resolver el locale inicial con esta prioridad:
+
+1. `settings.i18n.locale` cuando contiene `en` o `es`.
+2. El idioma base de `navigator.language`.
+3. `en` si el sistema usa un idioma no soportado o no expone idioma.
+
+La instancia de `@zn-apps/settings-core` debe usar un namespace propio de la aplicación. No se debe compartir el documento de settings entre apps.
+
 ---
 
-## 5. Compilación y Construcción para Producción
+## 6. Compilación y Construcción para Producción
 
 ### Compilación Individual de Librerías y Apps
 ```bash
-# Compilar todas las librerías compartidas (ui-core, storage, ui-about)
+# Compilar todas las librerías compartidas (ui-core, settings-core, ui-about)
 npm run build:shared
 
 # Compilar una app particular
@@ -132,12 +140,13 @@ Este comando ejecuta en secuencia:
 
 ---
 
-## 6. Política de Testing y Validación de Regresiones
+## 7. Política de Testing y Validación de Regresiones
 
-> ⚠️ **Regla de Ejecución**: Ejecuta los scripts de test y build **ÚNICAMENTE cuando existan cambios de código** (archivos `.vue`, `.js`, `.mjs`, `.css`, `package.json` o configuraciones de bundler).  
-> **NO ejecutes tests ni builds en tareas exclusivas de documentación** (archivos `.md`, guías, diagramas o notas).
+> **Criterio de Ejecución**: Elige tests y builds de acuerdo con el alcance y el riesgo del cambio. La suite completa y el build completo no son un requisito automático para cada modificación de código; prioriza los comandos del proyecto afectado y amplía la verificación si el cambio cruza proyectos o afecta código compartido. CI siempre ejecuta la suite completa y el build de producción antes de desplegar.
+>
+> En tareas exclusivas de documentación (archivos `.md`, guías, diagramas o notas), no ejecutes tests ni builds.
 
-Al modificar código fuente o configuraciones:
+Para cambios que ameriten verificación amplia o de release:
 
 ```bash
 # 1. Ejecutar todos los tests unitarios
@@ -147,11 +156,11 @@ npm run test:run
 npm run build:all
 ```
 
-Ambos comandos deben finalizar con código de salida `0`.
+Para un cambio local más acotado, usa el comando de tests y build del proyecto afectado. Los comandos completos de arriba deben finalizar con código de salida `0` cuando se elijan.
 
 ---
 
-## 7. Despliegue Continuo (CI/CD)
+## 8. Despliegue Continuo (CI/CD)
 
 - **Workflow**: `.github/workflows/deploy.yml`
 - **Disparador**: `push` a la rama `main`.

@@ -1,13 +1,13 @@
 {
-  "name": "@zn-apps/storage",
+  "name": "@zn-apps/settings-core",
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "main": "./dist/storage.js",
-  "module": "./dist/storage.js",
+  "main": "./dist/settings-core.js",
+  "module": "./dist/settings-core.js",
   "exports": {
     ".": {
-      "import": "./dist/storage.js"
+      "import": "./dist/settings-core.js"
     },
     "./dist/*": "./dist/*"
   },

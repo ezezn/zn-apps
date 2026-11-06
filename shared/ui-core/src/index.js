@@ -18,6 +18,7 @@ export { default as ZnSection } from './components/ZnSection.vue' //
 export { default as ZnTabs } from './components/ZnTabs.vue'
 export { default as ZnButton } from './components/ZnButton.vue'
 export { default as ZnCard } from './components/ZnCard.vue'
+export { default as ZnImage } from './components/ZnImage.vue'
 export { default as ZnBox } from './components/ZnBox.vue'
 export { default as ZnSwitch } from './components/ZnSwitch.vue'
 export { default as ZnDialog } from './components/ZnDialog.vue'

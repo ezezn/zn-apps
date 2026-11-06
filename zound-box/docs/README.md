@@ -26,6 +26,10 @@ Cuenta con soporte offline completo mediante Service Worker (PWA instalable), ta
 | **Gestión de Estado (Pinia)** | **Omitido (Override)** | Se utiliza Composition API local con `ref()` en `App.vue`. No hay múltiples vistas que compartan estado y se evita cualquier riesgo de acoplamiento cross-app. |
 | **Estilos Visuales de Tarjeta** | **Override Local** | `SoundToggle.vue` encapsula un efecto visual personalizado: en estado inactivo las imágenes se muestran oscurecidas y en escala de grises (`filter: grayscale(100%) brightness(0.6)`), recuperando color pleno al activarse. |
 
+### Internacionalización — implementación completada
+
+Zound Box integra Vue I18n con mensajes en inglés y español. El locale inicial se obtiene de `settings.i18n.locale` dentro del namespace `zound-box`; si no existe un valor válido, usa el idioma base del sistema y finalmente inglés. Las cadenas de la pantalla principal, reproducción, canales, sonidos y diálogo Acerca de ya están traducidas.
+
 ---
 
 ## 3. Modelo de Dominio y DTOs
@@ -47,6 +51,8 @@ interface SoundItem {
   fadeOutStartSeconds: number    // Marca de tiempo donde inicia la salida suave
 }
 ```
+
+En los sonidos con ambos tiempos, `SoundChannelPlayer` reproduce inicialmente desde cero y luego repite el tramo estable entre `fadeInEndSeconds` y `fadeOutStartSeconds`. Al deseleccionar el sonido, reproduce una última vez desde `fadeOutStartSeconds` hasta el final para que se oiga el fadeout. Los sonidos sin esos metadatos usan el loop nativo completo.
 
 ### `SoundChannel`
 ```typescript

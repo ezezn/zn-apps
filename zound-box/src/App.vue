@@ -1,27 +1,35 @@
 <template>
   <ZnApp :mode="isDarkMode ? 'dark' : 'light'">
-    <ZnScreen title="Zound Box">
+    <ZnScreen :title="t('app.title')">
       <template #icon>
-        <ZnImage :src="appLogo" alt="Zound Box" />
+        <div class="zn-image-wrapper" style="width: 48px; height: 48px;">
+          <ZnImage
+            :src="appLogo"
+            alt="Zound Box"
+            :width="48"
+            :height="48"
+            fit="contain"
+          />
+        </div>
       </template>
 
       <template #actions>
         <ZnSwitch v-model="isDarkMode">
           <template #iconOff>
-            <ZnIcon name="light_mode" label="Modo claro" />
+            <ZnIcon name="light_mode" :label="t('actions.lightMode')" />
           </template>
           <template #iconOn>
-            <ZnIcon name="dark_mode" label="Modo oscuro" />
+            <ZnIcon name="dark_mode" :label="t('actions.darkMode')" />
           </template>
         </ZnSwitch>
         <ZnButton
           variant="text"
           iconOnly
-          aria-label="Acerca de Zound Box"
-          title="Acerca de Zound Box"
+          :aria-label="t('app.about')"
+          :title="t('app.about')"
           @click="isAboutOpen = true"
         >
-          <ZnIcon name="info" label="Acerca de Zound Box" />
+          <ZnIcon name="info" :label="t('app.about')" />
         </ZnButton>
       </template>
 
@@ -33,35 +41,37 @@
           :source="channel.audioSource"
           :playing="isPlaying && Boolean(channel.audioSource)"
           :volume="isMuted ? 0.1 : 1"
+          :loop-start="channel.loopStartSeconds"
+          :loop-end="channel.loopEndSeconds"
           @source-change="channel.currentSource = $event.source"
           @error="onPlaybackError"
         />
 
         <ZnSection>
-          <ZnCard class="playback-card" variant="elevated" aria-label="Controles de reproducción">
+        <ZnCard class="playback-card" variant="elevated" :aria-label="t('playback.aria')">
             <div class="playback-card__controls">
               <ZnButton
                 class="playback-card__play"
                 variant="filled"
                 iconOnly
-                :aria-label="isPlaying ? 'Pausar reproducción' : 'Iniciar reproducción'"
-                :title="isPlaying ? 'Pausar' : 'Reproducir'"
+                :aria-label="isPlaying ? t('actions.pause') : t('actions.play')"
+                :title="isPlaying ? t('actions.pause') : t('actions.play')"
                 @click="isPlaying = !isPlaying"
               >
                 <ZnIcon :name="isPlaying ? 'pause' : 'play_arrow'" :size="40" />
               </ZnButton>
               <div class="playback-card__status" aria-live="polite">
-                <span class="playback-card__title">{{ isPlaying ? 'Reproduciendo' : 'En pausa' }}</span>
+                <span class="playback-card__title">{{ isPlaying ? t('playback.playing') : t('playback.paused') }}</span>
                 <span class="playback-card__subtitle">
-                  {{ hasPlaybackError ? 'No se pudo iniciar un sonido' : isMuted ? 'Volumen reducido al 10%' : 'Volumen al 100%' }}
+                  {{ hasPlaybackError ? t('playback.error') : isMuted ? t('playback.reduced') : t('playback.full') }}
                 </span>
               </div>
               <ZnButton
                 class="playback-card__mute"
                 variant="tonal"
                 iconOnly
-                :aria-label="isMuted ? 'Restaurar volumen al 100%' : 'Reducir volumen al 10%'"
-                :title="isMuted ? 'Volumen al 100%' : 'Volumen al 10%'"
+                :aria-label="isMuted ? t('actions.restoreVolume') : t('actions.volume10')"
+                :title="isMuted ? t('actions.restoreVolume') : t('actions.volume10')"
                 @click="isMuted = !isMuted"
               >
                 <ZnIcon :name="isMuted ? 'volume_off' : 'volume_up'" :size="28" />
@@ -73,15 +83,15 @@
         <ZnSection
           v-for="channel in orderedChannels"
           :key="channel.id"
-          :title="channel.title"
+            :title="t(`channels.${channel.id}`)"
         >
           <div class="sound-grid" :class="`sound-grid--${channel.id}`">
             <SoundToggle
               v-for="sound in channel.sounds"
               :key="sound.id"
               v-model="sound.enabled"
-              :title="sound.label"
-              :description="sound.description"
+              :title="t(`sounds.${sound.id}.label`)"
+              :description="t(`sounds.${sound.id}.description`)"
               :indicator="sound.indicator"
               :image="sound.image"
               :playing="isPlaying && sound.enabled"
@@ -92,10 +102,10 @@
       </div>
     </ZnScreen>
 
-    <ZnDialog v-model="isAboutOpen" title="Acerca de Zound Box">
+    <ZnDialog v-model="isAboutOpen" :title="t('app.about')">
       <ZnAbout v-bind="appMetadata" :image="appLogo" />
       <template #actions>
-        <ZnButton variant="text" @click="isAboutOpen = false">Cerrar</ZnButton>
+        <ZnButton variant="text" @click="isAboutOpen = false">{{ t('app.close') }}</ZnButton>
       </template>
     </ZnDialog>
   </ZnApp>
@@ -105,10 +115,11 @@
 import { computed, reactive, ref } from 'vue'
 import packageJson from '../package.json'
 import '@zn-apps/ui-core/dist/ui-core.css'
-import { ZnApp, ZnScreen, ZnSection, ZnSwitch, ZnIcon, ZnButton, ZnCard, ZnDialog } from '@zn-apps/ui-core'
+import { ZnApp, ZnScreen, ZnSection, ZnSwitch, ZnIcon, ZnButton, ZnCard, ZnImage, ZnDialog } from '@zn-apps/ui-core'
 import { ZnAbout, getAppMetadata } from '@zn-apps/ui-about'
 import SoundToggle from './components/SoundToggle.vue'
 import SoundChannelPlayer from './components/SoundChannelPlayer.vue'
+import { i18n } from './i18n.js'
 import soundChannelData from './data/sound-channels.json'
 import appLogo from './assets/logo.svg'
 
@@ -123,10 +134,13 @@ const isPlaying = ref(false)
 const isMuted = ref(false)
 const isAboutOpen = ref(false)
 const appMetadata = getAppMetadata(packageJson)
+const t = (...args) => i18n.global.t(...args)
 const channels = reactive(soundChannelData.map((channel) => ({
   ...channel,
   audioSource: '',
   currentSource: '',
+  loopStartSeconds: 0,
+  loopEndSeconds: null,
   playbackError: false,
   sounds: channel.sounds.map((sound) => ({
     ...sound,
@@ -146,6 +160,10 @@ function toggleSound(channel, selectedSound, enabled) {
   }
 
   channel.audioSource = enabled ? selectedSound.audio : ''
+  if (enabled) {
+    channel.loopStartSeconds = selectedSound.fadeInEndSeconds ?? 0
+    channel.loopEndSeconds = selectedSound.fadeOutStartSeconds ?? null
+  }
   channel.playbackError = false
 }
 
