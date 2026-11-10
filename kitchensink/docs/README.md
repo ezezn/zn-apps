@@ -9,7 +9,7 @@
 ## 1. Visión General del Proyecto
 
 **Kitchensink** cumple tres funciones fundamentales dentro del monorepo `zn-apps`:
-1. **Showroom de Componentes**: Demostración viva e interactiva de cada componente de `@zn-apps/ui-core` y `@zn-apps/ui-about`, con ejemplos de variantes, props y accesibilidad.
+1. **Showroom de Componentes**: Demostración viva e interactiva de cada componente de `@zn-apps/ui-core`, `@zn-apps/ui-about`, `@zn-apps/settings-core` y `@zn-apps/pwa-integration`, con ejemplos de variantes, props y accesibilidad.
 2. **Catálogo Completo de Iconos**: Contiene el inventario exhaustivo de iconos Material Design en sus 5 familias (`filled`, `outlined`, `round`, `sharp`, `two-tone`), permitiendo explorar visualmente glifos para utilizarlos en otras apps.
 3. **Blueprint para Nuevas Apps**: Es el modelo canónico a seguir para crear nuevas aplicaciones multi-pantalla con enrutamiento (`vue-router`), layout maestro-detalle (`ZnMasterSlaveLayout`) y configuración PWA estándar.
 
@@ -23,6 +23,7 @@
 | **Layout Maestro-Esclavo** | `ZnMasterSlaveLayout` | En escritorio divide la pantalla en menú lateral (`#master`) y área de demostración (`default`). En móvil colapsa la navegación y muestra botón de regreso automático. |
 | **Perfil de Iconos Completo** | `manual` con catálogo total | A diferencia de apps productivas (que solo incluyen sus iconos escaneados), `kitchensink/icon-profile.json` declara más de 2000 nombres en su array `manual` para disponibilizar toda la biblioteca. |
 | **Panel Acerca de** | `ZnAbout` integrado | Vista `/about` que muestra la integración con `@zn-apps/ui-about` usando los metadatos de `package.json`. |
+| **Gestión de Configuración** | `createSettings` integrado | Vista `/settings` que muestra la persistencia reactiva profunda en Web Storage con `@zn-apps/settings-core`. |
 
 ### Internacionalización — implementación inicial pendiente de completar
 

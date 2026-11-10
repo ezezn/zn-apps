@@ -12,6 +12,7 @@ Al trabajar en este monorepo, **debes consultar la documentación organizada en 
 - [`docs/01-app-types.md`](./docs/01-app-types.md) — Tipología de apps, matriz de decisiones y reglas de override.
 - [`docs/02-workflow.md`](./docs/02-workflow.md) — Flujos de trabajo, scripts, pipeline de iconos y PWA.
 - [`docs/05-testing.md`](./docs/05-testing.md) — Estrategia de tests unitarios, mocks y comandos.
+- [`docs/06-changelog-versioning.md`](./docs/06-changelog-versioning.md) — Política SemVer y generación de CHANGELOGs bilingües a pedido.
 - [`README.md`](./README.md) — Guía humana de ejecución local, build y estructura.
 
 ### Nivel 2: Documentación Específica por Proyecto (`docs/` en cada subproyecto)

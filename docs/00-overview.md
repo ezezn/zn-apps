@@ -103,6 +103,7 @@ zn-apps/
 - [**Lineamientos de Tipos de Apps**](./01-app-types.md) — Arquetipos de aplicaciones y matriz de decisiones.
 - [**Flujo de Trabajo del Monorepo**](./02-workflow.md) — Scripts, builds, iconos y despliegue.
 - [**Estrategia de Testing**](./05-testing.md) — Vitest, mocks globales y ejecución de pruebas.
+- [**Versionado y CHANGELOGs**](./06-changelog-versioning.md) — Política SemVer y generación bilingüe de bitácoras de cambios.
 - [**Docs de @zn-apps/ui-core**](../shared/ui-core/docs/README.md) — API completa de componentes y tokens.
 - [**Docs de @zn-apps/settings-core**](../shared/settings-core/docs/README.md) — Proxy profundo de configuración JSON persistida.
 - [**Docs de @zn-apps/ui-about**](../shared/ui-about/docs/README.md) — Componente Acerca de y utilidades.

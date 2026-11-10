@@ -12,6 +12,7 @@ import LegacyPage from '../views/LegacyPage.vue'
 import DialogsPage from '../views/DialogsPage.vue'
 import TabsPage from '../views/TabsPage.vue'
 import AboutPage from '../views/AboutPage.vue'
+import SettingsPage from '../views/SettingsPage.vue'
 import ColorSchemePage from '../views/ColorSchemePage.vue'
 import PwaMetaPage from '../views/PwaMetaPage.vue'
 import PwaInstallPage from '../views/PwaInstallPage.vue'
@@ -30,6 +31,7 @@ export const routes = [
   { path: '/navigation-layout', name: 'navigation-layout', component: NavigationLayoutPage },
   { path: '/legacy', name: 'legacy', component: LegacyPage },
   { path: '/about', name: 'about', component: AboutPage },
+  { path: '/settings', name: 'settings', component: SettingsPage },
   {
     path: '/pwa/color-scheme',
     name: 'pwa-color-scheme',

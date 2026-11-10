@@ -70,6 +70,24 @@ export const navGroups = [
     ]
   },
   {
+    key: 'settings-core',
+    label: '@zn-apps/settings-core',
+    icon: 'tune',
+    sections: [
+      {
+        key: 'settings',
+        label: 'Configuración',
+        items: [
+          {
+            key: 'settings',
+            label: 'Configuración (settings-core)',
+            to: '/settings'
+          }
+        ]
+      }
+    ]
+  },
+  {
     key: 'pwa-integration',
     label: '@zn-apps/pwa-integration',
     icon: 'devices',

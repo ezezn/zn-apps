@@ -87,8 +87,8 @@ const route = useRoute()
 const t = (...args) => i18n.global.t(...args)
 
 const navTranslationKeys = {
-  section: { navigation: 'nav.navigation', layout: 'nav.layout', controls: 'nav.controls', resources: 'nav.resources', about: 'nav.application', 'pwa-theme': 'nav.themeBars', 'pwa-install': 'nav.installation' },
-  item: { tabs: 'nav.tabs', 'navigation-layout': 'nav.navigationLayout', layout: 'nav.layoutView', sections: 'nav.sections', screen: 'nav.screen', buttons: 'nav.buttons', cards: 'nav.cards', switches: 'nav.switches', dialogs: 'nav.dialogs', icons: 'nav.icons', legacy: 'nav.utilities', about: 'nav.about', 'pwa-color-scheme': 'nav.colorScheme', 'pwa-bar-styling': 'nav.barStyling', 'pwa-install': 'nav.pwaInstall' }
+  section: { navigation: 'nav.navigation', layout: 'nav.layout', controls: 'nav.controls', resources: 'nav.resources', about: 'nav.application', settings: 'nav.settings', 'pwa-theme': 'nav.themeBars', 'pwa-install': 'nav.installation' },
+  item: { tabs: 'nav.tabs', 'navigation-layout': 'nav.navigationLayout', layout: 'nav.layoutView', sections: 'nav.sections', screen: 'nav.screen', buttons: 'nav.buttons', cards: 'nav.cards', switches: 'nav.switches', dialogs: 'nav.dialogs', icons: 'nav.icons', legacy: 'nav.utilities', about: 'nav.about', settings: 'nav.settingsCore', 'pwa-color-scheme': 'nav.colorScheme', 'pwa-bar-styling': 'nav.barStyling', 'pwa-install': 'nav.pwaInstall' }
 }
 
 function navLabel(type, key, fallback) {

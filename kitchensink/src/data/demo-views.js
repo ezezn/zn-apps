@@ -48,6 +48,10 @@ export const demoViews = [
     sections: [{ title: 'Información de la aplicación', content: 'ZnAbout presenta nombre, versión, descripción y autor desde el package.json de cada app.' }]
   },
   {
+    key: 'settings', title: 'Configuración (settings-core)', subtitle: 'Persistencia JSON en Web Storage con proxy profundo y valores por defecto',
+    sections: [{ title: 'Configuración y estado', content: 'createSettings provee un proxy reactivo profundo persistido en Web Storage para gestionar las opciones de cada app.' }]
+  },
+  {
     key: 'pwa-color-scheme', title: 'Esquema de color (useColorScheme)', subtitle: 'Sigue el tema del sistema o fija una preferencia clara/oscuro',
     sections: [{ title: 'Esquema de color', content: 'Detección de prefers-color-scheme en tiempo real con preferencia system, light o dark.' }, { title: 'Cambiar preferencia', content: 'Alterna entre seguimiento automático del sistema y temas fijados manualmente.' }]
   },

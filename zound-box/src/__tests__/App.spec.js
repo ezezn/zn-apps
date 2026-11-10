@@ -1,8 +1,13 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import App from '../App.vue'
+import { settings } from '../i18n.js'
 
 describe('Zound Box App', () => {
+  beforeEach(() => {
+    settings.reset()
+  })
+
   it('renderiza correctamente el título de la aplicación', () => {
     const wrapper = mount(App)
     expect(wrapper.text()).toContain('Zound Box')
@@ -23,14 +28,40 @@ describe('Zound Box App', () => {
     expect(wrapper.text()).toContain('×5')
   })
 
-  it('permite alternar el estado del switch de modo oscuro', async () => {
-    const wrapper = mount(App)
-    const switchInput = wrapper.find('input[type="checkbox"]')
-    expect(switchInput.exists()).toBe(true)
+  it('permite alternar el estado del switch de modo oscuro desde settings', async () => {
+    const wrapper = mount(App, {
+      global: {
+        stubs: {
+          ZnDialog: {
+            props: ['modelValue', 'title'],
+            template: '<section v-if="modelValue" role="dialog" class="dialog-stub"><h2>{{ title }}</h2><slot /></section>'
+          }
+        }
+      }
+    })
 
-    expect(switchInput.element.checked).toBe(false)
-    await switchInput.setValue(true)
-    expect(switchInput.element.checked).toBe(true)
+    // Abrir settings
+    await wrapper.get('[aria-label="Settings"]').trigger('click')
+    const dialog = wrapper.find('.dialog-stub')
+
+    // Switches en el modal
+    const checkboxes = dialog.findAll('input[type="checkbox"]')
+    // Index 0: idioma del sistema, 1: volumen bajo, 2: recordar sonidos, 3: seguir tema sistema
+    const followSystemSwitch = checkboxes[3]
+    expect(followSystemSwitch).toBeDefined()
+    expect(followSystemSwitch.element.checked).toBe(true)
+
+    // Desactivar "Seguir tema del sistema"
+    await followSystemSwitch.setValue(false)
+
+    // Al desactivarlo se renderiza el switch de custom theme (quinto checkbox)
+    const updatedCheckboxes = dialog.findAll('input[type="checkbox"]')
+    const themeSwitch = updatedCheckboxes[4]
+    expect(themeSwitch).toBeDefined()
+    expect(themeSwitch.element.checked).toBe(false)
+
+    await themeSwitch.setValue(true)
+    expect(themeSwitch.element.checked).toBe(true)
   })
 
   it('alterna de forma independiente sonidos de fondo y variantes de seseo', async () => {
@@ -111,5 +142,64 @@ describe('Zound Box App', () => {
     expect(wrapper.get('[role="dialog"]').text()).toContain('0.0.0')
     expect(wrapper.get('[role="dialog"]').text()).toContain('Combina sonidos ambientales y sonidos de seseo para relajarse.')
     expect(wrapper.get('[role="dialog"]').text()).toContain('ZN Apps')
+  })
+
+  it('abre el diálogo de configuración con secciones y permite cambiar idioma y opciones', async () => {
+    const wrapper = mount(App, {
+      global: {
+        stubs: {
+          ZnDialog: {
+            props: ['modelValue', 'title'],
+            template: '<section v-if="modelValue" role="dialog" class="dialog-stub"><h2>{{ title }}</h2><slot /></section>'
+          }
+        }
+      }
+    })
+
+    const settingsButton = wrapper.find('[aria-label="Settings"]')
+    expect(settingsButton.exists()).toBe(true)
+    await settingsButton.trigger('click')
+
+    const dialog = wrapper.find('.dialog-stub')
+    expect(dialog.exists()).toBe(true)
+    expect(dialog.text()).toContain('Settings')
+    expect(dialog.text()).toContain('Language')
+    expect(dialog.text()).toContain('Audio')
+    expect(dialog.text()).toContain('Color Scheme')
+    expect(dialog.text()).toContain('Use system language')
+    expect(dialog.text()).toContain('Start with low volume (10%)')
+    expect(dialog.text()).toContain('Remember last sound combination')
+    expect(dialog.text()).toContain('Follow system theme')
+
+    // Desactivar el uso de idioma del sistema para mostrar el selector
+    const systemLangSwitch = dialog.findAll('input[type="checkbox"]')[0]
+    await systemLangSwitch.setValue(false)
+
+    const select = wrapper.find('select')
+    expect(select.exists()).toBe(true)
+    await select.setValue('es')
+
+    // Comprobar que cambia a español
+    expect(dialog.text()).toContain('Configuración')
+    expect(dialog.text()).toContain('Idioma')
+    expect(dialog.text()).toContain('Esquema de colores')
+  })
+
+  it('persiste la selección de sonidos en settings y la restaura al inicializar', async () => {
+    const wrapper = mount(App)
+    const sounds = wrapper.findAll('[aria-pressed]')
+
+    // Activar primer sonido de fondo (white-noise) y primer seseo (hiss-x2)
+    await sounds[0].trigger('click')
+    await sounds[4].trigger('click')
+
+    expect(settings.audio.selectedSounds.background).toBe('white-noise')
+    expect(settings.audio.selectedSounds.hiss).toBe('hiss-x2')
+
+    // Montar una nueva instancia de la app; debe recuperar los sonidos seleccionados
+    const newWrapper = mount(App)
+    expect(newWrapper.findAll('[aria-pressed="true"]')).toHaveLength(2)
+    expect(newWrapper.findAll('[aria-pressed]')[0].attributes('aria-pressed')).toBe('true')
+    expect(newWrapper.findAll('[aria-pressed]')[4].attributes('aria-pressed')).toBe('true')
   })
 })

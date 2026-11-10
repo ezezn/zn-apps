@@ -1,5 +1,5 @@
 <template>
-  <ZnApp :mode="isDarkMode ? 'dark' : 'light'">
+  <ZnApp :mode="appMode">
     <ZnScreen :title="t('app.title')">
       <template #icon>
         <div class="zn-image-wrapper" style="width: 48px; height: 48px;">
@@ -14,14 +14,15 @@
       </template>
 
       <template #actions>
-        <ZnSwitch v-model="isDarkMode">
-          <template #iconOff>
-            <ZnIcon name="light_mode" :label="t('actions.lightMode')" />
-          </template>
-          <template #iconOn>
-            <ZnIcon name="dark_mode" :label="t('actions.darkMode')" />
-          </template>
-        </ZnSwitch>
+        <ZnButton
+          variant="text"
+          iconOnly
+          :aria-label="t('app.settings')"
+          :title="t('app.settings')"
+          @click="isSettingsOpen = true"
+        >
+          <ZnIcon name="settings" :label="t('app.settings')" />
+        </ZnButton>
         <ZnButton
           variant="text"
           iconOnly
@@ -108,6 +109,85 @@
         <ZnButton variant="text" @click="isAboutOpen = false">{{ t('app.close') }}</ZnButton>
       </template>
     </ZnDialog>
+
+    <ZnDialog v-model="isSettingsOpen" :title="t('settings.title')">
+      <div class="settings-modal">
+        <!-- Sección Idioma -->
+        <div class="settings-section">
+          <h3 class="settings-section__title">{{ t('settings.languageSection') }}</h3>
+          <div class="settings-modal__row">
+            <ZnSwitch
+              :model-value="useSystemLanguage"
+              :label-left="t('settings.systemLanguage')"
+              @update:model-value="onToggleSystemLanguage"
+            />
+          </div>
+
+          <div v-if="!useSystemLanguage" class="settings-modal__row settings-modal__row--select">
+            <label class="settings-modal__label" for="setting-lang-select">{{ t('settings.language') }}</label>
+            <select
+              id="setting-lang-select"
+              class="settings-modal__select"
+              :value="selectedLanguage"
+              @change="onChangeLanguage"
+            >
+              <option value="es">{{ t('settings.spanish') }}</option>
+              <option value="en">{{ t('settings.english') }}</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Sección Audio -->
+        <div class="settings-section">
+          <h3 class="settings-section__title">{{ t('settings.audioSection') }}</h3>
+          <div class="settings-modal__row">
+            <ZnSwitch
+              :model-value="startLowVolume"
+              :label-left="t('settings.startLowVolume')"
+              @update:model-value="onToggleStartLowVolume"
+            />
+          </div>
+
+          <div class="settings-modal__row">
+            <ZnSwitch
+              :model-value="rememberSounds"
+              :label-left="t('settings.rememberCombination')"
+              @update:model-value="onToggleRememberSounds"
+            />
+          </div>
+        </div>
+
+        <!-- Sección Esquema de Colores -->
+        <div class="settings-section">
+          <h3 class="settings-section__title">{{ t('settings.themeSection') }}</h3>
+          <div class="settings-modal__row">
+            <ZnSwitch
+              :model-value="followSystemTheme"
+              :label-left="t('settings.systemTheme')"
+              @update:model-value="onToggleFollowSystemTheme"
+            />
+          </div>
+
+          <div v-if="!followSystemTheme" class="settings-modal__row">
+            <ZnSwitch
+              :model-value="isDarkMode"
+              :label-left="t('settings.customTheme')"
+              @update:model-value="onToggleCustomTheme"
+            >
+              <template #iconOff>
+                <ZnIcon name="light_mode" :label="t('actions.lightMode')" />
+              </template>
+              <template #iconOn>
+                <ZnIcon name="dark_mode" :label="t('actions.darkMode')" />
+              </template>
+            </ZnSwitch>
+          </div>
+        </div>
+      </div>
+      <template #actions>
+        <ZnButton variant="text" @click="isSettingsOpen = false">{{ t('app.close') }}</ZnButton>
+      </template>
+    </ZnDialog>
   </ZnApp>
 </template>
 
@@ -119,7 +199,7 @@ import { ZnApp, ZnScreen, ZnSection, ZnSwitch, ZnIcon, ZnButton, ZnCard, ZnImage
 import { ZnAbout, getAppMetadata } from '@zn-apps/ui-about'
 import SoundToggle from './components/SoundToggle.vue'
 import SoundChannelPlayer from './components/SoundChannelPlayer.vue'
-import { i18n } from './i18n.js'
+import { i18n, settings, systemLocale } from './i18n.js'
 import soundChannelData from './data/sound-channels.json'
 import appLogo from './assets/logo.svg'
 
@@ -129,28 +209,113 @@ const soundAssets = import.meta.glob('./assets/sounds/*', {
   query: '?url'
 })
 
-const isDarkMode = ref(false)
 const isPlaying = ref(false)
-const isMuted = ref(false)
 const isAboutOpen = ref(false)
+const isSettingsOpen = ref(false)
+
+// Configuración de tema desde settings
+const followSystemTheme = ref(settings.theme?.followSystem ?? true)
+const isDarkMode = ref(settings.theme?.mode === 'dark')
+
+const appMode = computed(() => {
+  if (followSystemTheme.value) return 'system'
+  return isDarkMode.value ? 'dark' : 'light'
+})
+
+function onToggleFollowSystemTheme(value) {
+  followSystemTheme.value = value
+  settings.theme.followSystem = value
+}
+
+function onToggleCustomTheme(value) {
+  isDarkMode.value = value
+  settings.theme.mode = value ? 'dark' : 'light'
+}
+
+// Configuración de audio desde settings
+const startLowVolume = ref(Boolean(settings.audio.startLowVolume))
+const isMuted = ref(startLowVolume.value)
+const rememberSounds = ref(Boolean(settings.audio.rememberSounds))
+
+// Configuración de idioma desde settings
+const useSystemLanguage = ref(Boolean(settings.i18n.useSystem))
+const selectedLanguage = ref(settings.i18n.locale || (i18n.global.locale.value || 'es'))
+
+function applyLocale() {
+  const targetLocale = useSystemLanguage.value ? systemLocale() : selectedLanguage.value
+  i18n.global.locale.value = targetLocale
+}
+
+function onToggleSystemLanguage(value) {
+  useSystemLanguage.value = value
+  settings.i18n.useSystem = value
+  if (value) {
+    settings.i18n.locale = null
+  } else {
+    settings.i18n.locale = selectedLanguage.value
+  }
+  applyLocale()
+}
+
+function onChangeLanguage(event) {
+  const value = event.target.value
+  selectedLanguage.value = value
+  settings.i18n.locale = value
+  applyLocale()
+}
+
+function onToggleStartLowVolume(value) {
+  startLowVolume.value = value
+  settings.audio.startLowVolume = value
+}
+
+function onToggleRememberSounds(value) {
+  rememberSounds.value = value
+  settings.audio.rememberSounds = value
+}
+
+function saveSelectedSounds() {
+  const current = {}
+  for (const channel of channels) {
+    const active = channel.sounds.find((s) => s.enabled)
+    current[channel.id] = active ? active.id : null
+  }
+  settings.audio.selectedSounds = current
+}
+
 const appMetadata = getAppMetadata(packageJson)
 const t = (...args) => i18n.global.t(...args)
-const channels = reactive(soundChannelData.map((channel) => ({
-  ...channel,
-  audioSource: '',
-  currentSource: '',
-  loopStartSeconds: 0,
-  loopEndSeconds: null,
-  playbackError: false,
-  sounds: channel.sounds.map((sound) => ({
-    ...sound,
-    image: sound.cardType === 'imagen' && sound.image
-      ? soundAssets[`./assets/sounds/${sound.image}`]
-      : '',
-    audio: soundAssets[`./assets/sounds/${sound.audio}`],
-    enabled: false
-  }))
-})))
+
+// Cargar sonidos iniciales si hay algo guardado en settings.audio.selectedSounds
+const savedSounds = settings.audio.selectedSounds || {}
+
+const channels = reactive(soundChannelData.map((channel) => {
+  const rememberedSoundId = savedSounds[channel.id] || null
+  const sounds = channel.sounds.map((sound) => {
+    const isSelected = Boolean(rememberedSoundId && sound.id === rememberedSoundId)
+    return {
+      ...sound,
+      image: sound.cardType === 'imagen' && sound.image
+        ? soundAssets[`./assets/sounds/${sound.image}`]
+        : '',
+      audio: soundAssets[`./assets/sounds/${sound.audio}`],
+      enabled: isSelected
+    }
+  })
+
+  const selectedSound = sounds.find((s) => s.enabled)
+
+  return {
+    ...channel,
+    audioSource: selectedSound ? selectedSound.audio : '',
+    currentSource: '',
+    loopStartSeconds: selectedSound ? (selectedSound.fadeInEndSeconds ?? 0) : 0,
+    loopEndSeconds: selectedSound ? (selectedSound.fadeOutStartSeconds ?? null) : null,
+    playbackError: false,
+    sounds
+  }
+}))
+
 const orderedChannels = computed(() => [...channels].sort((a, b) => a.order - b.order))
 const hasPlaybackError = computed(() => channels.some((channel) => channel.playbackError))
 
@@ -165,6 +330,8 @@ function toggleSound(channel, selectedSound, enabled) {
     channel.loopEndSeconds = selectedSound.fadeOutStartSeconds ?? null
   }
   channel.playbackError = false
+
+  saveSelectedSounds()
 }
 
 function onPlaybackError({ channelId }) {
@@ -275,5 +442,77 @@ function onPlaybackError({ channelId }) {
   .sound-grid--hiss {
     grid-template-columns: 1fr;
   }
+}
+
+.settings-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.settings-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.settings-section:not(:last-child) {
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--md-surface-variant);
+}
+
+.settings-section__title {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--md-primary);
+}
+
+.settings-modal__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  min-height: 40px;
+}
+
+.settings-modal__row :deep(.zn-switch-wrapper) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.settings-modal__row :deep(.zn-switch__label--left) {
+  font-size: 0.95rem;
+  color: var(--md-on-surface);
+}
+
+.settings-modal__row--select {
+  justify-content: space-between;
+}
+
+.settings-modal__label {
+  font-size: 0.95rem;
+  color: var(--md-on-surface);
+}
+
+.settings-modal__select {
+  padding: 8px 12px;
+  border: 1px solid var(--md-outline);
+  border-radius: 8px;
+  background: var(--md-surface);
+  color: var(--md-on-surface);
+  font-family: inherit;
+  font-size: 0.95rem;
+  outline: none;
+  cursor: pointer;
+}
+
+.settings-modal__select:focus-visible {
+  border-color: var(--md-primary);
+  box-shadow: 0 0 0 1px var(--md-primary);
 }
 </style>

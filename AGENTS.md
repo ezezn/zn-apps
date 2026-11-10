@@ -17,6 +17,7 @@ Lineamientos generales de arquitectura, taxonomía de aplicaciones y procesos de
 | **App Typology & Override Guidelines** | [`docs/01-app-types.md`](./docs/01-app-types.md) |
 | **Workflow, Builds, Icons & PWA** | [`docs/02-workflow.md`](./docs/02-workflow.md) |
 | **Testing Guidelines & Mock Setup** | [`docs/05-testing.md`](./docs/05-testing.md) |
+| **Versioning & CHANGELOG Guidelines** | [`docs/06-changelog-versioning.md`](./docs/06-changelog-versioning.md) |
 | **General Developer Guide** | [`README.md`](./README.md) |
 
 ### Tier 2: Project-Specific Documentation (`<app>/docs/` & `shared/<lib>/docs/`)

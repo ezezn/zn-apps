@@ -39,6 +39,7 @@ La documentación del monorepo sigue un esquema estructurado en dos niveles:
 | [**`01-app-types.md`**](./01-app-types.md) | **Tipología de Aplicaciones**: Arquetipos (Single-screen, Multi-screen routed, Showroom/Catalog), matriz de decisiones y reglas de override. | IAs al planificar o crear apps |
 | [**`02-workflow.md`**](./02-workflow.md) | **Flujo de Trabajo Operativo**: Comandos de desarrollo local, pipeline de iconos, compilación de producción y validación PWA. | Humanos e IAs en ejecución de tareas |
 | [**`05-testing.md`**](./05-testing.md) | **Estrategia de Testing**: Configuración centralizada de Vitest, proyectos modulares, mocks globales y cobertura. | IAs y desarrolladores al probar código |
+| [**`06-changelog-versioning.md`**](./06-changelog-versioning.md) | **Versionado y CHANGELOGs**: Política y formato SemVer para generación de CHANGELOGs bilingües a pedido del usuario. | IAs y desarrolladores en entregas |
 
 ---
 

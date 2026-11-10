@@ -15,6 +15,7 @@ import LegacyPage from '../views/LegacyPage.vue'
 import DialogsPage from '../views/DialogsPage.vue'
 import TabsPage from '../views/TabsPage.vue'
 import AboutPage from '../views/AboutPage.vue'
+import SettingsPage from '../views/SettingsPage.vue'
 import ColorSchemePage from '../views/ColorSchemePage.vue'
 import PwaMetaPage from '../views/PwaMetaPage.vue'
 import PwaInstallPage from '../views/PwaInstallPage.vue'
@@ -62,6 +63,7 @@ describe('Kitchensink App & Router', () => {
     expect(wrapper.text()).toContain('Master layout (ZnMasterSlaveLayout)')
     expect(wrapper.text()).toContain('Utilities')
     expect(wrapper.text()).toContain('About app (ZnAbout)')
+    expect(wrapper.text()).toContain('Settings (settings-core)')
   })
 
   it('agrupa la navegación por librería con subsecciones', async () => {
@@ -69,6 +71,7 @@ describe('Kitchensink App & Router', () => {
 
     expect(wrapper.text()).toContain('@zn-apps/ui-core')
     expect(wrapper.text()).toContain('@zn-apps/ui-about')
+    expect(wrapper.text()).toContain('@zn-apps/settings-core')
     expect(wrapper.text()).toContain('@zn-apps/pwa-integration')
 
     // Subsecciones de ui-core
@@ -203,6 +206,13 @@ describe('Kitchensink App & Router', () => {
     expect(wrapper.text()).toContain('kitchensink')
     expect(wrapper.text()).toContain('A catalog of shared ZN Apps components and utilities.')
     expect(wrapper.text()).toContain('ZN Apps')
+  })
+
+  it('navega a la vista de settings-core al cambiar de ruta', async () => {
+    const { wrapper } = await mountAt('/settings')
+
+    expect(wrapper.findComponent(SettingsPage).exists()).toBe(true)
+    expect(wrapper.text()).toContain('Estado reactivo y almacenamiento')
   })
 
   it('navega a la vista de esquema de color de pwa-integration', async () => {
