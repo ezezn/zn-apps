@@ -93,6 +93,7 @@ body {
   --md-on-surface: #1D1B20;
   --md-surface-variant: #E7E0EC;
   --md-on-surface-variant: #49454F;
+  --md-surface-container-low: #FFFFFF;
   --md-background: #FEF7FF;
   --md-on-background: #1D1B20;
   --md-outline: #79747E;
@@ -108,6 +109,7 @@ body {
   --md-on-surface: #E6E1E5;
   --md-surface-variant: #49454F;
   --md-on-surface-variant: #CAC4D0;
+  --md-surface-container-low: #2A282E;
   --md-background: #141218;
   --md-on-background: #E6E1E5;
   --md-outline: #938F99;
