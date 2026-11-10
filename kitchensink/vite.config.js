@@ -25,6 +25,7 @@ export default defineConfig({
         }
         return request
       },
+      '@zn-apps/settings-core': resolve(__dirname, '../shared/settings-core/src/index.js'),
       '@zn-apps/ui-about': resolve(__dirname, '../shared/ui-about/src/index.js'),
       '@zn-apps/pwa-integration': resolve(__dirname, '../shared/pwa-integration/src/index.js'),
     }

@@ -18,6 +18,7 @@ export default defineConfig({
       // icon name catalogs and sprite chunks instead of the pre-built dist package.
       '@zn-apps/ui-core/dist/ui-core.css': resolve(__dirname, '../shared/ui-core/src/assets/css/global.css'),
       '@zn-apps/ui-core': resolve(__dirname, '../shared/ui-core/src/index.js'),
+      '@zn-apps/settings-core': resolve(__dirname, '../shared/settings-core/src/index.js'),
       '@zn-apps/ui-about': resolve(__dirname, '../shared/ui-about/src/index.js'),
     }
   },
