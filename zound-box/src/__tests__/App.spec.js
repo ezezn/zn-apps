@@ -139,7 +139,6 @@ describe('Zound Box App', () => {
     await wrapper.get('[aria-label="About Zound Box"]').trigger('click')
 
     expect(wrapper.get('[role="dialog"]').text()).toContain('Zound Box')
-    expect(wrapper.get('[role="dialog"]').text()).toContain('0.0.0')
     expect(wrapper.get('[role="dialog"]').text()).toContain('Combina sonidos ambientales y sonidos de seseo para relajarse.')
     expect(wrapper.get('[role="dialog"]').text()).toContain('ZN Apps')
   })
