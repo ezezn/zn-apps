@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
-import ZnMasterSlaveLayout from '../ZnMasterSlaveLayout.vue'
-import ZnScreen from '../ZnScreen.vue'
+import ZnMasterSlaveLayout from '../layout/ZnMasterSlaveLayout.vue'
+import ZnScreen from '../layout/ZnScreen.vue'
 
 describe('ZnMasterSlaveLayout', () => {
   afterEach(() => vi.restoreAllMocks())

@@ -42,14 +42,14 @@
 
 <script setup>
 import { computed } from 'vue'
-import ZnButton from './ZnButton.vue'
+import ZnButton from '../controls/ZnButton.vue'
 import ZnDialog from './ZnDialog.vue'
 import {
   dialogState,
   dismissCurrentDialog,
   finishCurrentDialog,
   settleCurrentDialog
-} from '../composables/useDialogs.js'
+} from '../../composables/useDialogs.js'
 
 const current = computed(() => dialogState.current)
 

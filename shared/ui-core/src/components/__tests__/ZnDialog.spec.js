@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { nextTick } from 'vue'
-import ZnDialog from '../ZnDialog.vue'
+import ZnDialog from '../dialogs/ZnDialog.vue'
 
 let showModalSpy
 let closeSpy

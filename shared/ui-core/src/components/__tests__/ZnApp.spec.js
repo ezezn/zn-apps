@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
-import ZnApp from '../ZnApp.vue'
+import ZnApp from '../layout/ZnApp.vue'
 
 describe('ZnApp Component', () => {
   beforeEach(() => {

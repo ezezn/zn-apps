@@ -48,7 +48,7 @@
 
 <script setup>
 import { computed, useId, ref, watch } from 'vue'
-import ZnIcon from './ZnIcon.vue'
+import ZnIcon from '../media/ZnIcon.vue'
 
 const props = defineProps({
   /** Tabs pares con value único, label y contenido opcional. */

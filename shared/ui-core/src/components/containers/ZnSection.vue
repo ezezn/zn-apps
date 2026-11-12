@@ -44,7 +44,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import ZnButton from './ZnButton.vue'
+import ZnButton from '../controls/ZnButton.vue'
 
 const props = defineProps({
   title: { type: String, default: '' },

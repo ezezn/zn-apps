@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import ZnScreen from '../ZnScreen.vue'
+import ZnScreen from '../layout/ZnScreen.vue'
 
 describe('ZnScreen Component', () => {
   it('renders the title and subtitle as a structured heading', () => {

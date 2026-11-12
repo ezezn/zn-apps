@@ -22,7 +22,7 @@ import {
   iconSymbolId,
   loadIconFamily,
   normalizeFamily,
-} from '../icons/index.js'
+} from '../../icons/index.js'
 
 const props = defineProps({
   /** Nombre del icono Material Design, ej. `'home'`, `'play_arrow'`. */

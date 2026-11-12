@@ -31,9 +31,11 @@ Los tokens se definen en `src/assets/css/global.css` y se activan mediante varia
 | `--md-on-background` | `#1D1B20` | `#E6E1E5` | Texto principal sobre fondo |
 | `--md-surface` | `#FEF7FF` | `#141218` | Superficie estándar (cards, screens) |
 | `--md-surface-container-low`| `#F7F2FA` | `#1D1B20` | Superficie con baja elevación |
+| `--md-surface-container-highest` | `#E6E0E9` | `#36343B` | Fondo de los campos de entrada (los separa de la tarjeta) |
 | `--md-surface-variant` | `#E7E0EC` | `#49454F` | Fondo de tarjetas y switches inactivos |
 | `--md-on-surface-variant` | `#49454F` | `#CAC4D0` | Texto secundario o bordes |
 | `--md-outline` | `#79747E` | `#938F99` | Contornos y bordes en variante outlined |
+| `--md-error` | `#B3261E` | `#F2B8B5` | Errores de validación en campos de entrada |
 | `--md-section-gap` | `24px` | `24px` | Espaciado vertical estándar entre secciones |
 
 ### Control de Tema y `ZnApp`
@@ -45,6 +47,22 @@ El cambio de tema se gestiona **únicamente** a través del componente raíz `Zn
 ---
 
 ## 3. Catálogo de Componentes y API
+
+### Organización de carpetas
+
+Los componentes se agrupan por significado en `shared/ui-core/src/components/` (los tests de todos ellos viven en `__tests__/` en la raíz de esa carpeta):
+
+| Carpeta | Contenido |
+|---|---|
+| `layout/` | `ZnApp`, `ZnScreen`, `ZnScrollArea`, `ZnMasterSlaveLayout` y `screenNavigation.js` (clave de navegación compartida) |
+| `containers/` | Contenedores de contenido: `ZnBox`, `ZnRow`, `ZnSection`, `ZnCard` |
+| `controls/` | Controles interactivos: `ZnButton`, `ZnSwitch` |
+| `input/` | Campos de formulario: `ZnSingleLineText`, `ZnMultilineText`, `ZnEmailInput`, `ZnPhoneInput`, `ZnDateInput`, `ZnTimeInput`, `ZnDateTimeInput`, `ZnSelect`, `ZnRangeInput`, `ZnDateRangeInput`, `ZnTimeRangeInput`, `ZnDateTimeRangeInput` (+ `ZnFieldShell` y `ZnTemporalRange`, internos) |
+| `navigation/` | `ZnTabs` |
+| `dialogs/` | `ZnDialog`, `ZnDialogHost` |
+| `media/` | `ZnIcon`, `ZnImage` |
+
+Las apps consumen los componentes exclusivamente desde el barrel `src/index.js` (`@zn-apps/ui-core`), nunca por ruta de archivo, para que esta organización pueda evolucionar.
 
 ### Componentes de Infraestructura y Layout
 
@@ -137,6 +155,66 @@ Primitivas de espaciado y contenedores neutros:
 - `ZnRow`: contenedor flexbox (`padding`, `gap`, `align`).
 
 ---
+
+### Componentes de Entrada de Datos (`input/`)
+
+Todos los campos comparten la anatomía MD3 *outlined* (contorno con muesca, etiqueta flotante, texto de asistencia y estado de error) implementada por el componente interno `ZnFieldShell`, y envuelven controles HTML nativos: cualquier atributo (`name`, `autocomplete`, `aria-*`, `@keydown`) se reenvía al `<input>` o `<textarea>` real.
+
+**Props comunes**: `modelValue` (`v-model`), `label`, `hint`, `error`, `placeholder`, `name`, `disabled`, `readonly`, `required`, `floatLabel`, `variant`. **Slots**: `#leading` y `#trailing` (iconos o adornos). El error añade `aria-invalid="true"` y enlaza el texto con `aria-describedby`.
+
+- `variant`: `'outlined'` (por defecto, contorno con muesca) o `'filled'` (contenedor tonal con indicador inferior de 1px que pasa a 2px en foco y error). Son las dos variantes que define MD3 para campos de texto. `ZnDateRangeInput`, `ZnTimeRangeInput` y `ZnDateTimeRangeInput` también lo aceptan.
+- `label` es opcional: sin etiqueta no se renderiza `label` ni la muesca del contorno; el `placeholder` queda siempre visible. En ese caso aporta `aria-label` (se reenvía al control nativo).
+- `floatLabel` mantiene la etiqueta sobre el contorno aunque el campo esté vacío. Los campos temporales (`ZnDateInput`, `ZnTimeInput`, `ZnDateTimeInput` y los tres rangos) lo activan siempre, porque el control nativo muestra su propio texto (`dd/mm/aaaa`, `--:--`) y de lo contrario se superpondría a la etiqueta.
+- El contenedor del campo usa `--md-surface-container-highest` y el contorno aparece solo con el borde, de modo que el área editable se distingue de la superficie de la tarjeta en ambos temas.
+- Con `#leading` (icono inicial), la etiqueta en reposo se desplaza 44px para no superponerse al icono; al flotar vuelve al borde. Sin `label` el contorno nunca abre muesca.
+- El contorno outlined se dibuja con tres paneles (borde inicial, muesca de ancho automático y borde final) en lugar de `fieldset`/`legend`, para que el borde coincida exactamente con el contenedor en todos los navegadores.
+
+#### `ZnSingleLineText`
+Campo de texto de una línea (`<input type="text">`).
+- **Props extra**: `type`, `maxlength`, `autocomplete`, `variant`.
+- **Eventos**: `update:modelValue`, `enter`, `focus`, `blur`.
+
+#### `ZnMultilineText`
+Área de texto (`<textarea>`) con contador opcional externo.
+- **Props extra**: `rows` (default `4`), `maxlength`, `variant`.
+- **Eventos**: `update:modelValue`, `focus`, `blur`.
+
+#### `ZnEmailInput`
+`type="email"` con validación de formato al perder el foco.
+- **Props extra**: `validate` (default `true`), `invalidMessage`, `autocomplete` (default `'email'`).
+- **Eventos**: `update:modelValue`, `update:valid`, `validation(Boolean)`.
+
+#### `ZnPhoneInput`
+`type="tel"` que sanea la entrada (solo dígitos, `+`, espacios, paréntesis y guiones) y valida la cantidad de dígitos.
+- **Props extra**: `minDigits` (default `6`), `maxDigits` (default `15`), `validate`, `invalidMessage`.
+- **Eventos**: `update:modelValue` (valor saneado), `update:valid`, `validation(Boolean)`.
+
+#### `ZnDateInput` / `ZnTimeInput` / `ZnDateTimeInput`
+Selectores nativos `date`, `time` y `datetime-local`.
+- **Props extra**: `min`, `max`, `step` (hora y fecha-hora).
+- **Eventos**: `update:modelValue`, `change`, `focus`, `blur`.
+
+#### `ZnSelect`
+Menú desplegable MD3 de selección simple o múltiple, renderizado con `Teleport` a `<body>` y posición fija (no lo recorta el scroll del contenedor).
+- **Props**:
+  - `options`: `Array<string | number | { value, label?, disabled? }>`.
+  - `multiple` (`Boolean`): con `true` el `modelValue` es un `Array` y la selección se muestra como chips removibles.
+  - `maxVisibleItems` (`Number`, default `6`): altura máxima del menú (`items × 48px`); al superarla aparece la barra de desplazamiento.
+  - `label`, `hint`, `error`, `placeholder`, `disabled`, `required`, `variant`.
+- **Eventos**: `update:modelValue`, `change`, `open`, `close`.
+- **Teclado**: `ArrowDown`/`ArrowUp` abren y recorren, `Home`/`End`, `Enter`/`Espacio` seleccionan, `Escape` cierra.
+
+#### `ZnRangeInput`
+Deslizador basado en `<input type="range">`.
+- **Props**: `modelValue` (`Number` simple o `[inicio, fin]` con dos actuadores), `min`, `max`, `step`, `label`, `hint`, `error`, `showValue`, `valueFormat(Function)`, `disabled`, `showTicks`, `centered`.
+- **Variantes MD3**: continua (por defecto), discreta con marcas por cada `step` (`showTicks`, hasta 50 marcas), centrada (el indicador crece desde el punto medio con `centered`) y de rango (dos actuadores con `modelValue` como array).
+- **Eventos**: `update:modelValue`, `change`. En modo doble los valores nunca se cruzan.
+
+#### `ZnDateRangeInput` / `ZnTimeRangeInput` / `ZnDateTimeRangeInput`
+Pares de campos temporales nativos (`date`, `time` y `datetime-local`) con la misma API; comparten la implementación interna `ZnTemporalRange`.
+- **Props**: `modelValue` (`[inicio, fin]` en el formato nativo: `YYYY-MM-DD`, `HH:mm` o `YYYY-MM-DDTHH:mm`), `startLabel`, `endLabel`, `startName`, `endName`, `min`, `max`, `step` (hora y fecha-hora), `hint`, `error`, `invalidMessage`, `disabled`, `required`.
+- **Comportamiento**: aplica el límite cruzado (`max` del inicio = fin, `min` del fin = inicio) y muestra error si el fin es anterior al inicio (mensaje por defecto adaptado al tipo).
+- **Eventos**: `update:modelValue`, `change`, `focus`, `blur`.
 
 ### Sistema de Iconos (`ZnIcon`) y Chunks SVG
 

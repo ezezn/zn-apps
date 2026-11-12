@@ -83,10 +83,12 @@ img, picture, video, canvas, svg {
   
   --md-surface: #FEF7FF;
   --md-surface-container-low: #F7F2FA;
+  --md-surface-container-highest: #E6E0E9;
   --md-surface-variant: #E7E0EC;
   --md-on-surface-variant: #49454F;
   
   --md-outline: #79747E;
+  --md-error: #B3261E;
   --md-section-gap: 24px;
 }
 
@@ -105,10 +107,12 @@ body.dark-theme,.dark-theme {
   
   --md-surface: #141218;
   --md-surface-container-low: #1D1B20;
+  --md-surface-container-highest: #36343B;
   --md-surface-variant: #49454F;
   --md-on-surface-variant: #CAC4D0;
   
   --md-outline: #938F99;
+  --md-error: #F2B8B5;
 }
 
 /* ==========================================================================

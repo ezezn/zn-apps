@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import ZnSwitch from '../ZnSwitch.vue'
+import ZnSwitch from '../controls/ZnSwitch.vue'
 
 describe('ZnSwitch Component', () => {
   it('renderiza en estado apagado por defecto', () => {

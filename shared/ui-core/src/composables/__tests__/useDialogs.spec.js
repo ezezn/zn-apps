@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import { flushPromises, mount } from '@vue/test-utils'
 import { defineComponent, h, ref } from 'vue'
-import ZnDialogHost from '../../components/ZnDialogHost.vue'
+import ZnDialogHost from '../../components/dialogs/ZnDialogHost.vue'
 import { useDialogs } from '../useDialogs.js'
 
 let showModalSpy

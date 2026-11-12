@@ -12,6 +12,58 @@ export const demoViews = [
     sections: [{ title: 'Selectores', content: 'Prueba etiquetas, estados y opciones visuales del interruptor.' }]
   },
   {
+    key: 'inputs', title: 'Entradas de datos (Inputs)', subtitle: 'Campos de formulario MD3 basados en controles HTML nativos',
+    sections: [{ title: 'Entradas de datos', content: 'Resumen: texto, correo, teléfono, fechas, horas, select simple/múltiple y rangos numéricos, de fecha, de hora y de fecha-hora.' }]
+  },
+  {
+    key: 'input-text', title: 'Texto (ZnSingleLineText)', subtitle: 'Campo de una línea con variantes outlined y filled',
+    sections: [{ title: 'ZnSingleLineText', content: 'Variantes MD3, estados, adornos laterales y etiqueta opcional.' }]
+  },
+  {
+    key: 'input-multiline', title: 'Multilínea (ZnMultilineText)', subtitle: 'Área de texto con variantes MD3 y filas configurables',
+    sections: [{ title: 'ZnMultilineText', content: 'Variantes outlined/filled, estados y redimensionado nativo.' }]
+  },
+  {
+    key: 'input-email', title: 'Email (ZnEmailInput)', subtitle: 'Correo electrónico con validación de formato',
+    sections: [{ title: 'ZnEmailInput', content: 'Variantes, error de validación, error externo y campo sin etiqueta.' }]
+  },
+  {
+    key: 'input-phone', title: 'Teléfono (ZnPhoneInput)', subtitle: 'Número telefónico saneado con validación de dígitos',
+    sections: [{ title: 'ZnPhoneInput', content: 'Variantes, saneamiento de caracteres y longitud mínima/máxima.' }]
+  },
+  {
+    key: 'input-date', title: 'Fecha (ZnDateInput)', subtitle: 'Selector de fecha nativo con etiqueta flotante',
+    sections: [{ title: 'ZnDateInput', content: 'Variantes, límites min/max y estados.' }]
+  },
+  {
+    key: 'input-time', title: 'Hora (ZnTimeInput)', subtitle: 'Selector de hora nativo con precisión configurable',
+    sections: [{ title: 'ZnTimeInput', content: 'Variantes, step, límites horarios y estados.' }]
+  },
+  {
+    key: 'input-datetime', title: 'Fecha y hora (ZnDateTimeInput)', subtitle: 'Selector datetime-local con etiqueta flotante',
+    sections: [{ title: 'ZnDateTimeInput', content: 'Variantes, límites combinados y estados.' }]
+  },
+  {
+    key: 'input-select', title: 'Select (ZnSelect)', subtitle: 'Menú desplegable simple y múltiple con scroll',
+    sections: [{ title: 'ZnSelect', content: 'Variantes, maxVisibleItems, opciones deshabilitadas, chips y estados.' }]
+  },
+  {
+    key: 'input-range', title: 'Rango numérico (ZnRangeInput)', subtitle: 'Sliders continuo, discreto, centrado y de rango',
+    sections: [{ title: 'ZnRangeInput', content: 'Todas las variantes MD3 de slider y sus estados.' }]
+  },
+  {
+    key: 'input-date-range', title: 'Rango de fechas (ZnDateRangeInput)', subtitle: 'Par de fechas con límites cruzados',
+    sections: [{ title: 'ZnDateRangeInput', content: 'Variantes, límites globales y detección de rango invertido.' }]
+  },
+  {
+    key: 'input-time-range', title: 'Rango de horas (ZnTimeRangeInput)', subtitle: 'Par de horas con límites cruzados y precisión',
+    sections: [{ title: 'ZnTimeRangeInput', content: 'Variantes, paso de 15 minutos y rango invertido.' }]
+  },
+  {
+    key: 'input-datetime-range', title: 'Rango fecha-hora (ZnDateTimeRangeInput)', subtitle: 'Par de fechas-hora con límites cruzados',
+    sections: [{ title: 'ZnDateTimeRangeInput', content: 'Variantes, límites globales y rango invertido.' }]
+  },
+  {
     key: 'dialogs', title: 'Diálogos (ZnDialog)', subtitle: 'Diálogos modales nativos con estilo Material Design 3',
     sections: [{ title: 'Diálogos', content: 'Abre diálogos base y prueba alertas, confirmaciones y preguntas.' }]
   },

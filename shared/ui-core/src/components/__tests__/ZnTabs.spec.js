@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
-import ZnTabs from '../ZnTabs.vue'
+import ZnTabs from '../navigation/ZnTabs.vue'
 
 const tabs = [
   { value: 'first', label: 'Primera', content: 'Contenido uno' },

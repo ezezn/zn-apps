@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
-import ZnImage from '../components/ZnImage.vue'
+import ZnImage from '../components/media/ZnImage.vue'
 
 describe('ZnImage', () => {
   it('renders an <img> with src and alt', () => {

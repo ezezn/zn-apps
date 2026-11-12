@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
-import ZnScrollArea from '../ZnScrollArea.vue'
+import ZnScrollArea from '../layout/ZnScrollArea.vue'
 
 describe('ZnScrollArea', () => {
   afterEach(() => vi.useRealTimers())

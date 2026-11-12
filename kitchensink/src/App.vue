@@ -93,8 +93,8 @@ const route = useRoute()
 const t = (...args) => i18n.global.t(...args)
 
 const navTranslationKeys = {
-  section: { navigation: 'nav.navigation', layout: 'nav.layout', controls: 'nav.controls', resources: 'nav.resources', about: 'nav.application', settings: 'nav.settings', 'pwa-theme': 'nav.themeBars', 'pwa-install': 'nav.installation' },
-  item: { tabs: 'nav.tabs', 'navigation-layout': 'nav.navigationLayout', layout: 'nav.layoutView', sections: 'nav.sections', screen: 'nav.screen', buttons: 'nav.buttons', cards: 'nav.cards', switches: 'nav.switches', dialogs: 'nav.dialogs', icons: 'nav.icons', legacy: 'nav.utilities', about: 'nav.about', settings: 'nav.settingsCore', 'pwa-color-scheme': 'nav.colorScheme', 'pwa-bar-styling': 'nav.barStyling', 'pwa-install': 'nav.pwaInstall' }
+  section: { navigation: 'nav.navigation', layout: 'nav.layout', controls: 'nav.controls', input: 'nav.inputs', resources: 'nav.resources', about: 'nav.application', settings: 'nav.settings', 'pwa-theme': 'nav.themeBars', 'pwa-install': 'nav.installation' },
+  item: { tabs: 'nav.tabs', 'navigation-layout': 'nav.navigationLayout', layout: 'nav.layoutView', sections: 'nav.sections', screen: 'nav.screen', buttons: 'nav.buttons', cards: 'nav.cards', switches: 'nav.switches', inputs: 'nav.inputsView', 'input-text': 'nav.inputText', 'input-multiline': 'nav.inputMultiline', 'input-email': 'nav.inputEmail', 'input-phone': 'nav.inputPhone', 'input-date': 'nav.inputDate', 'input-time': 'nav.inputTime', 'input-datetime': 'nav.inputDatetime', 'input-select': 'nav.inputSelect', 'input-range': 'nav.inputRange', 'input-date-range': 'nav.inputDateRange', 'input-time-range': 'nav.inputTimeRange', 'input-datetime-range': 'nav.inputDatetimeRange', dialogs: 'nav.dialogs', icons: 'nav.icons', legacy: 'nav.utilities', about: 'nav.about', settings: 'nav.settingsCore', 'pwa-color-scheme': 'nav.colorScheme', 'pwa-bar-styling': 'nav.barStyling', 'pwa-install': 'nav.pwaInstall' }
 }
 
 function navLabel(type, key, fallback) {

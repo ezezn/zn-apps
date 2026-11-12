@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest'
 import { mount } from '@vue/test-utils'
-import ZnIcon from '../ZnIcon.vue'
+import ZnIcon from '../media/ZnIcon.vue'
 import { ICON_FAMILIES, iconNames, iconSymbolId, iconSpriteUrl } from '../../icons/index.js'
 
 /** Sprites de prueba: simulan el chunk generado en public/icons/sprite-<familia>.svg. */

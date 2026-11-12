@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import ZnButton from '../ZnButton.vue'
+import ZnButton from '../controls/ZnButton.vue'
 
 describe('ZnButton Component', () => {
   it('renderiza la variante filled por defecto', () => {

@@ -42,6 +42,25 @@ export const navGroups = [
         ]
       },
       {
+        key: 'input',
+        label: 'Entradas de datos',
+        items: [
+          { key: 'inputs', label: 'Resumen de entradas', to: '/inputs' },
+          { key: 'input-text', label: 'Texto (ZnSingleLineText)', to: '/inputs/text' },
+          { key: 'input-multiline', label: 'Multilínea (ZnMultilineText)', to: '/inputs/multiline' },
+          { key: 'input-email', label: 'Email (ZnEmailInput)', to: '/inputs/email' },
+          { key: 'input-phone', label: 'Teléfono (ZnPhoneInput)', to: '/inputs/phone' },
+          { key: 'input-date', label: 'Fecha (ZnDateInput)', to: '/inputs/date' },
+          { key: 'input-time', label: 'Hora (ZnTimeInput)', to: '/inputs/time' },
+          { key: 'input-datetime', label: 'Fecha y hora (ZnDateTimeInput)', to: '/inputs/datetime' },
+          { key: 'input-select', label: 'Select (ZnSelect)', to: '/inputs/select' },
+          { key: 'input-range', label: 'Rango numérico (ZnRangeInput)', to: '/inputs/range' },
+          { key: 'input-date-range', label: 'Rango de fechas (ZnDateRangeInput)', to: '/inputs/date-range' },
+          { key: 'input-time-range', label: 'Rango de horas (ZnTimeRangeInput)', to: '/inputs/time-range' },
+          { key: 'input-datetime-range', label: 'Rango fecha-hora (ZnDateTimeRangeInput)', to: '/inputs/datetime-range' }
+        ]
+      },
+      {
         key: 'resources',
         label: 'Recursos y utilidades',
         items: [

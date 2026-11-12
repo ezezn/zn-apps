@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import ZnCard from '../ZnCard.vue'
+import ZnCard from '../containers/ZnCard.vue'
 
 describe('ZnCard Component', () => {
   it('renderiza con variante filled por defecto', () => {

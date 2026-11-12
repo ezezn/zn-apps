@@ -94,9 +94,11 @@ body {
   --md-surface-variant: #E7E0EC;
   --md-on-surface-variant: #49454F;
   --md-surface-container-low: #FFFFFF;
+  --md-surface-container-highest: #E6E0E9;
   --md-background: #FEF7FF;
   --md-on-background: #1D1B20;
   --md-outline: #79747E;
+  --md-error: #B3261E;
 }
 
 /* Variables del Tema Oscuro */
@@ -110,8 +112,10 @@ body {
   --md-surface-variant: #49454F;
   --md-on-surface-variant: #CAC4D0;
   --md-surface-container-low: #2A282E;
+  --md-surface-container-highest: #36343B;
   --md-background: #141218;
   --md-on-background: #E6E1E5;
   --md-outline: #938F99;
+  --md-error: #F2B8B5;
 }
 </style>
