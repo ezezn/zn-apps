@@ -104,7 +104,16 @@
     </ZnScreen>
 
     <ZnDialog v-model="isAboutOpen" :title="t('app.about')">
-      <ZnAbout v-bind="appMetadata" :image="appLogo" />
+      <ZnAbout
+        v-bind="appMetadata"
+        :image="appLogo"
+        :changelog-url="changelogUrl"
+        :credits-label="t('aboutTabs.credits')"
+        :changelog-label="t('aboutTabs.changelog')"
+        :loading-text="t('aboutTabs.loading')"
+        :empty-text="t('aboutTabs.empty')"
+        :error-text="t('aboutTabs.error')"
+      />
       <template #actions>
         <ZnButton variant="text" @click="isAboutOpen = false">{{ t('app.close') }}</ZnButton>
       </template>
@@ -208,6 +217,7 @@ import soundChannelData from './data/sound-channels.json'
 import appLogo from './assets/logo.svg'
 
 const pwaIconUrl = `${import.meta.env.BASE_URL}pwa-icon.svg`
+const changelogUrl = `${import.meta.env.BASE_URL}CHANGELOG.md`
 
 const soundAssets = import.meta.glob('./assets/sounds/*', {
   eager: true,

@@ -4,6 +4,7 @@ import { createSettings } from '@zn-apps/settings-core'
 export const messages = {
   en: {
     app: { title: 'Zound Box', about: 'About Zound Box', close: 'Close', settings: 'Settings' },
+    aboutTabs: { credits: 'Credits', changelog: 'Changelog', loading: 'Loading changelog…', empty: 'No changelog available.', error: 'Could not load the changelog.' },
     pwa: {
       installTitle: 'Install Zound Box',
       installMessage: 'Install it on your device to open it quickly and use it offline.',
@@ -36,6 +37,7 @@ export const messages = {
   },
   es: {
     app: { title: 'Zound Box', about: 'Acerca de Zound Box', close: 'Cerrar', settings: 'Configuración' },
+    aboutTabs: { credits: 'Créditos', changelog: 'Changelog', loading: 'Cargando changelog…', empty: 'No hay changelog disponible.', error: 'No se pudo cargar el changelog.' },
     pwa: {
       installTitle: 'Instalar Zound Box',
       installMessage: 'Instálala en tu dispositivo para abrirla rápido y usarla sin conexión.',

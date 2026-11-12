@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { VitePWA } from 'vite-plugin-pwa'
+import { changelogPlugin } from '../scripts/vite-changelog-plugin.mjs'
 import { existsSync, readdirSync } from 'fs'
 import { resolve } from 'path'
 import { fileURLToPath } from 'url'
@@ -32,6 +33,7 @@ export default defineConfig({
   },
   plugins: [
     vue(),
+    changelogPlugin({ root: __dirname }),
     VitePWA({
       registerType: 'prompt',
       workbox: {
