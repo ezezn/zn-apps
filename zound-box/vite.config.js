@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue' 
+import vue from '@vitejs/plugin-vue'
 import { VitePWA } from 'vite-plugin-pwa'
 import { existsSync, readdirSync } from 'fs'
 import { resolve } from 'path'
@@ -8,7 +8,7 @@ import { dirname } from 'path'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const publicIconsDir = resolve(__dirname, 'public/icons')
 const hasIconSprites = existsSync(publicIconsDir)
-  && readdirSync(publicIconsDir).some((file) => /^sprite-[a-z-]+\.svg$/.test(file))
+  && readdirSync(publicIconsDir).some((file) => /^sprite-[a-z-]+\\.svg$/.test(file))
 
 export default defineConfig({
   base: '/zn-apps/zound-box/',
@@ -20,15 +20,16 @@ export default defineConfig({
       '@zn-apps/ui-core': resolve(__dirname, '../shared/ui-core/src/index.js'),
       '@zn-apps/settings-core': resolve(__dirname, '../shared/settings-core/src/index.js'),
       '@zn-apps/ui-about': resolve(__dirname, '../shared/ui-about/src/index.js'),
+      '@zn-apps/pwa-integration': resolve(__dirname, '../shared/pwa-integration/src/index.js'),
     }
   },
   plugins: [
     vue(),
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: 'prompt',
       workbox: {
         mode: 'development',
-        // Los sprites solo existen si el perfil de iconos genera alguno.
+        // Los sprites solo existen si el perfil de iconos genera algunos.
         // Incluirlos en el precache permite usar los iconos desde la primera
         // visita sin conexión, además del caché bajo demanda.
         globPatterns: [

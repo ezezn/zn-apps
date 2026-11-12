@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@zn-apps/settings-core": "*",
+    "@zn-apps/pwa-integration": "*",
     "@zn-apps/ui-about": "*",
     "@zn-apps/ui-core": "*",
     "vue": "^3.5.34",

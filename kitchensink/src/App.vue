@@ -70,6 +70,12 @@
       :image="pwaIconUrl"
       :delay-ms="2000"
     />
+    <ZnPwaUpdatePrompt
+      :title="t('shell.updateTitle')"
+      :message="t('shell.updateMessage')"
+      :update-text="t('shell.updateText')"
+      :dismiss-text="t('shell.dismissUpdate')"
+    />
 
   </ZnApp>
 </template>
@@ -79,7 +85,7 @@ import { computed, reactive, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import '../../shared/ui-core/src/assets/css/global.css'
 import { ZnApp, ZnScreen, ZnMasterSlaveLayout, ZnButton, ZnIcon, ZnDialogHost } from '@zn-apps/ui-core'
-import { ZnPwaInstallPrompt, useColorScheme } from '@zn-apps/pwa-integration'
+import { ZnPwaInstallPrompt, ZnPwaUpdatePrompt, useColorScheme, usePwaMeta } from '@zn-apps/pwa-integration'
 import { navGroups, findGroupByPath } from './data/nav-groups.js'
 import { i18n } from './i18n.js'
 
@@ -128,6 +134,13 @@ const themeOptions = computed(() => [
 
 // Ruta al icono de la PWA resuelta con el base path de la app
 const pwaIconUrl = `${import.meta.env.BASE_URL}pwa-icon.svg`
+
+// Configuración de metadatos PWA para barras de color siguiendo el esquema de la app
+const { themeColor, backgroundColor, syncWithScreenHeading } = usePwaMeta({
+  initialThemeColor: resolvedTheme.value === 'dark' ? '#1D1B20' : '#FEF7FF',
+  initialBackgroundColor: resolvedTheme.value === 'dark' ? '#1D1B20' : '#FEF7FF',
+  syncOnMount: true
+})
 </script>
 
 <style>

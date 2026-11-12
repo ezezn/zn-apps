@@ -188,6 +188,9 @@
         <ZnButton variant="text" @click="isSettingsOpen = false">{{ t('app.close') }}</ZnButton>
       </template>
     </ZnDialog>
+
+    <ZnPwaInstallPrompt :title="t('pwa.installTitle')" :message="t('pwa.installMessage')" :image="pwaIconUrl" :delay-ms="2000" />
+    <ZnPwaUpdatePrompt :title="t('pwa.updateTitle')" :message="t('pwa.updateMessage')" :update-text="t('pwa.updateText')" :dismiss-text="t('pwa.dismissUpdate')" />
   </ZnApp>
 </template>
 
@@ -197,11 +200,14 @@ import packageJson from '../package.json'
 import '@zn-apps/ui-core/dist/ui-core.css'
 import { ZnApp, ZnScreen, ZnSection, ZnSwitch, ZnIcon, ZnButton, ZnCard, ZnImage, ZnDialog } from '@zn-apps/ui-core'
 import { ZnAbout, getAppMetadata } from '@zn-apps/ui-about'
+import { ZnPwaInstallPrompt, ZnPwaUpdatePrompt, useColorScheme, usePwaMeta } from '@zn-apps/pwa-integration'
 import SoundToggle from './components/SoundToggle.vue'
 import SoundChannelPlayer from './components/SoundChannelPlayer.vue'
 import { i18n, settings, systemLocale } from './i18n.js'
 import soundChannelData from './data/sound-channels.json'
 import appLogo from './assets/logo.svg'
+
+const pwaIconUrl = `${import.meta.env.BASE_URL}pwa-icon.svg`
 
 const soundAssets = import.meta.glob('./assets/sounds/*', {
   eager: true,
@@ -231,6 +237,13 @@ function onToggleCustomTheme(value) {
   isDarkMode.value = value
   settings.theme.mode = value ? 'dark' : 'light'
 }
+
+// CONFIGURATION DE METADATOS PWA PARA BARCAS DE COLOR
+const { themeColor, backgroundColor, syncWithScreenHeading } = usePwaMeta({
+  initialThemeColor: isDarkMode.value ? '#1D1B20' : '#FEF7FF',
+  initialBackgroundColor: isDarkMode.value ? '#1D1B20' : '#FEF7FF',
+  syncOnMount: true
+})
 
 // Configuración de audio desde settings
 const startLowVolume = ref(Boolean(settings.audio.startLowVolume))
@@ -406,7 +419,7 @@ function onPlaybackError({ channelId }) {
 @media (max-width: 680px) {
   .sound-grid,
   .sound-grid--hiss {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr))
   }
 }
 

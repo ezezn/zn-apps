@@ -55,7 +55,7 @@ npm run dev --workspace=@zn-apps/ui-core
 
 ## 3. Pipeline de Iconos (`ZnIcon`)
 
-Cada aplicación genera su propio sprite SVG optimizado para no cargar la colección completa de glifos en memoria.
+Cada aplicación genera su propio sprite SVG optimizado para no cargar la colección completa de glifos en memoria. El chunk de la app es la unión de su `icon-profile.json` y los perfiles de las librerías compartidas (`shared/ui-core` y `shared/pwa-integration`), de modo que los iconos que usan los componentes compartidos siempre estén disponibles.
 
 ```
 Código fuente (.vue)
@@ -101,6 +101,62 @@ Para que una aplicación sea reconocida como PWA instalable de forma autónoma:
    npm run validate:pwa
    ```
    Valida que los manifiestos generados existan, apunten a rutas relativas correctas y que las imágenes existan con dimensiones exactas.
+
+### 4.1 Configuración de barras de color PWA
+
+Para que la barra de estado superior y la barra inferior sigan el esquema de colores de la aplicación:
+
+1. **Usar `usePwaMeta` en `App.vue`**: Invocar el composable `usePwaMeta` con `syncOnMount: true` para sincronizar dinámicamente la barra superior (`<meta name="theme-color">`) y el fondo del documento con el esquema de colores actual de la app (basado en el tema oscuro/claro o del sistema).
+
+2. **Color según tema**: Usar `#1D1B20` para modo oscuro y `#FEF7FF` para modo claro como colores iniciales, los cuales serán actualizados automáticamente por `syncWithScreenHeading()` basándose en el color de cabecera de `ZnScreen`.
+
+3. **Actualización reactiva**: Los colores se actualizan automáticamente cuando el tema cambia (fondo oscuro/light) gracias a la reactividad de Vue y la detección de `prefers-color-scheme` del sistema.
+
+### 4.2 Integración obligatoria de los popups PWA
+
+Toda app nueva **debe** integrar los dos popups de `@zn-apps/pwa-integration`. No basta con declararlos: sin los pasos siguientes se montan sin estilos o nunca se muestran.
+
+1. **Listeners globales en `src/main.js`** (antes de `mount`):
+   ```javascript
+   import { initPwaInstallListener, initPwaUpdateListener } from '@zn-apps/pwa-integration'
+
+   initPwaInstallListener() // captura beforeinstallprompt / appinstalled
+   initPwaUpdateListener()  // detecta versiones nuevas del service worker
+   ```
+   Sin `initPwaInstallListener()` el popup de instalación nunca aparece en un teléfono real; sin `initPwaUpdateListener()` nunca aparece el de actualización.
+
+2. **Montar ambos popups como hijos directos de `ZnApp`** en `src/App.vue`, fuera de `ZnScreen` y de `ZnMasterSlaveLayout`. Los popups usan `position: fixed`; si se anidan dentro de un contenedor con `transform`, `overflow` o `isolation`, quedan recortados o desplazados respecto al viewport.
+   ```vue
+   <ZnApp :mode="resolvedTheme">
+     <ZnScreen>...</ZnScreen>
+
+     <ZnPwaInstallPrompt :title="t('pwa.installTitle')" :message="t('pwa.installMessage')" :image="pwaIconUrl" :delay-ms="2000" />
+     <ZnPwaUpdatePrompt :title="t('pwa.updateTitle')" :message="t('pwa.updateMessage')" :update-text="t('pwa.updateText')" :dismiss-text="t('pwa.dismissUpdate')" />
+   </ZnApp>
+   ```
+
+3. **Resolver el paquete al código fuente en `vite.config.js`**:
+   ```javascript
+   '@zn-apps/pwa-integration': resolve(__dirname, '../shared/pwa-integration/src/index.js')
+   ```
+   El build de librería emite los estilos en `dist/pwa-integration.css`, un archivo que el entry JS no importa. Si la app resuelve el paquete desde `dist/`, los popups se renderizan **sin estilos**: aparecen como bloques al final del documento, alargan el scroll y quedan fuera del viewport. Al resolverlo al fuente, Vite compila los `<style scoped>` junto con la app.
+
+4. **Claves de i18n** en `en` y `es`: `installTitle`, `installMessage`, `updateTitle`, `updateMessage`, `updateText` y `dismissUpdate`. Sin ellas el popup muestra la ruta de la clave (por ejemplo `pwa.updateTitle`).
+
+### 4.3 Actualizaciones de una PWA ya instalada
+
+Las apps usan `VitePWA({ registerType: 'prompt' })`: el service worker nuevo queda en estado `waiting` y **no se activa solo**. `shared/pwa-integration/src/utils/pwaUpdate.js` se encarga del ciclo completo:
+
+- Consulta la registration al arrancar, así que una actualización pendiente de una sesión anterior se ofrece de inmediato.
+- Revisa si hay versión nueva cada 30 minutos y al volver al primer plano (máximo una consulta cada 5 minutos), porque una PWA instalada puede pasar días abierta sin navegar.
+- `updatePwa()` envía `SKIP_WAITING`, espera a que el worker nuevo active y recarga la página; sin esa recarga la app seguiría ejecutando el código anterior.
+- Si el usuario descarta el aviso, se recuerda en `sessionStorage` solo para esa versión; al quedar la app al día el descarte se limpia.
+
+### 4.4 Validación
+
+Ejecutar `npm run validate:pwa` para verificar que los manifiestos generados existan y apunten a rutas e imágenes correctas.
+
+---
 
 ## 5. Internacionalización de Aplicaciones
 

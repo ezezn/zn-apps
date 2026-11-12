@@ -8,11 +8,13 @@
 
 // Componentes
 export { default as ZnPwaInstallPrompt } from './components/ZnPwaInstallPrompt.vue'
+export { default as ZnPwaUpdatePrompt } from './components/ZnPwaUpdatePrompt.vue'
 
 // Composables
 export { useColorScheme } from './composables/useColorScheme.js'
 export { usePwaMeta } from './composables/usePwaMeta.js'
 export { usePwaInstall } from './composables/usePwaInstall.js'
+export { usePwaUpdate } from './composables/usePwaUpdate.js'
 
 // Utilidades de color scheme
 export {
@@ -40,3 +42,10 @@ export {
   clearDeferredPrompt,
   promptPwaInstall
 } from './utils/pwaState.js'
+
+export {
+  initPwaUpdateListener,
+  onPwaUpdateChange,
+  isPwaUpdateAvailable,
+  updatePwa
+} from './utils/pwaUpdate.js'

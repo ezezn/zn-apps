@@ -4,6 +4,14 @@ import { createSettings } from '@zn-apps/settings-core'
 export const messages = {
   en: {
     app: { title: 'Zound Box', about: 'About Zound Box', close: 'Close', settings: 'Settings' },
+    pwa: {
+      installTitle: 'Install Zound Box',
+      installMessage: 'Install it on your device to open it quickly and use it offline.',
+      updateTitle: 'Update available',
+      updateMessage: 'A new version of the app is ready. Update now to get the latest fixes.',
+      updateText: 'Update',
+      dismissUpdate: 'Later'
+    },
     actions: { lightMode: 'Light mode', darkMode: 'Dark mode', play: 'Play', pause: 'Pause', volume100: 'Volume at 100%', volume10: 'Reduce volume to 10%', restoreVolume: 'Restore volume to 100%' },
     playback: { playing: 'Playing', paused: 'Paused', reduced: 'Volume reduced to 10%', full: 'Volume at 100%', error: 'Could not start a sound', aria: 'Playback controls' },
     channels: { background: 'Background sounds', hiss: 'Hissing sounds' },
@@ -28,6 +36,14 @@ export const messages = {
   },
   es: {
     app: { title: 'Zound Box', about: 'Acerca de Zound Box', close: 'Cerrar', settings: 'Configuración' },
+    pwa: {
+      installTitle: 'Instalar Zound Box',
+      installMessage: 'Instálala en tu dispositivo para abrirla rápido y usarla sin conexión.',
+      updateTitle: 'Actualización disponible',
+      updateMessage: 'Hay una nueva versión de la app. Actualiza para recibir las últimas mejoras.',
+      updateText: 'Actualizar',
+      dismissUpdate: 'Ahora no'
+    },
     actions: { lightMode: 'Modo claro', darkMode: 'Modo oscuro', play: 'Reproducir', pause: 'Pausar', volume100: 'Volumen al 100%', volume10: 'Reducir volumen al 10%', restoreVolume: 'Restaurar volumen al 100%' },
     playback: { playing: 'Reproduciendo', paused: 'En pausa', reduced: 'Volumen reducido al 10%', full: 'Volumen al 100%', error: 'No se pudo iniciar un sonido', aria: 'Controles de reproducción' },
     channels: { background: 'Sonidos de fondo', hiss: 'Sonidos de seseo' },

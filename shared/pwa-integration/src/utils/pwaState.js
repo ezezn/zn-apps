@@ -38,6 +38,9 @@ export function isPwaInstalled() {
   return false
 }
 
+/**
+ * Notifica a todos los listeners registrados sobre el cambio de estado actual.
+ */
 function notifyStateChange() {
   const isInstalled = isPwaInstalled()
   const canInstall = Boolean(deferredInstallPrompt)
@@ -53,6 +56,9 @@ function notifyStateChange() {
 /**
  * Inicializa los listeners globales para capturar el evento `beforeinstallprompt` y `appinstalled`.
  * Es idempotente (solo se inicializa una vez).
+ *
+ * @debe ser llamado al menos una vez durante el ciclo de vida de la aplicación,
+ * preferiblemente en main.js o en el componente raíz.
  */
 export function initPwaInstallListener() {
   if (isInitialized || typeof window === 'undefined') return
@@ -74,8 +80,8 @@ export function initPwaInstallListener() {
 /**
  * Suscribe un listener a cambios en la disponibilidad del prompt de instalación.
  *
- * @param {(state: { isInstalled: boolean, canInstall: boolean, prompt: any }) => void} listener
- * @returns {() => void} Función para desuscribirse.
+ * @param {function} listener - Callback que recibe el estado actualizado.
+ * @returns {function} Función para desuscribirse.
  */
 export function onPwaStateChange(listener) {
   initPwaInstallListener()

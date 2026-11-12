@@ -78,13 +78,15 @@ proyecto la declare explícitamente en `manual`.
 | Proyecto | Perfil | Destino del chunk | Contenido |
 |---|---|---|---|
 | `@zn-apps/ui-core` | `shared` | Distribución de la librería | Solo los iconos usados por sus componentes |
+| `@zn-apps/pwa-integration` | — | Se suma a cada app | Iconos de sus popups (`download`, `system_update`) |
 | `zound-box` | `app:zound-box` | `zound-box/public/icons/` → `dist/icons/` | Sus iconos |
 | `kitchensink` | `app:kitchensink` | `kitchensink/public/icons/` → `dist/icons/` | Sus iconos + el catálogo completo declarado en `manual` |
 
 `ZnIcon` descarga el sprite de cada familia desde
 `<BASE_URL>icons/sprite-<familia>.svg` la primera vez que lo necesita y lo
 inyecta una sola vez en el documento. Los chunks de las apps incluyen además los
-iconos que usan los componentes de `ui-core`.
+iconos que usan los componentes de las librerías compartidas (`ui-core` y
+`pwa-integration`).
 
 ### Comandos
 
@@ -127,6 +129,13 @@ When adding an app from `kitchensink/`, keep it independently installable:
   valid for the app's `/zn-apps/<app-name>/` deployment path.
 - Add the app to the monorepo production build so `npm run validate:pwa` checks
   its generated manifest and verifies that both PNGs exist with correct sizes.
+- Call `initPwaInstallListener()` and `initPwaUpdateListener()` in `src/main.js`,
+  and mount `ZnPwaInstallPrompt` + `ZnPwaUpdatePrompt` as direct children of
+  `ZnApp` (never inside `ZnScreen` or a layout with `transform`/`overflow`).
+- Alias `@zn-apps/pwa-integration` to `shared/pwa-integration/src/index.js` in
+  `vite.config.js`: the library build emits its CSS separately, so consuming
+  `dist/` renders the popups unstyled and outside the viewport.
+- Add the `install*` and `update*` i18n keys in `en` and `es`.
 
 ---
 

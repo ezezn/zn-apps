@@ -3,6 +3,10 @@ import { router } from './router/index.js'
 import './style.css'
 import App from './App.vue'
 import { i18n } from './i18n.js'
+import { initPwaInstallListener, initPwaUpdateListener } from '@zn-apps/pwa-integration'
+
+initPwaInstallListener()
+initPwaUpdateListener()
 
 const app = createApp(App)
 

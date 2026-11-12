@@ -37,6 +37,9 @@ import { fileURLToPath } from 'node:url'
 
 const FAMILIES = ['filled', 'outlined', 'round', 'sharp', 'two-tone']
 
+/** Librerías compartidas cuyos iconos se suman al chunk de cada app. */
+const SHARED_LIBRARIES = ['ui-core', 'pwa-integration']
+
 const scriptDir = dirname(fileURLToPath(import.meta.url))
 const monorepoRoot = resolve(scriptDir, '..', '..', '..')
 const iconsRoot = join(monorepoRoot, 'node_modules', '@material-design-icons', 'svg')
@@ -142,11 +145,13 @@ function main() {
 
   const names = readProfileNames(project.dir, project.name)
 
-  // Las apps incluyen además los iconos usados por los componentes de ui-core.
+  // Las apps incluyen además los iconos usados por las librerías compartidas.
   if (!project.isLibrary) {
-    const uiCoreDir = join(monorepoRoot, 'shared', 'ui-core')
-    if (existsSync(join(uiCoreDir, 'icon-profile.json'))) {
-      for (const name of readProfileNames(uiCoreDir, 'ui-core')) names.add(name)
+    for (const library of SHARED_LIBRARIES) {
+      const libraryDir = join(monorepoRoot, 'shared', library)
+      if (existsSync(join(libraryDir, 'icon-profile.json'))) {
+        for (const name of readProfileNames(libraryDir, library)) names.add(name)
+      }
     }
   }
 

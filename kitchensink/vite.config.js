@@ -33,10 +33,10 @@ export default defineConfig({
   plugins: [
     vue(),
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: 'prompt',
       workbox: {
         mode: 'development',
-        // Los sprites solo existen si el perfil de iconos genera alguno.
+        // Los sprites solo existen si el perfil de iconos genera algunos.
         // Incluirlos en el precache permite usar los iconos desde la primera
         // visita sin conexión, además del caché bajo demanda.
         globPatterns: [
