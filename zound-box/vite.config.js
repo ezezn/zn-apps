@@ -55,8 +55,11 @@ export default defineConfig({
         description: 'Combina sonidos ambientales y sonidos de seseo para relajarse.',
         start_url: '/zn-apps/zound-box/index.html',
         scope: '/zn-apps/zound-box/',
-        theme_color: '#2563eb',
-        background_color: '#ffffff',
+        // Colores del esquema claro de Material Design 3 (--md-background).
+        // Evitan el azul por defecto en la barra de navegación del sistema
+        // mientras arranca la app; luego initPwaThemeSync() los actualiza.
+        theme_color: '#FEF7FF',
+        background_color: '#FEF7FF',
         display: 'standalone',
         icons: [
           {

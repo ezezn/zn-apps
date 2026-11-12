@@ -135,7 +135,13 @@ When adding an app from `kitchensink/`, keep it independently installable:
 - Alias `@zn-apps/pwa-integration` to `shared/pwa-integration/src/index.js` in
   `vite.config.js`: the library build emits its CSS separately, so consuming
   `dist/` renders the popups unstyled and outside the viewport.
-- Add the `install*` and `update*` i18n keys in `en` and `es`.
+- Call `initPwaThemeSync()` in `src/main.js` so the system bars (top status bar
+  and Android bottom navigation bar) follow the app theme instead of the browser
+  default blue.
+- Set `theme_color` and `background_color` to `#FEF7FF` (MD3 light background)
+  in the manifest and declare `<meta name="theme-color" content="#FEF7FF" />` in
+  `index.html`, so an installed app does not flash blue while booting.
+- Add the `install*`, `update*` and `pwa.*` i18n keys in `en` and `es`.
 
 ---
 

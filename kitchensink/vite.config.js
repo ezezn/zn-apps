@@ -62,8 +62,11 @@ export default defineConfig({
         description: 'Kitchensink for the local Material UI and helpers of this monorepo',
         start_url: '/zn-apps/kitchensink/index.html',
         scope: '/zn-apps/kitchensink/',
-        theme_color: '#2563eb',
-        background_color: '#ffffff',
+        // Colores del esquema claro de Material Design 3 (--md-background).
+        // Evitan el azul por defecto en la barra de navegación del sistema
+        // mientras arranca la app; luego initPwaThemeSync() los actualiza.
+        theme_color: '#FEF7FF',
+        background_color: '#FEF7FF',
         display: 'standalone',
         icons: [
           {

@@ -200,7 +200,7 @@ import packageJson from '../package.json'
 import '@zn-apps/ui-core/dist/ui-core.css'
 import { ZnApp, ZnScreen, ZnSection, ZnSwitch, ZnIcon, ZnButton, ZnCard, ZnImage, ZnDialog } from '@zn-apps/ui-core'
 import { ZnAbout, getAppMetadata } from '@zn-apps/ui-about'
-import { ZnPwaInstallPrompt, ZnPwaUpdatePrompt, useColorScheme, usePwaMeta } from '@zn-apps/pwa-integration'
+import { ZnPwaInstallPrompt, ZnPwaUpdatePrompt } from '@zn-apps/pwa-integration'
 import SoundToggle from './components/SoundToggle.vue'
 import SoundChannelPlayer from './components/SoundChannelPlayer.vue'
 import { i18n, settings, systemLocale } from './i18n.js'
@@ -238,12 +238,8 @@ function onToggleCustomTheme(value) {
   settings.theme.mode = value ? 'dark' : 'light'
 }
 
-// CONFIGURATION DE METADATOS PWA PARA BARCAS DE COLOR
-const { themeColor, backgroundColor, syncWithScreenHeading } = usePwaMeta({
-  initialThemeColor: isDarkMode.value ? '#1D1B20' : '#FEF7FF',
-  initialBackgroundColor: isDarkMode.value ? '#1D1B20' : '#FEF7FF',
-  syncOnMount: true
-})
+// Los colores de las barras del sistema (theme-color y fondo) se sincronizan
+// automáticamente con el tema mediante initPwaThemeSync() en src/main.js.
 
 // Configuración de audio desde settings
 const startLowVolume = ref(Boolean(settings.audio.startLowVolume))

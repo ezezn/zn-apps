@@ -33,6 +33,14 @@ export {
   setAppMetaColors
 } from './utils/metaTheme.js'
 
+// Sincronización automática de colores de barras del sistema
+export {
+  PWA_THEME_COLORS,
+  getAppColorScheme,
+  applyPwaThemeColors,
+  initPwaThemeSync
+} from './utils/pwaTheme.js'
+
 // Utilidades de estado PWA
 export {
   isPwaInstalled,

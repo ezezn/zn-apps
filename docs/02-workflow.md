@@ -102,15 +102,32 @@ Para que una aplicación sea reconocida como PWA instalable de forma autónoma:
    ```
    Valida que los manifiestos generados existan, apunten a rutas relativas correctas y que las imágenes existan con dimensiones exactas.
 
-### 4.1 Configuración de barras de color PWA
+### 4.1 Configuración de barras de color PWA (obligatoria)
 
-Para que la barra de estado superior y la barra inferior sigan el esquema de colores de la aplicación:
+La barra de estado superior **y la barra de navegación inferior del sistema** (home / atrás / apps recientes en Android) deben seguir el esquema de colores de la aplicación. Si no se configura, Android las pinta con el azul por defecto del navegador, incluso con la app ya instalada.
 
-1. **Usar `usePwaMeta` en `App.vue`**: Invocar el composable `usePwaMeta` con `syncOnMount: true` para sincronizar dinámicamente la barra superior (`<meta name="theme-color">`) y el fondo del documento con el esquema de colores actual de la app (basado en el tema oscuro/claro o del sistema).
+1. **Sincronización automática en `src/main.js`**: llamar a `initPwaThemeSync()` junto a los listeners de instalación/actualización. Es idempotente y observa las clases `zn-theme-light` / `zn-theme-dark` que `ZnApp` refleja en `<body>` (tema resuelto, incluida la preferencia manual del usuario) y los cambios de `prefers-color-scheme`.
+   ```javascript
+   import { initPwaInstallListener, initPwaUpdateListener, initPwaThemeSync } from '@zn-apps/pwa-integration'
 
-2. **Color según tema**: Usar `#1D1B20` para modo oscuro y `#FEF7FF` para modo claro como colores iniciales, los cuales serán actualizados automáticamente por `syncWithScreenHeading()` basándose en el color de cabecera de `ZnScreen`.
+   initPwaInstallListener()
+   initPwaUpdateListener()
+   initPwaThemeSync()
+   ```
+   Escribe `<meta name="theme-color">` y el `background-color` de `<html>` / `<body>` con los colores del esquema activo, que es lo que Android usa para la barra inferior y para el fondo de overscroll.
 
-3. **Actualización reactiva**: Los colores se actualizan automáticamente cuando el tema cambia (fondo oscuro/light) gracias a la reactividad de Vue y la detección de `prefers-color-scheme` del sistema.
+2. **Colores por defecto** (`PWA_THEME_COLORS` en `@zn-apps/pwa-integration`), alineados con los tokens `--md-background` de `ui-core`:
+
+   | Esquema | `theme_color` / `theme-color` | `background_color` |
+   |---|---|---|
+   | Claro | `#FEF7FF` | `#FEF7FF` |
+   | Oscuro | `#141218` | `#141218` |
+
+3. **Manifiesto (`vite.config.js`)**: `theme_color` y `background_color` **no** deben dejarse en azul (`#2563eb`) ni en blanco. Usa `#FEF7FF` (esquema claro) en ambos campos: es el color con el que el sistema pinta las barras durante el arranque de la PWA instalada, antes de que el JavaScript aplique el tema real.
+
+4. **Primer pintado (`index.html`)**: declarar `<meta name="theme-color" content="#FEF7FF" />` para que las barras tampoco se vean azules antes de ejecutar `main.js`.
+
+5. **Uso manual (opcional)**: `usePwaMeta()` sigue disponible para casos puntuales (por ejemplo, sincronizar la barra con el header de una `ZnScreen` mediante `syncWithScreenHeading()`). No lo uses para fijar colores iniciales por tema en `App.vue`: `initPwaThemeSync()` ya cubre ese caso y conoce el tema realmente resuelto.
 
 ### 4.2 Integración obligatoria de los popups PWA
 
