@@ -15,6 +15,8 @@
     :disabled="disabled"
     :readonly="readonly"
     :required="required"
+    :variant="variant"
+    :size="size"
     @update:model-value="onInput"
     @focus="$emit('focus', $event)"
     @blur="onBlur"
@@ -51,7 +53,17 @@ const props = defineProps({
   validate: { type: Boolean, default: true },
   minDigits: { type: Number, default: 6 },
   maxDigits: { type: Number, default: 15 },
-  invalidMessage: { type: String, default: 'Introduce un número de teléfono válido' }
+  invalidMessage: { type: String, default: 'Introduce un número de teléfono válido' },
+  variant: {
+    type: String,
+    default: 'outlined',
+    validator: (value) => ['outlined', 'filled'].includes(value)
+  },
+  size: {
+    type: String,
+    default: 'medium',
+    validator: (value) => ['small', 'medium', 'large'].includes(value)
+  }
 })
 
 const emit = defineEmits(['update:modelValue', 'update:valid', 'validation', 'focus', 'blur', 'enter'])

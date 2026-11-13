@@ -1,10 +1,15 @@
 import { describe, expect, it } from 'vitest'
 import {
   FieldTypes,
+  InputSizes,
+  InputVariants,
   clone,
   collectDefaults,
+  fieldSpan,
   formatFieldValue,
   merge,
+  normalizeInputSize,
+  normalizeInputVariant,
   readAt,
   sectionColumns,
   withDefaults,
@@ -60,6 +65,30 @@ describe('ui-data-core · esquema', () => {
     expect(sectionColumns({ layout: 9 })).toBe(4)
     expect(sectionColumns({})).toBe(1)
   })
+
+  it('resuelve field.span dentro de las columnas de la sección', () => {
+    expect(fieldSpan({ span: 2 }, 2)).toBe(2)
+    expect(fieldSpan({ span: 3 }, 2)).toBe(2)
+    expect(fieldSpan({}, 2)).toBe(1)
+    expect(fieldSpan({ span: 0 }, 2)).toBe(1)
+    expect(fieldSpan({ span: 2 }, 4)).toBe(2)
+  })
+})
+
+describe('ui-data-core · presentación de inputs', () => {
+  it('expone las variantes MD3 y normaliza valores desconocidos', () => {
+    expect(InputVariants).toEqual({ OUTLINED: 'outlined', FILLED: 'filled' })
+    expect(normalizeInputVariant('filled')).toBe('filled')
+    expect(normalizeInputVariant('flat')).toBe('outlined')
+    expect(normalizeInputVariant(undefined, 'filled')).toBe('filled')
+  })
+
+  it('expone los tamaños MD3 y normaliza valores desconocidos', () => {
+    expect(InputSizes).toEqual({ SMALL: 'small', MEDIUM: 'medium', LARGE: 'large' })
+    expect(normalizeInputSize('large')).toBe('large')
+    expect(normalizeInputSize('xl')).toBe('medium')
+    expect(normalizeInputSize(null, 'small')).toBe('small')
+  })
 })
 
 describe('ui-data-core · formato', () => {
@@ -71,6 +100,18 @@ describe('ui-data-core · formato', () => {
   it('formatea selects simples y múltiples', () => {
     expect(formatFieldValue({ type: FieldTypes.SELECT, options }, 'a')).toBe('Alpha')
     expect(formatFieldValue({ type: FieldTypes.MULTI_SELECT, options }, ['a', 'b'])).toBe('Alpha, Beta')
+  })
+
+  it('formatea listas libres de valores', () => {
+    expect(formatFieldValue({ type: FieldTypes.LIST }, ['md3', 'chips'])).toBe('md3, chips')
+    expect(formatFieldValue({ type: FieldTypes.LIST }, [])).toBe('—')
+    expect(formatFieldValue({ type: FieldTypes.LIST }, ['a'], { separator: ' | ' })).toBe('a')
+  })
+
+  it('formatea richtext a texto plano y declara el tipo', () => {
+    expect(FieldTypes.RICHTEXT).toBe('richtext')
+    expect(formatFieldValue({ type: FieldTypes.RICHTEXT }, '## Título\n\n**Texto**')).toBe('Título Texto')
+    expect(formatFieldValue({ type: FieldTypes.RICHTEXT }, '')).toBe('—')
   })
 
   it('formatea booleanos y valores vacíos', () => {

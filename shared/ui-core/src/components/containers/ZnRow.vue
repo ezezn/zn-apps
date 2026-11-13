@@ -18,21 +18,36 @@ const props = defineProps({
   },
   align: {
     type: String,
-    default: 'center' // 'center' | 'flex-start' | 'flex-end'
+    default: 'center' // 'center' | 'flex-start' | 'flex-end' | 'baseline' | 'stretch'
+  },
+  justify: {
+    type: String,
+    default: 'flex-start' // 'flex-start' | 'center' | 'flex-end' | 'space-between'
+  },
+  direction: {
+    type: String,
+    default: 'row', // 'row' | 'column'
+    validator: (value) => ['row', 'column'].includes(value)
+  },
+  wrap: {
+    type: Boolean,
+    default: false
   }
 })
 
 const rowStyles = computed(() => ({
   padding: props.padding,
   gap: props.gap,
-  alignItems: props.align
+  flexDirection: props.direction,
+  flexWrap: props.wrap ? 'wrap' : 'nowrap',
+  alignItems: props.align,
+  justifyContent: props.justify
 }))
 </script>
 
 <style scoped>
 .zn-row {
   display: flex;
-  flex-direction: row;
   width: 100%;
   box-sizing: border-box;
 }

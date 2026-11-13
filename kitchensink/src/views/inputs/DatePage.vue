@@ -40,6 +40,28 @@
         <ZnDateInput v-model="sinEtiqueta" aria-label="Fecha sin etiqueta" />
       </ZnBox>
     </ZnSection>
+    <ZnSection title="3. Tamaños MD3" collapsible :columns="3">
+      <p class="section-desc section-desc--full">
+        <code>size</code> ajusta la altura del contenedor: <code>small</code> 48px,
+        <code>medium</code> 56px (por defecto) y <code>large</code> 64px. La etiqueta
+        permanece flotante en todos los tamaños.
+      </p>
+
+      <ZnBox variant="outlined" class="showcase-stack">
+        <span class="showcase-label">small · 48px</span>
+        <ZnDateInput v-model="small" label="Fecha" variant="filled" size="small" />
+      </ZnBox>
+
+      <ZnBox variant="outlined" class="showcase-stack">
+        <span class="showcase-label">medium · 56px</span>
+        <ZnDateInput v-model="medium" label="Fecha" variant="filled" />
+      </ZnBox>
+
+      <ZnBox variant="outlined" class="showcase-stack">
+        <span class="showcase-label">large · 64px</span>
+        <ZnDateInput v-model="large" label="Fecha" variant="filled" size="large" />
+      </ZnBox>
+    </ZnSection>
   </DemoView>
 </template>
 
@@ -53,4 +75,7 @@ const filled = ref('2026-11-12')
 const conLimites = ref('')
 const conError = ref('')
 const sinEtiqueta = ref('')
+const small = ref('')
+const medium = ref('')
+const large = ref('')
 </script>

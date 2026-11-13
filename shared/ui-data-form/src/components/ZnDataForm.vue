@@ -1,7 +1,14 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { ZnButton } from '@zn-apps/ui-core'
-import { clone, schemaSections, withDefaults, writeAt } from '@zn-apps/ui-data-core'
+import { ZnButton, ZnRow } from '@zn-apps/ui-core'
+import {
+  clone,
+  normalizeInputSize,
+  normalizeInputVariant,
+  schemaSections,
+  withDefaults,
+  writeAt
+} from '@zn-apps/ui-data-core'
 import ZnDataSection from './ZnDataSection.vue'
 
 const props = defineProps({
@@ -31,7 +38,19 @@ const props = defineProps({
   saveLabel: { type: String, default: 'Save' },
   cancelLabel: { type: String, default: 'Cancel' },
   resetLabel: { type: String, default: 'Reset' },
-  clearLabel: { type: String, default: 'Clear' }
+  clearLabel: { type: String, default: 'Clear' },
+  /** Variante MD3 por defecto de los inputs; `schema.variant` tiene prioridad. */
+  variant: {
+    type: String,
+    default: '',
+    validator: (value) => ['', 'outlined', 'filled'].includes(value)
+  },
+  /** Tamaño MD3 por defecto de los inputs; `schema.size` tiene prioridad. */
+  size: {
+    type: String,
+    default: '',
+    validator: (value) => ['', 'small', 'medium', 'large'].includes(value)
+  }
 })
 
 const emit = defineEmits(['update:modelValue', 'save', 'cancel', 'reset', 'clear', 'change'])
@@ -41,6 +60,8 @@ const initialData = ref(withDefaults(props.schema, props.modelValue))
 const localData = ref(clone(initialData.value))
 
 const sections = computed(() => schemaSections(props.schema))
+const formVariant = computed(() => normalizeInputVariant(props.schema?.variant ?? props.variant))
+const formSize = computed(() => normalizeInputSize(props.schema?.size ?? props.size))
 
 watch(
   () => props.modelValue,
@@ -88,25 +109,36 @@ defineExpose({ save, cancel, reset, clear, value: localData })
 
 <template>
   <form class="zn-data-form" @submit.prevent="save">
-    <div class="zn-form-content">
+    <ZnRow direction="column" padding="0" gap="8px">
       <ZnDataSection
         v-for="(section, index) in sections"
         :key="index"
         :section="section"
         :model-value="localData"
+        :variant="formVariant"
+        :size="formSize"
         @change="handleFieldChange"
       />
-    </div>
+    </ZnRow>
 
-    <footer v-if="showActions" class="zn-form-actions">
-      <div class="zn-secondary-actions">
-        <ZnButton variant="text" type="button" @click="clear">{{ clearLabel }}</ZnButton>
-        <ZnButton variant="text" type="button" @click="reset">{{ resetLabel }}</ZnButton>
-      </div>
-      <div class="zn-primary-actions">
-        <ZnButton variant="outlined" type="button" @click="cancel">{{ cancelLabel }}</ZnButton>
-        <ZnButton variant="filled" type="submit">{{ saveLabel }}</ZnButton>
-      </div>
+    <footer v-if="showActions">
+      <ZnRow
+        class="zn-form-actions"
+        padding="16px 0"
+        gap="12px"
+        justify="space-between"
+        align="center"
+        wrap
+      >
+        <ZnRow padding="0" gap="8px">
+          <ZnButton variant="text" type="button" @click="clear">{{ clearLabel }}</ZnButton>
+          <ZnButton variant="text" type="button" @click="reset">{{ resetLabel }}</ZnButton>
+        </ZnRow>
+        <ZnRow padding="0" gap="8px">
+          <ZnButton variant="outlined" type="button" @click="cancel">{{ cancelLabel }}</ZnButton>
+          <ZnButton variant="filled" type="submit">{{ saveLabel }}</ZnButton>
+        </ZnRow>
+      </ZnRow>
     </footer>
   </form>
 </template>
@@ -119,26 +151,8 @@ defineExpose({ save, cancel, reset, clear, value: localData })
   font-family: 'Roboto', sans-serif;
 }
 
-.zn-form-content {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
 .zn-form-actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  padding: 16px 0;
   border-top: 1px solid var(--md-outline);
   margin-top: 8px;
-}
-
-.zn-primary-actions,
-.zn-secondary-actions {
-  display: flex;
-  gap: 8px;
 }
 </style>

@@ -14,6 +14,8 @@
     :required="required"
     :min="min"
     :max="max"
+    :variant="variant"
+    :size="size"
     @update:model-value="$emit('update:modelValue', $event)"
     @focus="$emit('focus', $event)"
     @blur="$emit('blur', $event)"
@@ -45,7 +47,17 @@ defineProps({
   max: { type: String, default: undefined },
   disabled: { type: Boolean, default: false },
   readonly: { type: Boolean, default: false },
-  required: { type: Boolean, default: false }
+  required: { type: Boolean, default: false },
+  variant: {
+    type: String,
+    default: 'outlined',
+    validator: (value) => ['outlined', 'filled'].includes(value)
+  },
+  size: {
+    type: String,
+    default: 'medium',
+    validator: (value) => ['small', 'medium', 'large'].includes(value)
+  }
 })
 
 defineEmits(['update:modelValue', 'change', 'focus', 'blur'])

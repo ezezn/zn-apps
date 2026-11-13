@@ -53,7 +53,8 @@ describe('ZnDataView', () => {
     expect(wrapper.text()).toContain('Cuenta')
     expect(fieldByLabel(wrapper, 'Nombre').text()).toContain('Ada Lovelace')
     expect(fieldByLabel(wrapper, 'Rol').text()).toContain('Administración')
-    expect(fieldByLabel(wrapper, 'Etiquetas').text()).toContain('Diseño, Código')
+    expect(fieldByLabel(wrapper, 'Etiquetas').findAll('.zn-chip')).toHaveLength(2)
+    expect(fieldByLabel(wrapper, 'Etiquetas').text()).toContain('Diseño')
     expect(fieldByLabel(wrapper, 'Activo').text()).toContain('Yes')
   })
 
@@ -83,6 +84,76 @@ describe('ZnDataView', () => {
     const details = wrapper.find('details')
     expect(details.exists()).toBe(true)
     expect(details.element.open).toBe(false)
+  })
+
+  it('presenta multiselect y listas como chips que heredan el tamaño', () => {
+    const listSchema = {
+      sections: [
+        {
+          fields: [
+            {
+              path: 'tags',
+              type: 'multi-select',
+              label: 'Etiquetas',
+              options: [{ value: 'd', label: 'Diseño' }, { value: 'c', label: 'Código' }]
+            },
+            { path: 'keywords', type: 'list', label: 'Palabras' }
+          ]
+        }
+      ]
+    }
+
+    const wrapper = mount(ZnDataView, {
+      props: {
+        schema: listSchema,
+        modelValue: { tags: ['d', 'c'], keywords: ['md3', 'chips'] },
+        size: 'small'
+      }
+    })
+
+    const chips = wrapper.findAll('.zn-chip')
+    expect(chips).toHaveLength(4)
+    expect(chips[0].classes()).toContain('zn-chip--input')
+    expect(chips[0].classes()).toContain('zn-chip--small')
+    expect(chips[0].text()).toBe('Diseño')
+    expect(chips[2].text()).toBe('md3')
+
+    const empty = mount(ZnDataView, {
+      props: { schema: listSchema, modelValue: { tags: [], keywords: [] } }
+    })
+    expect(empty.findAll('.zn-chip')).toHaveLength(0)
+    expect(empty.text()).toContain('—')
+  })
+
+  it('aplica el tamaño de presentación y respeta el override del campo', () => {
+    const wrapper = mount(ZnDataView, { props: { schema, modelValue, size: 'large' } })
+
+    expect(wrapper.findAll('.zn-view-field--large')).toHaveLength(5)
+
+    const fromSchema = mount(ZnDataView, {
+      props: { schema: { ...schema, size: 'small' }, modelValue }
+    })
+    expect(fromSchema.findAll('.zn-view-field--small')).toHaveLength(5)
+
+    const customSchema = {
+      sections: [
+        {
+          size: 'small',
+          fields: [
+            { path: 'name', type: 'text', label: 'Nombre' },
+            { path: 'role', type: 'select', label: 'Rol', size: 'large', options: [] }
+          ]
+        }
+      ]
+    }
+
+    const mixed = mount(ZnDataView, {
+      props: { schema: customSchema, modelValue, size: 'medium' }
+    })
+
+    const fields = mixed.findAll('.zn-view-field')
+    expect(fields[0].classes()).toContain('zn-view-field--small')
+    expect(fields[1].classes()).toContain('zn-view-field--large')
   })
 
   it('permite etiquetas en línea por vista y por campo', () => {

@@ -12,6 +12,7 @@ import DatePage from '../views/inputs/DatePage.vue'
 import TimePage from '../views/inputs/TimePage.vue'
 import DateTimePage from '../views/inputs/DateTimePage.vue'
 import SelectPage from '../views/inputs/SelectPage.vue'
+import ChipPage from '../views/inputs/ChipPage.vue'
 import RangePage from '../views/inputs/RangePage.vue'
 import DateRangePage from '../views/inputs/DateRangePage.vue'
 import TimeRangePage from '../views/inputs/TimeRangePage.vue'
@@ -33,6 +34,7 @@ import DataCorePage from '../views/data/DataCorePage.vue'
 import DataFormPage from '../views/data/DataFormPage.vue'
 import DataViewPage from '../views/data/DataViewPage.vue'
 import DataEditorPage from '../views/data/DataEditorPage.vue'
+import DataRichTextPage from '../views/data/DataRichTextPage.vue'
 
 export const routes = [
   { path: '/', redirect: '/buttons' },
@@ -48,6 +50,7 @@ export const routes = [
   { path: '/inputs/time', name: 'input-time', component: TimePage },
   { path: '/inputs/datetime', name: 'input-datetime', component: DateTimePage },
   { path: '/inputs/select', name: 'input-select', component: SelectPage },
+  { path: '/inputs/chip', name: 'input-chip', component: ChipPage },
   { path: '/inputs/range', name: 'input-range', component: RangePage },
   { path: '/inputs/date-range', name: 'input-date-range', component: DateRangePage },
   { path: '/inputs/time-range', name: 'input-time-range', component: TimeRangePage },
@@ -56,6 +59,7 @@ export const routes = [
   { path: '/data/form', name: 'data-form', component: DataFormPage },
   { path: '/data/view', name: 'data-view', component: DataViewPage },
   { path: '/data/editor', name: 'data-editor', component: DataEditorPage },
+  { path: '/data/richtext', name: 'data-richtext', component: DataRichTextPage },
   { path: '/dialogs', name: 'dialogs', component: DialogsPage },
   { path: '/icons', name: 'icons', component: IconsPage },
   { path: '/layout', name: 'layout', component: LayoutPage },

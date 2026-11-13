@@ -43,9 +43,17 @@ export const dataDemoSchema = {
           path: 'profile.bio',
           type: 'textarea',
           label: 'Biografía',
-          description: 'Máximo 240 caracteres.',
+          description: 'Máximo 240 caracteres. Ocupa las 2 columnas de la sección.',
           rows: 3,
-          maxlength: 240
+          maxlength: 240,
+          span: 2
+        },
+        {
+          path: 'profile.notes',
+          type: 'richtext',
+          label: 'Notas',
+          description: 'Texto enriquecido almacenado como Markdown.',
+          span: 2
         }
       ]
     },
@@ -85,6 +93,13 @@ export const dataDemoSchema = {
           type: 'multi-select',
           label: 'Etiquetas',
           options: ['Diseño', 'Código', 'Investigación', 'Equipo']
+        },
+        {
+          path: 'preferences.keywords',
+          type: 'list',
+          label: 'Palabras clave',
+          description: 'Escribe un valor y pulsa Enter para añadirlo como chip.',
+          placeholder: 'Nueva palabra clave'
         }
       ]
     },
@@ -117,13 +132,15 @@ export const dataDemoValue = {
     email: 'ada@example.com',
     role: 'admin',
     joined: '2026-01-15',
-    bio: 'Matemática y escritora. Primera programadora de la historia.'
+    bio: 'Matemática y escritora. Primera programadora de la historia.',
+    notes: '## Notas\n\nTexto **enriquecido** con *énfasis*, <u>subrayado</u> y ~~tachado~~.\n\n| Campo | Valor |\n| --- | :---: |\n| Estado | **Activo** |\n| Rol | Editor |'
   },
   preferences: {
     notifications: true,
     theme: 'system',
     dailyGoal: 45,
-    tags: ['Diseño', 'Código']
+    tags: ['Diseño', 'Código'],
+    keywords: ['Material 3', 'chips']
   },
   system: {
     id: 'usr-001'

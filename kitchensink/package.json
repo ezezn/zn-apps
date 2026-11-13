@@ -1,7 +1,7 @@
 {
   "name": "kitchensink",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "A catalog of shared ZN Apps components and utilities.",
   "author": "ZN Apps",
   "type": "module",
@@ -23,6 +23,7 @@
     "@zn-apps/ui-data-form": "*",
     "@zn-apps/ui-data-view": "*",
     "@zn-apps/ui-data-editor": "*",
+    "@zn-apps/ui-data-richtext": "*",
     "vue": "^3.5.34",
     "vue-i18n": "^11.4.18",
     "vue-router": "^4.6.4"

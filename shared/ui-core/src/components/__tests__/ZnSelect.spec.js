@@ -11,6 +11,17 @@ const options = [
 ]
 
 describe('ZnSelect', () => {
+  it('propaga la variante y el tamaño al contenedor del campo', () => {
+    const wrapper = mount(ZnSelect, {
+      props: { modelValue: null, options, variant: 'filled', size: 'small' },
+      ...teleportStub
+    })
+
+    const field = wrapper.find('.zn-field')
+    expect(field.classes()).toContain('zn-field--filled')
+    expect(field.classes()).toContain('zn-field--small')
+  })
+
   it('muestra el placeholder y no abre el menú por defecto', () => {
     const wrapper = mount(ZnSelect, {
       props: { modelValue: null, options, placeholder: 'Selecciona' },
@@ -86,13 +97,42 @@ describe('ZnSelect', () => {
     expect(wrapper.findAll('.zn-select__chip')).toHaveLength(2)
   })
 
+  it('renderiza los chips con ZnChip y hereda el tamaño del campo', async () => {
+    const wrapper = mount(ZnSelect, {
+      props: { modelValue: ['a'], options, multiple: true, size: 'small' },
+      ...teleportStub
+    })
+
+    const chip = wrapper.find('.zn-select__chip')
+    expect(chip.classes()).toContain('zn-chip--input')
+    expect(chip.classes()).toContain('zn-chip--small')
+    expect(chip.text()).toContain('Opción A')
+  })
+
+  it('teleporta el menú dentro del diálogo que contiene el select', async () => {
+    const host = document.createElement('dialog')
+    document.body.appendChild(host)
+
+    const wrapper = mount(ZnSelect, {
+      attachTo: host,
+      props: { modelValue: null, options, label: 'Elegir' }
+    })
+
+    await wrapper.find('.zn-select__trigger').trigger('click')
+
+    expect(host.querySelector('.zn-select__menu')).not.toBeNull()
+
+    wrapper.unmount()
+    host.remove()
+  })
+
   it('permite quitar un chip de selección múltiple', async () => {
     const wrapper = mount(ZnSelect, {
       props: { modelValue: ['a', 'b'], options, multiple: true },
       ...teleportStub
     })
 
-    await wrapper.findAll('.zn-select__chip-remove')[0].trigger('click')
+    await wrapper.findAll('.zn-chip__remove')[0].trigger('click')
 
     expect(wrapper.emitted('update:modelValue')[0]).toEqual([['b']])
   })

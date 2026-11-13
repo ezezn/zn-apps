@@ -71,6 +71,10 @@ export const FieldTypes = Object.freeze({
   DATETIME: 'datetime',
   SELECT: 'select',
   MULTI_SELECT: 'multi-select',
+  /** Lista libre de valores escalares (tags), sin `options` predefinidas. */
+  LIST: 'list',
+  /** Texto enriquecido almacenado como Markdown. */
+  RICHTEXT: 'richtext',
   SWITCH: 'switch',
   CHECKBOX: 'checkbox',
   RANGE: 'range'
@@ -89,6 +93,27 @@ export const LabelPositions = Object.freeze({
   TOP: 'top',
   INLINE: 'inline'
 })
+
+/** Variantes MD3 de los campos de entrada. */
+export const InputVariants = Object.freeze({
+  OUTLINED: 'outlined',
+  FILLED: 'filled'
+})
+
+/** Tamaños MD3 de los campos de entrada (`small` = densidad -2, 48px). */
+export const InputSizes = Object.freeze({
+  SMALL: 'small',
+  MEDIUM: 'medium',
+  LARGE: 'large'
+})
+
+export function normalizeInputVariant(value, fallback = InputVariants.OUTLINED) {
+  return Object.values(InputVariants).includes(value) ? value : fallback
+}
+
+export function normalizeInputSize(value, fallback = InputSizes.MEDIUM) {
+  return Object.values(InputSizes).includes(value) ? value : fallback
+}
 
 /* --------------------------------------------------------------------------
    Esquema (schema)
@@ -111,6 +136,20 @@ export function sectionColumns(section) {
   const columns = Number(section?.layout ?? section?.columns ?? LayoutColumns.ONE)
   if (!Number.isFinite(columns)) return LayoutColumns.ONE
   return Math.min(LayoutColumns.FOUR, Math.max(LayoutColumns.ONE, Math.round(columns)))
+}
+
+/**
+ * Columnas que ocupa un campo dentro de su sección (`field.span`).
+ * Se limita a las columnas efectivas de la sección y nunca es menor que 1.
+ */
+export function fieldSpan(field, columns = LayoutColumns.FOUR) {
+  const effectiveColumns = Math.min(
+    LayoutColumns.FOUR,
+    Math.max(LayoutColumns.ONE, Number(columns) || LayoutColumns.ONE)
+  )
+  const span = Number(field?.span ?? 1)
+  if (!Number.isFinite(span)) return LayoutColumns.ONE
+  return Math.min(effectiveColumns, Math.max(LayoutColumns.ONE, Math.round(span)))
 }
 
 /** Construye un objeto con los valores `default` declarados en el esquema. */
@@ -189,6 +228,20 @@ export function formatFieldValue(field = {}, value, options = {}) {
     const values = Array.isArray(value) ? value : [value]
     if (values.length === 0) return emptyText
     return values.map((item) => optionLabel(field.options, item)).join(separator)
+  }
+
+  if (type === FieldTypes.LIST) {
+    const values = Array.isArray(value) ? value : [value]
+    if (values.length === 0) return emptyText
+    return values.map((item) => String(item)).join(separator)
+  }
+
+  if (type === FieldTypes.RICHTEXT) {
+    return String(value)
+      .replace(/<[^>]+>/g, ' ')
+      .replace(/[`*_~#>|]/g, '')
+      .replace(/\s+/g, ' ')
+      .trim()
   }
 
   if (type === FieldTypes.RANGE && Array.isArray(value)) {

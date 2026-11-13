@@ -77,6 +77,47 @@ describe('ZnDataEditor', () => {
     expect(dialog.element.open).toBe(false)
   })
 
+  it('edita listas de valores desde el diálogo con chips', async () => {
+    const listSchema = {
+      sections: [
+        { fields: [{ path: 'keywords', type: 'list', label: 'Palabras' }] }
+      ]
+    }
+
+    const wrapper = mount(ZnDataEditor, {
+      props: { schema: listSchema, modelValue: { keywords: ['md3'] } }
+    })
+
+    expect(wrapper.findAll('.zn-view-field .zn-chip')).toHaveLength(1)
+
+    await wrapper.find('.zn-field-trigger').trigger('click')
+    await nextTick()
+    await nextTick()
+
+    const input = wrapper.find('dialog .zn-list-input__entry input')
+    await input.setValue('chips')
+    await input.trigger('keydown', { key: 'Enter' })
+    await saveButton(wrapper).trigger('click')
+
+    expect(wrapper.emitted('update:modelValue')[0][0]).toMatchObject({
+      keywords: ['md3', 'chips']
+    })
+  })
+
+  it('aplica variante y tamaño del editor al input del diálogo', async () => {
+    const wrapper = mount(ZnDataEditor, {
+      props: { schema, modelValue, variant: 'filled', size: 'large' }
+    })
+
+    await wrapper.findAll('.zn-field-trigger')[0].trigger('click')
+    await nextTick()
+    await nextTick()
+
+    const field = wrapper.find('dialog .zn-field')
+    expect(field.classes()).toContain('zn-field--filled')
+    expect(field.classes()).toContain('zn-field--large')
+  })
+
   it('no abre el diálogo para campos disabled o readonly', async () => {
     const wrapper = mount(ZnDataEditor, { props: { schema, modelValue } })
 

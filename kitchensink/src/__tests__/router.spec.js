@@ -23,6 +23,7 @@ import DataCorePage from '../views/data/DataCorePage.vue'
 import DataFormPage from '../views/data/DataFormPage.vue'
 import DataViewPage from '../views/data/DataViewPage.vue'
 import DataEditorPage from '../views/data/DataEditorPage.vue'
+import ChipPage from '../views/inputs/ChipPage.vue'
 
 function createTestRouter() {
   return createRouter({
@@ -163,6 +164,14 @@ describe('Kitchensink App & Router', () => {
 
     expect(wrapper.findComponent(page).exists()).toBe(true)
     expect(wrapper.text()).toContain(expectedText)
+  })
+
+  it('navega a la vista de Chips al cambiar de ruta', async () => {
+    const { wrapper } = await mountAt('/inputs/chip')
+
+    expect(wrapper.findComponent(ChipPage).exists()).toBe(true)
+    expect(wrapper.text()).toContain('assist')
+    expect(wrapper.text()).toContain('suggestion')
   })
 
   it('navega a la vista de diálogos al cambiar de ruta', async () => {

@@ -40,6 +40,27 @@
         <ZnDateTimeInput model-value="2026-11-12T10:00" label="Bloqueado" disabled />
       </ZnBox>
     </ZnSection>
+    <ZnSection title="3. Tamaños MD3" collapsible :columns="3">
+      <p class="section-desc section-desc--full">
+        <code>size</code> ajusta la altura del contenedor: <code>small</code> 48px,
+        <code>medium</code> 56px (por defecto) y <code>large</code> 64px.
+      </p>
+
+      <ZnBox variant="outlined" class="showcase-stack">
+        <span class="showcase-label">small · 48px</span>
+        <ZnDateTimeInput v-model="small" label="Inicio" variant="filled" size="small" />
+      </ZnBox>
+
+      <ZnBox variant="outlined" class="showcase-stack">
+        <span class="showcase-label">medium · 56px</span>
+        <ZnDateTimeInput v-model="medium" label="Inicio" variant="filled" />
+      </ZnBox>
+
+      <ZnBox variant="outlined" class="showcase-stack">
+        <span class="showcase-label">large · 64px</span>
+        <ZnDateTimeInput v-model="large" label="Inicio" variant="filled" size="large" />
+      </ZnBox>
+    </ZnSection>
   </DemoView>
 </template>
 
@@ -53,4 +74,7 @@ const filled = ref('2026-11-12T10:00')
 const conLimites = ref('')
 const conError = ref('')
 const sinEtiqueta = ref('')
+const small = ref('')
+const medium = ref('')
+const large = ref('')
 </script>

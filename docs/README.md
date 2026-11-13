@@ -68,6 +68,7 @@ Cada librería compartida contiene su propia carpeta `docs/` detallando su API, 
 | **ui-data-form** | `@zn-apps/ui-data-form` | [`shared/ui-data-form/docs/README.md`](../shared/ui-data-form/docs/README.md) | Formularios por secciones derivados de un esquema, con borrador, doble binding opcional y acciones save/cancel/reset/clear. |
 | **ui-data-view** | `@zn-apps/ui-data-view` | [`shared/ui-data-view/docs/README.md`](../shared/ui-data-view/docs/README.md) | Presentación de sólo lectura del mismo esquema, con etiquetas encima o en línea y valores formateados. |
 | **ui-data-editor** | `@zn-apps/ui-data-editor` | [`shared/ui-data-editor/docs/README.md`](../shared/ui-data-editor/docs/README.md) | Presentación tipo vista con edición por campo en un diálogo (`ZnDataEditor`). |
+| **ui-data-richtext** | `@zn-apps/ui-data-richtext` | [`shared/ui-data-richtext/docs/README.md`](../shared/ui-data-richtext/docs/README.md) | Editor y vista de texto enriquecido con toolbar MD3; el valor persistido es Markdown. |
 
 ---
 
@@ -80,3 +81,4 @@ Cuando recibas una tarea en este repositorio:
 4. **Para trabajar con settings persistidos**: Consulta [`shared/settings-core/docs/README.md`](../shared/settings-core/docs/README.md).
 5. **Para trabajar en Zound Box**: Lee [`zound-box/docs/README.md`](../zound-box/docs/README.md).
 6. **Para escribir o ejecutar tests**: Consulta [`docs/05-testing.md`](./05-testing.md).
+7. **Para agregar o modificar campos de datos**: Consulta el contrato de campos en [`docs/00-overview.md`](./00-overview.md#6-contrato-de-campos-de-datos-ui-data-form--ui-data-view--ui-data-editor): la feature debe existir en formulario, vista y editor.

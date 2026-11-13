@@ -38,6 +38,8 @@ Comparte el mismo `schema` y `value` que `ZnDataForm` y `ZnDataView`.
 | `labelPosition` | `'top' \| 'inline'` | `'top'` | Posición de las etiquetas. |
 | `emptyText` | String | `'—'` | Texto para valores vacíos. |
 | `trueText` / `falseText` | String | `'Yes'` / `'No'` | Textos para booleanos. |
+| `variant` | `'outlined' \| 'filled'` | `'outlined'` | Variante MD3 del input que se muestra en el diálogo. `schema.variant` tiene prioridad. |
+| `size` | `'small' \| 'medium' \| 'large'` | `'medium'` | Tamaño MD3 del input del diálogo. `schema.size` tiene prioridad. |
 
 ### Eventos
 
@@ -59,10 +61,22 @@ Comparte el mismo `schema` y `value` que `ZnDataForm` y `ZnDataView`.
    campos `disabled` o `readonly` no abren el diálogo.
 2. **Diálogo**: usa el `ZnDataField` de `ui-data-form`, por lo que soporta todos
    los `FieldTypes`. Guardar emite `update:modelValue` con la ruta actualizada.
-3. **`live`**: por defecto cada edición se confirma al guardar el diálogo. Con
+   La variante y el tamaño siguen la precedencia `field` → `section` → `schema`
+   → props del editor.
+3. **Multi-select y listas**: los valores array se presentan como chips en el
+   trigger y se editan en el diálogo (`ZnSelect multiple` para `multi-select` y
+   una lista de chips editable para `list`).
+4. **Texto enriquecido**: `richtext` se presenta con `ZnRichTextView` y se edita
+   con `ZnRichTextEditor` dentro del diálogo; el valor confirmado es Markdown.
+5. **Span**: el campo trigger aplica `field.span` en el grid de la sección, por
+   lo que un campo con `span: 2` (por ejemplo un `textarea` o `richtext`) ocupa
+   dos columnas tanto en la vista como en la edición.
+6. **Paridad del contrato**: el diálogo reutiliza `ZnDataField` y el trigger
+   reutiliza `ZnDataViewField`; toda feature de campo debe funcionar en ambos.
+7. **`live`**: por defecto cada edición se confirma al guardar el diálogo. Con
    `live=false` el componente mantiene un borrador y el consumidor decide cuándo
    llamar a `save()`, `cancel()` o `reset()`.
-4. **Defaults**: igual que el formulario, aplica `withDefaults(schema, modelValue)`.
+8. **Defaults**: igual que el formulario, aplica `withDefaults(schema, modelValue)`.
 
 ---
 
@@ -85,7 +99,8 @@ const schema = {
     fields: [
       { path: 'name', type: 'text', label: 'Nombre' },
       { path: 'role', type: 'select', label: 'Rol',
-        options: [{ value: 'admin', label: 'Administrador' }] }
+        options: [{ value: 'admin', label: 'Administrador' }] },
+      { path: 'bio', type: 'textarea', label: 'Biografía', span: 2 }
     ]
   }]
 }
@@ -106,5 +121,8 @@ const schema = {
 Ruta en kitchensink: **`/data/editor`** (`src/views/data/DataEditorPage.vue`), con acciones Reset/Clear y el JSON resultante.
 
 ```bash
+npx vitest run --project ui-data-editor
 npm run build --workspace=@zn-apps/ui-data-editor
 ```
+
+Los tests viven en `src/components/__tests__/ZnDataEditor.spec.js` y cubren la presentación de valores, la apertura del diálogo, la confirmación por ruta, los campos `disabled`, el modo `live=false` y los métodos `reset`/`clear`.

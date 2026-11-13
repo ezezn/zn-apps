@@ -1,7 +1,13 @@
 <script setup>
 import { computed } from 'vue'
-import { ZnIcon, ZnSection } from '@zn-apps/ui-core'
-import { LabelPositions, readAt, sectionColumns } from '@zn-apps/ui-data-core'
+import { ZnIcon, ZnRow, ZnSection } from '@zn-apps/ui-core'
+import {
+  LabelPositions,
+  normalizeInputSize,
+  normalizeInputVariant,
+  readAt,
+  sectionColumns
+} from '@zn-apps/ui-data-core'
 import ZnDataEditorField from './ZnDataEditorField.vue'
 
 const props = defineProps({
@@ -19,10 +25,17 @@ const props = defineProps({
   },
   emptyText: { type: String, default: '—' },
   trueText: { type: String, default: 'Yes' },
-  falseText: { type: String, default: 'No' }
+  falseText: { type: String, default: 'No' },
+  /** Variante heredada; `section.variant` tiene prioridad. */
+  variant: { type: String, default: '' },
+  /** Tamaño heredado; `section.size` tiene prioridad. */
+  size: { type: String, default: '' }
 })
 
 const emit = defineEmits(['change'])
+
+const sectionVariant = computed(() => normalizeInputVariant(props.section.variant ?? props.variant))
+const sectionSize = computed(() => normalizeInputSize(props.section.size ?? props.size))
 
 const columns = computed(() => sectionColumns(props.section))
 const expanded = computed(() => props.section.expanded !== false)
@@ -40,10 +53,10 @@ function updateFieldValue(path, value) {
     :columns="columns"
   >
     <template v-if="section.title || section.icon" #title>
-      <span class="zn-data-section-title">
+      <ZnRow class="zn-data-section-title" padding="0" gap="8px">
         <ZnIcon v-if="section.icon" :name="section.icon" :size="20" class="zn-data-section-icon" />
         <span v-if="section.title">{{ section.title }}</span>
-      </span>
+      </ZnRow>
     </template>
 
     <ZnDataEditorField
@@ -55,6 +68,9 @@ function updateFieldValue(path, value) {
       :empty-text="emptyText"
       :true-text="trueText"
       :false-text="falseText"
+      :variant="sectionVariant"
+      :size="sectionSize"
+      :columns="columns"
       @update:model-value="(value) => updateFieldValue(field.path, value)"
     />
   </ZnSection>
@@ -62,9 +78,6 @@ function updateFieldValue(path, value) {
 
 <style scoped>
 .zn-data-section-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
   color: var(--md-on-background);
   font-family: 'Roboto', sans-serif;
   font-size: 1.25rem;

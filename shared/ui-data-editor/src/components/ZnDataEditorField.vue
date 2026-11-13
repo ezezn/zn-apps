@@ -1,9 +1,9 @@
 <script setup>
 import { computed, nextTick, ref } from 'vue'
-import { ZnButton, ZnDialog, ZnIcon } from '@zn-apps/ui-core'
+import { ZnButton, ZnDialog, ZnIcon, ZnRow } from '@zn-apps/ui-core'
 import { ZnDataField } from '@zn-apps/ui-data-form'
 import { ZnDataViewField } from '@zn-apps/ui-data-view'
-import { LabelPositions, clone } from '@zn-apps/ui-data-core'
+import { LabelPositions, clone, fieldSpan } from '@zn-apps/ui-data-core'
 
 const props = defineProps({
   modelValue: {
@@ -23,7 +23,13 @@ const props = defineProps({
   falseText: { type: String, default: 'No' },
   dialogTitle: { type: String, default: '' },
   saveLabel: { type: String, default: 'Save' },
-  cancelLabel: { type: String, default: 'Cancel' }
+  cancelLabel: { type: String, default: 'Cancel' },
+  /** Variante heredada para el input del diálogo; `field.variant` gana. */
+  variant: { type: String, default: '' },
+  /** Tamaño heredado para el input del diálogo; `field.size` gana. */
+  size: { type: String, default: '' },
+  /** Columnas efectivas de la sección para limitar `field.span`. */
+  columns: { type: [Number, String], default: 1 }
 })
 
 const emit = defineEmits(['update:modelValue', 'change'])
@@ -31,6 +37,9 @@ const emit = defineEmits(['update:modelValue', 'change'])
 const isEditing = ref(false)
 const editValue = ref(null)
 const triggerRef = ref(null)
+
+const span = computed(() => fieldSpan(props.field, props.columns))
+const spanClass = computed(() => (span.value > 1 ? `zn-span-${span.value}` : null))
 
 const title = computed(
   () => props.dialogTitle || (props.field.label ? `Edit ${props.field.label}` : 'Edit')
@@ -64,7 +73,7 @@ function onTriggerKeydown(event) {
 </script>
 
 <template>
-  <div v-if="!field.hidden" class="zn-editor-field">
+  <div v-if="!field.hidden" class="zn-editor-field" :class="spanClass">
     <div
       ref="triggerRef"
       class="zn-field-trigger"
@@ -82,6 +91,8 @@ function onTriggerKeydown(event) {
         :empty-text="emptyText"
         :true-text="trueText"
         :false-text="falseText"
+        :size="size"
+        :columns="columns"
       />
       <ZnIcon v-if="!field.disabled && !field.readonly" name="edit" :size="18" class="zn-edit-icon" />
     </div>
@@ -92,9 +103,19 @@ function onTriggerKeydown(event) {
       @update:model-value="(open) => { if (!open) cancelEdit() }"
       @close="cancelEdit"
     >
-      <div class="zn-edit-dialog-content">
-        <ZnDataField v-model="editValue" :field="field" />
-      </div>
+      <ZnRow
+        class="zn-edit-dialog-content"
+        direction="column"
+        padding="8px 0"
+        gap="0"
+      >
+        <ZnDataField
+          v-model="editValue"
+          :field="field"
+          :variant="field.variant ?? variant"
+          :size="field.size ?? size"
+        />
+      </ZnRow>
 
       <template #actions>
         <ZnButton variant="text" @click="cancelEdit">{{ cancelLabel }}</ZnButton>
@@ -148,7 +169,6 @@ function onTriggerKeydown(event) {
 }
 
 .zn-edit-dialog-content {
-  padding: 8px 0;
   min-width: min(320px, 70vw);
 }
 </style>

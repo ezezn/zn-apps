@@ -10,6 +10,7 @@
       :required="required"
       :for-id="triggerId"
       :variant="variant"
+      :size="size"
     >
       <template #trailing>
         <ZnIcon
@@ -41,16 +42,17 @@
           <span v-if="selectedOptions.length === 0 && showPlaceholder" class="zn-select__placeholder">
             {{ placeholder }}
           </span>
-          <span v-for="option in selectedOptions" :key="option.value" class="zn-select__chip">
-            <span class="zn-select__chip-label">{{ option.label }}</span>
-            <span
-              class="zn-select__chip-remove"
-              role="button"
-              tabindex="-1"
-              :aria-label="`Quitar ${option.label}`"
-              @click.stop.prevent="removeOption(option)"
-            >×</span>
-          </span>
+          <ZnChip
+            v-for="option in selectedOptions"
+            :key="option.value"
+            class="zn-select__chip"
+            variant="input"
+            :label="option.label"
+            :size="size"
+            removable
+            :remove-label="`Quitar ${option.label}`"
+            @remove="removeOption(option)"
+          />
         </template>
 
         <span
@@ -62,7 +64,7 @@
       </button>
     </ZnFieldShell>
 
-    <Teleport to="body">
+    <Teleport :to="teleportTarget">
       <div
         v-if="open"
         :id="listboxId"
@@ -115,8 +117,9 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onBeforeUnmount, ref, useId, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, useId, watch } from 'vue'
 import ZnFieldShell from './ZnFieldShell.vue'
+import ZnChip from '../controls/ZnChip.vue'
 import ZnIcon from '../media/ZnIcon.vue'
 
 const MENU_ITEM_HEIGHT = 48
@@ -138,6 +141,12 @@ const props = defineProps({
     type: String,
     default: 'outlined',
     validator: (value) => ['outlined', 'filled'].includes(value)
+  },
+  /** `small` (48px, densidad -2 MD3), `medium` (56px) o `large` (64px). */
+  size: {
+    type: String,
+    default: 'medium',
+    validator: (value) => ['small', 'medium', 'large'].includes(value)
   }
 })
 
@@ -150,6 +159,21 @@ const listboxId = `zn-select-listbox-${uid}`
 const rootRef = ref(null)
 const triggerRef = ref(null)
 const menuRef = ref(null)
+/**
+ * Un `<dialog>` modal se renderiza en la capa superior del navegador: cualquier
+ * elemento teleportado a `<body>` queda por debajo, incluido el menú. Cuando el
+ * select vive dentro de un diálogo, el menú se teleporta al propio diálogo para
+ * compartir su capa de apilado.
+ */
+const teleportTarget = ref('body')
+
+onMounted(() => {
+  const dialog = rootRef.value?.closest('dialog')
+  if (!dialog) return
+  teleportTarget.value = dialog
+  // El menú vive dentro del diálogo: al cerrarlo debe cerrarse también.
+  dialog.addEventListener('close', closeMenu)
+})
 
 const open = ref(false)
 const isFocused = ref(false)
@@ -302,6 +326,9 @@ function moveActive(delta) {
 }
 
 onBeforeUnmount(() => {
+  if (teleportTarget.value !== 'body') {
+    teleportTarget.value.removeEventListener('close', closeMenu)
+  }
   closeMenu()
 })
 
@@ -439,42 +466,15 @@ function onTriggerKeydown(event) {
   color: var(--md-on-surface-variant);
 }
 
-/* Chips de selección múltiple */
+/* Chips de selección múltiple: heredan el tamaño del campo. */
 .zn-select__chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
   max-width: 100%;
-  padding: 0 4px 0 10px;
-  border: 1px solid var(--md-outline);
-  border-radius: 8px;
-  background-color: transparent;
-  color: var(--md-on-surface-variant);
-  font-size: 0.8125rem;
-  line-height: 26px;
 }
 
-.zn-select__chip-label {
-  overflow: hidden;
+.zn-select__chip :deep(.zn-chip__label) {
+  max-width: 100%;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.zn-select__chip-remove {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  color: var(--md-on-surface-variant);
-  font-size: 1rem;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.zn-select__chip-remove:hover {
-  background-color: color-mix(in srgb, var(--md-on-surface-variant) 16%, transparent);
 }
 
 .zn-select__caret {

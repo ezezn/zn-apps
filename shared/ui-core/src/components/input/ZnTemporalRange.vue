@@ -13,6 +13,7 @@
           :disabled="disabled"
           :required="required"
           :variant="variant"
+          :size="size"
           :name="startName"
           @update:model-value="updateStart"
           @focus="$emit('focus', $event)"
@@ -33,6 +34,7 @@
           :disabled="disabled"
           :required="required"
           :variant="variant"
+          :size="size"
           :name="endName"
           :error="rangeError"
           @update:model-value="updateEnd"
@@ -81,6 +83,11 @@ const props = defineProps({
     type: String,
     default: 'outlined',
     validator: (value) => ['outlined', 'filled'].includes(value)
+  },
+  size: {
+    type: String,
+    default: 'medium',
+    validator: (value) => ['small', 'medium', 'large'].includes(value)
   }
 })
 

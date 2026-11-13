@@ -33,6 +33,28 @@
         <ZnMultilineText v-model="sinEtiqueta" placeholder="Escribe una nota…" aria-label="Nota" :rows="3" />
       </ZnBox>
     </ZnSection>
+    <ZnSection title="3. Tamaños MD3" collapsible :columns="3">
+      <p class="section-desc section-desc--full">
+        <code>size</code> ajusta el contenedor del campo: <code>small</code> 48px,
+        <code>medium</code> 56px (por defecto) y <code>large</code> 64px. La altura
+        total del textarea sigue dependiendo de <code>rows</code>.
+      </p>
+
+      <ZnBox variant="outlined" class="showcase-stack">
+        <span class="showcase-label">small · 48px</span>
+        <ZnMultilineText v-model="small" label="Compacto" variant="filled" size="small" :rows="3" />
+      </ZnBox>
+
+      <ZnBox variant="outlined" class="showcase-stack">
+        <span class="showcase-label">medium · 56px</span>
+        <ZnMultilineText v-model="medium" label="Estándar" variant="filled" :rows="3" />
+      </ZnBox>
+
+      <ZnBox variant="outlined" class="showcase-stack">
+        <span class="showcase-label">large · 64px</span>
+        <ZnMultilineText v-model="large" label="Amplio" variant="filled" size="large" :rows="3" />
+      </ZnBox>
+    </ZnSection>
   </DemoView>
 </template>
 
@@ -45,4 +67,7 @@ const outlined = ref('')
 const filled = ref('Texto de ejemplo')
 const conError = ref('')
 const sinEtiqueta = ref('')
+const small = ref('')
+const medium = ref('')
+const large = ref('')
 </script>

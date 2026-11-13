@@ -15,6 +15,7 @@ export default defineConfig({
       { find: '@zn-apps/ui-data-form', replacement: resolve(__dirname, '../shared/ui-data-form/src/index.js') },
       { find: '@zn-apps/ui-data-view', replacement: resolve(__dirname, '../shared/ui-data-view/src/index.js') },
       { find: '@zn-apps/ui-data-editor', replacement: resolve(__dirname, '../shared/ui-data-editor/src/index.js') },
+      { find: '@zn-apps/ui-data-richtext', replacement: resolve(__dirname, '../shared/ui-data-richtext/src/index.js') },
     ],
   },
   test: {

@@ -11,7 +11,10 @@
         'zn-field--disabled': disabled,
         'zn-field--multiline': multiline,
         'zn-field--outlined': variant === 'outlined',
-        'zn-field--filled': variant === 'filled'
+        'zn-field--filled': variant === 'filled',
+        'zn-field--small': size === 'small',
+        'zn-field--medium': size === 'medium',
+        'zn-field--large': size === 'large'
       }
     ]"
   >
@@ -81,6 +84,16 @@ const props = defineProps({
     type: String,
     default: 'outlined',
     validator: (value) => ['outlined', 'filled'].includes(value)
+  },
+  /**
+   * Tamaño MD3: `small` (48px, densidad -2), `medium` (56px, por defecto) o
+   * `large` (64px). MD3 desaconseja la densidad por defecto: úsala sólo en
+   * layouts que el usuario pueda alternar.
+   */
+  size: {
+    type: String,
+    default: 'medium',
+    validator: (value) => ['small', 'medium', 'large'].includes(value)
   }
 })
 
@@ -439,6 +452,85 @@ const supportingId = computed(() => (props.error || props.hint ? `${props.forId 
 .zn-field :deep(input:disabled),
 .zn-field :deep(textarea:disabled) {
   cursor: not-allowed;
+}
+
+/* --------------------------------------------------------------------------
+   Tamaños MD3
+   `medium` es el tamaño por defecto (56dp). `small` aplica la densidad -2 de
+   MD3 (48dp) y `large` amplía el contenedor a 64dp conservando la tipografía.
+   -------------------------------------------------------------------------- */
+.zn-field--small .zn-field__content {
+  min-height: 48px;
+  padding: 4px 12px;
+}
+
+.zn-field--small.zn-field--filled .zn-field__content {
+  min-height: 48px;
+  padding: 16px 12px 6px;
+}
+
+.zn-field--small.zn-field--filled.zn-field--multiline .zn-field__content {
+  padding-top: 16px;
+}
+
+.zn-field--small .zn-field__label {
+  left: 12px;
+  max-width: calc(100% - 24px);
+}
+
+.zn-field--small.zn-field--has-leading:not(.zn-field--floating) .zn-field__label {
+  left: 40px;
+  max-width: calc(100% - 52px);
+}
+
+.zn-field--small.zn-field--filled.zn-field--floating .zn-field__label {
+  top: 6px;
+  left: 12px;
+}
+
+.zn-field--small .zn-field__supporting {
+  padding: 0 12px;
+}
+
+.zn-field--small .zn-field__outline-edge--leading {
+  flex-basis: 8px;
+}
+
+.zn-field--large .zn-field__content {
+  min-height: 64px;
+  padding: 12px 20px;
+}
+
+.zn-field--large.zn-field--filled .zn-field__content {
+  min-height: 64px;
+  padding: 24px 20px 12px;
+}
+
+.zn-field--large.zn-field--filled.zn-field--multiline .zn-field__content {
+  padding-top: 24px;
+}
+
+.zn-field--large .zn-field__label {
+  left: 20px;
+  max-width: calc(100% - 40px);
+}
+
+.zn-field--large.zn-field--has-leading:not(.zn-field--floating) .zn-field__label {
+  left: 48px;
+  max-width: calc(100% - 68px);
+}
+
+.zn-field--large.zn-field--filled.zn-field--floating .zn-field__label {
+  top: 12px;
+  left: 20px;
+}
+
+.zn-field--large .zn-field__supporting {
+  padding: 0 20px;
+}
+
+.zn-field--large .zn-field__outline-edge--leading {
+  flex-basis: 16px;
 }
 
 :global(.zn-theme-dark) .zn-field :deep(input),

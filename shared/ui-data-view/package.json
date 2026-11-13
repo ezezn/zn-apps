@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@zn-apps/ui-core": "*",
-    "@zn-apps/ui-data-core": "*"
+    "@zn-apps/ui-data-core": "*",
+    "@zn-apps/ui-data-richtext": "*"
   }
 }

@@ -34,6 +34,27 @@
         <ZnPhoneInput v-model="sinEtiqueta" placeholder="+34 600 000 000" aria-label="Teléfono móvil" />
       </ZnBox>
     </ZnSection>
+    <ZnSection title="3. Tamaños MD3" collapsible :columns="3">
+      <p class="section-desc section-desc--full">
+        <code>size</code> ajusta la altura del contenedor: <code>small</code> 48px,
+        <code>medium</code> 56px (por defecto) y <code>large</code> 64px.
+      </p>
+
+      <ZnBox variant="outlined" class="showcase-stack">
+        <span class="showcase-label">small · 48px</span>
+        <ZnPhoneInput v-model="small" label="Teléfono" variant="filled" size="small" />
+      </ZnBox>
+
+      <ZnBox variant="outlined" class="showcase-stack">
+        <span class="showcase-label">medium · 56px</span>
+        <ZnPhoneInput v-model="medium" label="Teléfono" variant="filled" />
+      </ZnBox>
+
+      <ZnBox variant="outlined" class="showcase-stack">
+        <span class="showcase-label">large · 64px</span>
+        <ZnPhoneInput v-model="large" label="Teléfono" variant="filled" size="large" />
+      </ZnBox>
+    </ZnSection>
   </DemoView>
 </template>
 
@@ -47,4 +68,7 @@ const filled = ref('+34 600 123 456')
 const corto = ref('123')
 const conError = ref('600 000 000')
 const sinEtiqueta = ref('')
+const small = ref('')
+const medium = ref('')
+const large = ref('')
 </script>

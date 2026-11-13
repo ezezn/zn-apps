@@ -1,8 +1,11 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
+import { ZnRow } from '@zn-apps/ui-core'
 import {
   LabelPositions,
   clone,
+  normalizeInputSize,
+  normalizeInputVariant,
   schemaSections,
   withDefaults,
   writeAt
@@ -36,7 +39,19 @@ const props = defineProps({
   },
   emptyText: { type: String, default: '—' },
   trueText: { type: String, default: 'Yes' },
-  falseText: { type: String, default: 'No' }
+  falseText: { type: String, default: 'No' },
+  /** Variante MD3 de los inputs del diálogo; `schema.variant` tiene prioridad. */
+  variant: {
+    type: String,
+    default: '',
+    validator: (value) => ['', 'outlined', 'filled'].includes(value)
+  },
+  /** Tamaño MD3 de los inputs del diálogo; `schema.size` tiene prioridad. */
+  size: {
+    type: String,
+    default: '',
+    validator: (value) => ['', 'small', 'medium', 'large'].includes(value)
+  }
 })
 
 const emit = defineEmits(['update:modelValue', 'change', 'save', 'cancel', 'reset', 'clear'])
@@ -45,6 +60,8 @@ const initialData = ref(withDefaults(props.schema, props.modelValue))
 const localData = ref(clone(initialData.value))
 
 const sections = computed(() => schemaSections(props.schema))
+const editorVariant = computed(() => normalizeInputVariant(props.schema?.variant ?? props.variant))
+const editorSize = computed(() => normalizeInputSize(props.schema?.size ?? props.size))
 
 watch(
   () => props.modelValue,
@@ -91,7 +108,7 @@ defineExpose({ save, cancel, reset, clear, value: localData })
 </script>
 
 <template>
-  <div class="zn-data-editor">
+  <ZnRow direction="column" padding="0" gap="8px" class="zn-data-editor">
     <ZnDataEditorSection
       v-for="(section, index) in sections"
       :key="index"
@@ -101,16 +118,15 @@ defineExpose({ save, cancel, reset, clear, value: localData })
       :empty-text="emptyText"
       :true-text="trueText"
       :false-text="falseText"
+      :variant="editorVariant"
+      :size="editorSize"
       @change="handleFieldChange"
     />
-  </div>
+  </ZnRow>
 </template>
 
 <style scoped>
 .zn-data-editor {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
   font-family: 'Roboto', sans-serif;
 }
 </style>

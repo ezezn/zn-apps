@@ -1,6 +1,11 @@
 <script setup>
 import { computed } from 'vue'
-import { LabelPositions, schemaSections } from '@zn-apps/ui-data-core'
+import { ZnRow } from '@zn-apps/ui-core'
+import {
+  LabelPositions,
+  normalizeInputSize,
+  schemaSections
+} from '@zn-apps/ui-data-core'
 import ZnDataViewSection from './ZnDataViewSection.vue'
 
 const props = defineProps({
@@ -22,14 +27,21 @@ const props = defineProps({
   },
   emptyText: { type: String, default: '—' },
   trueText: { type: String, default: 'Yes' },
-  falseText: { type: String, default: 'No' }
+  falseText: { type: String, default: 'No' },
+  /** Escala de presentación MD3; `section.size` y `field.size` la sobrescriben. */
+  size: {
+    type: String,
+    default: '',
+    validator: (value) => ['', 'small', 'medium', 'large'].includes(value)
+  }
 })
 
 const sections = computed(() => schemaSections(props.schema))
+const viewSize = computed(() => normalizeInputSize(props.schema?.size ?? props.size))
 </script>
 
 <template>
-  <div class="zn-data-view">
+  <ZnRow direction="column" padding="0" gap="8px" class="zn-data-view">
     <ZnDataViewSection
       v-for="(section, index) in sections"
       :key="index"
@@ -39,15 +51,13 @@ const sections = computed(() => schemaSections(props.schema))
       :empty-text="emptyText"
       :true-text="trueText"
       :false-text="falseText"
+      :size="viewSize"
     />
-  </div>
+  </ZnRow>
 </template>
 
 <style scoped>
 .zn-data-view {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
   font-family: 'Roboto', sans-serif;
 }
 </style>

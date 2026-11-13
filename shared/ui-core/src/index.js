@@ -26,9 +26,14 @@ export { default as ZnCard } from './components/containers/ZnCard.vue'
 
 // Controles (interacción del usuario)
 export { default as ZnButton } from './components/controls/ZnButton.vue'
+export { default as ZnChip } from './components/controls/ZnChip.vue'
 export { default as ZnSwitch } from './components/controls/ZnSwitch.vue'
 
 // Entradas de datos (formularios)
+// `ZnFieldShell` es la anatomía interna compartida por los campos MD3; se exporta
+// para que librerías derivadas (p. ej. `ui-data-form`) puedan construir campos
+// propios sin duplicar contorno, etiqueta flotante ni estados.
+export { default as ZnFieldShell } from './components/input/ZnFieldShell.vue'
 export { default as ZnSingleLineText } from './components/input/ZnSingleLineText.vue'
 export { default as ZnMultilineText } from './components/input/ZnMultilineText.vue'
 export { default as ZnEmailInput } from './components/input/ZnEmailInput.vue'

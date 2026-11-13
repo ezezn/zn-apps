@@ -10,6 +10,7 @@
     :required="required"
     :for-id="fieldId"
     :variant="variant"
+    :size="size"
   >
     <template v-if="$slots.leading" #leading>
       <slot name="leading" />
@@ -68,6 +69,12 @@ const props = defineProps({
     type: String,
     default: 'outlined',
     validator: (value) => ['outlined', 'filled'].includes(value)
+  },
+  /** `small` (48px, densidad -2 MD3), `medium` (56px) o `large` (64px). */
+  size: {
+    type: String,
+    default: 'medium',
+    validator: (value) => ['small', 'medium', 'large'].includes(value)
   }
 })
 

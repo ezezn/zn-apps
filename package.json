@@ -12,16 +12,17 @@
     "shared/ui-data-core",
     "shared/ui-data-form",
     "shared/ui-data-view",
-    "shared/ui-data-editor"
+    "shared/ui-data-editor",
+    "shared/ui-data-richtext"
   ],
   "scripts": {
     "test": "vitest",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "test:shared": "vitest --project ui-core --project settings-core --project ui-about --project pwa-integration --project ui-data-core --project ui-data-form --project ui-data-view --project ui-data-editor",
+    "test:shared": "vitest --project ui-core --project settings-core --project ui-about --project pwa-integration --project ui-data-core --project ui-data-form --project ui-data-view --project ui-data-editor --project ui-data-richtext",
     "test:zound-box": "vitest --project zound-box",
     "test:kitchensink": "vitest --project kitchensink",
-    "build:shared": "npm run build --workspace=@zn-apps/ui-core && npm run build --workspace=@zn-apps/settings-core && npm run build --workspace=@zn-apps/ui-about && npm run build --workspace=@zn-apps/pwa-integration && npm run build --workspace=@zn-apps/ui-data-core && npm run build --workspace=@zn-apps/ui-data-form && npm run build --workspace=@zn-apps/ui-data-view && npm run build --workspace=@zn-apps/ui-data-editor",
+    "build:shared": "npm run build --workspace=@zn-apps/ui-core && npm run build --workspace=@zn-apps/settings-core && npm run build --workspace=@zn-apps/ui-about && npm run build --workspace=@zn-apps/pwa-integration && npm run build --workspace=@zn-apps/ui-data-core && npm run build --workspace=@zn-apps/ui-data-richtext && npm run build --workspace=@zn-apps/ui-data-form && npm run build --workspace=@zn-apps/ui-data-view && npm run build --workspace=@zn-apps/ui-data-editor",
     "generate:icons": "node shared/ui-core/scripts/generate-icons.mjs --profile shared && node shared/ui-core/scripts/generate-icons.mjs --profile app:zound-box && node shared/ui-core/scripts/generate-icons.mjs --profile app:kitchensink",
     "scan:icons": "node scripts/scan-icons.mjs shared/ui-core && node scripts/scan-icons.mjs shared/pwa-integration && node scripts/scan-icons.mjs shared/ui-data-form && node scripts/scan-icons.mjs shared/ui-data-view && node scripts/scan-icons.mjs shared/ui-data-editor && node scripts/scan-icons.mjs zound-box && node scripts/scan-icons.mjs kitchensink",
     "build:icons": "npm run scan:icons && npm run generate:icons",

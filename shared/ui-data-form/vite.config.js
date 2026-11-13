@@ -12,7 +12,7 @@ export default defineConfig({
       formats: ['es']
     },
     rollupOptions: {
-      external: ['vue', '@zn-apps/ui-core', '@zn-apps/ui-data-core'],
+      external: ['vue', '@zn-apps/ui-core', '@zn-apps/ui-data-core', '@zn-apps/ui-data-richtext'],
       output: {
         globals: {
           vue: 'Vue'

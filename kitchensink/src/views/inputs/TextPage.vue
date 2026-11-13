@@ -62,6 +62,30 @@
         <ZnSingleLineText v-model="sinEtiqueta" placeholder="Buscar…" aria-label="Buscar" />
       </ZnBox>
     </ZnSection>
+
+    <ZnSection title="4. Tamaños MD3" collapsible :columns="3">
+      <p class="section-desc section-desc--full">
+        MD3 fija 56dp como altura estándar. <code>size="small"</code> aplica la
+        densidad -2 (48dp) para layouts densos y <code>size="large"</code> amplía el
+        contenedor a 64dp. La tipografía no cambia: sólo la altura y el padding.
+        MD3 recomienda no aplicar densidad por defecto, sino ofrecerla como opción.
+      </p>
+
+      <ZnBox variant="outlined" class="showcase-stack">
+        <span class="showcase-label">small · 48px</span>
+        <ZnSingleLineText v-model="small" label="Compacto" variant="filled" size="small" hint="Densidad -2" />
+      </ZnBox>
+
+      <ZnBox variant="outlined" class="showcase-stack">
+        <span class="showcase-label">medium · 56px (default)</span>
+        <ZnSingleLineText v-model="medium" label="Estándar" variant="filled" size="medium" hint="Altura MD3 por defecto" />
+      </ZnBox>
+
+      <ZnBox variant="outlined" class="showcase-stack">
+        <span class="showcase-label">large · 64px</span>
+        <ZnSingleLineText v-model="large" label="Amplio" variant="filled" size="large" hint="Formularios con más aire" />
+      </ZnBox>
+    </ZnSection>
   </DemoView>
 </template>
 
@@ -76,4 +100,7 @@ const conError = ref('')
 const conAdornos = ref('')
 const conPlaceholder = ref('')
 const sinEtiqueta = ref('')
+const small = ref('Compacto')
+const medium = ref('Estándar')
+const large = ref('Amplio')
 </script>

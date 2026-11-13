@@ -6,6 +6,11 @@
         sólo se emite al pulsar Save o al usar Reset/Clear. Cancel descarta los
         cambios y vuelve al valor inicial.
       </p>
+      <p class="section-desc">
+        Los campos <strong>Biografía</strong> (<code>textarea</code>) y
+        <strong>Notas</strong> (<code>richtext</code>) declaran <code>span: 2</code>
+        y ocupan las dos columnas de la sección <code>Cuenta</code>.
+      </p>
 
       <ZnDataForm
         v-model="draft"
@@ -37,6 +42,37 @@
         <pre class="json-dump">{{ liveJson }}</pre>
       </ZnBox>
     </ZnSection>
+
+    <ZnSection title="3. Variante y tamaño heredados" collapsible :columns="1">
+      <p class="section-desc">
+        <code>variant</code> y <code>size</code> del formulario se aplican a todos los
+        campos. Cada sección puede sobrescribirlos con <code>section.variant</code> /
+        <code>section.size</code>, y cada campo con <code>field.variant</code> /
+        <code>field.size</code>. Aquí se combinan <code>filled</code> con la densidad
+        compacta de MD3 (<code>small</code>, 48px).
+      </p>
+
+      <ZnDataForm
+        v-model="compactValue"
+        :schema="dataDemoSchema"
+        variant="filled"
+        size="small"
+        :show-actions="false"
+      />
+    </ZnSection>
+
+    <ZnSection title="4. Esquema (schema)" collapsible :expanded="false" :columns="1">
+      <p class="section-desc">
+        JSON del esquema que construye el formulario. La misma definición se usa en
+        la vista y en el editor; incluye secciones, tipos de campo, overrides de
+        variante/tamaño y <code>span</code> entre columnas.
+      </p>
+
+      <ZnBox variant="outlined">
+        <span class="showcase-label">schema</span>
+        <pre class="json-dump">{{ schemaJson }}</pre>
+      </ZnBox>
+    </ZnSection>
   </DemoView>
 </template>
 
@@ -51,9 +87,11 @@ import { dataDemoSchema, dataDemoValue } from '../../data/data-demo.js'
 const draft = ref(clone(dataDemoValue))
 const confirmed = ref(clone(dataDemoValue))
 const liveValue = ref(clone(dataDemoValue))
+const compactValue = ref(clone(dataDemoValue))
 const lastEvent = ref('—')
 
 const confirmedJson = computed(() => JSON.stringify(confirmed.value, null, 2))
+const schemaJson = computed(() => JSON.stringify(dataDemoSchema, null, 2))
 const liveJson = computed(() => JSON.stringify(liveValue.value, null, 2))
 
 function onSave(value) {

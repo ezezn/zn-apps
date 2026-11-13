@@ -54,6 +54,7 @@ export const navGroups = [
           { key: 'input-time', label: 'Hora (ZnTimeInput)', to: '/inputs/time' },
           { key: 'input-datetime', label: 'Fecha y hora (ZnDateTimeInput)', to: '/inputs/datetime' },
           { key: 'input-select', label: 'Select (ZnSelect)', to: '/inputs/select' },
+          { key: 'input-chip', label: 'Chips (ZnChip)', to: '/inputs/chip' },
           { key: 'input-range', label: 'Rango numérico (ZnRangeInput)', to: '/inputs/range' },
           { key: 'input-date-range', label: 'Rango de fechas (ZnDateRangeInput)', to: '/inputs/date-range' },
           { key: 'input-time-range', label: 'Rango de horas (ZnTimeRangeInput)', to: '/inputs/time-range' },
@@ -82,7 +83,8 @@ export const navGroups = [
           { key: 'data-core', label: 'Contrato y utilidades (ui-data-core)', to: '/data/core' },
           { key: 'data-form', label: 'Formularios (ui-data-form)', to: '/data/form' },
           { key: 'data-view', label: 'Presentación (ui-data-view)', to: '/data/view' },
-          { key: 'data-editor', label: 'Editor por campo (ui-data-editor)', to: '/data/editor' }
+          { key: 'data-editor', label: 'Editor por campo (ui-data-editor)', to: '/data/editor' },
+          { key: 'data-richtext', label: 'Texto enriquecido (ui-data-richtext)', to: '/data/richtext' }
         ]
       }
     ]

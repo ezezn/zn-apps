@@ -24,6 +24,7 @@ campo, el `required` visual y delega la lógica de guardado al consumidor.
 | `ZnDataForm` | Contenedor raíz, borrador, botones y eventos. |
 | `ZnDataSection` | Envoltorio de sección: reutiliza `ZnSection` de `@zn-apps/ui-core` y le añade el título con icono. |
 | `ZnDataField` | Renderiza el input de `ui-core` correspondiente al `field.type`. |
+| `ZnDataListInput` | Interno: edita `FieldTypes.LIST` como una lista de chips de entrada MD3 (añadir con Enter/coma, quitar con × o Backspace). |
 
 ---
 
@@ -39,6 +40,8 @@ campo, el `required` visual y delega la lógica de guardado al consumidor.
 | `cancelLabel` | String | `'Cancel'` | Texto del botón Cancel. |
 | `resetLabel` | String | `'Reset'` | Texto del botón Reset. |
 | `clearLabel` | String | `'Clear'` | Texto del botón Clear. |
+| `variant` | `'outlined' \| 'filled'` | `'outlined'` | Variante MD3 por defecto de los inputs. `schema.variant` tiene prioridad. |
+| `size` | `'small' \| 'medium' \| 'large'` | `'medium'` | Tamaño MD3 por defecto (`small` = 48px, densidad -2). `schema.size` tiene prioridad. |
 
 ### Eventos
 
@@ -71,6 +74,22 @@ desde un ref del componente.
 5. **Campos ocultos** (`hidden`) no se renderizan pero conservan su valor.
 6. **Secciones**: `title`, `icon`, `collapsible`, `expanded` y `layout` (1–4
    columnas). En pantallas pequeñas el grid pasa a una columna.
+7. **Variante y tamaño**: la precedencia es `field.variant` → `section.variant`
+   → `schema.variant` → prop `variant` (igual con `size`). Sólo se aplican a los
+   campos con contenedor MD3: texto, textarea, email, teléfono, número, fecha,
+   hora, fecha-hora, select, multi-select, listas y texto enriquecido. `switch`,
+   `checkbox` y `range` no tienen contenedor, pero el layout de la sección
+   conserva su altura (`small` 48px, `medium` 56px, `large` 64px).
+8. **Listas y multi-select**: `type: 'multi-select'` usa `ZnSelect multiple` y
+   muestra los valores como chips; `type: 'list'` edita un array libre de valores
+   escalares con chips y un campo de entrada. Los chips heredan `size`.
+9. **Span entre columnas**: `field.span` (1..columnas de la sección) expande el
+   campo en el grid. Por ejemplo, un `textarea` con `span: 2` ocupa las dos
+   columnas de una sección con `layout: 2`.
+10. **Texto enriquecido**: `type: 'richtext'` renderiza `ZnRichTextEditor` de
+    `@zn-apps/ui-data-richtext`; el valor sigue siendo un string Markdown.
+11. **Paridad del contrato**: cualquier prop, estado o tipo nuevo debe existir
+    también en `ZnDataViewField` y en el diálogo de `ZnDataEditorField`.
 
 ---
 
@@ -95,6 +114,7 @@ const schema = {
       fields: [
         { path: 'name', type: 'text', label: 'Nombre', required: true },
         { path: 'contact.email', type: 'email', label: 'Correo' },
+        { path: 'bio', type: 'textarea', label: 'Biografía', rows: 3, span: 2 },
         {
           path: 'role',
           type: 'select',

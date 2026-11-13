@@ -48,6 +48,10 @@ export const demoViews = [
     sections: [{ title: 'ZnSelect', content: 'Variantes, maxVisibleItems, opciones deshabilitadas, chips y estados.' }]
   },
   {
+    key: 'input-chip', title: 'Chips (ZnChip)', subtitle: 'Cuatro variantes MD3 para acciones, filtros, entradas y sugerencias',
+    sections: [{ title: 'ZnChip', content: 'Variantes assist, filter, input y suggestion, con tamaños y estados.' }]
+  },
+  {
     key: 'input-range', title: 'Rango numérico (ZnRangeInput)', subtitle: 'Sliders continuo, discreto, centrado y de rango',
     sections: [{ title: 'ZnRangeInput', content: 'Todas las variantes MD3 de slider y sus estados.' }]
   },
@@ -78,6 +82,10 @@ export const demoViews = [
   {
     key: 'data-editor', title: 'Editor por campo (ui-data-editor)', subtitle: 'Presentación tipo vista con diálogo de edición',
     sections: [{ title: 'ZnDataEditor', content: 'Haz click en un valor para editarlo con el input de su tipo.' }]
+  },
+  {
+    key: 'data-richtext', title: 'Texto enriquecido (ui-data-richtext)', subtitle: 'Editor WYSIWYG con valor Markdown y toolbar MD3',
+    sections: [{ title: 'ZnRichTextEditor', content: 'Formato inline, encabezados, párrafos, alineación, tablas y edición de Markdown crudo.' }]
   },
   {
     key: 'dialogs', title: 'Diálogos (ZnDialog)', subtitle: 'Diálogos modales nativos con estilo Material Design 3',

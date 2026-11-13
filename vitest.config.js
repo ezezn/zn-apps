@@ -11,6 +11,7 @@ export default defineConfig({
       'shared/ui-data-form/vitest.config.js',
       'shared/ui-data-view/vitest.config.js',
       'shared/ui-data-editor/vitest.config.js',
+      'shared/ui-data-richtext/vitest.config.js',
       'zound-box/vitest.config.js',
       'kitchensink/vitest.config.js',
     ],

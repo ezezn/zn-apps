@@ -14,6 +14,8 @@
     :disabled="disabled"
     :readonly="readonly"
     :required="required"
+    :variant="variant"
+    :size="size"
     @update:model-value="onInput"
     @focus="$emit('focus', $event)"
     @blur="onBlur"
@@ -51,7 +53,17 @@ const props = defineProps({
   readonly: { type: Boolean, default: false },
   required: { type: Boolean, default: false },
   validate: { type: Boolean, default: true },
-  invalidMessage: { type: String, default: 'Introduce un correo electrónico válido' }
+  invalidMessage: { type: String, default: 'Introduce un correo electrónico válido' },
+  variant: {
+    type: String,
+    default: 'outlined',
+    validator: (value) => ['outlined', 'filled'].includes(value)
+  },
+  size: {
+    type: String,
+    default: 'medium',
+    validator: (value) => ['small', 'medium', 'large'].includes(value)
+  }
 })
 
 const emit = defineEmits(['update:modelValue', 'update:valid', 'validation', 'focus', 'blur', 'enter'])

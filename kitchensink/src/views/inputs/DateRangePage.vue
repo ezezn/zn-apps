@@ -37,6 +37,22 @@
         <span class="helper-text">El campo final queda marcado en rojo.</span>
       </ZnBox>
     </ZnSection>
+    <ZnSection title="3. Tamaños MD3" collapsible :columns="2">
+      <p class="section-desc section-desc--full">
+        <code>size</code> se aplica a ambos campos del rango: <code>small</code> 48px,
+        <code>medium</code> 56px (por defecto) y <code>large</code> 64px.
+      </p>
+
+      <ZnBox variant="outlined" class="showcase-stack">
+        <span class="showcase-label">small · 48px</span>
+        <ZnDateRangeInput v-model="small" variant="filled" size="small" start-label="Desde" end-label="Hasta" />
+      </ZnBox>
+
+      <ZnBox variant="outlined" class="showcase-stack">
+        <span class="showcase-label">large · 64px</span>
+        <ZnDateRangeInput v-model="large" variant="filled" size="large" start-label="Desde" end-label="Hasta" />
+      </ZnBox>
+    </ZnSection>
   </DemoView>
 </template>
 
@@ -49,4 +65,6 @@ const outlined = ref(['', ''])
 const filled = ref(['2026-11-10', '2026-11-14'])
 const conLimites = ref(['', ''])
 const invertido = ref(['2026-11-20', '2026-11-10'])
+const small = ref(['', ''])
+const large = ref(['2026-11-10', '2026-11-14'])
 </script>

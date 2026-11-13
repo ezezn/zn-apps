@@ -82,6 +82,48 @@
         />
       </ZnBox>
     </ZnSection>
+    <ZnSection title="5. Tamaños MD3" collapsible :columns="3">
+      <p class="section-desc section-desc--full">
+        <code>size</code> ajusta el campo y sus chips (<code>small</code> 48/24px,
+        <code>medium</code> 56/32px, <code>large</code> 64/40px). Los chips de la
+        selección múltiple usan <code>ZnChip</code>, por lo que heredan el tamaño.
+      </p>
+
+      <ZnBox variant="outlined" class="showcase-stack">
+        <span class="showcase-label">small · campo 48px / chip 24px</span>
+        <ZnSelect
+          v-model="etiquetasSmall"
+          label="Etiquetas"
+          :options="etiquetasDisponibles"
+          multiple
+          variant="filled"
+          size="small"
+        />
+      </ZnBox>
+
+      <ZnBox variant="outlined" class="showcase-stack">
+        <span class="showcase-label">medium · campo 56px / chip 32px</span>
+        <ZnSelect
+          v-model="etiquetasMedium"
+          label="Etiquetas"
+          :options="etiquetasDisponibles"
+          multiple
+          variant="filled"
+        />
+      </ZnBox>
+
+      <ZnBox variant="outlined" class="showcase-stack">
+        <span class="showcase-label">large · campo 64px / chip 40px</span>
+        <ZnSelect
+          v-model="etiquetasLarge"
+          label="Etiquetas"
+          :options="etiquetasDisponibles"
+          multiple
+          variant="filled"
+          size="large"
+        />
+      </ZnBox>
+    </ZnSection>
   </DemoView>
 </template>
 
@@ -118,4 +160,7 @@ const etiquetas = ref(['Trabajo'])
 const etiquetasFilled = ref([])
 const conError = ref(null)
 const sinEtiqueta = ref(null)
+const etiquetasSmall = ref(['Trabajo', 'Urgente'])
+const etiquetasMedium = ref(['Trabajo', 'Urgente'])
+const etiquetasLarge = ref(['Trabajo', 'Urgente'])
 </script>

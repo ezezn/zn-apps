@@ -76,6 +76,22 @@ describe('ZnSingleLineText', () => {
     expect(filled.find('.zn-field__outline').exists()).toBe(false)
   })
 
+  it('aplica medium por defecto y propaga los tamaños MD3', () => {
+    const medium = mount(ZnSingleLineText, { props: { modelValue: '' } })
+    expect(medium.find('.zn-field').classes()).toContain('zn-field--medium')
+
+    const small = mount(ZnSingleLineText, {
+      props: { modelValue: '', label: 'Compacto', size: 'small' }
+    })
+    expect(small.find('.zn-field').classes()).toContain('zn-field--small')
+
+    const large = mount(ZnSingleLineText, {
+      props: { modelValue: '', label: 'Amplio', size: 'large', variant: 'filled' }
+    })
+    expect(large.find('.zn-field').classes()).toContain('zn-field--large')
+    expect(large.find('.zn-field').classes()).toContain('zn-field--filled')
+  })
+
   it('mantiene la etiqueta flotante con floatLabel aunque esté vacío', () => {
     const wrapper = mount(ZnSingleLineText, {
       props: { modelValue: '', label: 'Nombre', floatLabel: true }
@@ -198,6 +214,19 @@ describe('Campos temporales nativos', () => {
     })
 
     expect(wrapper.find('.zn-field').classes()).toContain('zn-field--filled')
+  })
+
+  it('propaga el tamaño small a los campos de fecha y email', () => {
+    const date = mount(ZnDateInput, {
+      props: { modelValue: '', label: 'Fecha', size: 'small' }
+    })
+    expect(date.find('.zn-field').classes()).toContain('zn-field--small')
+
+    const email = mount(ZnEmailInput, {
+      props: { modelValue: '', label: 'Correo', size: 'large', variant: 'filled' }
+    })
+    expect(email.find('.zn-field').classes()).toContain('zn-field--large')
+    expect(email.find('.zn-field').classes()).toContain('zn-field--filled')
   })
 
   it('mantiene la etiqueta flotante en campos temporales vacíos', () => {

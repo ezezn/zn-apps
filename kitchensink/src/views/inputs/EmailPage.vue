@@ -47,6 +47,28 @@
         <ZnEmailInput v-model="sinEtiqueta" placeholder="tu@correo.com" aria-label="Correo de contacto" required />
       </ZnBox>
     </ZnSection>
+    <ZnSection title="3. Tamaños MD3" collapsible :columns="3">
+      <p class="section-desc section-desc--full">
+        <code>size</code> ajusta la altura del contenedor: <code>small</code> 48px,
+        <code>medium</code> 56px (por defecto) y <code>large</code> 64px. La validación
+        y los estados no cambian.
+      </p>
+
+      <ZnBox variant="outlined" class="showcase-stack">
+        <span class="showcase-label">small · 48px</span>
+        <ZnEmailInput v-model="small" label="Correo" variant="filled" size="small" />
+      </ZnBox>
+
+      <ZnBox variant="outlined" class="showcase-stack">
+        <span class="showcase-label">medium · 56px</span>
+        <ZnEmailInput v-model="medium" label="Correo" variant="filled" />
+      </ZnBox>
+
+      <ZnBox variant="outlined" class="showcase-stack">
+        <span class="showcase-label">large · 64px</span>
+        <ZnEmailInput v-model="large" label="Correo" variant="filled" size="large" />
+      </ZnBox>
+    </ZnSection>
   </DemoView>
 </template>
 
@@ -63,4 +85,7 @@ const sinEtiqueta = ref('')
 const validoOutlined = ref(true)
 const validoFilled = ref(true)
 const validoInvalido = ref(false)
+const small = ref('')
+const medium = ref('')
+const large = ref('')
 </script>

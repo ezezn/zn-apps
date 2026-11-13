@@ -7,7 +7,8 @@ export default defineConfig({
   resolve: {
     alias: {
       '@zn-apps/ui-core': resolve(__dirname, '../ui-core/src/index.js'),
-      '@zn-apps/ui-data-core': resolve(__dirname, '../ui-data-core/src/index.js')
+      '@zn-apps/ui-data-core': resolve(__dirname, '../ui-data-core/src/index.js'),
+      '@zn-apps/ui-data-richtext': resolve(__dirname, '../ui-data-richtext/src/index.js')
     }
   },
   test: {

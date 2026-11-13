@@ -77,6 +77,8 @@ img, picture, video, canvas, svg {
   --md-on-primary: #FFFFFF;
   --md-primary-container: #EADDFF;
   --md-on-primary-container: #21005D;
+  --md-secondary-container: #E8DEF8;
+  --md-on-secondary-container: #1D192B;
   
   --md-background: #FEF7FF;
   --md-on-background: #1D1B20;
@@ -101,6 +103,8 @@ body.dark-theme,.dark-theme {
   --md-on-primary: #381E72;
   --md-primary-container: #4F378B;
   --md-on-primary-container: #EADDFF;
+  --md-secondary-container: #4A4458;
+  --md-on-secondary-container: #E8DEF8;
   
   --md-background: #141218;
   --md-on-background: #E6E1E5;
@@ -148,3 +152,11 @@ body, html {
 .zn-span-8  { grid-column: span 8 / span 8; }
 .zn-span-9  { grid-column: span 9 / span 9; }
 .zn-span-10 { grid-column: span 10 / span 10; }
+
+/* ZnSection colapsa a una columna en móvil; los spans también deben hacerlo. */
+@media (max-width: 600px) {
+  .zn-span-2, .zn-span-3, .zn-span-4, .zn-span-5, .zn-span-6,
+  .zn-span-7, .zn-span-8, .zn-span-9, .zn-span-10 {
+    grid-column: auto;
+  }
+}

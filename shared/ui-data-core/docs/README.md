@@ -29,11 +29,16 @@ const schema = {
       collapsible: true,        // opcional
       expanded: false,          // estado inicial si es colapsable
       layout: 2,                // 1 | 2 | 3 | 4 columnas (por defecto 1)
+      variant: 'filled',        // opcional: outlined | filled
+      size: 'small',            // opcional: small | medium | large
       fields: [
         {
           path: 'contact.email', // ruta dentro del objeto value
           type: 'email',         // FieldTypes
           label: 'Correo',
+          variant: 'outlined',   // override por campo
+          size: 'large',         // override por campo
+          span: 2,               // ocupa 2 columnas de la sección (1..columnas)
           description: 'Solo laboral',
           placeholder: 'nombre@empresa.com',
           required: true,
@@ -45,6 +50,7 @@ const schema = {
           // según el tipo:
           options: [{ value: 'a', label: 'A' }], // select / multi-select
           min: 0, max: 100, step: 1,             // number / range / date / time
+          // list: array de valores escalares, sin `options`
           rows: 4, maxlength: 500,               // textarea
           labelPosition: 'inline'                // override de presentación
         }
@@ -67,7 +73,9 @@ const schema = {
 | `TIME` | `time` | `ZnTimeInput` |
 | `DATETIME` | `datetime` | `ZnDateTimeInput` |
 | `SELECT` | `select` | `ZnSelect` |
-| `MULTI_SELECT` | `multi-select` | `ZnSelect multiple` |
+| `MULTI_SELECT` | `multi-select` | `ZnSelect multiple` (chips MD3) |
+| `LIST` | `list` | Lista libre de valores con chips editables (interna `ZnDataListInput`) |
+| `RICHTEXT` | `richtext` | `ZnRichTextEditor` (valor Markdown, vista HTML5) |
 | `SWITCH` | `switch` | `ZnSwitch` |
 | `CHECKBOX` | `checkbox` | `ZnSwitch` |
 | `RANGE` | `range` | `ZnRangeInput` |
@@ -77,10 +85,26 @@ const schema = {
 `ONE`, `TWO`, `THREE`, `FOUR` (`1..4`). `sectionColumns(section)` normaliza
 cualquier valor fuera de rango.
 
+`fieldSpan(field, columns)` resuelve `field.span` (por defecto `1`) y lo limita
+a las columnas efectivas de la sección. Los tres renderizadores aplican la clase
+`zn-span-N` de `ui-core`, de modo que un `textarea` con `span: 2` ocupa las dos
+columnas de una sección `layout: 2`.
+
 ### `LabelPositions`
 
 `TOP` (`label` encima del valor) e `INLINE` (misma línea). Aplicable por vista,
 sección o campo (`field.labelPosition`).
+
+### `InputVariants` e `InputSizes`
+
+`InputVariants` (`OUTLINED`, `FILLED`) e `InputSizes` (`SMALL`, `MEDIUM`,
+`LARGE`) describen las opciones MD3 de los campos. `normalizeInputVariant(value,
+fallback)` y `normalizeInputSize(value, fallback)` devuelven el fallback cuando
+el valor no es válido.
+
+La precedencia es **campo → sección → contenedor** (`ZnDataForm`,
+`ZnDataView`, `ZnDataEditor`) y, en form/editor, el `schema` raíz puede fijar
+`variant`/`size` como valor por defecto del documento.
 
 ---
 
@@ -104,6 +128,7 @@ sección o campo (`field.labelPosition`).
 | `schemaSections(schema)` | Secciones válidas del esquema. |
 | `schemaFields(schema)` | Lista plana de todos los campos. |
 | `sectionColumns(section)` | Columnas efectivas (1..4). |
+| `fieldSpan(field, columns)` | Columnas que ocupa un campo, limitadas a la sección. |
 | `collectDefaults(schema)` | Objeto con los `default` declarados por los campos. |
 | `withDefaults(schema, value)` | `merge(collectDefaults(schema), value)`: el valor recibido tiene prioridad. |
 
@@ -113,7 +138,7 @@ sección o campo (`field.labelPosition`).
 |---|---|
 | `normalizeOptions(options)` | Normaliza opciones primitivas u `{ value, label }`. |
 | `optionLabel(options, value)` | Etiqueta de una opción. |
-| `formatFieldValue(field, value, options)` | Texto de presentación. `options`: `emptyText` (`'—'`), `trueText` (`'Yes'`), `falseText` (`'No'`), `separator` (`', '`). |
+| `formatFieldValue(field, value, options)` | Texto de presentación. `options`: `emptyText` (`'—'`), `trueText` (`'Yes'`), `falseText` (`'No'`), `separator` (`', '`). Para `richtext` devuelve texto plano sin sintaxis Markdown (la presentación rica usa `ZnRichTextView`). |
 
 ---
 

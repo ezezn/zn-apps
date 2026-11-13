@@ -56,8 +56,8 @@ Los componentes se agrupan por significado en `shared/ui-core/src/components/` (
 |---|---|
 | `layout/` | `ZnApp`, `ZnScreen`, `ZnScrollArea`, `ZnMasterSlaveLayout` y `screenNavigation.js` (clave de navegación compartida) |
 | `containers/` | Contenedores de contenido: `ZnBox`, `ZnRow`, `ZnSection`, `ZnCard` |
-| `controls/` | Controles interactivos: `ZnButton`, `ZnSwitch` |
-| `input/` | Campos de formulario: `ZnSingleLineText`, `ZnMultilineText`, `ZnEmailInput`, `ZnPhoneInput`, `ZnDateInput`, `ZnTimeInput`, `ZnDateTimeInput`, `ZnSelect`, `ZnRangeInput`, `ZnDateRangeInput`, `ZnTimeRangeInput`, `ZnDateTimeRangeInput` (+ `ZnFieldShell` y `ZnTemporalRange`, internos) |
+| `controls/` | Controles interactivos: `ZnButton`, `ZnChip`, `ZnSwitch` |
+| `input/` | Campos de formulario: `ZnSingleLineText`, `ZnMultilineText`, `ZnEmailInput`, `ZnPhoneInput`, `ZnDateInput`, `ZnTimeInput`, `ZnDateTimeInput`, `ZnSelect`, `ZnRangeInput`, `ZnDateRangeInput`, `ZnTimeRangeInput`, `ZnDateTimeRangeInput` (+ `ZnFieldShell`, la anatomía MD3 exportada para librerías derivadas, y `ZnTemporalRange`, interno) |
 | `navigation/` | `ZnTabs` |
 | `dialogs/` | `ZnDialog`, `ZnDialogHost` |
 | `media/` | `ZnIcon`, `ZnImage` |
@@ -139,6 +139,19 @@ Tarjeta contenedora con elevación y soporte de scrim para imágenes.
   - `imageVariant`: `'header'` (scrim degradado) | `'full'` (fondo completo con oscurecimiento)
 - **Slots**: `#title`, `default`.
 
+#### `ZnChip`
+Chip MD3 reutilizable (`controls/ZnChip.vue`) con las cuatro variantes de Material Design 3.
+- **Props**:
+  - `variant`: `'assist'` | `'filter'` | `'input'` | `'suggestion'` (default `'assist'`).
+  - `size`: `'small'` (24px, densidad -2) | `'medium'` (32px, default) | `'large'` (40px).
+  - `label`: texto del chip (también acepta el slot `default`).
+  - `selected` (`filter` muestra el check y el fondo `secondary-container`), `disabled`, `elevated` (assist/filter/suggestion).
+  - `clickable`: lo hace interactivo y accesible por teclado (`role="button"`; en `filter`, `role="checkbox"` + `aria-checked`).
+  - `removable`: añade el botón de quitar y emite `remove` (variante `input`). `removeLabel` define su etiqueta accesible.
+- **Slots**: `#icon` (icono inicial de 18px), `default` (contenido del label).
+- **Eventos**: `click`, `remove`.
+- **Geometría MD3**: 32dp de alto y radio 8dp por defecto; el tamaño del texto no cambia con la densidad. `ZnSelect` con `multiple` usa internamente `ZnChip variant="input"` y le pasa su propio `size`, por lo que los chips acompañan al campo (48/24px, 56/32px o 64/40px).
+
 #### `ZnSwitch`
 Interruptor accesible MD3 con thumb animado, texto interior e iconos.
 - **Props**:
@@ -152,7 +165,9 @@ Interruptor accesible MD3 con thumb animado, texto interior e iconos.
 #### `ZnBox` y `ZnRow`
 Primitivas de espaciado y contenedores neutros:
 - `ZnBox`: contenedor estilizado con variante MD3 (`filled`, `elevated`, `outlined`).
-- `ZnRow`: contenedor flexbox (`padding`, `gap`, `align`).
+- `ZnRow`: contenedor flexbox. Props: `padding` (`'16px'`), `gap` (`'12px'`), `align` (`'flex-start'`), `justify` (`'flex-start'`), `direction` (`'row' | 'column'`) y `wrap` (`Boolean`). Úsalo en lugar de duplicar `display: flex` en las apps y librerías.
+
+Los tokens `--md-secondary-container` y `--md-on-secondary-container` están disponibles para los estados seleccionados de chips y filtros.
 
 ---
 
@@ -160,9 +175,10 @@ Primitivas de espaciado y contenedores neutros:
 
 Todos los campos comparten la anatomía MD3 *outlined* (contorno con muesca, etiqueta flotante, texto de asistencia y estado de error) implementada por el componente interno `ZnFieldShell`, y envuelven controles HTML nativos: cualquier atributo (`name`, `autocomplete`, `aria-*`, `@keydown`) se reenvía al `<input>` o `<textarea>` real.
 
-**Props comunes**: `modelValue` (`v-model`), `label`, `hint`, `error`, `placeholder`, `name`, `disabled`, `readonly`, `required`, `floatLabel`, `variant`. **Slots**: `#leading` y `#trailing` (iconos o adornos). El error añade `aria-invalid="true"` y enlaza el texto con `aria-describedby`.
+**Props comunes**: `modelValue` (`v-model`), `label`, `hint`, `error`, `placeholder`, `name`, `disabled`, `readonly`, `required`, `floatLabel`, `variant`, `size`. **Slots**: `#leading` y `#trailing` (iconos o adornos). El error añade `aria-invalid="true"` y enlaza el texto con `aria-describedby`.
 
 - `variant`: `'outlined'` (por defecto, contorno con muesca) o `'filled'` (contenedor tonal con indicador inferior de 1px que pasa a 2px en foco y error). Son las dos variantes que define MD3 para campos de texto. `ZnDateRangeInput`, `ZnTimeRangeInput` y `ZnDateTimeRangeInput` también lo aceptan.
+- `size`: `'small'` (48px), `'medium'` (56px, por defecto) o `'large'` (64px). MD3 fija 56dp como altura estándar y una escala de densidad de 4dp por paso: `small` equivale a la densidad -2. MD3 recomienda no aplicar densidad por defecto, sino ofrecerla como preferencia (por ejemplo, un layout denso alternable); `large` conserva la tipografía y sólo amplía contenedor y padding. La escala se aplica igual en `outlined` y `filled`, con o sin iconos, y en `ZnSelect`, correos, teléfonos y campos temporales.
 - `label` es opcional: sin etiqueta no se renderiza `label` ni la muesca del contorno; el `placeholder` queda siempre visible. En ese caso aporta `aria-label` (se reenvía al control nativo).
 - `floatLabel` mantiene la etiqueta sobre el contorno aunque el campo esté vacío. Los campos temporales (`ZnDateInput`, `ZnTimeInput`, `ZnDateTimeInput` y los tres rangos) lo activan siempre, porque el control nativo muestra su propio texto (`dd/mm/aaaa`, `--:--`) y de lo contrario se superpondría a la etiqueta.
 - El contenedor del campo usa `--md-surface-container-highest` y el contorno aparece solo con el borde, de modo que el área editable se distingue de la superficie de la tarjeta en ambos temas.
@@ -195,7 +211,7 @@ Selectores nativos `date`, `time` y `datetime-local`.
 - **Eventos**: `update:modelValue`, `change`, `focus`, `blur`.
 
 #### `ZnSelect`
-Menú desplegable MD3 de selección simple o múltiple, renderizado con `Teleport` a `<body>` y posición fija (no lo recorta el scroll del contenedor).
+Menú desplegable MD3 de selección simple o múltiple, renderizado con `Teleport` y posición fija (no lo recorta el scroll del contenedor). Si el select está anidado en un `<dialog>` (por ejemplo, en el editor de datos), el menú se teleporta al propio diálogo: un diálogo modal ocupa la capa superior del navegador y un menú en `<body>` quedaría detrás de él. El menú se cierra automáticamente cuando el diálogo se cierra.
 - **Props**:
   - `options`: `Array<string | number | { value, label?, disabled? }>`.
   - `multiple` (`Boolean`): con `true` el `modelValue` es un `Array` y la selección se muestra como chips removibles.

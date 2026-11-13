@@ -76,6 +76,10 @@ const samples = computed(() => [
     value: formatFieldValue({ type: FieldTypes.MULTI_SELECT, options: ['Diseño', 'Código'] }, ['Diseño', 'Código'])
   },
   {
+    label: 'list · palabras clave',
+    value: formatFieldValue({ type: FieldTypes.LIST }, ['Material 3', 'chips'])
+  },
+  {
     label: 'switch · notificaciones',
     value: formatFieldValue(
       { type: FieldTypes.SWITCH },
