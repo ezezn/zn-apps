@@ -71,6 +71,23 @@ export const navGroups = [
     ]
   },
   {
+    key: 'ui-data',
+    label: '@zn-apps/ui-data-*',
+    icon: 'table_view',
+    sections: [
+      {
+        key: 'data',
+        label: 'Datos',
+        items: [
+          { key: 'data-core', label: 'Contrato y utilidades (ui-data-core)', to: '/data/core' },
+          { key: 'data-form', label: 'Formularios (ui-data-form)', to: '/data/form' },
+          { key: 'data-view', label: 'Presentación (ui-data-view)', to: '/data/view' },
+          { key: 'data-editor', label: 'Editor por campo (ui-data-editor)', to: '/data/editor' }
+        ]
+      }
+    ]
+  },
+  {
     key: 'ui-about',
     label: '@zn-apps/ui-about',
     icon: 'info',

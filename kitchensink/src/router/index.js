@@ -29,6 +29,10 @@ import SettingsPage from '../views/SettingsPage.vue'
 import ColorSchemePage from '../views/ColorSchemePage.vue'
 import PwaMetaPage from '../views/PwaMetaPage.vue'
 import PwaInstallPage from '../views/PwaInstallPage.vue'
+import DataCorePage from '../views/data/DataCorePage.vue'
+import DataFormPage from '../views/data/DataFormPage.vue'
+import DataViewPage from '../views/data/DataViewPage.vue'
+import DataEditorPage from '../views/data/DataEditorPage.vue'
 
 export const routes = [
   { path: '/', redirect: '/buttons' },
@@ -48,6 +52,10 @@ export const routes = [
   { path: '/inputs/date-range', name: 'input-date-range', component: DateRangePage },
   { path: '/inputs/time-range', name: 'input-time-range', component: TimeRangePage },
   { path: '/inputs/datetime-range', name: 'input-datetime-range', component: DateTimeRangePage },
+  { path: '/data/core', name: 'data-core', component: DataCorePage },
+  { path: '/data/form', name: 'data-form', component: DataFormPage },
+  { path: '/data/view', name: 'data-view', component: DataViewPage },
+  { path: '/data/editor', name: 'data-editor', component: DataEditorPage },
   { path: '/dialogs', name: 'dialogs', component: DialogsPage },
   { path: '/icons', name: 'icons', component: IconsPage },
   { path: '/layout', name: 'layout', component: LayoutPage },

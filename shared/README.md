@@ -9,6 +9,10 @@ independently built libraries consumed by the apps in this monorepo.
 | [`settings-core/`](./settings-core) | `@zn-apps/settings-core` | Deep JSON settings proxy with localStorage persistence and defaults. | [`settings-core/docs/`](./settings-core/docs/README.md) |
 | [`ui-about/`](./ui-about) | `@zn-apps/ui-about` | Neutral two-row About component composed with `@zn-apps/ui-core` icons. | [`ui-about/docs/`](./ui-about/docs/README.md) |
 | [`pwa-integration/`](./pwa-integration) | `@zn-apps/pwa-integration` | PWA state detection, system color scheme, dynamic bar styling & install popup. | [`pwa-integration/docs/`](./pwa-integration/docs/README.md) |
+| [`ui-data-core/`](./ui-data-core) | `@zn-apps/ui-data-core` | Schema contract, nested JSON helpers, defaults and value formatting. | [`ui-data-core/docs/`](./ui-data-core/docs/README.md) |
+| [`ui-data-form/`](./ui-data-form) | `@zn-apps/ui-data-form` | Schema-driven forms with draft/live binding and actions. | [`ui-data-form/docs/`](./ui-data-form/docs/README.md) |
+| [`ui-data-view/`](./ui-data-view) | `@zn-apps/ui-data-view` | Read-only schema presentation with top/inline labels. | [`ui-data-view/docs/`](./ui-data-view/docs/README.md) |
+| [`ui-data-editor/`](./ui-data-editor) | `@zn-apps/ui-data-editor` | View-like presentation with per-field dialog editing. | [`ui-data-editor/docs/`](./ui-data-editor/docs/README.md) |
 
 ## Rules
 

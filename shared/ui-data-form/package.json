@@ -1,0 +1,29 @@
+{
+  "name": "@zn-apps/ui-data-form",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/ui-data-form.js",
+  "module": "./dist/ui-data-form.js",
+  "exports": {
+    ".": {
+      "import": "./dist/ui-data-form.js"
+    },
+    "./dist/*": "./dist/*"
+  },
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite build --watch"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.0",
+    "vite": "^6.0.0"
+  },
+  "peerDependencies": {
+    "vue": "^3.0.0"
+  },
+  "dependencies": {
+    "@zn-apps/ui-core": "*",
+    "@zn-apps/ui-data-core": "*"
+  }
+}

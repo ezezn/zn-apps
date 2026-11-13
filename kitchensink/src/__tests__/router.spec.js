@@ -19,6 +19,10 @@ import SettingsPage from '../views/SettingsPage.vue'
 import ColorSchemePage from '../views/ColorSchemePage.vue'
 import PwaMetaPage from '../views/PwaMetaPage.vue'
 import PwaInstallPage from '../views/PwaInstallPage.vue'
+import DataCorePage from '../views/data/DataCorePage.vue'
+import DataFormPage from '../views/data/DataFormPage.vue'
+import DataViewPage from '../views/data/DataViewPage.vue'
+import DataEditorPage from '../views/data/DataEditorPage.vue'
 
 function createTestRouter() {
   return createRouter({
@@ -147,6 +151,18 @@ describe('Kitchensink App & Router', () => {
     const { wrapper } = await mountAt('/switches')
 
     expect(wrapper.findComponent(SwitchesPage).exists()).toBe(true)
+  })
+
+  it.each([
+    ['/data/core', DataCorePage, 'Utilidades compartidas'],
+    ['/data/form', DataFormPage, 'Valor confirmado'],
+    ['/data/view', DataViewPage, 'Presentación de sólo lectura'],
+    ['/data/editor', DataEditorPage, 'Edición por campo']
+  ])('monta la demo de ui-data en %s', async (path, page, expectedText) => {
+    const { wrapper } = await mountAt(path)
+
+    expect(wrapper.findComponent(page).exists()).toBe(true)
+    expect(wrapper.text()).toContain(expectedText)
   })
 
   it('navega a la vista de diálogos al cambiar de ruta', async () => {

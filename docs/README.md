@@ -64,6 +64,10 @@ Cada librería compartida contiene su propia carpeta `docs/` detallando su API, 
 | **settings-core** | `@zn-apps/settings-core` | [`shared/settings-core/docs/README.md`](../shared/settings-core/docs/README.md) | Documento JSON de settings con proxy profundo, definiciones por defecto y persistencia en `localStorage`. |
 | **ui-about** | `@zn-apps/ui-about` | [`shared/ui-about/docs/README.md`](../shared/ui-about/docs/README.md) | Componente neutral de "Acerca de" (`ZnAbout`) y extractor de metadatos de aplicación desde `package.json`. |
 | **pwa-integration** | `@zn-apps/pwa-integration` | [`shared/pwa-integration/docs/README.md`](../shared/pwa-integration/docs/README.md) | Detección de PWA, esquema de color del sistema, sincronización dinámica de barras (`theme-color`, fondo) y popup interactivo de instalación (`ZnPwaInstallPrompt`). |
+| **ui-data-core** | `@zn-apps/ui-data-core` | [`shared/ui-data-core/docs/README.md`](../shared/ui-data-core/docs/README.md) | Contrato del esquema, utilidades de rutas JSON anidadas, defaults y formato de valores para la familia `ui-data-*`. |
+| **ui-data-form** | `@zn-apps/ui-data-form` | [`shared/ui-data-form/docs/README.md`](../shared/ui-data-form/docs/README.md) | Formularios por secciones derivados de un esquema, con borrador, doble binding opcional y acciones save/cancel/reset/clear. |
+| **ui-data-view** | `@zn-apps/ui-data-view` | [`shared/ui-data-view/docs/README.md`](../shared/ui-data-view/docs/README.md) | Presentación de sólo lectura del mismo esquema, con etiquetas encima o en línea y valores formateados. |
+| **ui-data-editor** | `@zn-apps/ui-data-editor` | [`shared/ui-data-editor/docs/README.md`](../shared/ui-data-editor/docs/README.md) | Presentación tipo vista con edición por campo en un diálogo (`ZnDataEditor`). |
 
 ---
 

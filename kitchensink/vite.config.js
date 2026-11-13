@@ -29,6 +29,10 @@ export default defineConfig({
       '@zn-apps/settings-core': resolve(__dirname, '../shared/settings-core/src/index.js'),
       '@zn-apps/ui-about': resolve(__dirname, '../shared/ui-about/src/index.js'),
       '@zn-apps/pwa-integration': resolve(__dirname, '../shared/pwa-integration/src/index.js'),
+      '@zn-apps/ui-data-core': resolve(__dirname, '../shared/ui-data-core/src/index.js'),
+      '@zn-apps/ui-data-form': resolve(__dirname, '../shared/ui-data-form/src/index.js'),
+      '@zn-apps/ui-data-view': resolve(__dirname, '../shared/ui-data-view/src/index.js'),
+      '@zn-apps/ui-data-editor': resolve(__dirname, '../shared/ui-data-editor/src/index.js'),
     }
   },
   plugins: [

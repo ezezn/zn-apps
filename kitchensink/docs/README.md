@@ -9,7 +9,7 @@
 ## 1. Visión General del Proyecto
 
 **Kitchensink** cumple tres funciones fundamentales dentro del monorepo `zn-apps`:
-1. **Showroom de Componentes**: Demostración viva e interactiva de cada componente de `@zn-apps/ui-core`, `@zn-apps/ui-about`, `@zn-apps/settings-core` y `@zn-apps/pwa-integration`, con ejemplos de variantes, props y accesibilidad.
+1. **Showroom de Componentes**: Demostración viva e interactiva de cada componente de `@zn-apps/ui-core`, `@zn-apps/ui-about`, `@zn-apps/settings-core`, `@zn-apps/pwa-integration` y la familia `@zn-apps/ui-data-*` (`/data/core`, `/data/form`, `/data/view`, `/data/editor`), con ejemplos de variantes, props y accesibilidad.
 2. **Catálogo Completo de Iconos**: Contiene el inventario exhaustivo de iconos Material Design en sus 5 familias (`filled`, `outlined`, `round`, `sharp`, `two-tone`), permitiendo explorar visualmente glifos para utilizarlos en otras apps.
 3. **Blueprint para Nuevas Apps**: Es el modelo canónico a seguir para crear nuevas aplicaciones multi-pantalla con enrutamiento (`vue-router`), layout maestro-detalle (`ZnMasterSlaveLayout`) y configuración PWA estándar.
 
@@ -24,6 +24,7 @@
 | **Perfil de Iconos Completo** | `manual` con catálogo total | A diferencia de apps productivas (que solo incluyen sus iconos escaneados), `kitchensink/icon-profile.json` declara más de 2000 nombres en su array `manual` para disponibilizar toda la biblioteca. |
 | **Panel Acerca de** | `ZnAbout` integrado | Vista `/about` que muestra la integración con `@zn-apps/ui-about` usando los metadatos de `package.json`. |
 | **Gestión de Configuración** | `createSettings` integrado | Vista `/settings` que muestra la persistencia reactiva profunda en Web Storage con `@zn-apps/settings-core`. |
+| **Datos declarativos** | `ZnDataForm`, `ZnDataView` y `ZnDataEditor` | Vistas `/data/*` con un mismo `schema` y `value`: formulario con borrador/doble binding, presentación y edición por campo. |
 
 ### Internacionalización — implementación inicial pendiente de completar
 

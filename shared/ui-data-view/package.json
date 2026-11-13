@@ -1,0 +1,29 @@
+{
+  "name": "@zn-apps/ui-data-view",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/ui-data-view.js",
+  "module": "./dist/ui-data-view.js",
+  "exports": {
+    ".": {
+      "import": "./dist/ui-data-view.js"
+    },
+    "./dist/*": "./dist/*"
+  },
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite build --watch"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.0",
+    "vite": "^6.0.0"
+  },
+  "peerDependencies": {
+    "vue": "^3.0.0"
+  },
+  "dependencies": {
+    "@zn-apps/ui-core": "*",
+    "@zn-apps/ui-data-core": "*"
+  }
+}

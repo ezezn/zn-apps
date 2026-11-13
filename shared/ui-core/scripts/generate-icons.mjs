@@ -38,7 +38,13 @@ import { fileURLToPath } from 'node:url'
 const FAMILIES = ['filled', 'outlined', 'round', 'sharp', 'two-tone']
 
 /** Librerías compartidas cuyos iconos se suman al chunk de cada app. */
-const SHARED_LIBRARIES = ['ui-core', 'pwa-integration']
+const SHARED_LIBRARIES = [
+  'ui-core',
+  'pwa-integration',
+  'ui-data-form',
+  'ui-data-view',
+  'ui-data-editor'
+]
 
 const scriptDir = dirname(fileURLToPath(import.meta.url))
 const monorepoRoot = resolve(scriptDir, '..', '..', '..')

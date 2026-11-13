@@ -64,6 +64,22 @@ export const demoViews = [
     sections: [{ title: 'ZnDateTimeRangeInput', content: 'Variantes, límites globales y rango invertido.' }]
   },
   {
+    key: 'data-core', title: 'Datos (ui-data-core)', subtitle: 'Rutas JSON, defaults de esquema y formato de valores',
+    sections: [{ title: 'Utilidades compartidas', content: 'La base común de la familia ui-data-*: lectura/escritura de rutas anidadas, defaults y presentación.' }]
+  },
+  {
+    key: 'data-form', title: 'Formularios (ui-data-form)', subtitle: 'Secciones declarativas, borrador y doble binding',
+    sections: [{ title: 'ZnDataForm', content: 'Construye formularios desde un esquema y controla cuándo se confirma el valor.' }]
+  },
+  {
+    key: 'data-view', title: 'Presentación (ui-data-view)', subtitle: 'El mismo esquema en modo de sólo lectura',
+    sections: [{ title: 'ZnDataView', content: 'Secciones con etiquetas encima o en línea y valores formateados.' }]
+  },
+  {
+    key: 'data-editor', title: 'Editor por campo (ui-data-editor)', subtitle: 'Presentación tipo vista con diálogo de edición',
+    sections: [{ title: 'ZnDataEditor', content: 'Haz click en un valor para editarlo con el input de su tipo.' }]
+  },
+  {
     key: 'dialogs', title: 'Diálogos (ZnDialog)', subtitle: 'Diálogos modales nativos con estilo Material Design 3',
     sections: [{ title: 'Diálogos', content: 'Abre diálogos base y prueba alertas, confirmaciones y preguntas.' }]
   },

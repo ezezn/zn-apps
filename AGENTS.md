@@ -29,6 +29,10 @@ Contiene la arquitectura local, decisiones de override, dominio, DTOs y reglas d
 | **@zn-apps/settings-core** | [`shared/settings-core/docs/README.md`](./shared/settings-core/docs/README.md) | Deep JSON settings proxy, nested definitions and localStorage persistence |
 | **@zn-apps/ui-about** | [`shared/ui-about/docs/README.md`](./shared/ui-about/docs/README.md) | Neutral `ZnAbout` panel, package.json metadata extraction & app integration |
 | **@zn-apps/pwa-integration** | [`shared/pwa-integration/docs/README.md`](./shared/pwa-integration/docs/README.md) | PWA state detection, system color scheme, dynamic bar styling & install popup |
+| **@zn-apps/ui-data-core** | [`shared/ui-data-core/docs/README.md`](./shared/ui-data-core/docs/README.md) | Schema contract, nested JSON path helpers, defaults and value formatting |
+| **@zn-apps/ui-data-form** | [`shared/ui-data-form/docs/README.md`](./shared/ui-data-form/docs/README.md) | Schema-driven forms with draft/live binding and save/cancel/reset/clear |
+| **@zn-apps/ui-data-view** | [`shared/ui-data-view/docs/README.md`](./shared/ui-data-view/docs/README.md) | Read-only sections with top/inline labels and formatted values |
+| **@zn-apps/ui-data-editor** | [`shared/ui-data-editor/docs/README.md`](./shared/ui-data-editor/docs/README.md) | View-like presentation with per-field dialog editing |
 | **Zound Box** | [`zound-box/docs/README.md`](./zound-box/docs/README.md) | Audio mixer architecture, sound channels domain, DTOs (`SoundItem`, `SoundChannel`), overrides (no-router, local reactive state) |
 | **Kitchensink** | [`kitchensink/docs/README.md`](./kitchensink/docs/README.md) | Showroom, full icon catalog integration, master-slave layout, step-by-step blueprint for new apps |
 
@@ -44,6 +48,7 @@ Contiene la arquitectura local, decisiones de override, dominio, DTOs y reglas d
    - `shared/` contains isolated libraries. Each has its own `package.json`, `vite.config.js` and `vitest.config.js`.
    - `shared/ui-core/` (`@zn-apps/ui-core`): all shared components live in `shared/ui-core/src/components/` and are prefixed with `Zn` (e.g. `ZnButton`, `ZnCard`, `ZnSwitch`, `ZnScreen`, `ZnSection`, `ZnApp`).
    - `shared/settings-core/` (`@zn-apps/settings-core`): deep settings proxy with nested defaults and a single persisted JSON document.
+   - `shared/ui-data-*`: schema-driven data libraries. `ui-data-core` owns the shared contract; `ui-data-form`, `ui-data-view` and `ui-data-editor` compose it (the editor also reuses form/view field renderers).
    - Apps consume the libraries via npm workspaces.
    - Never duplicate buttons, cards, or theme logic inside individual apps if an existing `Zn*` component covers it.
    - Shared libraries must not import from each other; only apps compose them.
