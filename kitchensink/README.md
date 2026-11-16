@@ -2,7 +2,8 @@
 
 Showroom de componentes Material Design 3, catálogo exhaustivo de iconos y **blueprint** para nuevas aplicaciones en el monorepo `zn-apps`.
 
-- **Documentación Completa**: Consulta [`docs/README.md`](./docs/README.md) para detalles sobre arquitectura maestro-esclavo, `vue-router`, integración del catálogo completo de iconos y guía paso a paso para crear nuevas apps.
+- **Documentación de usuario**: [English](./doc/en/README.md) · [Español](./doc/es/README.md) — arquitectura maestro-esclavo, rutas de demo, catálogo de iconos y guía paso a paso para crear nuevas apps.
+- **Contexto para agentes**: [`ai/README.md`](./ai/README.md)
 - **Ruta de Despliegue**: `/zn-apps/kitchensink/`
 
 ## Scripts

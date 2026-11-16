@@ -18,6 +18,14 @@ describe('markdownToHtml', () => {
     expect(html).toContain('<a href="https://example.com">enlace</a>')
   })
 
+  it('convierte imágenes con ancho y alto en píxeles', () => {
+    const html = markdownToHtml('![foto](data:image/png;base64,123 =300x200)')
+
+    expect(html).toContain(
+      '<img src="data:image/png;base64,123" alt="foto" width="300" height="200">'
+    )
+  })
+
   it('convierte tablas GFM con alineación por columna', () => {
     const html = markdownToHtml([
       '| Campo | Valor |',
@@ -68,6 +76,14 @@ describe('htmlToMarkdown', () => {
     expect(markdown).toContain('~~tachado~~')
     expect(markdown).toContain('![pic](data:img)')
     expect(markdown).toContain('[link](https://test.com)')
+  })
+
+  it('serializa el tamaño de las imágenes', () => {
+    const markdown = htmlToMarkdown(
+      '<p><img src="data:img" alt="pic" width="300" height="200"></p>'
+    )
+
+    expect(markdown).toBe('![pic](data:img =300x200)')
   })
 
   it('serializa alineación de bloques como HTML dentro de Markdown', () => {

@@ -1,163 +1,59 @@
-# AGENTS.md — Instructions for AI Coding Assistants
+# AGENTS.md — Instructions for AI coding agents
 
-> This file is automatically loaded by Antigravity, OpenAI Codex, and other AI coding agents when working in this repository.
+> Automatically loaded by Antigravity, Codex, Cursor, Copilot, Claude Code and similar agents.
 
-## 🚨 Mandatory: Read Documentation First
+## Start here
 
-Before making modifications, generating components, or refactoring code in this monorepo, **you MUST inspect the relevant documentation**.
-Documentation follows a **two-tier architecture**:
+[`ai/README.md`](./ai/README.md) is the entry point: it routes each task to the smallest set of files to read. **Load a project's context only when the change touches it.**
 
-### Tier 1: Monorepo Root Documentation (`docs/`)
-Lineamientos generales de arquitectura, taxonomía de aplicaciones y procesos del monorepo:
-
-| Topic | Document |
+| Need | Read |
 |---|---|
-| **Master Documentation Index** | [`docs/README.md`](./docs/README.md) |
-| **Monorepo Architecture & Conventions** | [`docs/00-overview.md`](./docs/00-overview.md) |
-| **App Typology & Override Guidelines** | [`docs/01-app-types.md`](./docs/01-app-types.md) |
-| **Workflow, Builds, Icons & PWA** | [`docs/02-workflow.md`](./docs/02-workflow.md) |
-| **Testing Guidelines & Mock Setup** | [`docs/05-testing.md`](./docs/05-testing.md) |
-| **Versioning & CHANGELOG Guidelines** | [`docs/06-changelog-versioning.md`](./docs/06-changelog-versioning.md) |
-| **General Developer Guide** | [`README.md`](./README.md) |
+| Monorepo architecture, isolation, MD3, i18n, icon pipeline | [`ai/architecture.md`](./ai/architecture.md) |
+| Commands, builds, icons, PWA checklist, CI | [`ai/workflow.md`](./ai/workflow.md) |
+| Tests | [`ai/testing.md`](./ai/testing.md) |
+| New app / archetypes / overrides | [`ai/app-types.md`](./ai/app-types.md) |
+| CHANGELOG and version bumps | [`ai/versioning.md`](./ai/versioning.md) |
+| Where and when to update docs | [`ai/docs-maintenance.md`](./ai/docs-maintenance.md) |
+| Project detail | `<project>/ai/README.md` |
 
-### Tier 2: Project-Specific Documentation (`<app>/docs/` & `shared/<lib>/docs/`)
-Contiene la arquitectura local, decisiones de override, dominio, DTOs y reglas de negocio encapsuladas en cada proyecto:
+Every app and library also ships `<project>/ai/README.md` (agent context, English) and `<project>/doc/{en,es}/README.md` (user manuals, bilingual).
 
-| Project | Specific Documentation | Focus & Scope |
+## Hard rules
+
+1. **Read before writing** — inspect the `ai/` files of the projects involved; they record architecture and decisions already taken.
+2. **Independent PWAs** — each app has its own `package.json`, `vite.config.js`, service worker, base `/zn-apps/<app>/`. Never share Pinia state between apps.
+3. **Isolated libraries** — `shared/*` builds independently and does not import other libraries except the documented composition edges (`ui-about → ui-core`, `ui-data-* → ui-core`/`ui-data-core`, `ui-data-editor → form + view`).
+4. **MD3** — components live in `shared/ui-core/src/components/`, use the `Zn` prefix, consume `--md-*` tokens and are imported from the package barrel. Theme switching only through `<ZnApp>`.
+5. **Field parity** — any field feature must exist in form, view and editor in the same change; a new `FieldTypes` value needs implementations in all three.
+6. **i18n** — every app ships `en` and `es`; resolve locale as `settings.i18n.locale` → system base → `en`.
+7. **Verification is scoped** — narrowest useful test/build; full `npm run test:run` + `build:all` only for cross-project or release-level changes. Documentation-only changes: no tests, no builds. CI runs the full suite.
+8. **Never weaken checks** — no skipped tests, loosened assertions or silenced errors to pass verification.
+
+## Documentation duties
+
+Two trees with different audiences; keep both accurate in the same change as the code:
+
+| Tree | Audience | Language |
 |---|---|---|
-| **@zn-apps/ui-core** | [`shared/ui-core/docs/README.md`](./shared/ui-core/docs/README.md) | MD3 Design System, tokens `--md-*`, complete component API, composables, SVG sprite chunks |
-| **@zn-apps/settings-core** | [`shared/settings-core/docs/README.md`](./shared/settings-core/docs/README.md) | Deep JSON settings proxy, nested definitions and localStorage persistence |
-| **@zn-apps/ui-about** | [`shared/ui-about/docs/README.md`](./shared/ui-about/docs/README.md) | Neutral `ZnAbout` panel, package.json metadata extraction & app integration |
-| **@zn-apps/pwa-integration** | [`shared/pwa-integration/docs/README.md`](./shared/pwa-integration/docs/README.md) | PWA state detection, system color scheme, dynamic bar styling & install popup |
-| **@zn-apps/ui-data-core** | [`shared/ui-data-core/docs/README.md`](./shared/ui-data-core/docs/README.md) | Schema contract, nested JSON path helpers, defaults and value formatting |
-| **@zn-apps/ui-data-form** | [`shared/ui-data-form/docs/README.md`](./shared/ui-data-form/docs/README.md) | Schema-driven forms with draft/live binding and save/cancel/reset/clear |
-| **@zn-apps/ui-data-view** | [`shared/ui-data-view/docs/README.md`](./shared/ui-data-view/docs/README.md) | Read-only sections with top/inline labels and formatted values |
-| **@zn-apps/ui-data-editor** | [`shared/ui-data-editor/docs/README.md`](./shared/ui-data-editor/docs/README.md) | View-like presentation with per-field dialog editing |
-| **@zn-apps/ui-data-richtext** | [`shared/ui-data-richtext/docs/README.md`](./shared/ui-data-richtext/docs/README.md) | Markdown-backed rich text editor, read-only view and Markdown ↔ HTML converters |
-| **Zound Box** | [`zound-box/docs/README.md`](./zound-box/docs/README.md) | Audio mixer architecture, sound channels domain, DTOs (`SoundItem`, `SoundChannel`), overrides (no-router, local reactive state) |
-| **Kitchensink** | [`kitchensink/docs/README.md`](./kitchensink/docs/README.md) | Showroom, full icon catalog integration, master-slave layout, step-by-step blueprint for new apps |
+| `doc/` + `<project>/doc/{en,es}/` | Users and developers | English **and** Spanish |
+| `ai/` + `<project>/ai/` | AI agents | English only, compact |
 
----
+- New/changed component, token, composable → that library's `ai/` + user docs (EN and ES).
+- New `FieldTypes` value or schema key → `ui-data-core` docs plus the affected `ui-data-*` projects.
+- App domain rule or override → that app's docs.
+- Global architecture, workflow, testing, archetype → root `ai/` and `doc/` files.
+- Do not document unfinished work in user docs; `ai/` holds technical detail, `doc/` holds usage.
+- CHANGELOGs and version bumps only on explicit request (see [`ai/versioning.md`](./ai/versioning.md)).
 
-## 🏗️ Core Architecture Principles
+Details and checklist: [`ai/docs-maintenance.md`](./ai/docs-maintenance.md).
 
-1. **Independent PWAs**:
-   - Each app (`zound-box`, `kitchensink`, etc.) is an autonomous SPA with its own `vite.config.js`, `package.json`, and service worker.
-   - **Never share Pinia state across apps**. State is strictly per-application.
-   - Applications must be deployed relative to subpaths: `/zn-apps/<app-name>/`.
-2. **Shared libraries (isolated workspaces)**:
-   - `shared/` contains isolated libraries. Each has its own `package.json`, `vite.config.js` and `vitest.config.js`.
-   - `shared/ui-core/` (`@zn-apps/ui-core`): all shared components live in `shared/ui-core/src/components/` and are prefixed with `Zn` (e.g. `ZnButton`, `ZnCard`, `ZnSwitch`, `ZnScreen`, `ZnSection`, `ZnApp`).
-   - `shared/settings-core/` (`@zn-apps/settings-core`): deep settings proxy with nested defaults and a single persisted JSON document.
-   - `shared/ui-data-*`: schema-driven data libraries. `ui-data-core` owns the shared contract; `ui-data-form`, `ui-data-view` and `ui-data-editor` compose it (the editor also reuses form/view field renderers). `ui-data-richtext` provides the Markdown-backed rich text editor/view used by the `richtext` field type.
-   - **Field parity is mandatory**: any feature added to a field implementation (props, variants, sizes, chips, `span`, etc.) must be supported in form, view and editor in the same change. A new `FieldTypes` value requires its own implementation in `ZnDataField`, `ZnDataViewField` and the `ZnDataEditorField` dialog. See [`docs/00-overview.md`](./docs/00-overview.md#6-contrato-de-campos-de-datos-ui-data-form--ui-data-view--ui-data-editor).
-   - Apps consume the libraries via npm workspaces.
-   - Never duplicate buttons, cards, or theme logic inside individual apps if an existing `Zn*` component covers it.
-   - Shared libraries must not import from each other; only apps compose them.
-3. **Design System (Material Design 3)**:
-   - Uses CSS custom properties prefixed with `--md-*` (e.g. `--md-primary`, `--md-surface`).
-   - Root theme switching is handled exclusively by `ZnApp` (`mode="light | dark | system"`).
-4. **Internationalization**:
-   - All applications use Vue I18n with `en` and `es` messages.
-   - Initial locale priority is `settings.i18n.locale`, then the system language, then `en`.
-   - Each app uses its own `@zn-apps/settings-core` namespace.
-5. **Templates & New Apps**:
-   - When creating a new application, use `kitchensink/` as the blueprint.
-
----
-
-## 🧪 Testing Policy (Vitest)
-
-- Unit and component tests are run with Vitest and happy-dom.
-- **Run tests when they help verify the change**. Choose the narrowest relevant project or test file; run the full `npm run test:run` suite when the change spans projects, affects shared behavior, or carries broader regression risk. Code changes do not automatically require the full suite.
-- **Documentation-only changes**: If a task ONLY touches documentation (`.md` files, READMEs), **DO NOT run tests**.
-- If you add or modify a component in `ui-core`, add/update its corresponding unit test in `shared/ui-core/src/components/__tests__/`.
-- Do not bypass mocks: `window.matchMedia` and `IntersectionObserver` are mocked in `vitest.setup.js`.
-
----
-
-## 📦 Icon Chunk System
-
-Cada proyecto genera su propio chunk de iconos (`ZnIcon`), filtrado a los nombres
-de su `icon-profile.json`. Nunca se publica la colección completa salvo que el
-proyecto la declare explícitamente en `manual`.
-
-| Proyecto | Perfil | Destino del chunk | Contenido |
-|---|---|---|---|
-| `@zn-apps/ui-core` | `shared` | Distribución de la librería | Solo los iconos usados por sus componentes |
-| `@zn-apps/pwa-integration` | — | Se suma a cada app | Iconos de sus popups (`download`, `system_update`) |
-| `zound-box` | `app:zound-box` | `zound-box/public/icons/` → `dist/icons/` | Sus iconos |
-| `kitchensink` | `app:kitchensink` | `kitchensink/public/icons/` → `dist/icons/` | Sus iconos + el catálogo completo declarado en `manual` |
-
-`ZnIcon` descarga el sprite de cada familia desde
-`<BASE_URL>icons/sprite-<familia>.svg` la primera vez que lo necesita y lo
-inyecta una sola vez en el documento. Los chunks de las apps incluyen además los
-iconos que usan los componentes de las librerías compartidas (`ui-core` y
-`pwa-integration`).
-
-### Comandos
+## Quick commands
 
 ```bash
-npm run scan:icons          # escanea cada proyecto → icon-profile.json (scanned + manual)
-npm run generate:icons      # genera todos los chunks de sprite (shared + apps)
-npm run build:icons         # scan + generate; luego subir perfiles/sprites por Git
-npm run build:production    # build sin escanear ni regenerar iconos
-```
-
-La generación de iconos es manual. Los sprites versionados en `public/icons/`
-se usan en desarrollo y producción; Vite los copia a `dist/`.
-
-### Flujo de CI (deploy.yml)
-
-```text
 npm install
-npm run test:run
-npm run build:production   # consume sprites versionados, no genera iconos
+npm run dev --workspace=<app>
+npm run test:run | test:<app> | npx vitest run --project <name>
+npm run build:production | build:<app> | build:shared
+npm run build:icons      # after adding/renaming <ZnIcon> usages
+npm run validate:pwa
 ```
-
-La orden de `build:production` es:
-
-1. `build:shared` (ui-core, settings-core, ui-about y pwa-integration)
-2. `build:zound-box`
-3. `build:kitchensink`
-
-Antes de integrar usos nuevos, ejecuta `npm run build:icons` y sube los perfiles
-y sprites actualizados al repositorio.
-
-## 📲 PWA Installability for New Apps
-
-When adding an app from `kitchensink/`, keep it independently installable:
-
-- Add an editable `public/pwa-icon.svg` and local PNG exports at 192×192 and
-  512×512. Keep artwork inside the maskable safe area.
-- Declare both PNG files in `VitePWA({ manifest: { icons } })` with their exact
-  sizes, `type: "image/png"`, `purpose: "any maskable"`, and app-relative paths.
-- Keep `name` or `short_name`, `start_url`, `scope`, and `display: "standalone"`
-  valid for the app's `/zn-apps/<app-name>/` deployment path.
-- Add the app to the monorepo production build so `npm run validate:pwa` checks
-  its generated manifest and verifies that both PNGs exist with correct sizes.
-- Call `initPwaInstallListener()` and `initPwaUpdateListener()` in `src/main.js`,
-  and mount `ZnPwaInstallPrompt` + `ZnPwaUpdatePrompt` as direct children of
-  `ZnApp` (never inside `ZnScreen` or a layout with `transform`/`overflow`).
-- Alias `@zn-apps/pwa-integration` to `shared/pwa-integration/src/index.js` in
-  `vite.config.js`: the library build emits its CSS separately, so consuming
-  `dist/` renders the popups unstyled and outside the viewport.
-- Call `initPwaThemeSync()` in `src/main.js` so the system bars (top status bar
-  and Android bottom navigation bar) follow the app theme instead of the browser
-  default blue.
-- Set `theme_color` and `background_color` to `#FEF7FF` (MD3 light background)
-  in the manifest and declare `<meta name="theme-color" content="#FEF7FF" />` in
-  `index.html`, so an installed app does not flash blue while booting.
-- Add the `install*`, `update*` and `pwa.*` i18n keys in `en` and `es`.
-
----
-
-## 📦 Build Verification
-
-For changes to executable code or build configuration, select verification that matches the scope and regression risk. A full test suite and monorepo build are not mandatory for every code change. Use `npm run test:run` and `npm run build:all` for cross-project or release-level verification. CI still runs the full suite and production build before deployment.
-```bash
-npm run test:zound-box
-npm run build:zound-box
-```
-
-> **Documentation-only tasks**: Do not run builds or tests when a task changes only Markdown documentation.

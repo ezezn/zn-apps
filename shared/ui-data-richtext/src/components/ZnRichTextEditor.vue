@@ -227,6 +227,29 @@
             @change="onImageSelected"
           />
         </div>
+
+        <template v-if="imageNaturalWidth">
+          <p class="zn-dialog-description">
+            Tamaño original: {{ imageNaturalWidth }} × {{ imageNaturalHeight }} px
+          </p>
+          <div class="zn-dialog-row">
+            <ZnNumberInput
+              v-model="imageWidth"
+              label="Ancho (px)"
+              :min="1"
+              :step="1"
+              size="small"
+            />
+            <ZnNumberInput
+              v-model="imageHeight"
+              label="Alto (px)"
+              :min="1"
+              :step="1"
+              size="small"
+            />
+          </div>
+          <ZnSwitch v-model="preserveAspect" label-right="Preservar aspecto" />
+        </template>
       </div>
       <template #actions>
         <ZnButton variant="text" @click="closeImageDialog">Cancelar</ZnButton>
@@ -277,7 +300,7 @@
 
 <script setup>
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
-import { ZnButton, ZnButtonGroup, ZnDialog, ZnFieldShell, ZnIcon, ZnNumberInput } from '@zn-apps/ui-core'
+import { ZnButton, ZnButtonGroup, ZnDialog, ZnFieldShell, ZnIcon, ZnNumberInput, ZnSwitch } from '@zn-apps/ui-core'
 import { htmlToMarkdown, markdownToHtml } from '../markdown.js'
 
 const props = defineProps({
@@ -346,6 +369,53 @@ const isDraggingFile = ref(false)
 const imageInputRef = ref(null)
 const selectedImageName = ref('')
 const pendingImageData = ref('')
+const imageWidth = ref(null)
+const imageHeight = ref(null)
+const imageNaturalWidth = ref(0)
+const imageNaturalHeight = ref(0)
+const preserveAspect = ref(true)
+
+const imageAspect = computed(() => {
+  if (!imageNaturalWidth.value || !imageNaturalHeight.value) return null
+  return imageNaturalWidth.value / imageNaturalHeight.value
+})
+
+// Al preservar el aspecto, cambiar una dimensión recalcula la otra. Los
+// watchers son síncronos para que la propagación no rebote entre ambos campos.
+let syncingImageSize = false
+
+watch(
+  imageWidth,
+  (value) => {
+    if (syncingImageSize || !preserveAspect.value || !imageAspect.value || !value) return
+    syncingImageSize = true
+    imageHeight.value = Math.max(1, Math.round(value / imageAspect.value))
+    syncingImageSize = false
+  },
+  { flush: 'sync' }
+)
+
+watch(
+  imageHeight,
+  (value) => {
+    if (syncingImageSize || !preserveAspect.value || !imageAspect.value || !value) return
+    syncingImageSize = true
+    imageWidth.value = Math.max(1, Math.round(value * imageAspect.value))
+    syncingImageSize = false
+  },
+  { flush: 'sync' }
+)
+
+watch(
+  preserveAspect,
+  (enabled) => {
+    if (!enabled || !imageAspect.value || !imageWidth.value) return
+    syncingImageSize = true
+    imageHeight.value = Math.max(1, Math.round(imageWidth.value / imageAspect.value))
+    syncingImageSize = false
+  },
+  { flush: 'sync' }
+)
 
 // Link Dialog State
 const showLinkDialog = ref(false)
@@ -598,6 +668,11 @@ function openImageDialog() {
   saveSelection()
   selectedImageName.value = ''
   pendingImageData.value = ''
+  imageWidth.value = null
+  imageHeight.value = null
+  imageNaturalWidth.value = 0
+  imageNaturalHeight.value = 0
+  preserveAspect.value = true
   showImageDialog.value = true
 }
 
@@ -627,13 +702,29 @@ function handleImageFile(file) {
   const reader = new FileReader()
   reader.onload = () => {
     pendingImageData.value = reader.result
+    // Lee el tamaño natural de la imagen para precargar ancho y alto.
+    if (typeof Image === 'undefined') return
+    const probe = new Image()
+    probe.onload = () => {
+      imageNaturalWidth.value = probe.naturalWidth || probe.width || 0
+      imageNaturalHeight.value = probe.naturalHeight || probe.height || 0
+      imageWidth.value = imageNaturalWidth.value || null
+      imageHeight.value = imageNaturalHeight.value || null
+    }
+    probe.src = String(reader.result)
   }
   reader.readAsDataURL(file)
 }
 
 async function confirmImageInsert() {
   if (!pendingImageData.value) return
-  const imgHtml = `<img src="${pendingImageData.value}" alt="${escapeHtml(selectedImageName.value || 'image')}" />`
+
+  const finalWidth = Math.round(imageWidth.value ?? imageNaturalWidth.value)
+  const finalHeight = Math.round(imageHeight.value ?? imageNaturalHeight.value)
+  const sizeAttrs = finalWidth > 0 && finalHeight > 0
+    ? ` width="${finalWidth}" height="${finalHeight}"`
+    : ''
+  const imgHtml = `<img src="${pendingImageData.value}" alt="${escapeHtml(selectedImageName.value || 'image')}"${sizeAttrs} />`
   // Cerramos el diálogo modal antes de insertar para que el editor recupere
   // la interacción y el caret guardado siga siendo válido.
   showImageDialog.value = false

@@ -37,7 +37,13 @@ function inlineToHtml(text = '') {
   out = out.replace(/__([^_\n]+)__/g, '<strong>$1</strong>')
   out = out.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>')
   out = out.replace(/~~([^~\n]+)~~/g, '<s>$1</s>')
-  out = out.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1">')
+  out = out.replace(
+    /!\[([^\]]*)\]\(([^\s)]+)(?:\s+=([0-9]+)x([0-9]+))?\)/g,
+    (_, alt, src, width, height) => {
+      const size = width && height ? ` width="${width}" height="${height}"` : ''
+      return `<img src="${src}" alt="${alt}"${size}>`
+    }
+  )
   out = out.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
 
   return out
@@ -243,7 +249,11 @@ function serializeInline(node) {
     case 'IMG': {
       const src = node.getAttribute('src') || ''
       const alt = node.getAttribute('alt') || ''
-      return `![${alt}](${src})`
+      const width = node.getAttribute('width')
+      const height = node.getAttribute('height')
+      // `![alt](src =WxH)` conserva el tamaño en píxeles dentro del Markdown.
+      const size = width && height ? ` =${width}x${height}` : ''
+      return `![${alt}](${src}${size})`
     }
     case 'A': {
       const href = node.getAttribute('href') || ''

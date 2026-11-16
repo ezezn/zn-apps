@@ -32,6 +32,10 @@ export const demoViews = [
     sections: [{ title: 'ZnPhoneInput', content: 'Variantes, saneamiento de caracteres y longitud mínima/máxima.' }]
   },
   {
+    key: 'input-number', title: 'Número (ZnNumberInput)', subtitle: 'Campo numérico MD3 con min, max, step y validación de rango',
+    sections: [{ title: 'ZnNumberInput', content: 'Variantes outlined y filled, tamaños MD3, validación de rango y estados.' }]
+  },
+  {
     key: 'input-date', title: 'Fecha (ZnDateInput)', subtitle: 'Selector de fecha nativo con etiqueta flotante',
     sections: [{ title: 'ZnDateInput', content: 'Variantes, límites min/max y estados.' }]
   },

@@ -8,6 +8,7 @@ import TextPage from '../views/inputs/TextPage.vue'
 import MultilinePage from '../views/inputs/MultilinePage.vue'
 import EmailPage from '../views/inputs/EmailPage.vue'
 import PhonePage from '../views/inputs/PhonePage.vue'
+import NumberPage from '../views/inputs/NumberPage.vue'
 import DatePage from '../views/inputs/DatePage.vue'
 import TimePage from '../views/inputs/TimePage.vue'
 import DateTimePage from '../views/inputs/DateTimePage.vue'
@@ -46,6 +47,7 @@ export const routes = [
   { path: '/inputs/multiline', name: 'input-multiline', component: MultilinePage },
   { path: '/inputs/email', name: 'input-email', component: EmailPage },
   { path: '/inputs/phone', name: 'input-phone', component: PhonePage },
+  { path: '/inputs/number', name: 'input-number', component: NumberPage },
   { path: '/inputs/date', name: 'input-date', component: DatePage },
   { path: '/inputs/time', name: 'input-time', component: TimePage },
   { path: '/inputs/datetime', name: 'input-datetime', component: DateTimePage },

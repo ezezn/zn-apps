@@ -1,24 +1,15 @@
 # Instructions for Claude Code
 
-Before making changes, consult documentation organized in two tiers:
+Start with [`ai/README.md`](./ai/README.md), which routes tasks to the minimum context needed. Load a project's context only when the change touches it.
 
-1. Root Monorepo Guidelines:
-   - `docs/README.md` (Master index)
-   - `docs/00-overview.md` (Monorepo architecture and conventions)
-   - `docs/01-app-types.md` (App typology & override criteria)
-   - `docs/02-workflow.md` (Workflow, scripts, icons & PWA)
-   - `docs/05-testing.md` (Testing architecture and mocks)
-   - `README.md` (Setup, scripts, and local development)
+- Global: [`ai/architecture.md`](./ai/architecture.md), [`ai/workflow.md`](./ai/workflow.md), [`ai/testing.md`](./ai/testing.md), [`ai/app-types.md`](./ai/app-types.md), [`ai/versioning.md`](./ai/versioning.md), [`ai/docs-maintenance.md`](./ai/docs-maintenance.md).
+- Per project: `shared/<lib>/ai/README.md`, `zound-box/ai/README.md`, `kitchensink/ai/README.md`.
+- User documentation (EN + ES): [`doc/en/README.md`](./doc/en/README.md) and [`doc/es/README.md`](./doc/es/README.md).
 
-2. Subproject-Specific Documentation:
-   - `shared/ui-core/docs/README.md` (API reference for @zn-apps/ui-core)
-   - `shared/ui-about/docs/README.md` (API reference for @zn-apps/ui-about)
-   - `zound-box/docs/README.md` (Zound Box audio architecture, DTOs & overrides)
-   - `kitchensink/docs/README.md` (Kitchensink showroom, icon catalog & blueprint)
-
-Key Rules:
-- Vue 3 `<script setup>` syntax.
-- `shared/` holds isolated libraries such as `shared/ui-core/` and `shared/settings-core/`. Never import one library from the other.
-- All shared components belong in `shared/ui-core/src/components/` with `Zn` prefix.
-- Never share Pinia store state across separate applications.
-- Run `npm run test:run` and `npm run build:all` ONLY when there are code-related changes (Vue SFCs, JS/TS, CSS, configs). Do NOT run them for documentation-only changes (.md files).
+Key rules:
+- Vue 3 `<script setup>`; shared components in `shared/ui-core/src/components/` with the `Zn` prefix and `--md-*` tokens.
+- Independent apps: no shared Pinia state, base `/zn-apps/<app>/`.
+- Isolated libraries: no imports between libraries beyond the documented composition edges.
+- Field parity across form, view and editor.
+- Verify with the narrowest useful command; full suite/build only for cross-project or release-level changes. Markdown-only changes run no tests or builds.
+- Update `ai/` and `doc/{en,es}` in the same change as any feature or decision.

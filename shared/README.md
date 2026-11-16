@@ -1,41 +1,24 @@
 # Shared libraries
 
-`shared/` no longer contains a single package. It is a container for isolated,
-independently built libraries consumed by the apps in this monorepo.
+`shared/` is a container of isolated, independently built libraries consumed by the apps in this monorepo. Each one has its own `package.json`, `vite.config.js`, `vitest.config.js`, agent context (`ai/`) and user manual (`doc/{en,es}/`).
 
-| Library | Package | Purpose | Docs |
-|---|---|---|---|
-| [`ui-core/`](./ui-core) | `@zn-apps/ui-core` | Vue 3 UI components (MD3), composables, helpers and global CSS tokens. | [`ui-core/docs/`](./ui-core/docs/README.md) |
-| [`settings-core/`](./settings-core) | `@zn-apps/settings-core` | Deep JSON settings proxy with localStorage persistence and defaults. | [`settings-core/docs/`](./settings-core/docs/README.md) |
-| [`ui-about/`](./ui-about) | `@zn-apps/ui-about` | Neutral two-row About component composed with `@zn-apps/ui-core` icons. | [`ui-about/docs/`](./ui-about/docs/README.md) |
-| [`pwa-integration/`](./pwa-integration) | `@zn-apps/pwa-integration` | PWA state detection, system color scheme, dynamic bar styling & install popup. | [`pwa-integration/docs/`](./pwa-integration/docs/README.md) |
-| [`ui-data-core/`](./ui-data-core) | `@zn-apps/ui-data-core` | Schema contract, nested JSON helpers, defaults and value formatting. | [`ui-data-core/docs/`](./ui-data-core/docs/README.md) |
-| [`ui-data-form/`](./ui-data-form) | `@zn-apps/ui-data-form` | Schema-driven forms with draft/live binding and actions. | [`ui-data-form/docs/`](./ui-data-form/docs/README.md) |
-| [`ui-data-view/`](./ui-data-view) | `@zn-apps/ui-data-view` | Read-only schema presentation with top/inline labels. | [`ui-data-view/docs/`](./ui-data-view/docs/README.md) |
-| [`ui-data-editor/`](./ui-data-editor) | `@zn-apps/ui-data-editor` | View-like presentation with per-field dialog editing. | [`ui-data-editor/docs/`](./ui-data-editor/docs/README.md) |
+| Library | Package | Purpose | User docs | AI context |
+|---|---|---|---|---|
+| [`ui-core/`](./ui-core) | `@zn-apps/ui-core` | MD3 components, composables, helpers, global CSS tokens, icon chunks | [EN](./ui-core/doc/en/README.md) · [ES](./ui-core/doc/es/README.md) | [`ai/`](./ui-core/ai/README.md) |
+| [`settings-core/`](./settings-core) | `@zn-apps/settings-core` | Deep JSON settings proxy with localStorage persistence and defaults | [EN](./settings-core/doc/en/README.md) · [ES](./settings-core/doc/es/README.md) | [`ai/`](./settings-core/ai/README.md) |
+| [`ui-about/`](./ui-about) | `@zn-apps/ui-about` | Neutral About panel composed with `ui-core` | [EN](./ui-about/doc/en/README.md) · [ES](./ui-about/doc/es/README.md) | [`ai/`](./ui-about/ai/README.md) |
+| [`pwa-integration/`](./pwa-integration) | `@zn-apps/pwa-integration` | PWA state, system color scheme, bar styling, install/update popups | [EN](./pwa-integration/doc/en/README.md) · [ES](./pwa-integration/doc/es/README.md) | [`ai/`](./pwa-integration/ai/README.md) |
+| [`ui-data-core/`](./ui-data-core) | `@zn-apps/ui-data-core` | Schema contract, nested JSON helpers, defaults, value formatting | [EN](./ui-data-core/doc/en/README.md) · [ES](./ui-data-core/doc/es/README.md) | [`ai/`](./ui-data-core/ai/README.md) |
+| [`ui-data-form/`](./ui-data-form) | `@zn-apps/ui-data-form` | Schema-driven forms with draft/live binding | [EN](./ui-data-form/doc/en/README.md) · [ES](./ui-data-form/doc/es/README.md) | [`ai/`](./ui-data-form/ai/README.md) |
+| [`ui-data-view/`](./ui-data-view) | `@zn-apps/ui-data-view` | Read-only presentation with top/inline labels | [EN](./ui-data-view/doc/en/README.md) · [ES](./ui-data-view/doc/es/README.md) | [`ai/`](./ui-data-view/ai/README.md) |
+| [`ui-data-editor/`](./ui-data-editor) | `@zn-apps/ui-data-editor` | View-like presentation with per-field dialog editing | [EN](./ui-data-editor/doc/en/README.md) · [ES](./ui-data-editor/doc/es/README.md) | [`ai/`](./ui-data-editor/ai/README.md) |
+| [`ui-data-richtext/`](./ui-data-richtext) | `@zn-apps/ui-data-richtext` | Markdown-backed rich text editor and view | [EN](./ui-data-richtext/doc/en/README.md) · [ES](./ui-data-richtext/doc/es/README.md) | [`ai/`](./ui-data-richtext/ai/README.md) |
 
 ## Rules
 
-- Each library has its own `package.json`, `vite.config.js` and `vitest.config.js`.
-- Libraries are isolated except for explicit composition dependencies such as `ui-about` consuming `ui-core`.
+- Libraries are isolated except for explicit composition: `ui-about → ui-core`, `ui-data-form/view/editor → ui-core + ui-data-core`, `ui-data-editor → ui-data-form + ui-data-view`, `ui-data-richtext → ui-core`.
 - Apps depend on a library by workspace name (`"@zn-apps/ui-core": "*"`).
-- Build all shared libraries from the repo root with `npm run build:shared`.
+- Build all shared libraries from the root with `npm run build:shared`.
+- A field feature must exist in form, view and editor in the same change.
 
-## Usage
-
-```js
-// UI components + composables + helpers
-import '@zn-apps/ui-core/dist/ui-core.css'
-import { ZnApp, ZnScreen, ZnButton, useOnlineStatus, formatDate } from '@zn-apps/ui-core'
-
-// Persistence
-import { ZnAbout } from '@zn-apps/ui-about'
-import '@zn-apps/ui-about/dist/ui-about.css'
-
-// Pass the app's package.json metadata into the component.
-// Puede recibir icon="widgets" o image="/app-icon.png" (image tiene prioridad).
-// <ZnAbout name="Mi app" version="1.0.0" description="..." author="..." image="/app-icon.png" />
-```
-
-The apps' Vitest configs alias `@zn-apps/ui-core` to `shared/ui-core/src/index.js`,
-so tests run without a prior build of the library.
+Global rules: [`ai/architecture.md`](../ai/architecture.md).

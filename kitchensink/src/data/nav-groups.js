@@ -50,6 +50,7 @@ export const navGroups = [
           { key: 'input-multiline', label: 'Multilínea (ZnMultilineText)', to: '/inputs/multiline' },
           { key: 'input-email', label: 'Email (ZnEmailInput)', to: '/inputs/email' },
           { key: 'input-phone', label: 'Teléfono (ZnPhoneInput)', to: '/inputs/phone' },
+          { key: 'input-number', label: 'Número (ZnNumberInput)', to: '/inputs/number' },
           { key: 'input-date', label: 'Fecha (ZnDateInput)', to: '/inputs/date' },
           { key: 'input-time', label: 'Hora (ZnTimeInput)', to: '/inputs/time' },
           { key: 'input-datetime', label: 'Fecha y hora (ZnDateTimeInput)', to: '/inputs/datetime' },

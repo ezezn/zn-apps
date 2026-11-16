@@ -131,6 +131,32 @@ describe('ZnRichTextEditor', () => {
     wrapper.unmount()
   })
 
+  it('preserva la relación de aspecto al editar ancho o alto', async () => {
+    const wrapper = mount(ZnRichTextEditor, { props: { modelValue: '' } })
+
+    wrapper.vm.imageNaturalWidth = 400
+    wrapper.vm.imageNaturalHeight = 200
+    wrapper.vm.preserveAspect = false
+    wrapper.vm.imageWidth = 400
+    wrapper.vm.imageHeight = 200
+    wrapper.vm.preserveAspect = true
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.imageHeight).toBe(200)
+
+    wrapper.vm.imageWidth = 200
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.imageHeight).toBe(100)
+
+    wrapper.vm.imageHeight = 50
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.imageWidth).toBe(100)
+
+    wrapper.vm.preserveAspect = false
+    wrapper.vm.imageWidth = 320
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.imageHeight).toBe(50)
+  })
+
   it('permite abrir el diálogo de tabla, imagen y enlace desde la toolbar', async () => {
     const wrapper = mount(ZnRichTextEditor, { props: { modelValue: '' } })
 

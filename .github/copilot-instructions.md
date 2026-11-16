@@ -1,18 +1,22 @@
 # GitHub Copilot Instructions for zn-apps
 
-## Context & Architecture
-This is a Vue 3 + Vite monorepo using npm workspaces for multiple PWAs deployed to GitHub Pages.
+## Context & architecture
 
-Always consult the documentation inside `docs/`:
-- `docs/00-overview.md` — Monorepo design, build pipeline and conventions
-- `docs/01-shared.md` — `@zn-apps/ui-core` component library API and MD3 tokens
-- `docs/02-app-zound-box.md` — Zound Box application architecture
-- `docs/03-app-kitchensink.md` — Kitchensink showroom & blueprint for new apps
-- `docs/05-testing.md` — Vitest unit testing architecture
-- `README.md` — Human guide for local development and build scripts
+Vue 3 + Vite monorepo of independent PWAs using npm workspaces, deployed to GitHub Pages.
 
-## Coding Conventions
-1. **Shared Libraries**: `shared/` contains isolated workspaces — `shared/ui-core/` (`@zn-apps/ui-core`) and `shared/storage/` (`@zn-apps/storage`). Do not import one library from the other.
-2. **Component Design**: Components in `@zn-apps/ui-core` use the `Zn` prefix and Material Design 3 tokens (`--md-*`). Use Vue 3 Composition API with `<script setup>`.
-3. **App Isolation**: Every app in subfolders is independent. Do not share Pinia stores between different apps.
-4. **Quality**: Write unit tests for new shared components under `shared/ui-core/src/**/__tests__/` and for storage helpers under `shared/storage/src/__tests__/`. Select verification based on the change; the full `npm run test:run` suite is for cross-project, shared, or broad regression checks, not an automatic requirement for every code change. CI runs the full suite before deployment.
+Start with [`ai/README.md`](../ai/README.md) — it routes the task to the minimum context:
+
+- [`ai/architecture.md`](../ai/architecture.md) — monorepo design, isolation rules, MD3, i18n, icon pipeline
+- [`ai/workflow.md`](../ai/workflow.md) — commands, builds, icons, PWA checklist, CI
+- [`ai/testing.md`](../ai/testing.md) — Vitest projects and mocks
+- [`ai/app-types.md`](../ai/app-types.md) — archetypes, overrides, blueprint
+- Per project: `shared/<lib>/ai/README.md`, `zound-box/ai/README.md`, `kitchensink/ai/README.md`
+
+## Coding conventions
+
+1. **Shared libraries**: `shared/` holds isolated workspaces (`ui-core`, `settings-core`, `ui-about`, `pwa-integration`, `ui-data-*`). Never import one library from another except the documented composition edges.
+2. **Components**: `Zn` prefix, Material Design 3 tokens (`--md-*`), Vue 3 Composition API with `<script setup>`, imported from the `@zn-apps/ui-core` barrel.
+3. **App isolation**: every app in subfolders is independent; never share Pinia stores between apps; base `/zn-apps/<app>/`.
+4. **Field parity**: a `ui-data-*` field feature must exist in form, view and editor.
+5. **Quality**: add or update specs for new shared components; choose verification proportional to the change (full `npm run test:run` only for cross-project or broad regression checks). Documentation-only changes run no tests or builds.
+6. **Docs**: keep `ai/` (English, compact) and `doc/{en,es}/` (bilingual user docs) updated with every feature or decision.

@@ -1,38 +1,19 @@
-# Reglas y Contexto para Gemini / Antigravity
+# Reglas y contexto para Gemini / Antigravity
 
 > Archivo de descubrimiento automático para **Antigravity** y **Gemini CLI**.
 
-## 📖 Documentación Obligatoria
+## Punto de entrada
 
-Al trabajar en este monorepo, **debes consultar la documentación organizada en dos niveles**:
+[`ai/README.md`](./ai/README.md) enruta cada tarea al conjunto mínimo de archivos a leer. Carga el contexto de un proyecto sólo si el cambio lo toca.
 
-### Nivel 1: Lineamientos Generales del Monorepo (`docs/`)
-- [`docs/README.md`](./docs/README.md) — Índice maestro de documentación para IA.
-- [`docs/00-overview.md`](./docs/00-overview.md) — Visión general, arquitectura de monorepo, CI/CD y convenciones.
-- [`docs/01-app-types.md`](./docs/01-app-types.md) — Tipología de apps, matriz de decisiones y reglas de override.
-- [`docs/02-workflow.md`](./docs/02-workflow.md) — Flujos de trabajo, scripts, pipeline de iconos y PWA.
-- [`docs/05-testing.md`](./docs/05-testing.md) — Estrategia de tests unitarios, mocks y comandos.
-- [`docs/06-changelog-versioning.md`](./docs/06-changelog-versioning.md) — Política SemVer y generación de CHANGELOGs bilingües a pedido.
-- [`README.md`](./README.md) — Guía humana de ejecución local, build y estructura.
+- Global: [`ai/architecture.md`](./ai/architecture.md), [`ai/workflow.md`](./ai/workflow.md), [`ai/testing.md`](./ai/testing.md), [`ai/app-types.md`](./ai/app-types.md), [`ai/versioning.md`](./ai/versioning.md), [`ai/docs-maintenance.md`](./ai/docs-maintenance.md).
+- Por proyecto: `shared/<lib>/ai/README.md`, `zound-box/ai/README.md`, `kitchensink/ai/README.md`.
+- Documentación de usuario (EN + ES): [`doc/en/README.md`](./doc/en/README.md) y [`doc/es/README.md`](./doc/es/README.md).
 
-### Nivel 2: Documentación Específica por Proyecto (`docs/` en cada subproyecto)
-- [`shared/ui-core/docs/README.md`](./shared/ui-core/docs/README.md) — API completa de `@zn-apps/ui-core` (props, slots, eventos, tokens MD3).
-- [`shared/ui-about/docs/README.md`](./shared/ui-about/docs/README.md) — Componente neutral `ZnAbout` y utilidades de metadatos.
-- [`shared/pwa-integration/docs/README.md`](./shared/pwa-integration/docs/README.md) — Detección PWA, tema del sistema, barras y popup de instalación.
-- [`zound-box/docs/README.md`](./zound-box/docs/README.md) — Arquitectura de audio, DTOs (`SoundItem`, `SoundChannel`), overrides y reglas de negocio.
-- [`kitchensink/docs/README.md`](./kitchensink/docs/README.md) — Catálogo total de iconos, showroom y blueprint para nuevas apps.
+## Reglas clave
 
-## 📌 Reglas Clave de Desarrollo
-
-1. **Librerías Compartidas Aisladas:**
-   - `shared/` contiene librerías independientes como `shared/ui-core/` y `shared/settings-core/`.
-   - Todo componente compartido debe vivir en `shared/ui-core/src/components/` con prefijo `Zn` (ej. `ZnButton`, `ZnCard`).
-   - Respetar los tokens de Material Design 3 (`--md-*`).
-   - Las librerías compartidas no deben importarse entre sí.
-2. **Independencia de Aplicaciones:**
-   - No acoplar apps entre sí ni compartir stores de Pinia entre distintas aplicaciones.
-   - Cada app se compila con base URL `/zn-apps/<nombre>/`.
-3. **Calidad, Tests y Builds:**
-   - Ejecutar `npm run test:run` y `npm run build:all` **ÚNICAMENTE ante cambios relacionados con código** (archivos `.vue`, `.js`, `.css`, configs o dependencias).
-   - En tareas de **documentación exclusiva** (archivos `.md`), **NO ejecutar tests ni compilación**.
-   - Si creas o modificas componentes en `ui-core`, crea o actualiza su test en `shared/ui-core/src/**/__tests__/`.
+1. **Librerías compartidas aisladas**: `shared/` contiene librerías independientes. Todo componente compartido vive en `shared/ui-core/src/components/` con prefijo `Zn` y tokens `--md-*`. Las librerías no se importan entre sí salvo las composiciones documentadas.
+2. **Independencia de aplicaciones**: no acoplar apps ni compartir stores de Pinia entre ellas; cada app se compila con base `/zn-apps/<nombre>/`.
+3. **Paridad de campos**: toda feature de un campo de datos debe existir en formulario, vista y editor.
+4. **Verificación acotada**: usa el test/build mínimo útil; la suite completa y `build:all` son para cambios transversales o de release. Las tareas sólo de Markdown no ejecutan tests ni builds.
+5. **Documentación**: actualiza `ai/` (inglés, compacta) y `doc/{en,es}/` (usuario, bilingüe) en el mismo cambio que la feature o decisión.

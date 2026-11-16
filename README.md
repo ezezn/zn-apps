@@ -1,227 +1,87 @@
-# 🌐 zn-apps — Multi-PWA Monorepo
+# 🌐 zn-apps — multi-PWA monorepo
 
-> Monorepo de **Progressive Web Applications (PWAs)** independientes construidas con **Vue 3**, **Vite** y **Material Design 3**, orquestadas mediante **npm workspaces** y desplegadas automáticamente en **GitHub Pages**.
+> Monorepo of independent **Progressive Web Apps** built with **Vue 3**, **Vite** and **Material Design 3**, orchestrated with **npm workspaces** and deployed to **GitHub Pages**.
 
----
-
-## 📱 Aplicaciones y Proyectos
-
-El monorepo aloja un ecosistema de aplicaciones autónomas y una librería compartida de interfaz de usuario:
-
-| Proyecto | Carpeta | Rol / Descripción | Estado | Ruta / Base URL |
-|---|---|---|---|---|
-| **Landing Portal** | `/` (`index.html`) | Portal de bienvenida para seleccionar y lanzar cada PWA | Producción | `/zn-apps/` |
-| **@zn-apps/ui-core** | [`shared/ui-core/`](./shared/ui-core) | Librería central de componentes UI (MD3), tokens CSS, composables y utilidades | Activo | N/A (librería ES) |
-| **@zn-apps/settings-core** | [`shared/settings-core/`](./shared/settings-core) | Documento JSON de settings con proxy profundo y persistencia local | Activo | N/A (librería ES) |
-| **@zn-apps/ui-about** | [`shared/ui-about/`](./shared/ui-about) | Componente de información de la app construido con `ui-core` | Activo | N/A (librería ES) |
-| **Zound Box** | [`zound-box/`](./zound-box) | Primera aplicación interactiva del monorepo (reproductor / caja de sonidos) | Activo | `/zn-apps/zound-box/` |
-| **Dev Kitchensink** | [`kitchensink/`](./kitchensink) | Catálogo interactivo de componentes y **plantilla oficial** para nuevas apps | Activo | `/zn-apps/kitchensink/` |
+**Documentation:** [English](./doc/en/README.md) · [Español](./doc/es/README.md) · AI agents start at [`ai/README.md`](./ai/README.md)
 
 ---
 
-## 🛠️ Requisitos Previos
+## 📱 Projects
 
-- **Node.js**: Versión **24.x** (recomendada) o superior (soporta v20+).
-- **npm**: Versión **10.x** o superior (con soporte nativo para `workspaces`).
+| Project | Folder | Role | Deploy path |
+|---|---|---|---|
+| **Landing portal** | `index.html` | Launcher for every PWA | `/zn-apps/` |
+| **@zn-apps/ui-core** | [`shared/ui-core/`](./shared/ui-core) | MD3 design system: components, tokens, composables, icons | library |
+| **@zn-apps/settings-core** | [`shared/settings-core/`](./shared/settings-core) | Deep JSON settings with local persistence | library |
+| **@zn-apps/ui-about** | [`shared/ui-about/`](./shared/ui-about) | About panel built on `ui-core` | library |
+| **@zn-apps/pwa-integration** | [`shared/pwa-integration/`](./shared/pwa-integration) | PWA state, theme sync, install/update popups | library |
+| **@zn-apps/ui-data-** | [`shared/`](./shared) | Schema-driven form, view, editor and rich text | libraries |
+| **Zound Box** | [`zound-box/`](./zound-box) | Ambient audio mixer PWA | `/zn-apps/zound-box/` |
+| **Kitchensink** | [`kitchensink/`](./kitchensink) | Showroom, icon catalog and blueprint for new apps | `/zn-apps/kitchensink/` |
+
+Each project keeps its own user manual in `doc/en/README.md` and `doc/es/README.md`, and its agent context in `ai/README.md`.
 
 ---
 
-## 🚀 Instalación
+## 🛠️ Requirements
 
-Gracias a **npm workspaces**, todas las dependencias del monorepo y sus subproyectos se instalan desde la raíz en un único paso:
+- **Node.js** 24.x recommended (20+ supported)
+- **npm** 10+
+
+## 🚀 Install
 
 ```bash
-# 1. Clonar el repositorio
-git clone https://github.com/<usuario>/zn-apps.git
+git clone https://github.com/<user>/zn-apps.git
 cd zn-apps
-
-# 2. Instalar todas las dependencias unificadas
 npm install
 ```
 
----
-
-## 💻 Desarrollo Local
-
-Puedes levantar el servidor de desarrollo de Vite para cualquiera de las aplicaciones de dos formas: usando el flag `--workspace` desde la raíz o entrando a la subcarpeta.
-
-### Opción 1: Comandos directos desde la raíz (Recomendado)
+## 💻 Local development
 
 ```bash
-# Levantar el catálogo Kitchensink
 npm run dev --workspace=kitchensink
-
-# Levantar Zound Box
 npm run dev --workspace=zound-box
-
-# Compilar las librerías compartidas en modo watch (detecta cambios en vivo)
-npm run dev --workspace=@zn-apps/ui-core
-npm run dev --workspace=@zn-apps/ui-about
+npm run dev --workspace=@zn-apps/ui-core   # library watch build
 ```
 
-### Opción 2: Navegando a la subcarpeta
+## 🧪 Tests
 
 ```bash
-# Para Kitchensink
-cd kitchensink
-npm run dev
-
-# Para Zound Box
-cd ../zound-box
-npm run dev
-
-# Para la librería ui-core
-cd ../shared/ui-core
-npm run dev
-
-npm run dev
-```
-
-> 💡 **Nota sobre las librerías compartidas:** Cada librería es un workspace independiente. Para el desarrollo de nuevas características en `@zn-apps/ui-core`, corre `npm run dev --workspace=@zn-apps/ui-core` para que Vite recompile automáticamente ante cualquier modificación en `shared/ui-core/src/`.
-
----
-
-## 🧪 Testing Unitario
-
-El monorepo cuenta con una suite centralizada de pruebas con **Vitest**, **@vue/test-utils** y **happy-dom**:
-
-```bash
-# Ejecutar todos los tests en modo interactivo (watch)
-npm test
-
-# Ejecutar todos los tests una sola vez (modo CI)
-npm run test:run
-
-# Generar reporte de cobertura de código (V8)
+npm test                    # watch
+npm run test:run            # full suite once (CI)
 npm run test:coverage
-
-# Ejecutar tests de un paquete en específico:
-npm run test:shared       # Librerías compartidas, incluido @zn-apps/settings-core
-npm run test:zound-box    # Solo la aplicación Zound Box
-npm run test:kitchensink  # Solo la aplicación Kitchensink y su router
+npm run test:shared
+npm run test:zound-box
+npm run test:kitchensink
 ```
 
-En el desarrollo local, elige el alcance de tests según el cambio: puedes ejecutar el proyecto o archivo afectado; la suite completa no es obligatoria para cada modificación. CI sí corre `npm run test:run` antes de desplegar. Para cambios solo de documentación, omite tests y builds.
+Run the narrowest scope that covers your change; the full suite is for cross-project or release-level verification. Documentation-only changes need no tests or builds.
 
----
-
-## 📦 Compilación para Producción (Build)
-
-### Compilación Unificada (Todo el Monorepo)
-
-Para generar la distribución completa lista para producción en la carpeta `dist/`:
+## 📦 Build
 
 ```bash
-npm run build:production
+npm run build:shared
+npm run build:zound-box
+npm run build:kitchensink
+npm run build:production   # full dist/ + validate:pwa
+npm run build:icons        # scan + generate icon sprites (commit the result)
 ```
 
-**¿Qué hace este script?**
-1. Limpia y crea la carpeta `dist/`.
-2. Copia la landing page (`index.html`) y el Service Worker raíz (`sw.js`).
-3. Compila las librerías compartidas en modo librería.
-4. Compila `zound-box` y `kitchensink`.
-5. Mueve cada `dist/` a su subcarpeta correspondiente dentro de la raíz `dist/`.
-6. Valida los manifiestos y los PNG de instalación de 192×192 y 512×512 de cada app.
+## 🚢 Deployment
 
-El build no escanea ni genera iconos. Cuando cambien los iconos, ejecuta
-`npm run build:icons` localmente y sube `icon-profile.json` y los sprites de
-`zound-box/public/icons/` y `kitchensink/public/icons/` junto con los cambios.
-Cada app también incluye `public/pwa-icon.svg` y sus PNG derivados de 192×192 y
-512×512, declarados en el manifiesto.
-
-### Compilación Individual por Proyecto
-
-```bash
-npm run build:shared       # Compila las librerías compartidas
-npm run build:zound-box    # Compila Zound Box -> zound-box/dist/
-npm run build:kitchensink  # Compila Kitchensink -> kitchensink/dist/
-```
+`.github/workflows/deploy.yml` runs on every push to `main`: install → `npm run test:run` → `npm run build:production` → `404.html` fallbacks → GitHub Pages at `/zn-apps/`.
 
 ---
 
-## 🚢 CI/CD y Despliegue en GitHub Pages
+## 📚 Documentation
 
-El repositorio cuenta con un flujo automatizado de integración y despliegue continuo mediante **GitHub Actions** en [`.github/workflows/deploy.yml`](./.github/workflows/deploy.yml):
+| Tree | Audience | Language |
+|---|---|---|
+| [`doc/en`](./doc/en/README.md) / [`doc/es`](./doc/es/README.md) | Developers and users: architecture, workflow, app types, conventions | English and Spanish |
+| `<project>/doc/{en,es}/` | Per-app / per-library manual | English and Spanish |
+| [`ai/`](./ai/README.md) | AI coding agents: compact architecture, contracts, APIs, decisions | English |
 
-```mermaid
-flowchart LR
-  A[Push a main] --> B[npm install]
-  B --> C[npm run test:run\nTests Unitarios]
-  C --> D[npm run build:production\nCompilación Unificada]
-  D --> E[Inyección Fallbacks 404]
-  E --> F[Deploy a GitHub Pages]
-```
-
-1. **Disparador:** Cada `git push` a la rama `main`.
-2. **Entorno:** Ubuntu con Node.js 24 y cache de npm.
-3. **Control de Calidad:** Ejecuta `npm run test:run`. Si alguna prueba unitaria falla, el despliegue se cancela inmediatamente.
-4. **Build & Fallbacks:** Genera la carpeta `dist/` e inyecta los archivos `404.html` para resolver enrutamiento en SPAs.
-5. **Publicación:** Publica los artefactos directamente en GitHub Pages bajo `/zn-apps/`.
-
----
-
-## 📁 Estructura del Repositorio
-
-```
-zn-apps/
-├── .github/
-│   └── workflows/
-│       └── deploy.yml        # Workflow de CI/CD para GitHub Pages
-├── docs/                     # 📚 Documentación técnica detallada y de arquitectura
-├── index.html                # Landing portal general
-├── sw.js                     # Service Worker raíz para la landing
-├── package.json              # Configuración de workspaces y scripts globales
-├── vitest.config.js          # Configuración global de Vitest (proyectos)
-├── vitest.setup.js           # Mocks globales de entorno para tests
-│
-├── shared/                   # 📦 Contenedor de librerías compartidas aisladas
-│   ├── ui-core/              # @zn-apps/ui-core
-│   │   ├── src/
-│   │   │   ├── components/   # Componentes Vue 3 (ZnButton, ZnCard, ZnSwitch, etc.)
-│   │   │   ├── composables/  # useOnlineStatus
-│   │   │   ├── utils/        # helpers (formatDate)
-│   │   │   └── assets/css/   # global.css y tokens MD3
-│   │   └── vitest.config.js
-│   └── settings-core/        # @zn-apps/settings-core
-│       ├── src/              # Proxy de settings JSON persistidos
-│       └── vitest.config.js
-│
-├── zound-box/                # 🎵 App productiva de audio / PWA independiente
-│   ├── src/
-│   └── vitest.config.js
-│
-├── kitchensink/              # 🧬 Catálogo visual de componentes y template base
-│   ├── src/
-│   │   ├── router/           # Enrutamiento con vue-router
-│   │   └── views/            # Vistas demostrativas
-│   └── vitest.config.js
-│
-```
-
----
-
-## 📚 Documentación Técnica Adicional
-
-La documentación del proyecto se organiza en **dos niveles**:
-
-### Nivel 1: Lineamientos Globales del Monorepo ([`docs/`](./docs))
-- [**`docs/README.md`**](./docs/README.md): Índice maestro de documentación y mapa de navegación para IA y humanos.
-- [**`docs/00-overview.md`**](./docs/00-overview.md): Visión general de arquitectura, dependencias y reglas de monorepo.
-- [**`docs/01-app-types.md`**](./docs/01-app-types.md): Tipología de aplicaciones (single-screen, multi-screen, catalog) y matriz de decisiones/overrides.
-- [**`docs/02-workflow.md`**](./docs/02-workflow.md): Flujo operativo, desarrollo local, pipeline de iconos, validación PWA y CI/CD.
-- [**`docs/05-testing.md`**](./docs/05-testing.md): Guía completa de testing unitario y mocks con Vitest.
-
-### Nivel 2: Documentación Específica por Proyecto (`docs/` en cada carpeta)
-- [**`shared/ui-core/docs/`**](./shared/ui-core/docs/README.md): API completa de componentes MD3 (`Zn*`), tokens CSS, composables y chunks SVG.
-- [**`shared/settings-core/docs/`**](./shared/settings-core/docs/README.md): Proxy profundo de settings JSON persistidos y definiciones por defecto.
-- [**`shared/ui-about/docs/`**](./shared/ui-about/docs/README.md): Componente "Acerca de" y metadatos de aplicación.
-- [**`zound-box/docs/`**](./zound-box/docs/README.md): Motor de audio, DTOs (`SoundChannel`, `SoundItem`), overrides y reglas de negocio.
-- [**`kitchensink/docs/`**](./kitchensink/docs/README.md): Showroom, catálogo exhaustivo de iconos y blueprint para nuevas apps.
-
----
-
-## 🤖 Contexto para Agentes de IA
-
-Si eres un modelo o agente de IA trabajando en este repositorio (Antigravity, Cursor, Copilot, etc.), consulta los archivos de instrucciones automáticas en la raíz:
-- [**`AGENTS.md`**](./AGENTS.md)
-- [**`GEMINI.md`**](./GEMINI.md)
+- [Getting started](./doc/en/getting-started.md) · [Empezar](./doc/es/getting-started.md)
+- [Architecture](./doc/en/architecture.md) · [Arquitectura](./doc/es/architecture.md)
+- [App types](./doc/en/app-types.md) · [Tipos de app](./doc/es/app-types.md)
+- [Conventions](./doc/en/conventions.md) · [Convenciones](./doc/es/conventions.md)

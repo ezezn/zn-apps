@@ -2,7 +2,8 @@
 
 PWA de relajación, reproducción y mezcla de audio ambiental (ruido blanco, lluvia, viento, canción de cuna y seseo rítmico).
 
-- **Documentación Completa**: Consulta [`docs/README.md`](./docs/README.md) para detalles sobre arquitectura, modelo de dominio (`SoundChannel`, `SoundItem`), decisiones de override (sin router, estado reactivo local) y reglas de negocio.
+- **Documentación de usuario**: [English](./doc/en/README.md) · [Español](./doc/es/README.md) — arquitectura, modelo de dominio (`SoundChannel`, `SoundItem`), overrides (sin router, estado reactivo local) y reglas de negocio.
+- **Contexto para agentes**: [`ai/README.md`](./ai/README.md)
 - **Ruta de Despliegue**: `/zn-apps/zound-box/`
 
 ## Scripts
