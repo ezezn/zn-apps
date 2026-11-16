@@ -1,7 +1,7 @@
 {
   "name": "kitchensink",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A catalog of shared ZN Apps components and utilities.",
   "author": "ZN Apps",
   "type": "module",
