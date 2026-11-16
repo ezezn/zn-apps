@@ -1,0 +1,22 @@
+{
+  "scanned": [
+    "add",
+    "cloud",
+    "delete_forever",
+    "download",
+    "edit",
+    "info",
+    "open_in_new",
+    "search",
+    "settings",
+    "task_alt",
+    "upload"
+  ],
+  "manual": [
+    "arrow_downward",
+    "arrow_upward",
+    "delete",
+    "expand_less",
+    "expand_more"
+  ]
+}

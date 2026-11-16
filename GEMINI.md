@@ -7,7 +7,7 @@
 [`ai/README.md`](./ai/README.md) enruta cada tarea al conjunto mínimo de archivos a leer. Carga el contexto de un proyecto sólo si el cambio lo toca.
 
 - Global: [`ai/architecture.md`](./ai/architecture.md), [`ai/workflow.md`](./ai/workflow.md), [`ai/testing.md`](./ai/testing.md), [`ai/app-types.md`](./ai/app-types.md), [`ai/versioning.md`](./ai/versioning.md), [`ai/docs-maintenance.md`](./ai/docs-maintenance.md).
-- Por proyecto: `shared/<lib>/ai/README.md`, `zound-box/ai/README.md`, `kitchensink/ai/README.md`.
+- Por proyecto: `shared/<lib>/ai/README.md`, `zound-box/ai/README.md`, `kitchensink/ai/README.md`, `daily-task-report/ai/README.md`.
 - Documentación de usuario (EN + ES): [`doc/en/README.md`](./doc/en/README.md) y [`doc/es/README.md`](./doc/es/README.md).
 
 ## Reglas clave

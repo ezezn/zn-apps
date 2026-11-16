@@ -22,6 +22,7 @@ zn-apps/
 │   ├── ui-data-editor/          # view + per-field dialog editing (ZnDataEditor)
 │   └── ui-data-richtext/        # Markdown-backed rich text editor/view
 ├── zound-box/                   # product PWA (single screen, no router)
+├── daily-task-report/           # product PWA (master-slave, Pinia + Dexie)
 └── kitchensink/                 # showroom, icon catalog, blueprint for new apps
 ```
 
@@ -38,6 +39,7 @@ Each project also holds `ai/` (agent context, English) and `doc/{en,es}/` (user 
 | PWA | `vite-plugin-pwa` (one manifest + service worker per app) |
 | Tests | Vitest + `@vue/test-utils` + happy-dom, modular `projects` config |
 | Routing | `vue-router` 4, only for multi-screen apps |
+| App state / local data | Pinia per app + Dexie (IndexedDB) when the app owns user data (`daily-task-report`) |
 | Fonts | Roboto 400/500 via `@fontsource/roboto` (shipped by `ui-core`) |
 | i18n | `vue-i18n`, `en` + `es` in every app |
 | CI/CD | GitHub Actions → GitHub Pages on push to `main` |

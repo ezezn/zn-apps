@@ -5,6 +5,7 @@
   "workspaces": [
     "zound-box",
     "kitchensink",
+    "daily-task-report",
     "shared/ui-core",
     "shared/settings-core",
     "shared/ui-about",
@@ -22,15 +23,17 @@
     "test:shared": "vitest --project ui-core --project settings-core --project ui-about --project pwa-integration --project ui-data-core --project ui-data-form --project ui-data-view --project ui-data-editor --project ui-data-richtext",
     "test:zound-box": "vitest --project zound-box",
     "test:kitchensink": "vitest --project kitchensink",
+    "test:daily-task-report": "vitest --project daily-task-report",
     "build:shared": "npm run build --workspace=@zn-apps/ui-core && npm run build --workspace=@zn-apps/settings-core && npm run build --workspace=@zn-apps/ui-about && npm run build --workspace=@zn-apps/pwa-integration && npm run build --workspace=@zn-apps/ui-data-core && npm run build --workspace=@zn-apps/ui-data-richtext && npm run build --workspace=@zn-apps/ui-data-form && npm run build --workspace=@zn-apps/ui-data-view && npm run build --workspace=@zn-apps/ui-data-editor",
-    "generate:icons": "node shared/ui-core/scripts/generate-icons.mjs --profile shared && node shared/ui-core/scripts/generate-icons.mjs --profile app:zound-box && node shared/ui-core/scripts/generate-icons.mjs --profile app:kitchensink",
-    "scan:icons": "node scripts/scan-icons.mjs shared/ui-core && node scripts/scan-icons.mjs shared/pwa-integration && node scripts/scan-icons.mjs shared/ui-data-form && node scripts/scan-icons.mjs shared/ui-data-view && node scripts/scan-icons.mjs shared/ui-data-editor && node scripts/scan-icons.mjs shared/ui-data-richtext && node scripts/scan-icons.mjs zound-box && node scripts/scan-icons.mjs kitchensink",
+    "generate:icons": "node shared/ui-core/scripts/generate-icons.mjs --profile shared && node shared/ui-core/scripts/generate-icons.mjs --profile app:zound-box && node shared/ui-core/scripts/generate-icons.mjs --profile app:kitchensink && node shared/ui-core/scripts/generate-icons.mjs --profile app:daily-task-report",
+    "scan:icons": "node scripts/scan-icons.mjs shared/ui-core && node scripts/scan-icons.mjs shared/pwa-integration && node scripts/scan-icons.mjs shared/ui-data-form && node scripts/scan-icons.mjs shared/ui-data-view && node scripts/scan-icons.mjs shared/ui-data-editor && node scripts/scan-icons.mjs shared/ui-data-richtext && node scripts/scan-icons.mjs zound-box && node scripts/scan-icons.mjs kitchensink && node scripts/scan-icons.mjs daily-task-report",
     "build:icons": "npm run scan:icons && npm run generate:icons",
     "build:zound-box": "cd zound-box && npm run build",
     "build:kitchensink": "cd kitchensink && npm run build",
+    "build:daily-task-report": "cd daily-task-report && npm run build",
     "validate:pwa": "node scripts/validate-pwa.mjs",
     "check:docs": "node scripts/check-docs-links.mjs",
-    "build:production": "rm -rf dist && mkdir dist && cp index.html dist/index.html && cp sw.js dist/sw.js && npm run build:shared && npm run build:zound-box && npm run build:kitchensink && cp -r zound-box/dist dist/zound-box && cp -r kitchensink/dist dist/kitchensink && npm run validate:pwa",
+    "build:production": "rm -rf dist && mkdir dist && cp index.html dist/index.html && cp sw.js dist/sw.js && npm run build:shared && npm run build:zound-box && npm run build:kitchensink && npm run build:daily-task-report && cp -r zound-box/dist dist/zound-box && cp -r kitchensink/dist dist/kitchensink && cp -r daily-task-report/dist dist/daily-task-report && npm run validate:pwa",
     "build:all": "npm run build:production"
   },
   "devDependencies": {

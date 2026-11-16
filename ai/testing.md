@@ -6,7 +6,7 @@ Vitest 5 + `@vue/test-utils` 2 + happy-dom, orchestrated from the root with Vite
 vitest.config.js        # root: project list + coverage
 vitest.setup.js         # global mocks
 shared/<lib>/vitest.config.js   # one project per library
-zound-box|kitchensink/vitest.config.js
+zound-box|kitchensink|daily-task-report/vitest.config.js
 ```
 
 Tests live in `src/**/__tests__/*.spec.js` of each project.
@@ -19,7 +19,7 @@ Tests live in `src/**/__tests__/*.spec.js` of each project.
 | `npm run test:run` | full suite once (CI) |
 | `npm run test:coverage` | V8 coverage |
 | `npm run test:shared` | all `shared/*` projects |
-| `npm run test:zound-box` / `test:kitchensink` | one app |
+| `npm run test:zound-box` / `test:kitchensink` / `test:daily-task-report` | one app |
 | `npx vitest run --project <name>` | one project (`ui-core`, `ui-data-form`, …) |
 | `npx vitest run path/to/file.spec.js` | one file |
 

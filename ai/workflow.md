@@ -5,6 +5,7 @@
 ```bash
 npm install                                  # resolves every workspace
 npm run dev --workspace=kitchensink          # run an app
+npm run dev --workspace=daily-task-report
 npm run dev --workspace=zound-box
 npm run dev --workspace=@zn-apps/ui-core     # library watch build
 ```
@@ -22,11 +23,12 @@ See [`testing.md`](./testing.md).
 | `npm run build:shared` | Builds `ui-core`, `settings-core`, `ui-about`, `pwa-integration`, `ui-data-*` |
 | `npm run build:zound-box` | Builds `zound-box` → `zound-box/dist/` |
 | `npm run build:kitchensink` | Builds `kitchensink` → `kitchensink/dist/` |
+| `npm run build:daily-task-report` | Builds `daily-task-report` → `daily-task-report/dist/` |
 | `npm run build:all` / `build:production` | Clean `dist/`, copy landing + `sw.js`, build shared + apps, move to `dist/<app>/`, run `validate:pwa` |
 | `npm run validate:pwa` | Checks generated manifests and 192/512 PNGs |
 | `npm run build:icons` | `scan:icons` + `generate:icons` (run before committing new icon usage) |
 
-Production order: shared → zound-box → kitchensink. CI runs `build:production`, which consumes the **versioned** sprites and never regenerates icons.
+Production order: shared → zound-box → kitchensink → daily-task-report. CI runs `build:production`, which consumes the **versioned** sprites and never regenerates icons.
 
 ## Icon pipeline
 
@@ -48,6 +50,7 @@ source (.vue)  --scan:icons-->  icon-profile.json {scanned, manual}
 | `pwa-integration` | — | merged into each app (`download`, `system_update`) |
 | `zound-box` | `app:zound-box` | `zound-box/public/icons/` |
 | `kitchensink` | `app:kitchensink` | `kitchensink/public/icons/` (full catalog via `manual`) |
+| `daily-task-report` | `app:daily-task-report` | `daily-task-report/public/icons/` (dynamic names in `manual`) |
 
 ## PWA checklist for any app
 

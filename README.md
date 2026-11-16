@@ -18,6 +18,7 @@
 | **@zn-apps/ui-data-** | [`shared/`](./shared) | Schema-driven form, view, editor and rich text | libraries |
 | **Zound Box** | [`zound-box/`](./zound-box) | Ambient audio mixer PWA | `/zn-apps/zound-box/` |
 | **Kitchensink** | [`kitchensink/`](./kitchensink) | Showroom, icon catalog and blueprint for new apps | `/zn-apps/kitchensink/` |
+| **Daily Task Report** | [`daily-task-report/`](./daily-task-report) | Local task tracker with configurable entity naming | `/zn-apps/daily-task-report/` |
 
 Each project keeps its own user manual in `doc/en/README.md` and `doc/es/README.md`, and its agent context in `ai/README.md`.
 
@@ -40,6 +41,7 @@ npm install
 
 ```bash
 npm run dev --workspace=kitchensink
+npm run dev --workspace=daily-task-report
 npm run dev --workspace=zound-box
 npm run dev --workspace=@zn-apps/ui-core   # library watch build
 ```
@@ -53,6 +55,7 @@ npm run test:coverage
 npm run test:shared
 npm run test:zound-box
 npm run test:kitchensink
+npm run test:daily-task-report
 ```
 
 Run the narrowest scope that covers your change; the full suite is for cross-project or release-level verification. Documentation-only changes need no tests or builds.
@@ -63,6 +66,7 @@ Run the narrowest scope that covers your change; the full suite is for cross-pro
 npm run build:shared
 npm run build:zound-box
 npm run build:kitchensink
+npm run build:daily-task-report
 npm run build:production   # full dist/ + validate:pwa
 npm run build:icons        # scan + generate icon sprites (commit the result)
 ```

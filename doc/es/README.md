@@ -23,6 +23,7 @@ Esta carpeta es el punto de entrada para personas. Cada app y librería mantiene
 |---|---|---|---|---|
 | **Zound Box** | `zound-box/` | PWA mezcladora de audio ambiental (paisajes sonoros + seseo rítmico) | `/zn-apps/zound-box/` | [ES](../../zound-box/doc/es/README.md) · [EN](../../zound-box/doc/en/README.md) |
 | **Kitchensink** | `kitchensink/` | Showroom de componentes, catálogo completo de iconos y blueprint para nuevas apps | `/zn-apps/kitchensink/` | [ES](../../kitchensink/doc/es/README.md) · [EN](../../kitchensink/doc/en/README.md) |
+| **Daily Task Report** | `daily-task-report/` | Seguimiento local de tareas con nombres de entidad configurables (Dexie + Pinia) | `/zn-apps/daily-task-report/` | [ES](../../daily-task-report/doc/es/README.md) · [EN](../../daily-task-report/doc/en/README.md) |
 | **Portal de entrada** | `index.html` | Lanzador estático de todas las PWA | `/zn-apps/` | — |
 
 ### Librerías compartidas (`shared/`)

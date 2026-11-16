@@ -23,6 +23,7 @@ This folder is the human entry point. Each app and library keeps its own user ma
 |---|---|---|---|---|
 | **Zound Box** | `zound-box/` | Ambient audio mixer PWA (background soundscapes + rhythmic shh) | `/zn-apps/zound-box/` | [EN](../../zound-box/doc/en/README.md) · [ES](../../zound-box/doc/es/README.md) |
 | **Kitchensink** | `kitchensink/` | Component showroom, full icon catalog and blueprint for new apps | `/zn-apps/kitchensink/` | [EN](../../kitchensink/doc/en/README.md) · [ES](../../kitchensink/doc/es/README.md) |
+| **Daily Task Report** | `daily-task-report/` | Local task tracker with configurable entity naming (Dexie + Pinia) | `/zn-apps/daily-task-report/` | [EN](../../daily-task-report/doc/en/README.md) · [ES](../../daily-task-report/doc/es/README.md) |
 | **Landing portal** | `index.html` | Static launcher for every PWA | `/zn-apps/` | — |
 
 ### Shared libraries (`shared/`)

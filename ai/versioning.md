@@ -6,7 +6,7 @@
 
 ## SemVer
 
-Each app (`zound-box`, `kitchensink`) and library (`ui-core`, `settings-core`, `ui-about`, `pwa-integration`, `ui-data-*`) owns its version in its `package.json` (`MAJOR.MINOR.PATCH`).
+Each app (`zound-box`, `kitchensink`, `daily-task-report`) and library (`ui-core`, `settings-core`, `ui-about`, `pwa-integration`, `ui-data-*`) owns its version in its `package.json` (`MAJOR.MINOR.PATCH`).
 
 | Request | Bump | `0.0.0` → | `1.2.3` → |
 |---|---|---|---|

@@ -39,6 +39,7 @@ zn-apps/
 │   ├── ui-data-editor/          view + per-field dialog editing
 │   └── ui-data-richtext/        Markdown-backed rich text
 ├── zound-box/                   product PWA (single screen)
+├── daily-task-report/           product PWA (master-slave, Pinia + Dexie)
 └── kitchensink/                 showroom, icon catalog, blueprint
 ```
 

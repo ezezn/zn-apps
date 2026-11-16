@@ -1,0 +1,37 @@
+{
+  "name": "daily-task-report",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Track and edit the tasks reported from an external work system.",
+  "author": "ZN Apps",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "icons": "npm run scan:icons && npm run generate:icons",
+    "scan:icons": "node ../scripts/scan-icons.mjs .",
+    "generate:icons": "node ../shared/ui-core/scripts/generate-icons.mjs --profile app:daily-task-report",
+    "build:icons": "npm run icons"
+  },
+  "dependencies": {
+    "@zn-apps/pwa-integration": "*",
+    "@zn-apps/settings-core": "*",
+    "@zn-apps/ui-about": "*",
+    "@zn-apps/ui-core": "*",
+    "@zn-apps/ui-data-core": "*",
+    "@zn-apps/ui-data-form": "*",
+    "@zn-apps/ui-data-view": "*",
+    "@zn-apps/ui-data-richtext": "*",
+    "dexie": "^4.2.1",
+    "pinia": "^3.0.4",
+    "vue": "^3.5.34",
+    "vue-i18n": "^11.4.18",
+    "vue-router": "^4.6.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.0",
+    "vite": "^5.0.0",
+    "vite-plugin-pwa": "^0.20.0"
+  }
+}

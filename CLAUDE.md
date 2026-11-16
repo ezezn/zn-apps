@@ -3,7 +3,7 @@
 Start with [`ai/README.md`](./ai/README.md), which routes tasks to the minimum context needed. Load a project's context only when the change touches it.
 
 - Global: [`ai/architecture.md`](./ai/architecture.md), [`ai/workflow.md`](./ai/workflow.md), [`ai/testing.md`](./ai/testing.md), [`ai/app-types.md`](./ai/app-types.md), [`ai/versioning.md`](./ai/versioning.md), [`ai/docs-maintenance.md`](./ai/docs-maintenance.md).
-- Per project: `shared/<lib>/ai/README.md`, `zound-box/ai/README.md`, `kitchensink/ai/README.md`.
+- Per project: `shared/<lib>/ai/README.md`, `zound-box/ai/README.md`, `kitchensink/ai/README.md`, `daily-task-report/ai/README.md`.
 - User documentation (EN + ES): [`doc/en/README.md`](./doc/en/README.md) and [`doc/es/README.md`](./doc/es/README.md).
 
 Key rules:

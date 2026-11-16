@@ -20,6 +20,7 @@ npm install
 ```bash
 # Applications
 npm run dev --workspace=kitchensink
+npm run dev --workspace=daily-task-report
 npm run dev --workspace=zound-box
 
 # Shared library watch builds (run while changing shared/ui-*/src)
@@ -39,6 +40,7 @@ npm run test:coverage       # V8 coverage
 npm run test:shared         # all shared libraries
 npm run test:zound-box
 npm run test:kitchensink
+npm run test:daily-task-report
 npx vitest run --project ui-core              # one library
 npx vitest run path/to/file.spec.js           # one file
 ```
@@ -51,6 +53,7 @@ Pick the narrowest scope that covers your change. The full suite is for cross-pr
 npm run build:shared       # all shared libraries
 npm run build:zound-box
 npm run build:kitchensink
+npm run build:daily-task-report
 npm run build:production   # full monorepo -> dist/
 npm run validate:pwa       # manifest + 192/512 PNG validation
 ```

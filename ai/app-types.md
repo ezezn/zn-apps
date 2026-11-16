@@ -5,7 +5,7 @@
 | Archetype | Example | Router | Layout | State | Icons |
 |---|---|---|---|---|---|
 | Single-screen utility PWA | `zound-box` | ❌ | `ZnScreen` directly | `ref()`/`reactive()` in `App.vue` or local composables | scanned only |
-| Multi-screen routed PWA | new apps from the kitchensink blueprint | ✅ `createWebHistory()` with `/zn-apps/<app>/` | `ZnMasterSlaveLayout` (`#master` nav + default `<router-view>`) | `ref()` or app-local Pinia (never cross-app) | scanned + explicit `manual` |
+| Multi-screen routed PWA | `daily-task-report` (Pinia + Dexie), new apps from the kitchensink blueprint | ✅ `createWebHistory(import.meta.env.BASE_URL)` | `ZnMasterSlaveLayout` (`#master` nav + default `<router-view>`) | `ref()` or app-local Pinia (never cross-app); Dexie for local user data | scanned + explicit `manual` |
 | Showroom / catalog | `kitchensink` | ✅ | `ZnMasterSlaveLayout` | local `ref()` | full catalog in `manual` (~2100 glyphs) |
 
 Add `ZnTabs`/`ZnSection` for in-screen grouping; dialogs (`ZnDialog`, `useDialogs()`) for one-off flows.
@@ -17,6 +17,8 @@ Add `ZnTabs`/`ZnSection` for in-screen grouping; dialogs (`ZnDialog`, `useDialog
 | `vue-router` | ❌ unnecessary | ✅ recommended | ✅ |
 | `ZnMasterSlaveLayout` | ❌ | ✅ | ✅ |
 | `settings-core` persistence | optional, own namespace | optional | optional |
+| Pinia store | ❌ local `ref()` | app-local when the page has its own state | ❌ |
+| Dexie / IndexedDB | ❌ | when the app owns local user data (`daily-task-report`) | ❌ |
 | Vue I18n `en`/`es` | ✅ | ✅ | ✅ |
 | `ui-about` panel | `ZnDialog` | `/about` route or dialog | `/about` route |
 | PWA manifest + 192/512 PNGs | ✅ | ✅ | ✅ |
@@ -36,11 +38,12 @@ Add `ZnTabs`/`ZnSection` for in-screen grouping; dialogs (`ZnDialog`, `useDialog
 2. Local components that compose `Zn*` primitives with domain visuals (e.g. `SoundToggle.vue` grayscale/brightness filter over `ZnCard`).
 3. Workbox cache options for domain assets (`.ogg`, `.jpg`, custom fonts).
 4. Domain schema, DTOs, events and business rules inside the app (`src/data/`, `src/models/`).
+5. App-local Pinia stores and Dexie databases (`src/stores/`, `src/db/`); never share them across apps.
 
 ## New app from the blueprint
 
 1. Copy `kitchensink/` structure: `public/` (favicon, `pwa-icon.svg` + 2 PNGs), `src/{main.js,App.vue,views/}`, `index.html`, `package.json`, `vite.config.js`, `vitest.config.js`, `icon-profile.json`, plus `ai/` and `doc/{en,es}/`.
-2. Dependencies: `@zn-apps/ui-core`, optionally `@zn-apps/ui-about`, `ui-data-*`, `pwa-integration`, `settings-core`, `vue`, `vue-router`.
+2. Dependencies: `@zn-apps/ui-core`, optionally `@zn-apps/ui-about`, `ui-data-*`, `pwa-integration`, `settings-core`, `vue`, `vue-router`, plus `pinia` / `dexie` when the app needs page state or local user data.
 3. `vite.config.js`: `base: '/zn-apps/<app>/'`, `VitePWA` with manifest + icons, `changelogPlugin({ root: __dirname })`, source aliases for `pwa-integration`.
 4. `src/main.js`: i18n, settings namespace, PWA listeners + theme sync.
 5. Register the workspace in the root `package.json`, add icon scan/generate targets, add it to `build:production`, and keep `validate:pwa` covering it.

@@ -10,7 +10,7 @@ Start with [`ai/README.md`](../ai/README.md) — it routes the task to the minim
 - [`ai/workflow.md`](../ai/workflow.md) — commands, builds, icons, PWA checklist, CI
 - [`ai/testing.md`](../ai/testing.md) — Vitest projects and mocks
 - [`ai/app-types.md`](../ai/app-types.md) — archetypes, overrides, blueprint
-- Per project: `shared/<lib>/ai/README.md`, `zound-box/ai/README.md`, `kitchensink/ai/README.md`
+- Per project: `shared/<lib>/ai/README.md`, `zound-box/ai/README.md`, `kitchensink/ai/README.md`, `daily-task-report/ai/README.md`
 
 ## Coding conventions
 

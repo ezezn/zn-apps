@@ -39,6 +39,7 @@ zn-apps/
 │   ├── ui-data-editor/          vista + edición por campo en diálogo
 │   └── ui-data-richtext/        texto enriquecido con valor Markdown
 ├── zound-box/                   PWA productiva (mono-pantalla)
+├── daily-task-report/           PWA productiva (maestro-esclavo, Pinia + Dexie)
 └── kitchensink/                 showroom, catálogo de iconos y blueprint
 ```
 

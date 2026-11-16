@@ -20,6 +20,7 @@ npm install
 ```bash
 # Aplicaciones
 npm run dev --workspace=kitchensink
+npm run dev --workspace=daily-task-report
 npm run dev --workspace=zound-box
 
 # Compilación en watch de librerías compartidas (mientras cambias shared/ui-*/src)
@@ -39,6 +40,7 @@ npm run test:coverage       # cobertura V8
 npm run test:shared         # todas las librerías compartidas
 npm run test:zound-box
 npm run test:kitchensink
+npm run test:daily-task-report
 npx vitest run --project ui-core              # una librería
 npx vitest run ruta/al/archivo.spec.js        # un archivo
 ```
@@ -51,6 +53,7 @@ Elige el alcance mínimo que cubra tu cambio. La suite completa es para cambios 
 npm run build:shared       # todas las librerías compartidas
 npm run build:zound-box
 npm run build:kitchensink
+npm run build:daily-task-report
 npm run build:production   # monorepo completo -> dist/
 npm run validate:pwa       # valida manifiestos y PNG 192/512
 ```
