@@ -15,6 +15,7 @@ import {
 } from '@zn-apps/ui-core'
 import { ZnRichTextEditor } from '@zn-apps/ui-data-richtext'
 import ZnDataListInput from './ZnDataListInput.vue'
+import ZnDataFileInput from './ZnDataFileInput.vue'
 import {
   FieldTypes,
   fieldSpan,
@@ -66,6 +67,8 @@ const componentType = computed(() => {
       return ZnSelect
     case FieldTypes.LIST:
       return ZnDataListInput
+    case FieldTypes.FILE:
+      return ZnDataFileInput
     case FieldTypes.RICHTEXT:
       return ZnRichTextEditor
     case FieldTypes.SWITCH:
@@ -111,6 +114,7 @@ const STYLED_TYPES = new Set([
   FieldTypes.SELECT,
   FieldTypes.MULTI_SELECT,
   FieldTypes.LIST,
+  FieldTypes.FILE,
   FieldTypes.RICHTEXT
 ])
 
@@ -154,6 +158,8 @@ const componentProps = computed(() => {
       }
     case FieldTypes.LIST:
       return { ...base, placeholder: field.placeholder }
+    case FieldTypes.FILE:
+      return { ...base, placeholder: field.placeholder, accept: field.accept }
     case FieldTypes.RICHTEXT:
       return { ...base, placeholder: field.placeholder }
     case FieldTypes.TEXTAREA:

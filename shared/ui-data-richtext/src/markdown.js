@@ -37,6 +37,7 @@ function inlineToHtml(text = '') {
   out = out.replace(/__([^_\n]+)__/g, '<strong>$1</strong>')
   out = out.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>')
   out = out.replace(/~~([^~\n]+)~~/g, '<s>$1</s>')
+  out = out.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1">')
   out = out.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
 
   return out
@@ -239,6 +240,11 @@ function serializeInline(node) {
       return children ? `~~${children}~~` : ''
     case 'CODE':
       return `\`${node.textContent}\``
+    case 'IMG': {
+      const src = node.getAttribute('src') || ''
+      const alt = node.getAttribute('alt') || ''
+      return `![${alt}](${src})`
+    }
     case 'A': {
       const href = node.getAttribute('href') || ''
       return children ? `[${children}](${href})` : ''

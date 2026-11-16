@@ -1,4 +1,7 @@
 {
-  "scanned": [],
+  "scanned": [
+    "close",
+    "insert_drive_file"
+  ],
   "manual": []
 }

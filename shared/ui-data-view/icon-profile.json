@@ -1,4 +1,8 @@
 {
-  "scanned": [],
+  "scanned": [
+    "download",
+    "insert_drive_file",
+    "visibility"
+  ],
   "manual": []
 }

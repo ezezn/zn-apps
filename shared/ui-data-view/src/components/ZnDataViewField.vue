@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { ZnChip, ZnRow } from '@zn-apps/ui-core'
+import { ZnButton, ZnChip, ZnIcon, ZnRow } from '@zn-apps/ui-core'
 import { ZnRichTextView } from '@zn-apps/ui-data-richtext'
 import {
   FieldTypes,
@@ -58,6 +58,39 @@ const hasChips = computed(() => isList.value && chipValues.value.length > 0)
 const isRichText = computed(
   () => props.field.type === FieldTypes.RICHTEXT && String(props.modelValue ?? '').trim().length > 0
 )
+const isFile = computed(
+  () => props.field.type === FieldTypes.FILE && props.modelValue != null && props.modelValue !== ''
+)
+
+const fileData = computed(() => {
+  if (!isFile.value) return null
+  if (typeof props.modelValue === 'object') {
+    return {
+      name: props.modelValue.name || 'Archivo',
+      url: props.modelValue.url || props.modelValue.href || ''
+    }
+  }
+  return {
+    name: String(props.modelValue),
+    url: String(props.modelValue)
+  }
+})
+
+function downloadFile() {
+  if (!fileData.value) return
+  const link = document.createElement('a')
+  link.href = fileData.value.url || '#'
+  link.download = fileData.value.name
+  link.target = '_blank'
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+}
+
+function viewFile() {
+  if (!fileData.value?.url) return
+  window.open(fileData.value.url, '_blank')
+}
 
 const formattedValue = computed(() =>
   formatFieldValue(props.field, props.modelValue, {
@@ -85,6 +118,36 @@ const formattedValue = computed(() =>
       :model-value="String(modelValue)"
       :size="fieldSize"
     />
+    <ZnRow
+      v-else-if="isFile"
+      padding="0"
+      gap="8px"
+      align="center"
+      class="zn-field-file"
+    >
+      <ZnIcon name="insert_drive_file" :size="20" class="zn-file-icon" />
+      <span class="zn-field-value zn-file-name" :title="fileData?.name">{{ fileData?.name }}</span>
+      <ZnButton
+        v-if="fileData?.url"
+        variant="text"
+        icon-only
+        aria-label="Ver archivo"
+        title="Ver archivo"
+        @click.stop="viewFile"
+      >
+        <ZnIcon name="visibility" :size="18" />
+      </ZnButton>
+      <ZnButton
+        v-if="fileData?.url"
+        variant="text"
+        icon-only
+        aria-label="Descargar archivo"
+        title="Descargar archivo"
+        @click.stop="downloadFile"
+      >
+        <ZnIcon name="download" :size="18" />
+      </ZnButton>
+    </ZnRow>
     <span v-else-if="!hasChips" class="zn-field-value">{{ formattedValue }}</span>
     <ZnRow v-else padding="0" gap="4px" wrap class="zn-field-chips">
       <ZnChip

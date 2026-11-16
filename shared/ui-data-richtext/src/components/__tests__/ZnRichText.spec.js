@@ -42,6 +42,113 @@ describe('ZnRichTextEditor', () => {
     })
     expect(readonly.find('[role="toolbar"]').exists()).toBe(false)
   })
+
+  it('normaliza la URL del enlace con https:// y valida el formulario', async () => {
+    const wrapper = mount(ZnRichTextEditor, {
+      props: { modelValue: 'Hola' },
+      attachTo: document.body
+    })
+
+    await wrapper.find('button[title="Insertar enlace"]').trigger('mousedown')
+
+    const textInput = wrapper.find('input[placeholder="Texto a mostrar"]')
+    const urlInput = wrapper.find('input[placeholder="https://ejemplo.com"]')
+
+    await textInput.setValue('Ejemplo')
+    await urlInput.setValue('example.com')
+    expect(urlInput.element.value).toBe('example.com')
+
+    await urlInput.trigger('blur')
+    expect(urlInput.element.value).toBe('https://example.com')
+    expect(wrapper.find('.zn-dialog-error').exists()).toBe(false)
+
+    const dialog = urlInput.element.closest('dialog')
+    const insert = Array.from(dialog.querySelectorAll('button'))
+      .find((button) => button.textContent.trim() === 'Insertar')
+    expect(insert.disabled).toBe(false)
+
+    wrapper.unmount()
+  })
+
+  it('marca como inválida una URL que no se puede resolver', async () => {
+    const wrapper = mount(ZnRichTextEditor, {
+      props: { modelValue: 'Hola' },
+      attachTo: document.body
+    })
+
+    await wrapper.find('button[title="Insertar enlace"]').trigger('mousedown')
+
+    const textInput = wrapper.find('input[placeholder="Texto a mostrar"]')
+    const urlInput = wrapper.find('input[placeholder="https://ejemplo.com"]')
+
+    await textInput.setValue('Ejemplo')
+    await urlInput.setValue('http://')
+
+    expect(wrapper.find('.zn-dialog-error').exists()).toBe(true)
+    const dialog = urlInput.element.closest('dialog')
+    const insert = Array.from(dialog.querySelectorAll('button'))
+      .find((button) => button.textContent.trim() === 'Insertar')
+    expect(insert.disabled).toBe(true)
+
+    wrapper.unmount()
+  })
+
+  it('prellena y actualiza el enlace existente bajo el cursor', async () => {
+    const wrapper = mount(ZnRichTextEditor, {
+      props: { modelValue: 'Enlace [ejemplo](https://example.com) aquí' },
+      attachTo: document.body
+    })
+
+    const canvas = wrapper.find('.zn-richtext__canvas').element
+    const link = canvas.querySelector('a')
+    expect(link).not.toBeNull()
+
+    const range = document.createRange()
+    range.setStart(link.firstChild, 1)
+    range.setEnd(link.firstChild, 1)
+    const selection = window.getSelection()
+    selection.removeAllRanges()
+    selection.addRange(range)
+
+    await wrapper.find('button[title="Insertar enlace"]').trigger('mousedown')
+
+    const textInput = wrapper.find('input[placeholder="Texto a mostrar"]')
+    const urlInput = wrapper.find('input[placeholder="https://ejemplo.com"]')
+    expect(textInput.element.value).toBe('ejemplo')
+    expect(urlInput.element.value).toBe('https://example.com')
+
+    await textInput.setValue('otro')
+    await urlInput.setValue('other.com')
+
+    const dialog = urlInput.element.closest('dialog')
+    const save = Array.from(dialog.querySelectorAll('button'))
+      .find((button) => button.textContent.trim() === 'Guardar')
+    save.click()
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.emitted('update:modelValue').at(-1)[0]).toContain('[otro](https://other.com)')
+
+    wrapper.unmount()
+  })
+
+  it('permite abrir el diálogo de tabla, imagen y enlace desde la toolbar', async () => {
+    const wrapper = mount(ZnRichTextEditor, { props: { modelValue: '' } })
+
+    const tableBtn = wrapper.find('button[title="Tabla"]')
+    expect(tableBtn.exists()).toBe(true)
+    await tableBtn.trigger('mousedown')
+    expect(wrapper.vm.showTableDialog).toBe(true)
+
+    const imgBtn = wrapper.find('button[title="Insertar imagen"]')
+    expect(imgBtn.exists()).toBe(true)
+    await imgBtn.trigger('mousedown')
+    expect(wrapper.vm.showImageDialog).toBe(true)
+
+    const linkBtn = wrapper.find('button[title="Insertar enlace"]')
+    expect(linkBtn.exists()).toBe(true)
+    await linkBtn.trigger('mousedown')
+    expect(wrapper.vm.showLinkDialog).toBe(true)
+  })
 })
 
 describe('ZnRichTextView', () => {

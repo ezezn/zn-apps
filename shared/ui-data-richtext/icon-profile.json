@@ -1,0 +1,22 @@
+{
+  "scanned": [
+    "add",
+    "image",
+    "link",
+    "table_view",
+    "upload_file"
+  ],
+  "manual": [
+    "code",
+    "delete",
+    "format_align_center",
+    "format_align_left",
+    "format_align_right",
+    "format_bold",
+    "format_italic",
+    "format_strikethrough",
+    "format_underlined",
+    "link",
+    "visibility"
+  ]
+}

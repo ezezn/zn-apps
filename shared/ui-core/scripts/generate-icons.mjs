@@ -43,7 +43,8 @@ const SHARED_LIBRARIES = [
   'pwa-integration',
   'ui-data-form',
   'ui-data-view',
-  'ui-data-editor'
+  'ui-data-editor',
+  'ui-data-richtext'
 ]
 
 const scriptDir = dirname(fileURLToPath(import.meta.url))

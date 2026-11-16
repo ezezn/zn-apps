@@ -77,7 +77,9 @@ export const FieldTypes = Object.freeze({
   RICHTEXT: 'richtext',
   SWITCH: 'switch',
   CHECKBOX: 'checkbox',
-  RANGE: 'range'
+  RANGE: 'range',
+  /** Archivo seleccionado / subido. */
+  FILE: 'file'
 })
 
 /** Columnas del layout de una sección. */
@@ -246,6 +248,11 @@ export function formatFieldValue(field = {}, value, options = {}) {
 
   if (type === FieldTypes.RANGE && Array.isArray(value)) {
     return value.join(' – ')
+  }
+
+  if (type === FieldTypes.FILE) {
+    if (typeof value === 'object' && value?.name) return String(value.name)
+    return String(value)
   }
 
   if (type === FieldTypes.SWITCH || type === FieldTypes.CHECKBOX || typeof value === 'boolean') {

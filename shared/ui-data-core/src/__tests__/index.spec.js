@@ -110,6 +110,9 @@ describe('ui-data-core · formato', () => {
 
   it('formatea richtext a texto plano y declara el tipo', () => {
     expect(FieldTypes.RICHTEXT).toBe('richtext')
+    expect(FieldTypes.FILE).toBe('file')
+    expect(formatFieldValue({ type: FieldTypes.FILE }, { name: 'doc.pdf' })).toBe('doc.pdf')
+    expect(formatFieldValue({ type: FieldTypes.FILE }, 'doc.pdf')).toBe('doc.pdf')
     expect(formatFieldValue({ type: FieldTypes.RICHTEXT }, '## Título\n\n**Texto**')).toBe('Título Texto')
     expect(formatFieldValue({ type: FieldTypes.RICHTEXT }, '')).toBe('—')
   })

@@ -26,6 +26,7 @@ export { default as ZnCard } from './components/containers/ZnCard.vue'
 
 // Controles (interacción del usuario)
 export { default as ZnButton } from './components/controls/ZnButton.vue'
+export { default as ZnButtonGroup } from './components/controls/ZnButtonGroup.vue'
 export { default as ZnChip } from './components/controls/ZnChip.vue'
 export { default as ZnSwitch } from './components/controls/ZnSwitch.vue'
 

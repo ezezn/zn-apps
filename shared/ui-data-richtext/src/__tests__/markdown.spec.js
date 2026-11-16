@@ -6,7 +6,7 @@ describe('markdownToHtml', () => {
     const html = markdownToHtml([
       '## Título',
       '',
-      'Texto **negrita**, *cursiva*, <u>subrayado</u> y ~~tachado~~.'
+      'Texto **negrita**, *cursiva*, <u>subrayado</u>, ~~tachado~~, ![foto](data:image/png;base64,123) y [enlace](https://example.com).'
     ].join('\n'))
 
     expect(html).toContain('<h2>Título</h2>')
@@ -14,6 +14,8 @@ describe('markdownToHtml', () => {
     expect(html).toContain('<em>cursiva</em>')
     expect(html).toContain('<u>subrayado</u>')
     expect(html).toContain('<s>tachado</s>')
+    expect(html).toContain('<img src="data:image/png;base64,123" alt="foto">')
+    expect(html).toContain('<a href="https://example.com">enlace</a>')
   })
 
   it('convierte tablas GFM con alineación por columna', () => {
@@ -56,7 +58,7 @@ describe('markdownToHtml', () => {
 describe('htmlToMarkdown', () => {
   it('serializa párrafos, encabezados y formato inline', () => {
     const markdown = htmlToMarkdown(
-      '<h2>Título</h2><p>Texto <strong>negrita</strong> y <em>cursiva</em> con <u>subrayado</u> y <s>tachado</s>.</p>'
+      '<h2>Título</h2><p>Texto <strong>negrita</strong> y <em>cursiva</em> con <u>subrayado</u> y <s>tachado</s> y <img src="data:img" alt="pic"> y <a href="https://test.com">link</a>.</p>'
     )
 
     expect(markdown).toContain('## Título')
@@ -64,6 +66,8 @@ describe('htmlToMarkdown', () => {
     expect(markdown).toContain('*cursiva*')
     expect(markdown).toContain('<u>subrayado</u>')
     expect(markdown).toContain('~~tachado~~')
+    expect(markdown).toContain('![pic](data:img)')
+    expect(markdown).toContain('[link](https://test.com)')
   })
 
   it('serializa alineación de bloques como HTML dentro de Markdown', () => {

@@ -16,7 +16,23 @@
       />
     </ZnSection>
 
-    <ZnSection title="2. Valor Markdown" collapsible :columns="1">
+    <ZnSection title="2. Variante filled" collapsible :columns="1">
+      <p class="section-desc">
+        El editor también admite la variante rellena de MD3 con
+        <code>variant="filled"</code>. La etiqueta flotante reserva su espacio
+        dentro del contenedor, por lo que no se superpone con la toolbar.
+      </p>
+
+      <ZnRichTextEditor
+        v-model="filledMarkdown"
+        variant="filled"
+        label="Descripción (filled)"
+        hint="Mismo valor Markdown con el contenedor relleno de MD3."
+        placeholder="Escribe y aplica formato…"
+      />
+    </ZnSection>
+
+    <ZnSection title="3. Valor Markdown" collapsible :columns="1">
       <p class="section-desc">
         Este es el string que recibiría un formulario, una base de datos o una API.
         Puede editarse aquí y el editor se vuelve a renderizar.
@@ -28,7 +44,7 @@
       </ZnBox>
     </ZnSection>
 
-    <ZnSection title="3. Presentación de sólo lectura" collapsible :columns="1">
+    <ZnSection title="4. Presentación de sólo lectura" collapsible :columns="1">
       <p class="section-desc">
         <code>ZnRichTextView</code> convierte el mismo Markdown a HTML para
         presentación: encabezados, formato inline, listas, citas y tablas.
@@ -40,7 +56,7 @@
       </ZnBox>
     </ZnSection>
 
-    <ZnSection title="4. Campo richtext en form / view / editor" collapsible :columns="1">
+    <ZnSection title="5. Campo richtext en form / view / editor" collapsible :columns="1">
       <p class="section-desc">
         El tipo <code>richtext</code> de <code>UiDataCore.FieldTypes</code> usa este
         editor en formularios y diálogos de edición, y <code>ZnRichTextView</code>
@@ -69,6 +85,8 @@ Este editor guarda **Markdown** y muestra *HTML5*.
 | --- | :---: |
 | Negrita | B |
 | Tabla | ▦ |`)
+
+const filledMarkdown = ref('Texto de ejemplo con **negrita** en un campo *filled*.')
 </script>
 
 <style scoped>
