@@ -5,6 +5,7 @@ import {
   ZnMultilineText,
   ZnEmailInput,
   ZnPhoneInput,
+  ZnNumberInput,
   ZnDateInput,
   ZnTimeInput,
   ZnDateTimeInput,
@@ -56,6 +57,8 @@ const componentType = computed(() => {
       return ZnEmailInput
     case FieldTypes.PHONE:
       return ZnPhoneInput
+    case FieldTypes.NUMBER:
+      return ZnNumberInput
     case FieldTypes.DATE:
       return ZnDateInput
     case FieldTypes.TIME:
@@ -77,7 +80,6 @@ const componentType = computed(() => {
     case FieldTypes.RANGE:
       return ZnRangeInput
     case FieldTypes.TEXT:
-    case FieldTypes.NUMBER:
     default:
       return ZnSingleLineText
   }
@@ -142,7 +144,7 @@ const componentProps = computed(() => {
     case FieldTypes.MULTI_SELECT:
       return { ...base, options: field.options ?? [], multiple: true }
     case FieldTypes.NUMBER:
-      return { ...base, type: 'number', min: field.min, max: field.max, step: field.step }
+      return { ...base, min: field.min, max: field.max, step: field.step }
     case FieldTypes.RANGE:
       return {
         label: field.label,

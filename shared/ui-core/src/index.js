@@ -39,6 +39,7 @@ export { default as ZnSingleLineText } from './components/input/ZnSingleLineText
 export { default as ZnMultilineText } from './components/input/ZnMultilineText.vue'
 export { default as ZnEmailInput } from './components/input/ZnEmailInput.vue'
 export { default as ZnPhoneInput } from './components/input/ZnPhoneInput.vue'
+export { default as ZnNumberInput } from './components/input/ZnNumberInput.vue'
 export { default as ZnDateInput } from './components/input/ZnDateInput.vue'
 export { default as ZnTimeInput } from './components/input/ZnTimeInput.vue'
 export { default as ZnDateTimeInput } from './components/input/ZnDateTimeInput.vue'

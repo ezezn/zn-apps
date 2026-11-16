@@ -104,6 +104,28 @@ describe('ZnDataEditor', () => {
     })
   })
 
+  it('edita campos numéricos con ZnNumberInput en el diálogo', async () => {
+    const numberSchema = {
+      sections: [{ fields: [{ path: 'qty', type: 'number', label: 'Cantidad', min: 1, max: 20 }] }]
+    }
+
+    const wrapper = mount(ZnDataEditor, {
+      props: { schema: numberSchema, modelValue: { qty: 3 } }
+    })
+
+    await wrapper.find('.zn-field-trigger').trigger('click')
+    await nextTick()
+    await nextTick()
+
+    const input = wrapper.find('dialog input[type="number"]')
+    expect(input.element.value).toBe('3')
+
+    await input.setValue('7')
+    await saveButton(wrapper).trigger('click')
+
+    expect(wrapper.emitted('update:modelValue')[0][0]).toMatchObject({ qty: 7 })
+  })
+
   it('aplica variante y tamaño del editor al input del diálogo', async () => {
     const wrapper = mount(ZnDataEditor, {
       props: { schema, modelValue, variant: 'filled', size: 'large' }

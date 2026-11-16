@@ -57,7 +57,7 @@ Los componentes se agrupan por significado en `shared/ui-core/src/components/` (
 | `layout/` | `ZnApp`, `ZnScreen`, `ZnScrollArea`, `ZnMasterSlaveLayout` y `screenNavigation.js` (clave de navegación compartida) |
 | `containers/` | Contenedores de contenido: `ZnBox`, `ZnRow`, `ZnSection`, `ZnCard` |
 | `controls/` | Controles interactivos: `ZnButton`, `ZnChip`, `ZnSwitch` |
-| `input/` | Campos de formulario: `ZnSingleLineText`, `ZnMultilineText`, `ZnEmailInput`, `ZnPhoneInput`, `ZnDateInput`, `ZnTimeInput`, `ZnDateTimeInput`, `ZnSelect`, `ZnRangeInput`, `ZnDateRangeInput`, `ZnTimeRangeInput`, `ZnDateTimeRangeInput` (+ `ZnFieldShell`, la anatomía MD3 exportada para librerías derivadas, y `ZnTemporalRange`, interno) |
+| `input/` | Campos de formulario: `ZnSingleLineText`, `ZnMultilineText`, `ZnEmailInput`, `ZnPhoneInput`, `ZnNumberInput`, `ZnDateInput`, `ZnTimeInput`, `ZnDateTimeInput`, `ZnSelect`, `ZnRangeInput`, `ZnDateRangeInput`, `ZnTimeRangeInput`, `ZnDateTimeRangeInput` (+ `ZnFieldShell`, la anatomía MD3 exportada para librerías derivadas, y `ZnTemporalRange`, interno) |
 | `navigation/` | `ZnTabs` |
 | `dialogs/` | `ZnDialog`, `ZnDialogHost` |
 | `media/` | `ZnIcon`, `ZnImage` |
@@ -204,6 +204,11 @@ Campo de texto de una línea (`<input type="text">`).
 `type="tel"` que sanea la entrada (solo dígitos, `+`, espacios, paréntesis y guiones) y valida la cantidad de dígitos.
 - **Props extra**: `minDigits` (default `6`), `maxDigits` (default `15`), `validate`, `invalidMessage`.
 - **Eventos**: `update:modelValue` (valor saneado), `update:valid`, `validation(Boolean)`.
+
+#### `ZnNumberInput`
+`type="number"` con `inputmode="decimal"`, el mismo contenedor MD3 y validación de rango al perder el foco. Emite el valor como `Number` (o `null` cuando el campo está vacío) y conserva internamente el texto para no bloquear estados intermedios de tecleo.
+- **Props extra**: `min`, `max`, `step` (default `'any'`, permite decimales), `validate` (default `true`), `invalidMessage`.
+- **Eventos**: `update:modelValue` (`Number | null`), `update:valid`, `validation(Boolean)`.
 
 #### `ZnDateInput` / `ZnTimeInput` / `ZnDateTimeInput`
 Selectores nativos `date`, `time` y `datetime-local`.

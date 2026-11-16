@@ -89,6 +89,16 @@ export const dataDemoSchema = {
           showTicks: true
         },
         {
+          path: 'preferences.weeklyHours',
+          type: 'number',
+          label: 'Horas semanales',
+          hint: 'Entre 1 y 40',
+          placeholder: '32',
+          min: 1,
+          max: 40,
+          step: 1
+        },
+        {
           path: 'preferences.tags',
           type: 'multi-select',
           label: 'Etiquetas',
@@ -139,6 +149,7 @@ export const dataDemoValue = {
     notifications: true,
     theme: 'system',
     dailyGoal: 45,
+    weeklyHours: 32,
     tags: ['Diseño', 'Código'],
     keywords: ['Material 3', 'chips']
   },

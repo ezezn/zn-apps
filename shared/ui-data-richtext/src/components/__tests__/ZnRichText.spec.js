@@ -139,6 +139,10 @@ describe('ZnRichTextEditor', () => {
     await tableBtn.trigger('mousedown')
     expect(wrapper.vm.showTableDialog).toBe(true)
 
+    const numberInputs = wrapper.findAll('input[type="number"]')
+    expect(numberInputs).toHaveLength(2)
+    expect(numberInputs[0].element.value).toBe('2')
+
     const imgBtn = wrapper.find('button[title="Insertar imagen"]')
     expect(imgBtn.exists()).toBe(true)
     await imgBtn.trigger('mousedown')

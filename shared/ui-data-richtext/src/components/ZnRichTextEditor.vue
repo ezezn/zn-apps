@@ -148,14 +148,22 @@
       <div v-if="!isInsideTable" class="zn-dialog-form">
         <p class="zn-dialog-description">Especifica el número de filas y columnas para la nueva tabla.</p>
         <div class="zn-dialog-row">
-          <label class="zn-dialog-field">
-            <span>Filas:</span>
-            <input v-model.number="tableRows" type="number" min="1" max="20" class="zn-dialog-input" />
-          </label>
-          <label class="zn-dialog-field">
-            <span>Columnas:</span>
-            <input v-model.number="tableCols" type="number" min="1" max="20" class="zn-dialog-input" />
-          </label>
+          <ZnNumberInput
+            v-model="tableRows"
+            label="Filas"
+            :min="1"
+            :max="20"
+            :step="1"
+            size="small"
+          />
+          <ZnNumberInput
+            v-model="tableCols"
+            label="Columnas"
+            :min="1"
+            :max="20"
+            :step="1"
+            size="small"
+          />
         </div>
       </div>
       <div v-else class="zn-table-operations">
@@ -269,7 +277,7 @@
 
 <script setup>
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
-import { ZnButton, ZnButtonGroup, ZnDialog, ZnFieldShell, ZnIcon } from '@zn-apps/ui-core'
+import { ZnButton, ZnButtonGroup, ZnDialog, ZnFieldShell, ZnIcon, ZnNumberInput } from '@zn-apps/ui-core'
 import { htmlToMarkdown, markdownToHtml } from '../markdown.js'
 
 const props = defineProps({
@@ -827,6 +835,11 @@ defineExpose({
 .zn-dialog-row {
   display: flex;
   gap: 16px;
+}
+
+.zn-dialog-row > * {
+  flex: 1 1 0;
+  min-width: 0;
 }
 
 .zn-dialog-field {

@@ -58,6 +58,7 @@ sección de 2 columnas ocupa todo el ancho.
 | `multi-select` | Chips MD3 (`ZnChip`) con la etiqueta de cada opción. |
 | `list` | Chips MD3 (`ZnChip`) con cada valor de la lista. |
 | `richtext` | `ZnRichTextView`: Markdown convertido a HTML5 (encabezados, formato inline, listas y tablas). |
+| `number` | Valor numérico tal cual (`String(value)`). |
 | `range` (array) | `min – max`. |
 | `switch` / `checkbox` / boolean | `trueText` / `falseText`. |
 | Objeto | JSON serializado. |

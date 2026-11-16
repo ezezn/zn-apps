@@ -68,7 +68,7 @@ const schema = {
 | `TEXTAREA` | `textarea` | `ZnMultilineText` |
 | `EMAIL` | `email` | `ZnEmailInput` |
 | `PHONE` | `phone` | `ZnPhoneInput` |
-| `NUMBER` | `number` | `ZnSingleLineText type="number"` |
+| `NUMBER` | `number` | `ZnNumberInput` (valor `Number` o `null`, con `min`/`max`/`step`) |
 | `DATE` | `date` | `ZnDateInput` |
 | `TIME` | `time` | `ZnTimeInput` |
 | `DATETIME` | `datetime` | `ZnDateTimeInput` |

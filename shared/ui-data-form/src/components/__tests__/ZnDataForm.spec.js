@@ -137,6 +137,24 @@ describe('ZnDataForm', () => {
     expect(afterRemove.keywords).toEqual(['chips'])
   })
 
+  it('renderiza el tipo number con ZnNumberInput y emite un número', async () => {
+    const numberSchema = {
+      sections: [
+        { fields: [{ path: 'qty', type: 'number', label: 'Cantidad', min: 1, max: 20 }] }
+      ]
+    }
+
+    const wrapper = mount(ZnDataForm, {
+      props: { schema: numberSchema, modelValue: { qty: 3 }, live: true, showActions: false }
+    })
+
+    const input = wrapper.find('input[type="number"]')
+    expect(input.element.value).toBe('3')
+
+    await input.setValue('5')
+    expect(wrapper.emitted('update:modelValue').at(-1)[0]).toMatchObject({ qty: 5 })
+  })
+
   it('acepta variant y size como props del formulario', () => {
     const wrapper = mount(ZnDataForm, {
       props: { schema, modelValue: {}, variant: 'filled', size: 'large' }

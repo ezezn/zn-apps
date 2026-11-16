@@ -4,6 +4,7 @@ import ZnSingleLineText from '../input/ZnSingleLineText.vue'
 import ZnMultilineText from '../input/ZnMultilineText.vue'
 import ZnEmailInput from '../input/ZnEmailInput.vue'
 import ZnPhoneInput from '../input/ZnPhoneInput.vue'
+import ZnNumberInput from '../input/ZnNumberInput.vue'
 import ZnDateInput from '../input/ZnDateInput.vue'
 import ZnTimeInput from '../input/ZnTimeInput.vue'
 import ZnDateTimeInput from '../input/ZnDateTimeInput.vue'
@@ -190,6 +191,63 @@ describe('ZnPhoneInput', () => {
 
     expect(wrapper.emitted('update:valid')[0]).toEqual([false])
     expect(wrapper.find('.zn-field--error').exists()).toBe(true)
+  })
+})
+
+describe('ZnNumberInput', () => {
+  it('renderiza un input numérico con min, max y step', () => {
+    const wrapper = mount(ZnNumberInput, {
+      props: { modelValue: 12, label: 'Cantidad', min: 1, max: 20, step: 1 }
+    })
+
+    const input = wrapper.find('input[type="number"]')
+    expect(input.exists()).toBe(true)
+    expect(input.attributes('min')).toBe('1')
+    expect(input.attributes('max')).toBe('20')
+    expect(input.attributes('step')).toBe('1')
+    expect(input.element.value).toBe('12')
+  })
+
+  it('emite números y null al vaciar el campo', async () => {
+    const wrapper = mount(ZnNumberInput, {
+      props: { modelValue: null, label: 'Cantidad' }
+    })
+
+    const input = wrapper.find('input')
+    await input.setValue('8')
+    expect(wrapper.emitted('update:modelValue')[0]).toEqual([8])
+
+    await input.setValue('')
+    expect(wrapper.emitted('update:modelValue').at(-1)).toEqual([null])
+  })
+
+  it('valida el rango min/max al perder el foco', async () => {
+    const wrapper = mount(ZnNumberInput, {
+      props: { modelValue: 30, label: 'Cantidad', min: 1, max: 20 }
+    })
+
+    await wrapper.find('input').trigger('blur')
+
+    expect(wrapper.emitted('update:valid')[0]).toEqual([false])
+    expect(wrapper.emitted('validation')[0]).toEqual([false])
+    expect(wrapper.find('.zn-field--error').exists()).toBe(true)
+  })
+
+  it('propaga variante filled y tamaño small', () => {
+    const wrapper = mount(ZnNumberInput, {
+      props: { modelValue: 5, variant: 'filled', size: 'small' }
+    })
+
+    expect(wrapper.find('.zn-field').classes()).toContain('zn-field--filled')
+    expect(wrapper.find('.zn-field').classes()).toContain('zn-field--small')
+  })
+
+  it('permite decimales con el step por defecto', () => {
+    const wrapper = mount(ZnNumberInput, {
+      props: { modelValue: 1.5, label: 'Peso' }
+    })
+
+    expect(wrapper.find('input').attributes('step')).toBe('any')
   })
 })
 

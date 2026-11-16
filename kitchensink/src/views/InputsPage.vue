@@ -43,6 +43,20 @@
           Omite <code>label</code> y usa <code>aria-label</code> cuando el contexto ya describe el campo.
         </span>
       </ZnBox>
+
+      <ZnBox variant="outlined" class="showcase-stack">
+        <span class="showcase-label">ZnNumberInput</span>
+        <ZnNumberInput
+          v-model="edad"
+          label="Edad"
+          hint="Entre 18 y 99 años"
+          placeholder="0"
+          :min="18"
+          :max="99"
+          :step="1"
+        />
+        <span class="helper-text">Valor numérico: {{ edad ?? '—' }}</span>
+      </ZnBox>
     </ZnSection>
 
     <!-- SECCIÓN 2: EMAIL Y TELÉFONO -->
@@ -202,6 +216,7 @@ import {
   ZnMultilineText,
   ZnEmailInput,
   ZnPhoneInput,
+  ZnNumberInput,
   ZnDateInput,
   ZnTimeInput,
   ZnDateTimeInput,
@@ -217,6 +232,7 @@ const busqueda = ref('')
 const correo = ref('')
 const correoValido = ref(true)
 const telefono = ref('')
+const edad = ref(null)
 
 const paises = [
   { value: 'ar', label: 'Argentina' },

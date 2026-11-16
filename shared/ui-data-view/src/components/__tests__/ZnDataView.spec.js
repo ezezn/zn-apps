@@ -86,6 +86,22 @@ describe('ZnDataView', () => {
     expect(details.element.open).toBe(false)
   })
 
+  it('presenta valores numéricos y su estado vacío', () => {
+    const numberSchema = {
+      sections: [{ fields: [{ path: 'qty', type: 'number', label: 'Cantidad' }] }]
+    }
+
+    const wrapper = mount(ZnDataView, {
+      props: { schema: numberSchema, modelValue: { qty: 42 } }
+    })
+    expect(wrapper.text()).toContain('42')
+
+    const empty = mount(ZnDataView, {
+      props: { schema: numberSchema, modelValue: { qty: null } }
+    })
+    expect(empty.text()).toContain('—')
+  })
+
   it('presenta multiselect y listas como chips que heredan el tamaño', () => {
     const listSchema = {
       sections: [
