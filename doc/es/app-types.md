@@ -16,7 +16,7 @@ Ejemplo: `zound-box`.
 Ejemplo: apps derivadas del blueprint de `kitchensink`.
 - Propósito: varias vistas, paneles, flujos por pasos, secciones navegables por URL.
 - `vue-router` con `createWebHistory()` y base `/zn-apps/<app>/`.
-- `ZnMasterSlaveLayout`: navegación lateral (`#master`) + contenido (`default`) en escritorio; navegación colapsable con botón de regreso en móvil.
+- `ZnMasterSlaveLayout`: navegación lateral (`#master`) + contenido (`default`) en escritorio; en móvil una pantalla a la vez, con la navegación en un drawer modal que abre el botón hamburguesa del `ZnScreen` activo. Si la app arranca sin ruta seleccionada, la navegación ocupa primero la pantalla móvil.
 - Estado: Composition API o Pinia **estrictamente dentro de la app**.
 - Deep linking: cada vista tiene su URL propia.
 

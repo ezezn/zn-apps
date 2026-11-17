@@ -68,6 +68,20 @@ Cada app declara mensajes `en` y `es`. Locale inicial: `settings.i18n.locale` �
 ### 7. Verificación acotada
 Verifica con el comando mínimo útil para el cambio; la suite completa y `build:all` son para trabajo transversal o de release. Las tareas sólo de Markdown no ejecutan tests ni builds. CI mantiene la validación completa.
 
+## Navegación maestro-esclavo
+
+Las apps con varias pantallas usan `ZnMasterSlaveLayout`. La librería controla el armazón responsivo, así que todas las apps obtienen el mismo comportamiento de navegación sin código extra:
+
+| Viewport / estado | Qué ve el usuario |
+|---|---|
+| Escritorio (≥ breakpoint) | Navegación acoplada al costado de la página activa |
+| Móvil, la app arranca sin ruta seleccionada | La navegación ocupa la pantalla primero; al elegir un enlace se muestra la página |
+| Móvil, la app arranca en una página (o cambia la ruta) | La página conserva el foco y un botón hamburguesa en su header abre la navegación como drawer modal |
+
+Si aún no hay una página dibujada (por ejemplo, mientras el router resuelve la URL inicial), el layout mantiene visible la navegación en lugar de enfocar una pantalla vacía. Monta la app después de `router.isReady()` para que el primer frame ya muestre la página actual.
+
+El drawer es `ZnDrawer`, el navigation drawer MD3 de `ui-core`: variante modal con scrim, foco atrapado, cierre por Escape/scrim y restauración del foco, más una variante `standard` acoplada. Las apps sólo enlazan la ruta a `viewKey` y entregan los slots de navegación y contenido; nunca implementan el drawer, el breakpoint ni un botón de regreso.
+
 ## Relacionado
 
 - [Primeros pasos](./getting-started.md) · [Tipos de app](./app-types.md) · [Convenciones](./conventions.md)

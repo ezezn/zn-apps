@@ -8,7 +8,7 @@ Location: `kitchensink/`, base `/zn-apps/kitchensink/`.
 | Aspect | Implementation |
 |---|---|
 | Router | `createRouter` + `createWebHistory()`; each demo has its own URL (deep link) |
-| Layout | `ZnMasterSlaveLayout`: `#master` = grouped nav (`src/data/nav-groups.js`), default = `<router-view>` |
+| Layout | `ZnMasterSlaveLayout`: `#master` = grouped nav (`src/data/nav-groups.js`), default = `<router-view>`; mobile starts content-first, so the nav opens from the `ZnScreen` hamburger in a ui-core drawer |
 | Icon profile | `manual` holds the full catalog (~2122 names) so every glyph is browsable |
 | About | `ZnAbout` on `/about` with `package.json` metadata |
 | Settings | `createSettings` demo on `/settings` |

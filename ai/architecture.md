@@ -64,6 +64,18 @@ The `ui-data-*` family shares one schema and one JSON `value`, so an app can swi
 
 Details: [`../shared/ui-data-core/ai/README.md`](../shared/ui-data-core/ai/README.md).
 
+## Master-slave navigation pattern
+
+`ZnMasterSlaveLayout` owns the responsive shell; apps only bind `viewKey` and fill `#master` + default slots. The same rule serves every app, so navigation behavior is fixed once in `ui-core` instead of per app.
+
+| Viewport / state | Initial focus | Navigation |
+|---|---|---|
+| Desktop (≥ `breakpoint`, 768) | master + slave side by side | docked column, MD3 standard drawer styling |
+| Mobile, navigation-first (`viewKey` null at mount, or empty default slot) | master full screen | selecting a link focuses the slave |
+| Mobile, content-first (`viewKey` set and slot already rendered, or after a route change) | slave full screen | hamburger in `ZnScreen` opens `ZnDrawer` (modal) |
+
+An empty default slot never takes the focus: apps mount with `router.isReady()` so the initial route is already rendered on the first paint, and the layout still falls back to the master while the router resolves. The breakpoint is resolved in `setup` (before the first render), so the layout starts with its real desktop/mobile classes and needs no `@media` fallback — a fallback that hid the content pane on mobile would leave the app blank. Apps with a default route should also add a catch-all redirect so any entry URL lands on that page. A route change on mobile puts the slave in focus and closes the drawer. `ZnScreen` reads the injected `screenNavigationKey` state, so apps never wire the drawer, breakpoint or back/menu button themselves. `ZnDrawer` is the shared MD3 drawer (`modal` with scrim + focus trap, `standard` docked) for any overlay navigation.
+
 ## Where decisions live
 
 | Decision | Recorded in |

@@ -30,7 +30,9 @@ Todos los colores y espaciados provienen de tokens `--md-*` (definidos en `src/a
 
 ## Componentes
 
-**Layout** — `ZnApp`, `ZnScreen` (`title`, `subtitle`; slots `#icon`, `#title`, `#actions`), `ZnScrollArea`, `ZnMasterSlaveLayout` (`viewKey`, `breakpoint`; slots `#master`, default), `ZnSection` (`title`, `collapsible`, `expanded`, `columns` 0–10, hijos `.zn-span-N`), `ZnTabs` (`tabs`, `modelValue`, `variant` primary/secondary; slot `#panel`).
+**Layout** — `ZnApp`, `ZnScreen` (`title`, `subtitle`, `menuLabel`; slots `#icon`, `#title`, `#actions`), `ZnScrollArea`, `ZnMasterSlaveLayout` (`viewKey`, `breakpoint`; slots `#master`, default), `ZnSection` (`title`, `collapsible`, `expanded`, `columns` 0–10, hijos `.zn-span-N`), `ZnTabs` (`tabs`, `modelValue`, `variant` primary/secondary; slot `#panel`), `ZnDrawer` (`modelValue`, `variant` modal/standard, `side` start/end, `width`, `label`, `closeButton`, `closeLabel`, `closeOnEscape`, `closeOnScrim`; slots `#header`, default).
+
+En escritorio `ZnMasterSlaveLayout` muestra la navegación al costado del contenido. En móvil muestra una sola pantalla a la vez: si la app arranca sin ruta seleccionada, la navegación ocupa la pantalla primero; si arranca en una página (contenido primero), la página conserva el foco y el botón hamburguesa del header abre la navegación como drawer modal. Las apps no implementan nada de esto.
 
 **Contenedores y controles** — `ZnBox` (filled/elevated/outlined), `ZnRow` (flex: `padding`, `gap`, `align`, `justify`, `direction`, `wrap`), `ZnCard` (`title`, `variant`, `image`, `imageVariant` header/full), `ZnButton` (`variant` filled/tonal/elevated/outlined/text, `iconOnly`, `tag`), `ZnChip` (assist/filter/input/suggestion; `size` small 24px / medium 32px / large 40px; `selected`, `clickable`, `removable`), `ZnSwitch` (`labelLeft`/`labelRight`, `textOn`/`textOff`, slots de iconos).
 

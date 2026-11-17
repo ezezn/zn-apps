@@ -15,10 +15,10 @@ Location: `shared/ui-core/`. Published as `dist/ui-core.js` + `dist/ui-core.css`
 | Folder | Contents |
 |---|---|
 | `layout/` | `ZnApp`, `ZnScreen`, `ZnScrollArea`, `ZnMasterSlaveLayout`, `screenNavigation.js` |
+| `navigation/` | `ZnTabs`, `ZnDrawer` |
 | `containers/` | `ZnBox`, `ZnRow`, `ZnSection`, `ZnCard` |
 | `controls/` | `ZnButton`, `ZnChip`, `ZnSwitch` |
 | `input/` | `ZnSingleLineText`, `ZnMultilineText`, `ZnEmailInput`, `ZnPhoneInput`, `ZnNumberInput`, `ZnDateInput`, `ZnTimeInput`, `ZnDateTimeInput`, `ZnSelect`, `ZnRangeInput`, `ZnDateRangeInput`, `ZnTimeRangeInput`, `ZnDateTimeRangeInput`, plus `ZnFieldShell` (exported MD3 anatomy) and internal `ZnTemporalRange` |
-| `navigation/` | `ZnTabs` |
 | `dialogs/` | `ZnDialog`, `ZnDialogHost` |
 | `media/` | `ZnIcon`, `ZnImage` |
 
@@ -50,11 +50,22 @@ Also available: `--md-secondary-container`, `--md-on-secondary-container` (selec
 ## Layout components
 
 - **ZnApp** — root wrapper; prop `mode`; slot `default`.
-- **ZnScreen** — view shell with dynamic header elevation on scroll. Props `title`, `subtitle`. Slots `#icon`, `#title`, `#actions`, default (scroll area).
+- **ZnScreen** — view shell with dynamic header elevation on scroll. Props `title`, `subtitle`, `menuLabel` (`Abrir navegación`). Slots `#icon`, `#title`, `#actions`, default (scroll area). On mobile, when the slave content has focus inside `ZnMasterSlaveLayout`, the header renders the hamburger that opens the layout drawer; inside the master itself the layout hides it.
 - **ZnScrollArea** — accessible scroll container. Prop `label`; slot `default`.
-- **ZnMasterSlaveLayout** — responsive master/detail. Props `viewKey` (bind `$route.fullPath`), `breakpoint` (768). Slots `#master`, default. Mobile slides between panes, honors `prefers-reduced-motion`.
+- **ZnMasterSlaveLayout** — responsive master/detail. Props `viewKey` (bind `$route.fullPath`), `breakpoint` (768). Slots `#master`, default. Desktop: both panes side by side (navigation acts as an MD3 standard drawer). Mobile: one pane at a time and the navigation is an MD3 **modal drawer**; the initial state depends on the pattern — navigation-first (`viewKey` null, or a default slot that has not rendered yet because the router is still resolving) shows the master full screen, content-first (`viewKey` set **and** content already rendered, or after a route change) shows the page and leaves the master behind the hamburger. Honors `prefers-reduced-motion`.
+- **ZnDrawer** — MD3 navigation drawer. Props `modelValue`, `variant` (`modal` default | `standard`), `side` (`start` | `end`), `width` (360px), `label`, `closeButton` (true), `closeLabel`, `closeOnEscape`, `closeOnScrim`. Slots `#header`, default. `modal` adds a scrim, traps Tab focus, locks body scroll, closes on Escape/scrim and restores focus on close; `standard` is docked, without scrim or focus trap. Events `update:modelValue`, `open`, `close`.
 - **ZnSection** — grouped content, optional collapse + grid. Props `title`, `collapsible`, `expanded` (true), `columns` (0 → off, 1..10). Slot `default`; children can use `.zn-span-2`..`.zn-span-10`. Event `toggle(isOpen)`.
 - **ZnTabs** — MD3 tabs. Props `tabs` (`{value,label,content?,icon?,badge?,disabled?}[]`), `modelValue`, `variant` (`primary`|`secondary`). Slot `#panel` (`{tab,index}`).
+
+## Master-slave navigation contract
+
+`ZnMasterSlaveLayout` provides `screenNavigationKey` (`isMobile`, `isSlaveVisible`, `isDrawerOpen`, `openDrawer`, `closeDrawer`, `goBack`); `ZnScreen` consumes it. Apps only bind `viewKey` and provide `#master` + default slots — they never wire the drawer, the hamburger or the breakpoint themselves. Mount the app after `router.isReady()` so the first mobile paint already has the page instead of an empty slot. `isMobile` is resolved in `setup` from `matchMedia`, so the first render already carries `zn-master-slave-layout--mobile`; there is no `@media` fallback, and the content pane is never hidden by CSS.
+
+| Context | Desktop | Mobile navigation-first (`viewKey` null at mount, or empty default slot) | Mobile content-first (`viewKey` set and content rendered) |
+|---|---|---|---|
+| Master | sticky side column | full screen until a route exists | modal drawer, closed |
+| Slave | beside the master | off-screen until a route exists | full screen |
+| Header | no navigation button | — | hamburger → drawer |
 
 ## Containers & controls
 

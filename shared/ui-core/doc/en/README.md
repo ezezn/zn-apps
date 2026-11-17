@@ -30,7 +30,9 @@ All colors and spacing come from `--md-*` tokens (defined in `src/assets/css/glo
 
 ## Components
 
-**Layout** — `ZnApp`, `ZnScreen` (`title`, `subtitle`; slots `#icon`, `#title`, `#actions`), `ZnScrollArea`, `ZnMasterSlaveLayout` (`viewKey`, `breakpoint`; slots `#master`, default), `ZnSection` (`title`, `collapsible`, `expanded`, `columns` 0–10, `.zn-span-N` children), `ZnTabs` (`tabs`, `modelValue`, `variant` primary/secondary; slot `#panel`).
+**Layout** — `ZnApp`, `ZnScreen` (`title`, `subtitle`, `menuLabel`; slots `#icon`, `#title`, `#actions`), `ZnScrollArea`, `ZnMasterSlaveLayout` (`viewKey`, `breakpoint`; slots `#master`, default), `ZnSection` (`title`, `collapsible`, `expanded`, `columns` 0–10, `.zn-span-N` children), `ZnTabs` (`tabs`, `modelValue`, `variant` primary/secondary; slot `#panel`), `ZnDrawer` (`modelValue`, `variant` modal/standard, `side` start/end, `width`, `label`, `closeButton`, `closeLabel`, `closeOnEscape`, `closeOnScrim`; slots `#header`, default).
+
+On desktop `ZnMasterSlaveLayout` shows the navigation beside the content. On mobile it shows one pane at a time: if the app starts without a selected route, the navigation takes the screen first; if it starts on a page (content-first), the page keeps the focus and the header hamburger opens the navigation as a modal drawer. Apps do not implement this themselves.
 
 **Containers and controls** — `ZnBox` (filled/elevated/outlined), `ZnRow` (flex: `padding`, `gap`, `align`, `justify`, `direction`, `wrap`), `ZnCard` (`title`, `variant`, `image`, `imageVariant` header/full), `ZnButton` (`variant` filled/tonal/elevated/outlined/text, `iconOnly`, `tag`), `ZnChip` (assist/filter/input/suggestion; `size` small 24px / medium 32px / large 40px; `selected`, `clickable`, `removable`), `ZnSwitch` (`labelLeft`/`labelRight`, `textOn`/`textOff`, icon slots).
 

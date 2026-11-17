@@ -19,5 +19,6 @@ const app = createApp(App)
 app.use(router)
 app.use(i18n)
 
-// 3. Finalmente montas la aplicación
-app.mount('#app')
+// 3. Monta con la ruta inicial ya resuelta: en móvil el layout da el foco al
+//    contenido desde el primer paint (sin un frame en blanco).
+router.isReady().then(() => app.mount('#app'))

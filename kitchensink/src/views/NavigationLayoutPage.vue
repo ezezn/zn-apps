@@ -3,7 +3,7 @@
 
     <ZnSection title="1. Previsualización del Layout" collapsible :columns="1">
       <p class="section-desc section-desc--full">
-        El layout compone un <code>aside</code> fijo a la izquierda y el contenido principal a la derecha. En pantallas de 768px o menos el drawer pasa a la parte superior.
+        El layout compone un <code>aside</code> fijo a la izquierda y el contenido principal a la derecha. En pantallas de 768px o menos se muestra una sola pantalla: la navegación, o el contenido con un botón hamburguesa que la abre en un drawer modal.
       </p>
 
       <div class="preview">
@@ -20,7 +20,7 @@
 
           <ZnScreen title="Contenido principal" subtitle="Vista seleccionada">
             <p class="helper-text">
-              En escritorio, el contenido comparte el espacio con la pantalla maestra. En móvil, aparece al seleccionar una opción y ofrece una flecha para volver.
+              En escritorio, el contenido comparte el espacio con la pantalla maestra. En móvil, aparece al seleccionar una opción y el botón hamburguesa de la barra superior abre la navegación en un drawer.
             </p>
             <ZnRow padding="0" gap="8px" style="margin-top: 16px;">
               <ZnButton variant="filled">Acción primaria</ZnButton>
@@ -48,7 +48,7 @@
 
       <ZnBox variant="elevated" class="showcase-stack">
         <span class="showcase-label">viewKey</span>
-        <p class="helper-text">Al cambiar, muestra el contenido en móvil. La flecha de la barra superior permite volver al master.</p>
+        <p class="helper-text">Al cambiar, el contenido toma el foco en móvil. El botón hamburguesa de la barra superior abre la navegación en un drawer.</p>
       </ZnBox>
     </ZnSection>
 
@@ -73,6 +73,7 @@ import { ZnSection, ZnBox, ZnRow, ZnButton, ZnScreen, ZnMasterSlaveLayout } from
 
 <style scoped>
 .preview {
+  position: relative;
   height: 380px;
   overflow: hidden;
   border: 1px solid var(--md-surface-variant);
@@ -94,6 +95,11 @@ import { ZnSection, ZnBox, ZnRow, ZnButton, ZnScreen, ZnMasterSlaveLayout } from
   height: 100%;
   min-height: 0;
   overflow-y: auto;
+}
+
+/* El preview encierra el drawer modal para que no cubra el showroom. */
+.preview :deep(.zn-drawer-layer) {
+  position: absolute;
 }
 
 .preview :deep(.zn-screen) {

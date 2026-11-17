@@ -11,6 +11,7 @@ export const messages = {
     nav: {
       navigation: 'Navigation',
       tasks: 'Tasks',
+      updates: 'Updates',
       settings: 'Settings',
       about: 'About'
     },
@@ -30,7 +31,7 @@ export const messages = {
       new: 'New {entity}',
       editTitle: 'Edit {entity}',
       deleteTitle: 'Delete {entity}',
-      deleteMessage: 'This permanently removes “{name}”. This cannot be undone.',
+      deleteMessage: 'This permanently removes “{name}” and its updates. This cannot be undone.',
       search: 'Search by name or external ID',
       statusFilter: 'Status',
       allStatuses: 'All',
@@ -59,6 +60,27 @@ export const messages = {
       addedAt: 'Added at',
       status: 'Internal status',
       createHint: 'The added date is prefilled with the current time so you can adjust it before saving.'
+    },
+    updates: {
+      title: 'Updates',
+      summary: '{count} updates',
+      new: 'New update',
+      editTitle: 'Edit update',
+      deleteTitle: 'Delete update',
+      deleteMessage: 'This permanently removes the update. This cannot be undone.',
+      sectionTitle: 'Updates',
+      emptyForTask: 'No updates recorded for this task.',
+      emptyTitle: 'No updates yet',
+      emptyMessage: 'Record the first change of a task to start the log.',
+      loading: 'Loading…',
+      loadError: 'Could not load the updates.',
+      saveError: 'Could not save the update.',
+      removeError: 'Could not delete the update.',
+      task: 'Task',
+      description: 'What changed',
+      createdAt: 'Date and time',
+      unknownTask: 'Deleted task',
+      createHint: 'The date and time default to now so you can adjust them before saving.'
     },
     status: {
       active: 'Active',
@@ -134,6 +156,7 @@ export const messages = {
     nav: {
       navigation: 'Navegación',
       tasks: 'Tareas',
+      updates: 'Actualizaciones',
       settings: 'Configuración',
       about: 'Acerca de'
     },
@@ -157,7 +180,7 @@ export const messages = {
       new: 'Nueva {entity}',
       editTitle: 'Editar {entity}',
       deleteTitle: 'Eliminar {entity}',
-      deleteMessage: 'Esto elimina “{name}” de forma permanente. No se puede deshacer.',
+      deleteMessage: 'Esto elimina “{name}” y sus actualizaciones de forma permanente. No se puede deshacer.',
       search: 'Buscar por nombre o ID externo',
       statusFilter: 'Estado',
       allStatuses: 'Todos',
@@ -186,6 +209,27 @@ export const messages = {
       addedAt: 'Fecha de agregado',
       status: 'Estado interno',
       createHint: 'La fecha de agregado se completa con la fecha actual para que la ajustes antes de guardar.'
+    },
+    updates: {
+      title: 'Actualizaciones',
+      summary: '{count} actualizaciones',
+      new: 'Nueva actualización',
+      editTitle: 'Editar actualización',
+      deleteTitle: 'Eliminar actualización',
+      deleteMessage: 'Esto elimina la actualización de forma permanente. No se puede deshacer.',
+      sectionTitle: 'Actualizaciones',
+      emptyForTask: 'Esta tarea no tiene actualizaciones registradas.',
+      emptyTitle: 'Todavía no hay actualizaciones',
+      emptyMessage: 'Registra el primer cambio de una tarea para iniciar el historial.',
+      loading: 'Cargando…',
+      loadError: 'No se pudieron cargar las actualizaciones.',
+      saveError: 'No se pudo guardar la actualización.',
+      removeError: 'No se pudo eliminar la actualización.',
+      task: 'Tarea',
+      description: 'Qué cambió',
+      createdAt: 'Fecha y hora',
+      unknownTask: 'Tarea eliminada',
+      createHint: 'La fecha y hora se completan con el momento actual para que las ajustes antes de guardar.'
     },
     status: {
       active: 'Activa',

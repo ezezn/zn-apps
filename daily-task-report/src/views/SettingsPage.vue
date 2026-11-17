@@ -135,6 +135,7 @@ import { useAppLocale } from '../composables/useAppLocale.js'
 import { useAppTheme } from '../composables/useAppTheme.js'
 import { entityNames, setEntityName, useEntityLabels } from '../composables/useEntityLabels.js'
 import { useTasksStore } from '../stores/tasks.js'
+import { useUpdatesStore } from '../stores/updates.js'
 import { backupFileName, parseBackup, serializeBackup } from '../helpers/backup.js'
 import TaskImportDialog from '../components/TaskImportDialog.vue'
 
@@ -144,6 +145,7 @@ const { useSystem, locale, setUseSystem, setLocale } = useAppLocale()
 const { preference, setPreference } = useAppTheme()
 const { singular, plural } = useEntityLabels()
 const store = useTasksStore()
+const updatesStore = useUpdatesStore()
 
 const fileInput = ref(null)
 const feedback = ref(null)
@@ -235,6 +237,8 @@ async function deleteAllData() {
   if (!accepted) return
 
   const cleared = await store.clearTasks()
+  // El repositorio vació ambas tablas en una transacción.
+  if (cleared) updatesStore.forgetAll()
   feedback.value = cleared
     ? { type: 'success', message: t('settings.deleteAllDone') }
     : { type: 'error', message: t('tasks.removeError') }

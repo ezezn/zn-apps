@@ -17,6 +17,7 @@ export { default as ZnMasterSlaveLayout } from './components/layout/ZnMasterSlav
 
 // Componentes de Navegación
 export { default as ZnTabs } from './components/navigation/ZnTabs.vue'
+export { default as ZnDrawer } from './components/navigation/ZnDrawer.vue'
 
 // Contenedores (distribución de contenido)
 export { default as ZnBox } from './components/containers/ZnBox.vue'

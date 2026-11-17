@@ -4,18 +4,28 @@
       <template #master>
         <ZnScreen :title="t('app.title')" :subtitle="plural">
           <nav :aria-label="t('nav.navigation')">
-            <router-link to="/tasks" class="nav-link">
-              <ZnIcon name="task_alt" :size="20" />
-              <span>{{ plural }}</span>
-            </router-link>
-            <router-link to="/settings" class="nav-link">
-              <ZnIcon name="settings" :size="20" />
-              <span>{{ t('nav.settings') }}</span>
-            </router-link>
-            <router-link to="/about" class="nav-link">
-              <ZnIcon name="info" :size="20" />
-              <span>{{ t('nav.about') }}</span>
-            </router-link>
+            <div class="nav-group">
+              <router-link to="/tasks" class="nav-link">
+                <ZnIcon name="task_alt" :size="20" />
+                <span>{{ plural }}</span>
+              </router-link>
+              <router-link to="/updates" class="nav-link">
+                <ZnIcon name="system_update" :size="20" />
+                <span>{{ t('nav.updates') }}</span>
+              </router-link>
+            </div>
+
+            <!-- Opciones secundarias: ancladas al final del panel visible. -->
+            <div class="nav-group nav-group--secondary">
+              <router-link to="/settings" class="nav-link">
+                <ZnIcon name="settings" :size="20" />
+                <span>{{ t('nav.settings') }}</span>
+              </router-link>
+              <router-link to="/about" class="nav-link">
+                <ZnIcon name="info" :size="20" />
+                <span>{{ t('nav.about') }}</span>
+              </router-link>
+            </div>
           </nav>
         </ZnScreen>
       </template>
@@ -65,5 +75,18 @@ const pwaIconUrl = `${import.meta.env.BASE_URL}pwa-icon.svg`
 <style scoped>
 .nav-link {
   gap: 12px;
+}
+
+.nav-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* ui-core estira el <nav> para llenar el panel; el margen automático empuja
+   Configuración y Acerca de al borde inferior. */
+.nav-group--secondary {
+  margin-top: auto;
+  padding-top: 8px;
 }
 </style>

@@ -1,27 +1,69 @@
 <template>
-  <div class="zn-master-slave-layout" :class="{ 'zn-master-slave-layout--mobile': isMobile, 'zn-master-slave-layout--mobile-detail': isMobile && isSlaveVisible }">
+  <div
+    class="zn-master-slave-layout"
+    :class="{
+      'zn-master-slave-layout--mobile': isMobile,
+      'zn-master-slave-layout--mobile-detail': isMobile && isSlaveVisible
+    }"
+  >
+    <!-- Escritorio: navegación acoplada al costado (MD3 standard drawer). -->
     <aside
-      class="zn-master-slave-layout__master"
-      :aria-hidden="isMobile && isSlaveVisible ? 'true' : undefined"
-      :inert="isMobile && isSlaveVisible"
+      v-if="!isMobile"
+      class="zn-master-slave-layout__master zn-master-slave-layout__master--pane"
       @click.capture="handleMasterClick"
     >
       <slot name="master" />
     </aside>
 
     <main
+      ref="slaveRef"
       class="zn-master-slave-layout__slave"
       :aria-hidden="isMobile && !isSlaveVisible ? 'true' : undefined"
       :inert="isMobile && !isSlaveVisible"
     >
       <slot />
     </main>
+
+    <template v-if="isMobile">
+      <!--
+        Patrón mobile "navegación primero": la app arranca sin contenido
+        seleccionado, así que el master ocupa la pantalla.
+      -->
+      <aside
+        v-if="!isSlaveVisible"
+        class="zn-master-slave-layout__master zn-master-slave-layout__master--screen"
+        @click.capture="handleMasterClick"
+      >
+        <slot name="master" />
+      </aside>
+
+      <!--
+        Patrón mobile "contenido primero": hay una página activa, que ocupa la
+        pantalla; la navegación vive en un drawer modal que abre el botón
+        hamburguesa del ZnScreen activo.
+      -->
+      <ZnDrawer
+        v-else
+        v-model="isDrawerOpen"
+        variant="modal"
+        label="Navegación"
+        @close="handleDrawerClose"
+      >
+        <div
+          class="zn-master-slave-layout__master zn-master-slave-layout__master--drawer"
+          @click.capture="handleMasterClick"
+        >
+          <slot name="master" />
+        </div>
+      </ZnDrawer>
+    </template>
   </div>
 </template>
 
 <script setup>
 import { provide, ref, watch, onMounted, onUnmounted } from 'vue'
 import { screenNavigationKey } from './screenNavigation.js'
+import ZnDrawer from '../navigation/ZnDrawer.vue'
 
 const props = defineProps({
   /** Bind to the active route (for example, `$route.fullPath`). */
@@ -35,38 +77,77 @@ const props = defineProps({
   }
 })
 
-const isMobile = ref(false)
+// El breakpoint se resuelve en `setup`, antes del primer render: así el layout
+// nace ya con la clase de móvil o de escritorio y no necesita reglas CSS de
+// respaldo que luego compitan con el estado real.
+const mediaQuery = typeof window !== 'undefined' && typeof window.matchMedia === 'function'
+  ? window.matchMedia(`(max-width: ${props.breakpoint}px)`)
+  : null
+
+const isMobile = ref(mediaQuery ? mediaQuery.matches : false)
 const isSlaveVisible = ref(false)
-let mediaQuery
+const isDrawerOpen = ref(false)
+const slaveRef = ref(null)
+
+/**
+ * Solo hay contenido real cuando el router ya resolvió la ruta; con él aún en
+ * `START_LOCATION` el slot está vacío y darle el foco dejaría la pantalla en
+ * blanco en móvil.
+ */
+function slaveHasContent() {
+  if (!slaveRef.value) return false
+  return Array.from(slaveRef.value.childNodes).some((node) => node.nodeType === 1)
+}
 
 function goBack() {
   isSlaveVisible.value = false
+  isDrawerOpen.value = false
+}
+
+function openDrawer() {
+  if (isMobile.value && isSlaveVisible.value) isDrawerOpen.value = true
+}
+
+function closeDrawer() {
+  isDrawerOpen.value = false
+}
+
+function handleDrawerClose() {
+  isDrawerOpen.value = false
 }
 
 function handleMasterClick(event) {
   if (event.target instanceof Element && event.target.closest('a, [role="link"]')) {
     isSlaveVisible.value = true
+    isDrawerOpen.value = false
   }
 }
 
 watch(() => props.viewKey, (next, previous) => {
   if (next !== previous && next !== null && isMobile.value) {
     isSlaveVisible.value = true
+    isDrawerOpen.value = false
   }
 })
 
-provide(screenNavigationKey, { isMobile, isSlaveVisible, goBack })
+provide(screenNavigationKey, {
+  isMobile,
+  isSlaveVisible,
+  isDrawerOpen,
+  openDrawer,
+  closeDrawer,
+  goBack
+})
 
 onMounted(() => {
-  if (typeof window === 'undefined' || !window.matchMedia) return
+  if (!mediaQuery) return
 
-  mediaQuery = window.matchMedia(`(max-width: ${props.breakpoint}px)`)
   isMobile.value = mediaQuery.matches
-  // If the router resolved before this component mounted, the view key is
-  // already set and its watcher will not run. Treat that active route as the
-  // initial mobile selection so the user sees its content instead of a blank
-  // detail panel. A null key still starts on the master screen.
-  if (mediaQuery.matches && props.viewKey !== null) {
+  // Si el router ya resolvió una ruta y el slot pintó contenido, la app usa el
+  // patrón "contenido primero" y ese contenido arranca con el foco; la
+  // navegación queda detrás del drawer. Sin ruta (o con el router aún
+  // resolviendo), arranca el master para no mostrar una pantalla vacía.
+  if (mediaQuery.matches && props.viewKey !== null && slaveHasContent()) {
     isSlaveVisible.value = true
   }
   if (mediaQuery.addEventListener) {
@@ -86,7 +167,10 @@ onUnmounted(() => {
 
 function handleBreakpointChange(event) {
   isMobile.value = event.matches
-  if (!event.matches) isSlaveVisible.value = false
+  if (!event.matches) {
+    isSlaveVisible.value = false
+    isDrawerOpen.value = false
+  }
 }
 </script>
 
@@ -105,7 +189,7 @@ function handleBreakpointChange(event) {
   min-height: 100dvh;
 }
 
-.zn-master-slave-layout__master {
+.zn-master-slave-layout__master--pane {
   position: sticky;
   top: 0;
   height: 100dvh;
@@ -114,7 +198,7 @@ function handleBreakpointChange(event) {
   background: var(--md-surface);
 }
 
-/* En escritorio, ZnScreen dentro del master funciona como Navigation Drawer MD3. */
+/* La navegación se comporta como Navigation Drawer MD3 en ambos layouts. */
 .zn-master-slave-layout__master :deep(.zn-screen) {
   min-height: 100%;
   background: var(--md-surface);
@@ -147,6 +231,10 @@ function handleBreakpointChange(event) {
   flex: 1;
   flex-direction: column;
   gap: 4px;
+}
+
+.zn-master-slave-layout__master :deep(.zn-screen__menu) {
+  display: none;
 }
 
 .zn-master-slave-layout__master :deep(a),
@@ -187,6 +275,9 @@ function handleBreakpointChange(event) {
   background: var(--md-background);
 }
 
+/* ==========================================================================
+   Mobile: una sola pantalla a la vez
+   ========================================================================== */
 .zn-master-slave-layout--mobile {
   display: block;
   position: relative;
@@ -196,41 +287,23 @@ function handleBreakpointChange(event) {
   isolation: isolate;
 }
 
-.zn-master-slave-layout--mobile .zn-master-slave-layout__master,
+.zn-master-slave-layout--mobile .zn-master-slave-layout__master--screen,
 .zn-master-slave-layout--mobile .zn-master-slave-layout__slave {
-  width: 100%;
   position: absolute;
   inset: 0;
+  width: 100%;
   height: 100%;
   min-height: 100dvh;
   border: 0;
   overflow: hidden;
-  transition: transform 320ms cubic-bezier(0.2, 0, 0, 1);
-  will-change: transform;
-}
-
-.zn-master-slave-layout--mobile .zn-master-slave-layout__master {
-  z-index: 2;
-  transform: translateX(0);
-  pointer-events: auto;
-  background: var(--md-background);
-}
-
-.zn-master-slave-layout--mobile .zn-master-slave-layout__master :deep(.zn-screen) {
-  background: var(--md-background);
-  color: var(--md-on-background);
 }
 
 .zn-master-slave-layout--mobile .zn-master-slave-layout__slave {
   z-index: 1;
   transform: translateX(100%);
   pointer-events: none;
-  overflow: hidden;
-}
-
-.zn-master-slave-layout--mobile-detail .zn-master-slave-layout__master {
-  transform: translateX(-100%);
-  pointer-events: none;
+  transition: transform 320ms cubic-bezier(0.2, 0, 0, 1);
+  will-change: transform;
 }
 
 .zn-master-slave-layout--mobile-detail .zn-master-slave-layout__slave {
@@ -239,100 +312,40 @@ function handleBreakpointChange(event) {
   pointer-events: auto;
 }
 
-.zn-master-slave-layout--mobile .zn-master-slave-layout__master :deep(.zn-screen__header),
-.zn-master-slave-layout--mobile .zn-master-slave-layout__master :deep(.zn-screen__header--scrolled) {
-  height: 64px;
-  min-height: 64px;
-  padding: 0 16px;
+.zn-master-slave-layout--mobile .zn-master-slave-layout__master--screen {
+  z-index: 2;
   background: var(--md-background);
-  box-shadow: 0 0 0 transparent;
 }
 
-.zn-master-slave-layout--mobile .zn-master-slave-layout__master :deep(.zn-screen__content) {
-  padding: 16px;
+.zn-master-slave-layout--mobile .zn-master-slave-layout__master--screen :deep(.zn-screen) {
+  background: var(--md-background);
+  color: var(--md-on-background);
 }
 
-.zn-master-slave-layout--mobile .zn-master-slave-layout__master :deep(a),
-.zn-master-slave-layout--mobile .zn-master-slave-layout__master :deep([role='link']) {
+.zn-master-slave-layout__master--drawer {
+  min-height: 100%;
+}
+
+/* El drawer modal ya aporta su propio header con cierre. */
+.zn-master-slave-layout__master--drawer :deep(.zn-screen__header),
+.zn-master-slave-layout__master--drawer :deep(.zn-screen__header--scrolled) {
+  background: var(--md-surface-container-low, var(--md-surface));
+  min-height: 56px;
+  padding: 8px 16px;
+}
+
+.zn-master-slave-layout__master--drawer :deep(.zn-screen__content) {
+  padding: 8px 12px 16px;
+  background: var(--md-surface-container-low, var(--md-surface));
+}
+
+.zn-master-slave-layout__master--drawer :deep(a),
+.zn-master-slave-layout__master--drawer :deep([role='link']) {
   min-height: 48px;
 }
 
-/* Keep the component usable without JavaScript during the first paint. */
-@media (max-width: 768px) {
-  .zn-master-slave-layout {
-    display: block;
-    position: relative;
-    height: 100dvh;
-    min-height: 100dvh;
-    overflow: hidden;
-    isolation: isolate;
-  }
-
-  .zn-master-slave-layout__master,
-  .zn-master-slave-layout__slave {
-    width: 100%;
-    position: absolute;
-    inset: 0;
-    height: 100%;
-    min-height: 100dvh;
-    border: 0;
-    overflow: hidden;
-    transition: transform 320ms cubic-bezier(0.2, 0, 0, 1);
-  }
-
-  .zn-master-slave-layout:not(.zn-master-slave-layout--mobile-detail) .zn-master-slave-layout__master {
-    z-index: 2;
-    transform: translateX(0);
-    pointer-events: auto;
-    background: var(--md-background);
-  }
-
-  .zn-master-slave-layout__master :deep(.zn-screen) {
-    background: var(--md-background);
-    color: var(--md-on-background);
-  }
-
-  .zn-master-slave-layout:not(.zn-master-slave-layout--mobile-detail) .zn-master-slave-layout__slave {
-    z-index: 1;
-    transform: translateX(100%);
-    pointer-events: none;
-  }
-
-  .zn-master-slave-layout--mobile-detail .zn-master-slave-layout__master {
-    transform: translateX(-100%);
-    pointer-events: none;
-  }
-
-  .zn-master-slave-layout--mobile-detail .zn-master-slave-layout__slave {
-    z-index: 3;
-    transform: translateX(0);
-    pointer-events: auto;
-  }
-
-  .zn-master-slave-layout__master :deep(.zn-screen__header),
-  .zn-master-slave-layout__master :deep(.zn-screen__header--scrolled) {
-    height: 64px;
-    min-height: 64px;
-    padding: 0 16px;
-    background: var(--md-background);
-  }
-
-  .zn-master-slave-layout__master :deep(.zn-screen__content) {
-    padding: 16px;
-  }
-
-  .zn-master-slave-layout__master :deep(a),
-  .zn-master-slave-layout__master :deep([role='link']) {
-    min-height: 48px;
-  }
-
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .zn-master-slave-layout--mobile .zn-master-slave-layout__master,
-  .zn-master-slave-layout--mobile .zn-master-slave-layout__slave,
-  .zn-master-slave-layout__master,
-  .zn-master-slave-layout__slave {
+  .zn-master-slave-layout--mobile .zn-master-slave-layout__slave {
     transition: none;
   }
 }

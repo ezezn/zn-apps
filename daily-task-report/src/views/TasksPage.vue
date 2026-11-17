@@ -29,23 +29,26 @@
           variant="filled"
         />
 
-        <ZnSelect
-          v-model="store.filters.sortBy"
-          :label="t('tasks.sortBy')"
-          :options="sortOptions"
-          variant="filled"
-        />
+        <div class="task-filters__sort">
+          <ZnSelect
+            v-model="store.filters.sortBy"
+            class="task-filters__sort-select"
+            :label="t('tasks.sortBy')"
+            :options="sortOptions"
+            variant="filled"
+          />
 
-        <ZnButton
-          variant="outlined"
-          icon-only
-          class="task-filters__direction"
-          :aria-label="directionLabel"
-          :title="directionLabel"
-          @click="store.toggleDirection()"
-        >
-          <ZnIcon :name="store.filters.direction === 'asc' ? 'arrow_upward' : 'arrow_downward'" :size="20" />
-        </ZnButton>
+          <ZnButton
+            variant="outlined"
+            icon-only
+            class="task-filters__direction"
+            :aria-label="directionLabel"
+            :title="directionLabel"
+            @click="store.toggleDirection()"
+          >
+            <ZnIcon :name="store.filters.direction === 'asc' ? 'arrow_upward' : 'arrow_downward'" :size="20" />
+          </ZnButton>
+        </div>
       </div>
 
       <p v-if="store.error" class="task-alert" role="alert">{{ t(`tasks.${store.error}`) }}</p>
@@ -73,8 +76,10 @@
           v-for="task in store.visibleTasks"
           :key="task.id"
           :task="task"
+          :updates="updatesStore.forTask(task.id)"
           @edit="openEdit"
           @delete="removeTask"
+          @edit-update="openEditUpdate"
         />
       </div>
     </div>
@@ -85,6 +90,14 @@
       :saving="store.saving"
       @submit="submitTask"
     />
+
+    <UpdateDialog
+      v-model="isUpdateDialogOpen"
+      :update="editingUpdate"
+      :tasks="store.tasks"
+      :saving="updatesStore.saving"
+      @submit="submitUpdate"
+    />
   </ZnScreen>
 </template>
 
@@ -94,18 +107,23 @@ import { ZnBox, ZnButton, ZnIcon, ZnScreen, ZnSelect, ZnSingleLineText, useDialo
 import { i18n } from '../i18n.js'
 import { useEntityLabels } from '../composables/useEntityLabels.js'
 import { useTasksStore } from '../stores/tasks.js'
+import { useUpdatesStore } from '../stores/updates.js'
 import { ALL_STATUSES, TASK_STATUSES } from '../helpers/tasks.js'
 import { statusOptions } from '../data/task-schema.js'
 import TaskCard from '../components/TaskCard.vue'
 import TaskDialog from '../components/TaskDialog.vue'
+import UpdateDialog from '../components/UpdateDialog.vue'
 
 const t = (...args) => i18n.global.t(...args)
 const { confirm } = useDialogs()
 const { singular, plural } = useEntityLabels()
 const store = useTasksStore()
+const updatesStore = useUpdatesStore()
 
 const isDialogOpen = ref(false)
 const editingTask = ref(null)
+const isUpdateDialogOpen = ref(false)
+const editingUpdate = ref(null)
 
 const summary = computed(() => t('tasks.summary', { shown: store.shown, total: store.total }))
 
@@ -124,7 +142,11 @@ const directionLabel = computed(() =>
   store.filters.direction === 'asc' ? t('tasks.sortAsc') : t('tasks.sortDesc')
 )
 
-onMounted(() => store.load())
+onMounted(() => {
+  store.load()
+  // El registro de cambios alimenta la lista dentro de cada card.
+  updatesStore.load()
+})
 
 function openCreate() {
   editingTask.value = null
@@ -144,6 +166,17 @@ async function submitTask(payload) {
   if (saved) isDialogOpen.value = false
 }
 
+function openEditUpdate(update) {
+  editingUpdate.value = update
+  isUpdateDialogOpen.value = true
+}
+
+async function submitUpdate(payload) {
+  if (!editingUpdate.value) return
+  const saved = await updatesStore.updateUpdate(editingUpdate.value.id, payload)
+  if (saved) isUpdateDialogOpen.value = false
+}
+
 async function removeTask(task) {
   const accepted = await confirm(t('tasks.deleteMessage', { name: task.name }), {
     title: t('tasks.deleteTitle', { entity: singular.value }),
@@ -152,6 +185,8 @@ async function removeTask(task) {
   })
   if (!accepted) return
   await store.deleteTask(task.id)
+  // El repositorio borró el registro en cascada; limpia la copia en memoria.
+  updatesStore.forgetTask(task.id)
 }
 </script>
 
@@ -160,15 +195,25 @@ async function removeTask(task) {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  width: min(100%, 960px);
-  margin: 0 auto;
+  width: 100%;
 }
 
 .task-filters {
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 180px) auto;
   align-items: center;
   gap: 12px;
+}
+
+/* Orden compacto: el selector y la dirección forman un solo bloque angosto. */
+.task-filters__sort {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.task-filters__sort-select {
+  width: 168px;
 }
 
 .task-list {
@@ -220,6 +265,15 @@ async function removeTask(task) {
 
   .task-filters__search {
     grid-column: 1 / -1;
+  }
+
+  .task-filters__sort {
+    grid-column: 1 / -1;
+  }
+
+  .task-filters__sort-select {
+    flex: 1;
+    width: auto;
   }
 
   .new-task-label {

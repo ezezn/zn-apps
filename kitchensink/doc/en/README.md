@@ -29,7 +29,7 @@ Component showroom, full Material icon catalog and the blueprint for new apps in
 | Aspect | Implementation |
 |---|---|
 | Router | `vue-router` with `createWebHistory()`; every demo is deep-linkable |
-| Layout | `ZnMasterSlaveLayout`: grouped navigation on the left, demo on the right; collapsible on mobile |
+| Layout | `ZnMasterSlaveLayout`: grouped navigation on the left, demo on the right; on mobile the demo keeps the focus and the hamburger opens the navigation drawer |
 | Icon profile | `manual` declares the full catalog (~2100 glyphs) so all icons are browsable |
 | Data demos | one schema and one value shared by form, view and editor (`src/data/data-demo.js`) |
 | i18n | shell, navigation, theme and install popup are translated; static strings inside demo pages are being migrated |

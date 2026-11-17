@@ -29,7 +29,7 @@ Showroom de componentes, catálogo completo de iconos Material y blueprint para 
 | Aspecto | Implementación |
 |---|---|
 | Router | `vue-router` con `createWebHistory()`; cada demo tiene URL propia |
-| Layout | `ZnMasterSlaveLayout`: navegación agrupada a la izquierda, demo a la derecha; colapsable en móvil |
+| Layout | `ZnMasterSlaveLayout`: navegación agrupada a la izquierda, demo a la derecha; en móvil la demo conserva el foco y el botón hamburguesa abre el drawer de navegación |
 | Perfil de iconos | `manual` declara el catálogo completo (~2100 glifos) para poder explorarlos todos |
 | Demos de datos | un esquema y un valor compartidos por formulario, vista y editor (`src/data/data-demo.js`) |
 | i18n | shell, navegación, tema y popup de instalación traducidos; las cadenas estáticas de las demos están en migración |

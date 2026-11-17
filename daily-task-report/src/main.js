@@ -14,8 +14,9 @@ initPwaInstallListener()
 initPwaUpdateListener()
 initPwaThemeSync()
 
-createApp(App)
-  .use(pinia)
-  .use(router)
-  .use(i18n)
-  .mount('#app')
+const app = createApp(App)
+app.use(pinia).use(router).use(i18n)
+
+// Monta con la ruta inicial ya resuelta: en móvil el layout da el foco al
+// contenido desde el primer paint (sin un frame en blanco).
+router.isReady().then(() => app.mount('#app'))

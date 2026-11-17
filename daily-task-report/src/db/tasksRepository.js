@@ -24,8 +24,12 @@ export const tasksRepository = {
     return { ...task, id }
   },
 
+  /** Removing a task also removes its change log in the same transaction. */
   async remove(id) {
-    await db.tasks.delete(id)
+    await db.transaction('rw', db.tasks, db.updates, async () => {
+      await db.updates.where('taskId').equals(Number(id)).delete()
+      await db.tasks.delete(id)
+    })
   },
 
   /** Merges a backup by external id inside one transaction. */
@@ -52,6 +56,9 @@ export const tasksRepository = {
   },
 
   async clearAll() {
-    await db.tasks.clear()
+    await db.transaction('rw', db.tasks, db.updates, async () => {
+      await db.updates.clear()
+      await db.tasks.clear()
+    })
   }
 }

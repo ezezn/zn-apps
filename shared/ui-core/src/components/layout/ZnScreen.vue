@@ -4,7 +4,7 @@
       <div ref="sentinelRef" class="zn-screen__sentinel"></div>
 
       <header
-        v-if="title || subtitle || $slots.title || $slots.icon || $slots.actions || showBackButton"
+        v-if="title || subtitle || $slots.title || $slots.icon || $slots.actions || showMenuButton"
         :class="[
           'zn-screen__header',
           { 'zn-screen__header--scrolled': isScrolled }
@@ -12,14 +12,16 @@
       >
         <div class="zn-screen__branding">
           <button
-            v-if="showBackButton"
+            v-if="showMenuButton"
             type="button"
-            class="zn-screen__back"
-            aria-label="Volver a la navegación"
-            @click="navigation.goBack"
+            class="zn-screen__menu"
+            :aria-label="menuLabel"
+            aria-haspopup="dialog"
+            :aria-expanded="navigation.isDrawerOpen?.value ? 'true' : 'false'"
+            @click="navigation.openDrawer"
           >
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-              <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+              <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z" />
             </svg>
           </button>
           <div v-if="$slots.icon" class="zn-screen__icon">
@@ -59,14 +61,23 @@ defineProps({
   subtitle: {
     type: String,
     default: ''
+  },
+  menuLabel: {
+    type: String,
+    default: 'Abrir navegación'
   }
 })
 
 const isScrolled = ref(false)
 const sentinelRef = ref(null)
 const navigation = inject(screenNavigationKey, null)
-const showBackButton = computed(() => Boolean(
-  navigation?.isMobile.value && navigation?.isSlaveVisible.value
+// Mobile con contenido en foco: la navegación vive en el drawer del layout, así
+// que el header ofrece el botón hamburguesa. El master no lo muestra (el layout
+// lo oculta por CSS) para no abrir un drawer dentro del propio drawer.
+const showMenuButton = computed(() => Boolean(
+  navigation?.isMobile.value &&
+  navigation?.isSlaveVisible.value &&
+  typeof navigation?.openDrawer === 'function'
 ))
 let observer = null
 
@@ -162,7 +173,7 @@ onUnmounted(() => {
   gap: 16px;
 }
 
-.zn-screen__back {
+.zn-screen__menu {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -177,16 +188,16 @@ onUnmounted(() => {
   cursor: pointer;
 }
 
-.zn-screen__back:hover {
+.zn-screen__menu:hover {
   background: color-mix(in srgb, var(--md-on-surface) 8%, transparent);
 }
 
-.zn-screen__back:focus-visible {
+.zn-screen__menu:focus-visible {
   outline: 2px solid var(--md-primary);
   outline-offset: 2px;
 }
 
-.zn-screen__back svg {
+.zn-screen__menu svg {
   width: 24px;
   height: 24px;
   fill: currentColor;

@@ -1,12 +1,21 @@
 <template>
-  <ZnCard variant="outlined" class="task-card">
+  <ZnCard variant="filled" class="task-card">
     <div class="task-card__header">
       <div class="task-card__heading">
-        <h2 class="task-card__name">{{ task.name }}</h2>
+        <h2 class="task-card__name">
+          <a
+            v-if="link"
+            class="task-card__name-link"
+            :href="link"
+            target="_blank"
+            rel="noopener noreferrer"
+          >{{ task.name }}</a>
+          <template v-else>{{ task.name }}</template>
+        </h2>
         <span class="task-card__external-id">{{ task.externalId }}</span>
       </div>
 
-      <ZnRow padding="0" gap="4px">
+      <ZnRow padding="0" gap="4px" class="task-card__actions">
         <ZnButton
           variant="text"
           icon-only
@@ -46,22 +55,52 @@
         </template>
         {{ task.externalStatus }}
       </ZnChip>
-    </ZnRow>
 
-    <ZnButton
-      variant="text"
-      class="task-card__toggle"
-      :aria-expanded="expanded ? 'true' : 'false'"
-      @click="expanded = !expanded"
-    >
-      <template #icon>
-        <ZnIcon :name="expanded ? 'expand_less' : 'expand_more'" :size="20" />
-      </template>
-      {{ expanded ? t('tasks.hideDetails') : t('tasks.showDetails') }}
-    </ZnButton>
+      <!-- Comparte la última fila visible, alineado al borde derecho. -->
+      <ZnButton
+        variant="text"
+        class="task-card__toggle"
+        :aria-expanded="expanded ? 'true' : 'false'"
+        @click="expanded = !expanded"
+      >
+        <template #icon>
+          <ZnIcon :name="expanded ? 'expand_less' : 'expand_more'" :size="20" />
+        </template>
+        {{ expanded ? t('tasks.hideDetails') : t('tasks.showDetails') }}
+      </ZnButton>
+    </ZnRow>
 
     <div v-if="expanded" class="task-card__details">
       <ZnDataView :model-value="viewValue" :schema="viewSchema" />
+
+      <section class="task-card__updates">
+        <h3 class="task-card__updates-title">{{ t('updates.sectionTitle') }}</h3>
+
+        <p v-if="taskUpdates.length === 0" class="task-card__updates-empty">
+          {{ t('updates.emptyForTask') }}
+        </p>
+
+        <ul v-else class="task-card__updates-list">
+          <li v-for="update in taskUpdates" :key="update.id" class="task-card__update">
+            <div class="task-card__update-header">
+              <time class="task-card__update-date" :datetime="update.createdAt">
+                {{ formatDate(update.createdAt) }}
+              </time>
+              <ZnButton
+                variant="text"
+                icon-only
+                class="task-card__update-edit"
+                :aria-label="t('common.edit')"
+                :title="t('common.edit')"
+                @click="$emit('edit-update', update)"
+              >
+                <ZnIcon name="edit" :size="18" />
+              </ZnButton>
+            </div>
+            <p class="task-card__update-description">{{ update.description }}</p>
+          </li>
+        </ul>
+      </section>
 
       <ZnButton
         v-if="link"
@@ -88,21 +127,29 @@ import { ZnDataView } from '@zn-apps/ui-data-view'
 import { i18n } from '../i18n.js'
 import { statusLabel, taskViewSchema } from '../data/task-schema.js'
 import { absoluteUrl } from '../helpers/tasks.js'
+import { sortUpdatesDesc } from '../helpers/updates.js'
 import { formatTaskDate, formatTaskDateTime } from '../helpers/dates.js'
 
 const props = defineProps({
   task: {
     type: Object,
     required: true
-  }
+  },
+  /** Change log entries of this task (any order; the card sorts them). */
+  updates: { type: Array, default: () => [] }
 })
 
-defineEmits(['edit', 'delete'])
+defineEmits(['edit', 'delete', 'edit-update'])
 
 const t = (...args) => i18n.global.t(...args)
 const expanded = ref(false)
 
 const link = computed(() => absoluteUrl(props.task.externalUrl))
+const taskUpdates = computed(() => sortUpdatesDesc(props.updates))
+
+function formatDate(value) {
+  return formatTaskDateTime(value, i18n.global.locale.value)
+}
 
 const viewSchema = computed(() => taskViewSchema({ t }))
 
@@ -125,8 +172,18 @@ const viewValue = computed(() => ({
   gap: 12px;
 }
 
+/* Las acciones siempre se pegan al borde derecho, aunque el nombre sea corto.
+   `ZnRow` trae width:100%, que dentro del header acaparaba la línea y dejaba el
+   título en una columna mínima: aquí se ajusta al ancho de los botones. */
+.task-card__actions {
+  width: auto;
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+
 .task-card__heading {
   display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
   gap: 4px;
   min-width: 0;
@@ -139,6 +196,22 @@ const viewValue = computed(() => ({
   font-weight: 500;
   line-height: 1.4;
   overflow-wrap: anywhere;
+}
+
+/* El título abre el enlace externo sin gritar: hereda tipografía y color. */
+.task-card__name-link {
+  color: inherit;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.task-card__name-link:hover {
+  text-decoration: underline;
+}
+
+.task-card__name-link:focus-visible {
+  outline: 2px solid var(--md-primary);
+  outline-offset: 2px;
 }
 
 .task-card__external-id {
@@ -168,7 +241,7 @@ const viewValue = computed(() => ({
 }
 
 .task-card__toggle {
-  margin-top: 8px;
+  margin-left: auto;
   padding-left: 12px;
 }
 
@@ -178,10 +251,71 @@ const viewValue = computed(() => ({
   gap: 16px;
   margin-top: 12px;
   padding-top: 16px;
-  border-top: 1px solid var(--md-surface-variant);
+  /* La card es filled: el separador necesita contraste sobre surface-variant. */
+  border-top: 1px solid color-mix(in srgb, var(--md-on-surface) 12%, transparent);
 }
 
 .task-card__link {
-  align-self: flex-start;
+  align-self: flex-end;
+}
+
+.task-card__updates {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.task-card__updates-title {
+  margin: 0;
+  color: var(--md-on-surface);
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.task-card__updates-empty {
+  margin: 0;
+  color: var(--md-on-surface-variant);
+  font-size: 0.875rem;
+}
+
+.task-card__updates-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.task-card__update {
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--md-surface) 55%, transparent);
+}
+
+.task-card__update-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.task-card__update-date {
+  flex: 1 1 auto;
+  color: var(--md-on-surface-variant);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.task-card__update-edit {
+  flex: 0 0 auto;
+}
+
+.task-card__update-description {
+  margin: 2px 0 0;
+  color: var(--md-on-surface);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  white-space: pre-line;
 }
 </style>

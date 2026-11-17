@@ -25,3 +25,9 @@ db.version(2)
         task.status = task.status === 'done' || task.status === 'cancelled' ? 'inactive' : 'active'
       })
   )
+
+// v3: task updates — the change log attached to each task.
+db.version(3).stores({
+  tasks: '++id, externalId, name, status, taskDate, addedAt',
+  updates: '++id, taskId, createdAt'
+})

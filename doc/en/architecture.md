@@ -68,6 +68,20 @@ Every app ships `en` and `es` messages. Initial locale: `settings.i18n.locale` �
 ### 7. Scoped verification
 Verify with the narrowest useful command for the change; full suite and `build:all` are for cross-project or release-level work. Markdown-only changes skip tests and builds. CI keeps full validation.
 
+## Master-slave navigation
+
+Apps with several screens use `ZnMasterSlaveLayout`. It owns the responsive shell, so every app gets the same navigation behavior without extra code:
+
+| Viewport / state | What the user sees |
+|---|---|
+| Desktop (≥ breakpoint) | Navigation docked beside the active page |
+| Mobile, app starts without a selected route | Navigation takes the screen first; choosing a link shows the page |
+| Mobile, app starts on a page (or the route changes) | The page keeps the focus and a hamburger in its header opens the navigation as a modal drawer |
+
+When no page has been rendered yet (for example, while the router is still resolving the initial URL), the layout keeps the navigation visible instead of focusing an empty screen. Mount the app after `router.isReady()` so the first frame already shows the current page.
+
+The drawer is `ZnDrawer`, the MD3 navigation drawer of `ui-core`: modal variant with scrim, focus trap, Escape/scrim dismissal and focus restore, plus a docked `standard` variant. Apps only bind the route to `viewKey` and provide the navigation and content slots; they never implement the drawer, the breakpoint or a back button.
+
 ## Related
 
 - [Getting started](./getting-started.md) · [App types](./app-types.md) · [Conventions](./conventions.md)
