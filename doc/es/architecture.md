@@ -37,7 +37,8 @@ zn-apps/
 │   ├── ui-data-form/            formularios por esquema
 │   ├── ui-data-view/            presentación de sólo lectura
 │   ├── ui-data-editor/          vista + edición por campo en diálogo
-│   └── ui-data-richtext/        texto enriquecido con valor Markdown
+│   ├── ui-data-richtext/        texto enriquecido con valor Markdown
+│   └── ui-calendar/             calendarios MD3: mes/semana/día, rangos y eventos
 ├── zound-box/                   PWA productiva (mono-pantalla)
 ├── daily-task-report/           PWA productiva (maestro-esclavo, Pinia + Dexie)
 └── kitchensink/                 showroom, catálogo de iconos y blueprint
@@ -51,7 +52,7 @@ Cada proyecto incluye además `ai/` (contexto de agentes) y `doc/{en,es}/` (manu
 Cada app tiene su `package.json`, `vite.config.js`, `index.html`, service worker y `dist/`. **Nunca se comparte estado entre apps** (ni Pinia cross-app). Las subrutas son `/zn-apps/<app>/`.
 
 ### 2. Librerías compartidas aisladas
-Cada librería en `shared/*` tiene su manifiesto, build de librería en Vite y tests. Las librerías no se importan entre sí salvo las composiciones explícitas: `ui-about → ui-core`, la familia `ui-data-*` sobre `ui-core` y `ui-data-core`, `ui-data-editor → ui-data-form + ui-data-view`, `ui-data-richtext → ui-core`. Las de infraestructura (`settings-core`, `ui-data-core`) no dependen de Vue ni del DOM.
+Cada librería en `shared/*` tiene su manifiesto, build de librería en Vite y tests. Las librerías no se importan entre sí salvo las composiciones explícitas: `ui-about → ui-core`, `ui-calendar → ui-core`, la familia `ui-data-*` sobre `ui-core` y `ui-data-core`, `ui-data-editor → ui-data-form + ui-data-view`, `ui-data-richtext → ui-core`. Las de infraestructura (`settings-core`, `ui-data-core`) no dependen de Vue ni del DOM.
 
 ### 3. Material Design 3 centralizado
 Los tokens viven en `shared/ui-core/src/assets/css/global.css`. El cambio de tema ocurre sólo en `<ZnApp mode="light|dark|system">`, que aplica `zn-theme-light`/`zn-theme-dark` en `<body>`.

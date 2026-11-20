@@ -20,7 +20,8 @@ zn-apps/
 │   ├── ui-data-form/            # schema-driven form (ZnDataForm)
 │   ├── ui-data-view/            # read-only presentation (ZnDataView)
 │   ├── ui-data-editor/          # view + per-field dialog editing (ZnDataEditor)
-│   └── ui-data-richtext/        # Markdown-backed rich text editor/view
+│   ├── ui-data-richtext/        # Markdown-backed rich text editor/view
+│   └── ui-calendar/             # MD3 calendars: month/week/day, single/range, events
 ├── zound-box/                   # product PWA (single screen, no router)
 ├── daily-task-report/           # product PWA (master-slave, Pinia + Dexie)
 └── kitchensink/                 # showroom, icon catalog, blueprint for new apps
@@ -47,7 +48,7 @@ Each project also holds `ai/` (agent context, English) and `doc/{en,es}/` (user 
 ## Non-negotiable principles
 
 1. **App independence** — own `package.json`, `vite.config.js`, `index.html`, service worker, deployed at `/zn-apps/<app>/`. Never share state (Pinia or other) across apps.
-2. **Isolated libraries** — each `shared/*` builds as an ES module on its own. Libraries do not import each other except the explicit composition edges: `ui-about → ui-core`, `ui-data-form/view/editor → ui-core + ui-data-core`, `ui-data-editor → ui-data-form + ui-data-view`, `ui-data-richtext → ui-core`. Apps compose libraries; libraries never import apps.
+2. **Isolated libraries** — each `shared/*` builds as an ES module on its own. Libraries do not import each other except the explicit composition edges: `ui-about → ui-core`, `ui-calendar → ui-core`, `ui-data-form/view/editor → ui-core + ui-data-core`, `ui-data-editor → ui-data-form + ui-data-view`, `ui-data-richtext → ui-core`. Apps compose libraries; libraries never import apps.
 3. **MD3 is centralized** — tokens and theme switching live only in `ui-core`. Theme toggling happens exclusively through `<ZnApp mode="light|dark|system">`, which writes `zn-theme-light`/`zn-theme-dark` on `<body>`.
 4. **Icon chunks are generated, never bundled whole** — each project declares `icon-profile.json` (`scanned` + `manual`); `ZnIcon` lazily fetches `<BASE_URL>icons/sprite-<family>.svg`.
 5. **i18n everywhere** — every app ships `en` and `es` messages. Initial locale: `settings.i18n.locale` → base of `navigator.language` → `en`. Each app uses its own `settings-core` namespace.
@@ -63,6 +64,10 @@ The `ui-data-*` family shares one schema and one JSON `value`, so an app can swi
 - Every new type/feature needs a Kitchensink demo covering form, view and editor.
 
 Details: [`../shared/ui-data-core/ai/README.md`](../shared/ui-data-core/ai/README.md).
+
+## ui-calendar contract
+
+`@zn-apps/ui-calendar` is the only calendar source: `ZnCalendar` (`typeView` = month/week/day) plus the exported month/week/day views and date helpers. Values are local ISO strings — `YYYY-MM-DD` for a single day, `{ start, end }` for a range — and events are `{ id?, title, start, end?, color? }` (a date-time `start` is timed, a date-only one is all-day). No i18n dependency: dates come from `Intl` and UI captions from the `labels` prop. Details: [`../shared/ui-calendar/ai/README.md`](../shared/ui-calendar/ai/README.md).
 
 ## Master-slave navigation pattern
 

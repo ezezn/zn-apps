@@ -21,7 +21,7 @@ Consumes `ui-core` (`ZnSection`, `ZnChip`) and `ui-data-core` (`formatFieldValue
 | `emptyText` | String | `'—'` |
 | `trueText` | String | `'Yes'` |
 | `falseText` | String | `'No'` |
-| `size` | `small \| medium \| large` | `medium` (label/value scale; `field.size` → `section.size` → `schema.size` → prop) |
+| `size` | `xsmall \| small \| medium \| large` | `medium` (label/value scale; `field.size` → `section.size` → `schema.size` → prop) |
 
 Per-field: `labelPosition`, `size`, `span` (`zn-span-N`, clamped to `section.layout`). `field.description` renders under the value.
 

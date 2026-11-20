@@ -11,9 +11,9 @@ import {
 import { formatTaskDate, formatTaskDateTime, parseLocalDate } from '../helpers/dates.js'
 
 const baseTasks = [
-  { id: 1, name: 'Árbol caído', externalId: 'EXT-2', status: 'active', taskDate: '2026-11-02', addedAt: '2026-11-05T09:00' },
-  { id: 2, name: 'Revisar informe', externalId: 'EXT-1', status: 'active', taskDate: '2026-10-30', addedAt: '2026-11-06T10:30' },
-  { id: 3, name: 'Cierre mensual', externalId: 'EXT-3', status: 'inactive', taskDate: '', addedAt: '2026-11-01T08:15' }
+  { id: 1, name: 'Árbol caído', externalId: 'EXT-2', status: 'active', externalStatus: 'open', taskDate: '2026-11-02', addedAt: '2026-11-05T09:00' },
+  { id: 2, name: 'Revisar informe', externalId: 'EXT-1', status: 'active', externalStatus: 'closed', taskDate: '2026-10-30', addedAt: '2026-11-06T10:30' },
+  { id: 3, name: 'Cierre mensual', externalId: 'EXT-3', status: 'inactive', externalStatus: 'open', taskDate: '', addedAt: '2026-11-01T08:15' }
 ]
 
 describe('task helpers', () => {
@@ -66,6 +66,14 @@ describe('filterTasks', () => {
   it('filters by internal status', () => {
     const result = filterTasks(baseTasks, { search: '', status: 'inactive' })
     expect(result.map((task) => task.id)).toEqual([3])
+  })
+
+  it('filters by external status', () => {
+    const result = filterTasks(baseTasks, { search: '', externalStatus: 'open' })
+    expect(result.map((task) => task.id)).toEqual([1, 3])
+
+    const combined = filterTasks(baseTasks, { search: '', status: 'active', externalStatus: 'open' })
+    expect(combined.map((task) => task.id)).toEqual([1])
   })
 })
 

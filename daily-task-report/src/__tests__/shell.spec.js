@@ -17,7 +17,7 @@ describe('app shell', () => {
     })
   }
 
-  async function mountApp(isMobile, entry = '/tasks') {
+  async function mountApp(isMobile, entry = '/') {
     mockViewport(isMobile)
     const router = createRouter({ history: createMemoryHistory(), routes })
     router.push(entry)
@@ -41,10 +41,11 @@ describe('app shell', () => {
     wrapper.unmount()
   })
 
-  it('lands on the task page when the app is opened from the PWA start url', async () => {
+  it('lands on the home page when the app is opened from the PWA start url', async () => {
     const wrapper = await mountApp(true, '/index.html')
 
-    expect(wrapper.vm.$route.fullPath).toBe('/tasks')
+    expect(wrapper.vm.$route.fullPath).toBe('/')
+    expect(wrapper.find('.home-page').exists()).toBe(true)
     expect(wrapper.find('.zn-master-slave-layout__master--screen').exists()).toBe(false)
     expect(wrapper.find('.zn-screen__menu').exists()).toBe(true)
     expect(wrapper.find('main').text()).not.toBe('')

@@ -201,6 +201,14 @@ const formattedValue = computed(() =>
 }
 
 /* Escala de presentación alineada con los tamaños MD3 de los inputs. */
+.zn-view-field--xsmall .zn-field-label {
+  font-size: 0.6875rem;
+}
+
+.zn-view-field--xsmall .zn-field-value {
+  font-size: 0.8125rem;
+}
+
 .zn-view-field--small .zn-field-label {
   font-size: 0.6875rem;
 }
@@ -223,6 +231,10 @@ const formattedValue = computed(() =>
 
 .zn-view-field--medium .zn-field-value {
   font-size: 1rem;
+}
+
+.zn-view-field--inline.zn-view-field--xsmall .zn-field-label {
+  font-size: 0.75rem;
 }
 
 .zn-view-field--inline.zn-view-field--small .zn-field-label {

@@ -102,8 +102,9 @@ export const InputVariants = Object.freeze({
   FILLED: 'filled'
 })
 
-/** Tamaños MD3 de los campos de entrada (`small` = densidad -2, 48px). */
+/** Tamaños MD3 de los campos de entrada (`xsmall` = densidad -4 / 40px, `small` = -2 / 48px). */
 export const InputSizes = Object.freeze({
+  XSMALL: 'xsmall',
   SMALL: 'small',
   MEDIUM: 'medium',
   LARGE: 'large'

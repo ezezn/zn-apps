@@ -37,7 +37,8 @@ zn-apps/
 │   ├── ui-data-form/            schema-driven form
 │   ├── ui-data-view/            read-only presentation
 │   ├── ui-data-editor/          view + per-field dialog editing
-│   └── ui-data-richtext/        Markdown-backed rich text
+│   ├── ui-data-richtext/        Markdown-backed rich text
+│   └── ui-calendar/             MD3 calendars: month/week/day, ranges, events
 ├── zound-box/                   product PWA (single screen)
 ├── daily-task-report/           product PWA (master-slave, Pinia + Dexie)
 └── kitchensink/                 showroom, icon catalog, blueprint
@@ -51,7 +52,7 @@ Every project also holds `ai/` (agent context) and `doc/{en,es}/` (user manual).
 Each app owns `package.json`, `vite.config.js`, `index.html`, service worker and `dist/`. **Never share state between apps** (no cross-app Pinia). Deployment subpaths are `/zn-apps/<app>/`.
 
 ### 2. Shared libraries are isolated
-Each `shared/*` library has its own manifest, Vite library build and tests. Libraries do not import each other except explicit composition edges: `ui-about → ui-core`, the `ui-data-*` family over `ui-core` and `ui-data-core`, `ui-data-editor → ui-data-form + ui-data-view`, `ui-data-richtext → ui-core`. Infrastructure libraries (`settings-core`, `ui-data-core`) depend on neither Vue nor the DOM.
+Each `shared/*` library has its own manifest, Vite library build and tests. Libraries do not import each other except explicit composition edges: `ui-about → ui-core`, `ui-calendar → ui-core`, the `ui-data-*` family over `ui-core` and `ui-data-core`, `ui-data-editor → ui-data-form + ui-data-view`, `ui-data-richtext → ui-core`. Infrastructure libraries (`settings-core`, `ui-data-core`) depend on neither Vue nor the DOM.
 
 ### 3. Material Design 3, centralized
 Tokens live in `shared/ui-core/src/assets/css/global.css`. Theme switching happens only through `<ZnApp mode="light|dark|system">`, which applies `zn-theme-light`/`zn-theme-dark` to `<body>`.

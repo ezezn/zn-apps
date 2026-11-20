@@ -2,13 +2,16 @@
   "scanned": [
     "add",
     "cloud",
+    "content_copy",
     "delete_forever",
     "download",
     "edit",
+    "home",
     "info",
     "open_in_new",
     "search",
     "settings",
+    "system_update",
     "task_alt",
     "upload"
   ],

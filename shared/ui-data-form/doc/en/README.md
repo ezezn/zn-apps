@@ -36,7 +36,7 @@ const schema = { sections: [{ title: 'Perfil', icon: 'person', collapsible: true
 | `showActions` | `true` | show the Save/Cancel/Reset/Clear footer |
 | `saveLabel` / `cancelLabel` / `resetLabel` / `clearLabel` | `Save` / `Cancel` / `Reset` / `Clear` | button texts |
 | `variant` | `outlined` | default input variant; `schema.variant` wins |
-| `size` | `medium` | default input size (48/56/64px); `schema.size` wins |
+| `size` | `medium` | default input size (40/48/56/64px); `schema.size` wins |
 
 Events: `update:modelValue`, `change(value, path, fieldValue)`, `save(value)`, `cancel(initialValue)`, `reset(value)`, `clear`.
 Methods: `save()`, `cancel()`, `reset()`, `clear()`, and `value` (current draft).

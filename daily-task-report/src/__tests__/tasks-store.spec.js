@@ -16,7 +16,7 @@ vi.mock('../db/tasksRepository.js', () => ({
 
 const storedTasks = [
   { id: 1, name: 'Revisar informe', externalId: 'EXT-1', status: 'active', taskDate: '2026-11-02', addedAt: '2026-11-05T09:00', description: '', externalUrl: '', externalStatus: '' },
-  { id: 2, name: 'Cierre mensual', externalId: 'EXT-2', status: 'inactive', taskDate: '', addedAt: '2026-11-06T10:30', description: '', externalUrl: '', externalStatus: '' }
+  { id: 2, name: 'Cierre mensual', externalId: 'EXT-2', status: 'inactive', taskDate: '', addedAt: '2026-11-06T10:30', description: '', externalUrl: '', externalStatus: 'closed' }
 ]
 
 describe('tasks store', () => {
@@ -50,8 +50,14 @@ describe('tasks store', () => {
     expect(store.visibleTasks.map((task) => task.id)).toEqual([2])
     expect(store.hasActiveFilters).toBe(true)
 
+    store.filters.status = 'all'
+    store.filters.externalStatus = 'closed'
+    expect(store.visibleTasks.map((task) => task.id)).toEqual([2])
+    expect(store.hasActiveFilters).toBe(true)
+
     store.resetFilters()
     expect(store.filters.status).toBe('all')
+    expect(store.filters.externalStatus).toBe('all')
     expect(store.hasActiveFilters).toBe(false)
   })
 

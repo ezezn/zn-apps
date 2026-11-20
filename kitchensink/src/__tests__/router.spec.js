@@ -24,6 +24,10 @@ import DataFormPage from '../views/data/DataFormPage.vue'
 import DataViewPage from '../views/data/DataViewPage.vue'
 import DataEditorPage from '../views/data/DataEditorPage.vue'
 import ChipPage from '../views/inputs/ChipPage.vue'
+import CalendarMonthPage from '../views/calendar/MonthPage.vue'
+import CalendarRangePage from '../views/calendar/RangePage.vue'
+import CalendarWeekPage from '../views/calendar/WeekPage.vue'
+import CalendarDayPage from '../views/calendar/DayPage.vue'
 
 function createTestRouter() {
   return createRouter({
@@ -164,6 +168,19 @@ describe('Kitchensink App & Router', () => {
 
     expect(wrapper.findComponent(page).exists()).toBe(true)
     expect(wrapper.text()).toContain(expectedText)
+  })
+
+  it.each([
+    ['/calendar/month', CalendarMonthPage, 'Selección de un día'],
+    ['/calendar/range', CalendarRangePage, 'Rango de fechas'],
+    ['/calendar/week', CalendarWeekPage, 'Vista de semana'],
+    ['/calendar/day', CalendarDayPage, 'Vista de día']
+  ])('monta la demo de ui-calendar en %s', async (path, page, expectedText) => {
+    const { wrapper } = await mountAt(path)
+
+    expect(wrapper.findComponent(page).exists()).toBe(true)
+    expect(wrapper.text()).toContain(expectedText)
+    expect(wrapper.find('.zn-calendar').exists()).toBe(true)
   })
 
   it('navega a la vista de Chips al cambiar de ruta', async () => {

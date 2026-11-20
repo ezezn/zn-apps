@@ -16,6 +16,7 @@ export default defineConfig({
       { find: '@zn-apps/ui-data-view', replacement: resolve(__dirname, '../shared/ui-data-view/src/index.js') },
       { find: '@zn-apps/ui-data-editor', replacement: resolve(__dirname, '../shared/ui-data-editor/src/index.js') },
       { find: '@zn-apps/ui-data-richtext', replacement: resolve(__dirname, '../shared/ui-data-richtext/src/index.js') },
+      { find: '@zn-apps/ui-calendar', replacement: resolve(__dirname, '../shared/ui-calendar/src/index.js') },
     ],
   },
   test: {

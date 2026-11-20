@@ -12,6 +12,7 @@ export default defineConfig({
       'shared/ui-data-view/vitest.config.js',
       'shared/ui-data-editor/vitest.config.js',
       'shared/ui-data-richtext/vitest.config.js',
+      'shared/ui-calendar/vitest.config.js',
       'zound-box/vitest.config.js',
       'kitchensink/vitest.config.js',
       'daily-task-report/vitest.config.js',

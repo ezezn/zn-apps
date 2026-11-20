@@ -41,7 +41,7 @@ En escritorio `ZnMasterSlaveLayout` muestra la navegación al costado del conten
 | Prop | Valores |
 |---|---|
 | `variant` | `outlined` (por defecto) · `filled` |
-| `size` | `small` 48px · `medium` 56px (por defecto) · `large` 64px |
+| `size` | `xsmall` 40px · `small` 48px · `medium` 56px (por defecto) · `large` 64px |
 | comunes | `label`, `hint`, `error`, `placeholder`, `disabled`, `readonly`, `required`, `floatLabel` |
 | slots | `#leading`, `#trailing` |
 

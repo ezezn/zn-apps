@@ -142,5 +142,21 @@ export const demoViews = [
   {
     key: 'pwa-install', title: 'Instalación PWA (usePwaInstall)', subtitle: 'Detección de instalación, diálogo nativo y popup ZnPwaInstallPrompt',
     sections: [{ title: 'Instalación', content: 'Estado instalada/navegador, activación del diálogo nativo y ciclo de eventos del popup.' }]
+  },
+  {
+    key: 'calendar-month', title: 'Calendario · mes (ZnCalendar)', subtitle: 'Vista mensual con selección de un día y marcas de eventos',
+    sections: [{ title: 'Mes y selección', content: 'Selecciona un día sobre la cuadrícula, escribe la fecha en el campo opcional y observa la marca de hoy.' }, { title: 'Eventos', content: 'Eventos de un día y de varios días, con color, detalle completo o puntos compactos.' }]
+  },
+  {
+    key: 'calendar-range', title: 'Calendario · rango', subtitle: 'Selección de un rango de fechas con inicio y fin',
+    sections: [{ title: 'Rango de fechas', content: 'Dos clics definen el rango, que se marca por completo y puede editarse también desde los campos.' }, { title: 'Rangos predefinidos', content: 'El rango es un v-model: fíjalo desde botones externos y el calendario navega a esa fecha.' }]
+  },
+  {
+    key: 'calendar-week', title: 'Calendario · semana', subtitle: 'Siete columnas con navegación semanal, mensual y anual',
+    sections: [{ title: 'Vista de semana', content: 'Flechas para cambiar de semana, selectores de mes y año y encabezados de día como control de selección.' }]
+  },
+  {
+    key: 'calendar-day', title: 'Calendario · día', subtitle: 'Agenda de un día con eventos ordenados por hora',
+    sections: [{ title: 'Vista de día', content: 'Campo de fecha integrado, flechas día a día y encabezado seleccionable; sin eventos muestra el estado vacío.' }]
   }
 ]

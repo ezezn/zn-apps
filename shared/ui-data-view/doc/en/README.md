@@ -35,7 +35,7 @@ const value = { name: 'Ada', role: 'admin' }
 | `labelPosition` | `top` | label above the value, or `inline` |
 | `emptyText` | `'—'` | text for empty values |
 | `trueText` / `falseText` | `'Yes'` / `'No'` | booleans |
-| `size` | `medium` | label/value scale: `small`, `medium`, `large` |
+| `size` | `medium` | label/value scale: `xsmall`, `small`, `medium`, `large` |
 
 Each field may override `labelPosition`, `size` and `span`; each section may set `size`. `field.description` renders under the value.
 

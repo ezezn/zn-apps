@@ -32,6 +32,7 @@ import { ZnDataForm } from '@zn-apps/ui-data-form'
 import { clone } from '@zn-apps/ui-data-core'
 import { i18n } from '../i18n.js'
 import { useEntityLabels } from '../composables/useEntityLabels.js'
+import { useExternalStatuses } from '../composables/useExternalStatuses.js'
 import { taskFormSchema } from '../data/task-schema.js'
 import { createTaskDraft, normalizeTask, validateTask } from '../helpers/tasks.js'
 
@@ -46,6 +47,7 @@ const emit = defineEmits(['update:modelValue', 'submit'])
 
 const t = (...args) => i18n.global.t(...args)
 const { singular } = useEntityLabels()
+const { optionsWithCurrent } = useExternalStatuses()
 
 const formRef = ref(null)
 const draft = ref(createTaskDraft())
@@ -57,7 +59,13 @@ const title = computed(() =>
     : t('tasks.new', { entity: singular.value })
 )
 
-const schema = computed(() => taskFormSchema({ t, errors: errors.value }))
+const schema = computed(() =>
+  taskFormSchema({
+    t,
+    errors: errors.value,
+    externalStatusOptions: optionsWithCurrent(draft.value.externalStatus)
+  })
+)
 
 watch(
   () => [props.modelValue, props.task],

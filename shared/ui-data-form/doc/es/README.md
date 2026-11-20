@@ -36,7 +36,7 @@ const schema = { sections: [{ title: 'Perfil', icon: 'person', collapsible: true
 | `showActions` | `true` | muestra el footer Save/Cancel/Reset/Clear |
 | `saveLabel` / `cancelLabel` / `resetLabel` / `clearLabel` | `Save` / `Cancel` / `Reset` / `Clear` | textos de los botones |
 | `variant` | `outlined` | variante por defecto de los inputs; `schema.variant` tiene prioridad |
-| `size` | `medium` | tamaño por defecto (48/56/64px); `schema.size` tiene prioridad |
+| `size` | `medium` | tamaño por defecto (40/48/56/64px); `schema.size` tiene prioridad |
 
 Eventos: `update:modelValue`, `change(value, path, fieldValue)`, `save(value)`, `cancel(initialValue)`, `reset(value)`, `clear`.
 Métodos: `save()`, `cancel()`, `reset()`, `clear()` y `value` (borrador actual).

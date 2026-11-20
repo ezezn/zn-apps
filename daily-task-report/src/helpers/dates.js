@@ -38,3 +38,9 @@ export function formatTaskDateTime(value, locale = 'en') {
   if (!value) return ''
   return format(value, locale, { dateStyle: 'medium', timeStyle: 'short' })
 }
+
+/** Time only, for entries already grouped under a known day. */
+export function formatTaskTime(value, locale = 'en') {
+  if (!value) return ''
+  return format(value, locale, { timeStyle: 'short' })
+}

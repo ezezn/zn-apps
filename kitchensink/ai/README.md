@@ -13,12 +13,14 @@ Location: `kitchensink/`, base `/zn-apps/kitchensink/`.
 | About | `ZnAbout` on `/about` with `package.json` metadata |
 | Settings | `createSettings` demo on `/settings` |
 | Data | `/data/*` share one schema/value across form, view and editor (`src/data/data-demo.js`) |
+| Calendar | `/calendar/*` demo month, range, week and day views with shared events (`src/data/calendar-demo.js`) |
 | i18n | shell/nav/theme/install popup translated; static strings inside demo views are still Spanish and must be migrated (remove this note once done) |
 
 ## Routes (`src/router/index.js`)
 
 - ui-core: `/buttons`, `/cards`, `/switches`, `/inputs` (+ `/inputs/text`, `multiline`, `email`, `phone`, `number`, `date`, `time`, `datetime`, `select`, `chip`, `range`, `date-range`, `time-range`, `datetime-range`), `/dialogs`, `/tabs`, `/layout`, `/sections`, `/screen`, `/navigation-layout`, `/icons`, `/legacy`
 - ui-data: `/data/core`, `/data/form`, `/data/view`, `/data/editor`, `/data/richtext`
+- ui-calendar: `/calendar/month`, `/calendar/range`, `/calendar/week`, `/calendar/day`
 - ui-about: `/about`; settings-core: `/settings`; pwa-integration: `/pwa/color-scheme`, `/pwa/bar-styling`, `/pwa/install`
 - `/` redirects to `/buttons`
 

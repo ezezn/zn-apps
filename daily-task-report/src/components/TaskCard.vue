@@ -53,7 +53,7 @@
         <template #icon>
           <ZnIcon name="cloud" :size="16" />
         </template>
-        {{ task.externalStatus }}
+        {{ externalStatusLabel(task.externalStatus) }}
       </ZnChip>
 
       <!-- Comparte la última fila visible, alineado al borde derecho. -->
@@ -126,6 +126,7 @@ import { ZnButton, ZnCard, ZnChip, ZnIcon, ZnRow } from '@zn-apps/ui-core'
 import { ZnDataView } from '@zn-apps/ui-data-view'
 import { i18n } from '../i18n.js'
 import { statusLabel, taskViewSchema } from '../data/task-schema.js'
+import { useExternalStatuses } from '../composables/useExternalStatuses.js'
 import { absoluteUrl } from '../helpers/tasks.js'
 import { sortUpdatesDesc } from '../helpers/updates.js'
 import { formatTaskDate, formatTaskDateTime } from '../helpers/dates.js'
@@ -145,13 +146,19 @@ const t = (...args) => i18n.global.t(...args)
 const expanded = ref(false)
 
 const link = computed(() => absoluteUrl(props.task.externalUrl))
+const { labelFor: externalStatusLabel, optionsWithCurrent } = useExternalStatuses()
 const taskUpdates = computed(() => sortUpdatesDesc(props.updates))
 
 function formatDate(value) {
   return formatTaskDateTime(value, i18n.global.locale.value)
 }
 
-const viewSchema = computed(() => taskViewSchema({ t }))
+const viewSchema = computed(() =>
+  taskViewSchema({
+    t,
+    externalStatusOptions: optionsWithCurrent(props.task.externalStatus)
+  })
+)
 
 const viewValue = computed(() => ({
   ...props.task,

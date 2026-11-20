@@ -202,6 +202,37 @@
         </span>
       </ZnBox>
     </ZnSection>
+
+    <!-- SECCIÓN 7: TAMAÑOS -->
+    <ZnSection title="7. Tamaños (densidad MD3)" collapsible :columns="4">
+      <p class="section-desc section-desc--full">
+        Todos los campos aceptan <code>size</code> y comparten la escala de densidad:
+        <code>xsmall</code> (40px, densidad −4), <code>small</code> (48px, −2),
+        <code>medium</code> (56px, 0, por defecto) y <code>large</code> (64px, +2).
+        <code>xsmall</code> está pensado para barras de herramientas y cabeceras compactas.
+      </p>
+
+      <ZnBox
+        v-for="option in sizeOptions"
+        :key="option.value"
+        variant="outlined"
+        class="showcase-stack"
+      >
+        <span class="showcase-label">size="{{ option.value }}" · {{ option.px }}</span>
+        <ZnSelect
+          v-model="paisPorTamano[option.value]"
+          :size="option.value"
+          label="País"
+          :options="paises"
+        />
+        <ZnSingleLineText
+          v-model="textoPorTamano[option.value]"
+          :size="option.value"
+          label="Nombre"
+          placeholder="Texto"
+        />
+      </ZnBox>
+    </ZnSection>
   </DemoView>
 </template>
 
@@ -257,4 +288,13 @@ const rangoPrecio = ref([100, 350])
 const rangoFechas = ref(['', ''])
 const rangoHoras = ref(['09:00', '18:00'])
 const rangoFechaHora = ref(['', ''])
+
+const sizeOptions = [
+  { value: 'xsmall', px: '40px' },
+  { value: 'small', px: '48px' },
+  { value: 'medium', px: '56px' },
+  { value: 'large', px: '64px' }
+]
+const paisPorTamano = ref({})
+const textoPorTamano = ref({})
 </script>

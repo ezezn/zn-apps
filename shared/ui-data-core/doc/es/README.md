@@ -13,7 +13,7 @@ El contrato compartido de la familia `ui-data-*`: forma del esquema, utilidades 
     title: 'Perfil', icon: 'person', collapsible: true, expanded: false,
     layout: 2,              // 1–4 columnas
     variant: 'filled',      // outlined | filled
-    size: 'small',          // small | medium | large
+    size: 'small',          // xsmall | small | medium | large
     fields: [{
       path: 'contact.email', type: 'email', label: 'Correo',
       variant: 'outlined', size: 'large', span: 2, labelPosition: 'inline',
@@ -37,7 +37,7 @@ Cada uno tiene implementación en formulario (`ZnDataField`), vista (`ZnDataView
 
 - Columnas: `layout` 1–4; `field.span` (por defecto 1) se limita a las columnas de la sección.
 - Etiquetas: `labelPosition` `top` o `inline`, por vista, sección o campo.
-- Variantes/tamaños: `variant` `outlined`/`filled`, `size` `small`/`medium`/`large`; precedencia **campo → sección → contenedor** (`schema` puede fijar el default del documento).
+- Variantes/tamaños: `variant` `outlined`/`filled`, `size` `xsmall`/`small`/`medium`/`large` (40/48/56/64px); precedencia **campo → sección → contenedor** (`schema` puede fijar el default del documento).
 - Los defaults vienen de `field.default` y nunca sobrescriben un valor recibido.
 
 ## Utilidades

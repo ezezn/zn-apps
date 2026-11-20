@@ -25,6 +25,7 @@ export const useTasksStore = defineStore('tasks', () => {
   const filters = reactive({
     search: '',
     status: ALL_STATUSES,
+    externalStatus: ALL_STATUSES,
     sortBy: 'addedAt',
     direction: 'desc'
   })
@@ -38,7 +39,8 @@ export const useTasksStore = defineStore('tasks', () => {
   const hasActiveFilters = computed(
     () =>
       filters.search.trim() !== '' ||
-      filters.status !== ALL_STATUSES
+      filters.status !== ALL_STATUSES ||
+      filters.externalStatus !== ALL_STATUSES
   )
 
   async function load({ force = false } = {}) {
@@ -134,6 +136,7 @@ export const useTasksStore = defineStore('tasks', () => {
   function resetFilters() {
     filters.search = ''
     filters.status = ALL_STATUSES
+    filters.externalStatus = ALL_STATUSES
   }
 
   function setSortBy(field) {

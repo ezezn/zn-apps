@@ -10,10 +10,30 @@ export const messages = {
     },
     nav: {
       navigation: 'Navigation',
+      home: 'Home',
       tasks: 'Tasks',
       updates: 'Updates',
       settings: 'Settings',
       about: 'About'
+    },
+    home: {
+      title: 'Home',
+      calendarHint: 'Click a day to see its report below. The week view shows the current week; switch to the month view to browse further ahead.',
+      weekView: 'Week',
+      monthView: 'Month',
+      currentTitle: 'Current work',
+      previousTitle: 'Previous day',
+      pendingTitle: 'Pending',
+      emptyCurrent: 'No updates were recorded on this day.',
+      emptyPrevious: 'No updates were recorded the day before.',
+      emptyPending: 'Every active {entityPlural} has a recent update.',
+      loading: 'Loading…',
+      today: 'Today',
+      previous: 'Previous',
+      next: 'Next',
+      month: 'Month',
+      year: 'Year',
+      date: 'Date'
     },
     entity: {
       defaultSingular: 'Task',
@@ -34,6 +54,7 @@ export const messages = {
       deleteMessage: 'This permanently removes “{name}” and its updates. This cannot be undone.',
       search: 'Search by name or external ID',
       statusFilter: 'Status',
+      externalStatusFilter: 'External status',
       allStatuses: 'All',
       sortBy: 'Sort by',
       sortName: 'Name',
@@ -53,6 +74,7 @@ export const messages = {
       name: 'Name',
       externalId: 'External ID',
       externalStatus: 'Status in the external app',
+      noExternalStatuses: 'No external statuses configured. Add them in Settings.',
       externalLink: 'External link',
       openLink: 'Open link',
       description: 'Description',
@@ -80,7 +102,11 @@ export const messages = {
       description: 'What changed',
       createdAt: 'Date and time',
       unknownTask: 'Deleted task',
-      createHint: 'The date and time default to now so you can adjust them before saving.'
+      createHint: 'The date and time default to now so you can adjust them before saving.',
+      previousTitle: 'Last update',
+      copy: 'Copy text',
+      copied: 'Copied',
+      usePrevious: 'Use this text'
     },
     status: {
       active: 'Active',
@@ -108,6 +134,17 @@ export const messages = {
       singular: 'Singular',
       plural: 'Plural',
       namingPreview: 'Preview: {singular} · {plural}',
+      externalStatusSection: 'External statuses',
+      externalStatusHint: 'Possible values of the “Status in the external app” field. Only the labels are visible; the identifier is generated automatically.',
+      externalStatusEmpty: 'No external statuses configured yet.',
+      externalStatusAdd: 'Add status',
+      externalStatusEdit: 'Edit external status',
+      externalStatusDeleteTitle: 'Delete external status',
+      externalStatusDeleteMessage: 'Delete “{label}”? Tasks that use this value keep it as written.',
+      externalStatusDialogHint: 'The identifier is generated automatically and stays hidden; only the labels are shown.',
+      externalStatusLabelEn: 'Label in English',
+      externalStatusLabelEs: 'Label in Spanish',
+      externalStatusLabelEsHint: 'Optional. If empty, the English label is used.',
       dataSection: 'Data',
       dataHint: 'Tasks live only in this browser. Export a JSON backup, merge one back, or delete all local data.',
       exportData: 'Export JSON',
@@ -155,18 +192,34 @@ export const messages = {
     },
     nav: {
       navigation: 'Navegación',
+      home: 'Inicio',
       tasks: 'Tareas',
       updates: 'Actualizaciones',
       settings: 'Configuración',
       about: 'Acerca de'
     },
+    home: {
+      title: 'Inicio',
+      calendarHint: 'Haz clic en un día para ver su reporte debajo. La vista de semana muestra la semana actual; cambia a mes para recorrer más días.',
+      weekView: 'Semana',
+      monthView: 'Mes',
+      currentTitle: 'Trabajo actual',
+      previousTitle: 'Día anterior',
+      pendingTitle: 'Pendientes',
+      emptyCurrent: 'No hay actualizaciones registradas en este día.',
+      emptyPrevious: 'No hay actualizaciones registradas el día anterior.',
+      emptyPending: 'Todas las {entityPlural} activas tienen una actualización reciente.',
+      loading: 'Cargando…',
+      today: 'Hoy',
+      previous: 'Anterior',
+      next: 'Siguiente',
+      month: 'Mes',
+      year: 'Año',
+      date: 'Fecha'
+    },
     entity: {
       defaultSingular: 'Tarea',
-      defaultPlural: 'Tareas',
-      externalStatusManage: 'Manage external statuses',
-      externalStatusAdd: 'Add external status',
-      externalStatusDelete: 'Delete external status',
-      externalStatusEmpty: 'No external statuses configured',
+      defaultPlural: 'Tareas'
     },
     common: {
       cancel: 'Cancelar',
@@ -183,6 +236,7 @@ export const messages = {
       deleteMessage: 'Esto elimina “{name}” y sus actualizaciones de forma permanente. No se puede deshacer.',
       search: 'Buscar por nombre o ID externo',
       statusFilter: 'Estado',
+      externalStatusFilter: 'Estado externo',
       allStatuses: 'Todos',
       sortBy: 'Ordenar por',
       sortName: 'Nombre',
@@ -202,6 +256,7 @@ export const messages = {
       name: 'Nombre',
       externalId: 'ID externo',
       externalStatus: 'Estado en la app externa',
+      noExternalStatuses: 'No hay estados externos configurados. Agrégalos en Configuración.',
       externalLink: 'Enlace externo',
       openLink: 'Abrir enlace',
       description: 'Descripción',
@@ -229,7 +284,11 @@ export const messages = {
       description: 'Qué cambió',
       createdAt: 'Fecha y hora',
       unknownTask: 'Tarea eliminada',
-      createHint: 'La fecha y hora se completan con el momento actual para que las ajustes antes de guardar.'
+      createHint: 'La fecha y hora se completan con el momento actual para que las ajustes antes de guardar.',
+      previousTitle: 'Última actualización',
+      copy: 'Copiar texto',
+      copied: 'Copiado',
+      usePrevious: 'Usar este texto'
     },
     status: {
       active: 'Activa',
@@ -257,6 +316,17 @@ export const messages = {
       singular: 'Singular',
       plural: 'Plural',
       namingPreview: 'Vista previa: {singular} · {plural}',
+      externalStatusSection: 'Estados externos',
+      externalStatusHint: 'Valores posibles del campo “Estado en la app externa”. Sólo se ven las etiquetas; el identificador se genera automáticamente.',
+      externalStatusEmpty: 'Todavía no hay estados externos configurados.',
+      externalStatusAdd: 'Agregar estado',
+      externalStatusEdit: 'Editar estado externo',
+      externalStatusDeleteTitle: 'Eliminar estado externo',
+      externalStatusDeleteMessage: '¿Eliminar “{label}”? Las tareas que usan este valor lo conservan tal como está escrito.',
+      externalStatusDialogHint: 'El identificador se genera automáticamente y queda oculto; sólo se muestran las etiquetas.',
+      externalStatusLabelEn: 'Etiqueta en inglés',
+      externalStatusLabelEs: 'Etiqueta en español',
+      externalStatusLabelEsHint: 'Opcional. Si queda vacía, se usa la etiqueta en inglés.',
       dataSection: 'Datos',
       dataHint: 'Las tareas viven sólo en este navegador. Exporta una copia JSON, fusiona una o borra todos los datos locales.',
       exportData: 'Exportar JSON',
@@ -317,7 +387,8 @@ settings.define({
       en: { singular: 'Task', plural: 'Tasks' },
       es: { singular: 'Tarea', plural: 'Tareas' }
     }
-  }
+  },
+  externalStatuses: []
 })
 
 export function resolveInitialLocale() {

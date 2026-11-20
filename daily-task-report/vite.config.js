@@ -21,6 +21,7 @@ export default defineConfig({
       '@zn-apps/ui-core': resolve(__dirname, '../shared/ui-core/src/index.js'),
       '@zn-apps/settings-core': resolve(__dirname, '../shared/settings-core/src/index.js'),
       '@zn-apps/ui-about': resolve(__dirname, '../shared/ui-about/src/index.js'),
+      '@zn-apps/ui-calendar': resolve(__dirname, '../shared/ui-calendar/src/index.js'),
       '@zn-apps/pwa-integration': resolve(__dirname, '../shared/pwa-integration/src/index.js'),
       '@zn-apps/ui-data-core': resolve(__dirname, '../shared/ui-data-core/src/index.js'),
       '@zn-apps/ui-data-form': resolve(__dirname, '../shared/ui-data-form/src/index.js'),

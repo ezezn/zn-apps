@@ -81,7 +81,7 @@ Also available: `--md-secondary-container`, `--md-on-secondary-container` (selec
 `ZnFieldShell` renders the shared anatomy (notched outline, floating label, hint, error). Common props: `modelValue`, `label`, `hint`, `error`, `placeholder`, `name`, `disabled`, `readonly`, `required`, `floatLabel`, `variant`, `size`. Slots `#leading`, `#trailing`. Native attributes and listeners are forwarded to the real `<input>`/`<textarea>`.
 
 - `variant`: `outlined` (default, notched contour) | `filled` (tonal container + 1px indicator, 2px on focus/error). Also accepted by the three temporal ranges.
-- `size`: `small` 48px | `medium` 56px (default) | `large` 64px. MD3 56dp standard, 4dp density steps (`small` = density −2). Applies identically in both variants, with/without icons, and in `ZnSelect`/email/phone/number/temporal fields.
+- `size`: `xsmall` 40px | `small` 48px | `medium` 56px (default) | `large` 64px. MD3 56dp standard, 4dp density steps (`small` = density −2, `xsmall` = density −4). Applies identically in both variants, with/without icons, and in `ZnSelect`/email/phone/number/temporal fields. `ZnSelect multiple` falls back to `small` chips when the field is `xsmall`.
 - `label` optional: without it there is no notch and the placeholder stays visible — add `aria-label`.
 - `floatLabel` keeps the label above the contour when empty; temporal fields force it (native controls show `dd/mm/aaaa`, `--:--`).
 - Field fill uses `--md-surface-container-highest`; the outline is border-only so the editable area differs from the card surface in both themes.

@@ -16,6 +16,7 @@
 | **@zn-apps/ui-about** | [`shared/ui-about/`](./shared/ui-about) | About panel built on `ui-core` | library |
 | **@zn-apps/pwa-integration** | [`shared/pwa-integration/`](./shared/pwa-integration) | PWA state, theme sync, install/update popups | library |
 | **@zn-apps/ui-data-** | [`shared/`](./shared) | Schema-driven form, view, editor and rich text | libraries |
+| **@zn-apps/ui-calendar** | [`shared/ui-calendar/`](./shared/ui-calendar) | MD3 calendars: month/week/day, single or range selection, events | library |
 | **Zound Box** | [`zound-box/`](./zound-box) | Ambient audio mixer PWA | `/zn-apps/zound-box/` |
 | **Kitchensink** | [`kitchensink/`](./kitchensink) | Showroom, icon catalog and blueprint for new apps | `/zn-apps/kitchensink/` |
 | **Daily Task Report** | [`daily-task-report/`](./daily-task-report) | Local task tracker with configurable entity naming | `/zn-apps/daily-task-report/` |

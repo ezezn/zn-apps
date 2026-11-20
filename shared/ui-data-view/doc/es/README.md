@@ -35,7 +35,7 @@ const value = { name: 'Ada', role: 'admin' }
 | `labelPosition` | `top` | etiqueta encima del valor, o `inline` |
 | `emptyText` | `'—'` | texto para valores vacíos |
 | `trueText` / `falseText` | `'Yes'` / `'No'` | booleanos |
-| `size` | `medium` | escala de etiqueta/valor: `small`, `medium`, `large` |
+| `size` | `medium` | escala de etiqueta/valor: `xsmall`, `small`, `medium`, `large` |
 
 Cada campo puede sobrescribir `labelPosition`, `size` y `span`; cada sección puede fijar `size`. `field.description` se muestra bajo el valor.
 

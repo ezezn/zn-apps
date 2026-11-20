@@ -91,6 +91,23 @@ export const navGroups = [
     ]
   },
   {
+    key: 'ui-calendar',
+    label: '@zn-apps/ui-calendar',
+    icon: 'calendar_month',
+    sections: [
+      {
+        key: 'calendar',
+        label: 'Calendario',
+        items: [
+          { key: 'calendar-month', label: 'Vista de mes (ZnCalendar)', to: '/calendar/month' },
+          { key: 'calendar-range', label: 'Selección de rango', to: '/calendar/range' },
+          { key: 'calendar-week', label: 'Vista de semana', to: '/calendar/week' },
+          { key: 'calendar-day', label: 'Vista de día', to: '/calendar/day' }
+        ]
+      }
+    ]
+  },
+  {
     key: 'ui-about',
     label: '@zn-apps/ui-about',
     icon: 'info',

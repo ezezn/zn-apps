@@ -16,7 +16,7 @@ Form, view and editor consume the same `schema` and the same JSON `value`, so an
     expanded: false,        // initial state when collapsible
     layout: 2,              // 1|2|3|4 columns (default 1)
     variant: 'filled',      // optional outlined|filled
-    size: 'small',          // optional small|medium|large
+    size: 'small',          // optional xsmall|small|medium|large
     fields: [{
       path: 'contact.email', // path inside value
       type: 'email',         // FieldTypes
@@ -65,7 +65,7 @@ Adding a value here requires implementations in `ZnDataField`, `ZnDataViewField`
 - `LayoutColumns` = `ONE|TWO|THREE|FOUR` (1..4); `sectionColumns(section)` normalizes out-of-range values.
 - `fieldSpan(field, columns)` → `field.span` (default 1) clamped to the section's effective columns; renderers apply `zn-span-N`.
 - `LabelPositions` = `TOP` (label above value) | `INLINE`; settable per view, section or field.
-- `InputVariants` = `OUTLINED|FILLED`, `InputSizes` = `SMALL|MEDIUM|LARGE`; `normalizeInputVariant(v, fallback)` / `normalizeInputSize(v, fallback)`.
+- `InputVariants` = `OUTLINED|FILLED`, `InputSizes` = `XSMALL|SMALL|MEDIUM|LARGE` (40/48/56/64px); `normalizeInputVariant(v, fallback)` / `normalizeInputSize(v, fallback)`.
 - Precedence: **field → section → container** (`ZnDataForm`, `ZnDataView`, `ZnDataEditor`); in form/editor the root schema may set the document default.
 
 ## Utilities

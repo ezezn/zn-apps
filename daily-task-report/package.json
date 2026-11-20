@@ -18,6 +18,7 @@
     "@zn-apps/pwa-integration": "*",
     "@zn-apps/settings-core": "*",
     "@zn-apps/ui-about": "*",
+    "@zn-apps/ui-calendar": "*",
     "@zn-apps/ui-core": "*",
     "@zn-apps/ui-data-core": "*",
     "@zn-apps/ui-data-form": "*",

@@ -13,7 +13,7 @@ The shared contract behind the `ui-data-*` family: schema shape, nested JSON hel
     title: 'Perfil', icon: 'person', collapsible: true, expanded: false,
     layout: 2,              // 1–4 columns
     variant: 'filled',      // outlined | filled
-    size: 'small',          // small | medium | large
+    size: 'small',          // xsmall | small | medium | large
     fields: [{
       path: 'contact.email', type: 'email', label: 'Correo',
       variant: 'outlined', size: 'large', span: 2, labelPosition: 'inline',
@@ -37,7 +37,7 @@ Each one has an implementation in the form (`ZnDataField`), the view (`ZnDataVie
 
 - Columns: `layout` 1–4; `field.span` (default 1) is clamped to the section columns.
 - Labels: `labelPosition` `top` or `inline`, per view, section or field.
-- Variants/sizes: `variant` `outlined`/`filled`, `size` `small`/`medium`/`large`; precedence **field → section → container** (`schema` may set the document default).
+- Variants/sizes: `variant` `outlined`/`filled`, `size` `xsmall`/`small`/`medium`/`large` (40/48/56/64px); precedence **field → section → container** (`schema` may set the document default).
 - Defaults come from `field.default` and never override a received value.
 
 ## Utilities

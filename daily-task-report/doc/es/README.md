@@ -8,12 +8,13 @@ PWA para mantener una lista local de las tareas reportadas desde un sistema exte
 ## Qué hace
 
 - **Layout maestro-esclavo**: el panel de navegación a la izquierda y la página activa a la derecha. La entrada principal (la lista de tareas) queda arriba y las opciones secundarias (Configuración, Acerca de) se anclan al pie del panel. En móvil la página ocupa la pantalla y el botón hamburguesa de su header abre la navegación en un drawer.
+- **Inicio** (la página principal): un calendario que abre en la **vista de semana** (se puede cambiar a mes) donde un clic selecciona un solo día, empezando por hoy. Debajo, tres listas para el día seleccionado: **Trabajo actual** (tareas con una actualización registrada ese día), **Día anterior** (tareas con una actualización registrada el día anterior) y **Pendientes** (tareas activas sin actualizaciones en ninguno de los dos días). Cada lista se puede contraer: Trabajo actual y Día anterior empiezan abiertas y Pendientes empieza cerrada. Cada tarjeta tiene acciones: crear una nueva actualización para esa tarea y editar cualquiera de las actualizaciones que muestra. Al crear desde una tarjeta, el diálogo presenta la **última actualización** de la tarea en solo lectura (fecha, hora y texto) con dos botones: copiar el texto al portapapeles o usarlo como texto inicial de la nueva actualización.
 - **Lista de tareas** con tarjetas: la tarjeta colapsada muestra el nombre, el ID externo, el estado interno y el estado en la app externa. El nombre es un enlace que abre la tarea en la app externa en una pestaña nueva (cuando la tarea tiene enlace externo), y el control «Mostrar detalles» comparte la fila de los estados, alineado a la derecha. Al descolapsarla aparecen la descripción, las fechas y un botón para abrir el enlace externo.
 - **Historial de actualizaciones**: cada tarea puede acumular actualizaciones — qué cambió y la fecha y hora en que se estableció. La sección **Actualizaciones** las lista todas, de la más reciente a la más antigua, con acciones de editar y eliminar; la tarjeta extendida muestra las actualizaciones de esa tarea, también de la más reciente a la más antigua, cada una con su acción de editar.
-- **Filtros** en la parte superior: búsqueda por nombre o ID externo y filtro por estado interno.
+- **Filtros** en la parte superior: búsqueda por nombre o ID externo y filtro por estado interno o externo.
 - **Orden** por nombre, fecha de la tarea o fecha de agregado, ascendente o descendente.
 - **Diálogo de creación y edición** con todos los campos de la entidad; **eliminación** con confirmación.
-- **Configuración**: idioma, esquema de colores y los nombres de la entidad que se explican abajo.
+- **Configuración**: idioma, esquema de colores, los nombres de la entidad y los estados externos que se explican abajo.
 - **Acerca de** con versión, créditos y changelog.
 
 Todos los datos quedan en el navegador (IndexedDB). No hay cuenta, servidor ni sincronización.
@@ -31,7 +32,7 @@ En el código las entidades se llaman **Tasks**. En Configuración puedes cambia
 | Fecha de agregado | sí | Se completa con la fecha y hora actuales al crear; es editable |
 | Enlace externo | no | Se agrega `https://` si falta el esquema |
 | Estado interno | sí | Activa o Inactiva (por defecto: Activa) |
-| Estado externo | no | Etiqueta de estado copiada de la app externa. Configurable en Configuración → Datos → Estados externos |
+| Estado externo | no | Uno de los valores configurados en Configuración → Estados externos; la etiqueta sigue el idioma de la app |
 
 ## Uso
 
@@ -39,9 +40,10 @@ En el código las entidades se llaman **Tasks**. En Configuración puedes cambia
 2. **Editar**: el icono de lápiz de la tarjeta abre el mismo diálogo con los valores actuales.
 3. **Eliminar**: el icono de papelera pide confirmación y después borra el registro de forma permanente.
 4. **Consultar**: el control «Mostrar detalles» (al final de la fila de estados) despliega el resto de la información sin salir de la lista. El nombre de la tarea abre el enlace externo en una pestaña nueva.
-5. **Filtrar y ordenar**: la búsqueda y los dos selectores conservan su estado mientras navegas por la app.
+5. **Filtrar y ordenar**: la búsqueda y los selectores conservan su estado mientras navegas por la app. El selector de estado externo aparece cuando hay al menos un estado configurado.
 6. **Registrar una actualización**: abre **Actualizaciones** en la navegación, elige la tarea, describe qué cambió y confirma la fecha y hora (se completan con el momento actual). Puedes editar cualquier entrada desde la sección o desde la tarjeta de la tarea, y eliminarla desde la sección.
 7. **Consultar el historial**: extiende la tarjeta de una tarea para ver sus actualizaciones de la más reciente a la más antigua.
+8. **Leer el día**: abre **Inicio**, cambia entre la vista de semana y la de mes y haz clic en un día. Las tres listas se actualizan a la vez y cada una muestra las actualizaciones del día que cubre; la lista de pendientes muestra las tareas activas que no se actualizaron ni el día seleccionado ni el anterior.
 
 ## Configuración
 
@@ -50,9 +52,12 @@ En el código las entidades se llaman **Tasks**. En Configuración puedes cambia
 | Idioma | Seguir el idioma del sistema o forzar inglés/español |
 | Esquema de colores | Seguir al sistema o forzar claro/oscuro |
 | Nombres de las entidades | Singular y plural en inglés y español; la vista previa usa el idioma activo |
+| Estados externos | Listar, agregar, editar y eliminar los valores posibles del campo de estado externo |
 | Datos | Exportar una copia JSON, fusionar una por ID externo o borrar todos los datos locales |
 
 Si vacías el singular o el plural, se restaura el valor por defecto de ese idioma (`Task/Tasks`, `Tarea/Tareas`).
+
+Cada estado externo tiene una **etiqueta en inglés**, obligatoria, y una **etiqueta en español**, opcional: si queda vacía se usa la inglesa. La app genera un identificador oculto para cada estado, así que en Configuración y en las tarjetas sólo se ven las etiquetas. Si no hay estados configurados, el campo del diálogo de la tarea queda deshabilitado y remite a esta sección. Al eliminar un estado, las tareas que ya lo usan quedan intactas.
 
 ## Copia de seguridad
 
@@ -67,7 +72,7 @@ La importación y el borrado son atómicos: se ejecutan en una sola transacción
 ## Datos y privacidad
 
 - Las tareas se guardan en **IndexedDB** (Dexie) en el navegador del dispositivo: nunca en `localStorage` ni en un servidor.
-- La configuración (idioma, tema, nombres) se guarda aparte con `settings-core`.
+- La configuración (idioma, tema, nombres y estados externos) se guarda aparte con `settings-core`.
 - Al borrar los datos del sitio de la app se eliminan las tareas; exporta una copia antes si quieres conservarlas.
 
 ## Estructura del proyecto
@@ -75,14 +80,18 @@ La importación y el borrado son atómicos: se ejecutan en una sola transacción
 ```
 src/main.js                  arranque: Pinia, router, i18n, listeners PWA
 src/App.vue                  layout maestro-esclavo, navegación, popups PWA
-src/router/index.js          /tasks, /settings, /about
+src/router/index.js          / (Inicio), /tasks, /updates, /settings, /about
+src/views/HomePage.vue       calendario (semana/mes, un día) y las listas del reporte diario
+src/components/DailyTaskList.vue una lista de Inicio: título, contador, entradas, vacío y botón para contraerla
+src/helpers/daily-report.js  división actual / anterior / pendientes para una fecha
 src/views/TasksPage.vue      filtros, orden, lista y diálogo
 src/views/UpdatesPage.vue    historial: más reciente primero, editar y eliminar
-src/views/SettingsPage.vue   idioma, tema y nombres de la entidad
+src/views/SettingsPage.vue   idioma, tema, nombres de la entidad y estados externos
 src/views/AboutPage.vue      panel ZnAbout
 src/components/TaskCard.vue  tarjeta colapsable con acciones de editar/eliminar
 src/components/TaskDialog.vue diálogo de creación/edición (ZnDataForm)
 src/components/UpdateDialog.vue diálogo de creación/edición de una actualización
+src/components/ExternalStatusDialog.vue diálogo de creación/edición de un estado externo
 src/stores/tasks.js          store de Pinia de la lista de tareas
 src/stores/updates.js        store de Pinia del historial
 src/db/                      base Dexie y repositorios de tareas y actualizaciones

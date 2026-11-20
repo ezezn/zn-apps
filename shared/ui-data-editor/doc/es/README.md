@@ -41,7 +41,7 @@ El editor no importa los estilos del formulario ni de la vista: importa los tres
 | `emptyText` | `'—'` | valores vacíos |
 | `trueText` / `falseText` | `'Yes'` / `'No'` | booleanos |
 | `variant` | `outlined` | variante del input del diálogo; `schema.variant` tiene prioridad |
-| `size` | `medium` | tamaño del input del diálogo; `schema.size` tiene prioridad |
+| `size` | `medium` | tamaño del input del diálogo (`xsmall`/`small`/`medium`/`large`); `schema.size` tiene prioridad |
 
 Eventos: `update:modelValue`, `change(value, path, fieldValue)`, `save`, `cancel`, `reset`, `clear`.
 Métodos: `save()`, `cancel()`, `reset()`, `clear()` y `value`.

@@ -57,12 +57,18 @@ export function normalizeSearch(value) {
     .trim()
 }
 
-export function filterTasks(tasks = [], { search = '', status = ALL_STATUSES } = {}) {
+export function filterTasks(
+  tasks = [],
+  { search = '', status = ALL_STATUSES, externalStatus = ALL_STATUSES } = {}
+) {
   const query = normalizeSearch(search)
   const wantedStatus = status && status !== ALL_STATUSES ? status : null
+  const wantedExternalStatus =
+    externalStatus && externalStatus !== ALL_STATUSES ? externalStatus : null
 
   return tasks.filter((task) => {
     if (wantedStatus && task.status !== wantedStatus) return false
+    if (wantedExternalStatus && task.externalStatus !== wantedExternalStatus) return false
     if (!query) return true
     return normalizeSearch(`${task.name ?? ''} ${task.externalId ?? ''}`).includes(query)
   })

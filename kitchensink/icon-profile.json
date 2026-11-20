@@ -4,6 +4,7 @@
     "check",
     "close",
     "dark_mode",
+    "event",
     "favorite",
     "home",
     "keyboard_arrow_down",
@@ -15,6 +16,7 @@
     "pause",
     "play_arrow",
     "search",
+    "sell",
     "settings",
     "skip_next"
   ],

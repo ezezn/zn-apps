@@ -41,7 +41,7 @@ The editor imports neither the form nor the view stylesheet: import all three CS
 | `emptyText` | `'—'` | empty values |
 | `trueText` / `falseText` | `'Yes'` / `'No'` | booleans |
 | `variant` | `outlined` | dialog input variant; `schema.variant` wins |
-| `size` | `medium` | dialog input size; `schema.size` wins |
+| `size` | `medium` | dialog input size (`xsmall`/`small`/`medium`/`large`); `schema.size` wins |
 
 Events: `update:modelValue`, `change(value, path, fieldValue)`, `save`, `cancel`, `reset`, `clear`.
 Methods: `save()`, `cancel()`, `reset()`, `clear()`, and `value`.

@@ -39,6 +39,7 @@ This folder is the human entry point. Each app and library keeps its own user ma
 | `@zn-apps/ui-data-view` | Read-only presentation of the same schema | [EN](../../shared/ui-data-view/doc/en/README.md) · [ES](../../shared/ui-data-view/doc/es/README.md) |
 | `@zn-apps/ui-data-editor` | View-like presentation with per-field dialog editing | [EN](../../shared/ui-data-editor/doc/en/README.md) · [ES](../../shared/ui-data-editor/doc/es/README.md) |
 | `@zn-apps/ui-data-richtext` | Markdown-backed rich text editor and view | [EN](../../shared/ui-data-richtext/doc/en/README.md) · [ES](../../shared/ui-data-richtext/doc/es/README.md) |
+| `@zn-apps/ui-calendar` | MD3 calendars: month/week/day views, single or range selection, events | [EN](../../shared/ui-calendar/doc/en/README.md) · [ES](../../shared/ui-calendar/doc/es/README.md) |
 
 ## Documentation layout
 

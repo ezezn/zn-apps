@@ -84,7 +84,13 @@ describe('ui-data-core · presentación de inputs', () => {
   })
 
   it('expone los tamaños MD3 y normaliza valores desconocidos', () => {
-    expect(InputSizes).toEqual({ SMALL: 'small', MEDIUM: 'medium', LARGE: 'large' })
+    expect(InputSizes).toEqual({
+      XSMALL: 'xsmall',
+      SMALL: 'small',
+      MEDIUM: 'medium',
+      LARGE: 'large'
+    })
+    expect(normalizeInputSize('xsmall')).toBe('xsmall')
     expect(normalizeInputSize('large')).toBe('large')
     expect(normalizeInputSize('xl')).toBe('medium')
     expect(normalizeInputSize(null, 'small')).toBe('small')

@@ -10,7 +10,10 @@
     </template>
 
     <div class="tasks-page">
-      <div class="task-filters">
+      <div
+        class="task-filters"
+        :class="{ 'task-filters--external': externalStatusOptions.length > 0 }"
+      >
         <ZnSingleLineText
           v-model="store.filters.search"
           class="task-filters__search"
@@ -26,6 +29,14 @@
           v-model="store.filters.status"
           :label="t('tasks.statusFilter')"
           :options="statusFilterOptions"
+          variant="filled"
+        />
+
+        <ZnSelect
+          v-if="externalStatusOptions.length > 0"
+          v-model="store.filters.externalStatus"
+          :label="t('tasks.externalStatusFilter')"
+          :options="externalStatusFilterOptions"
           variant="filled"
         />
 
@@ -106,6 +117,7 @@ import { computed, onMounted, ref } from 'vue'
 import { ZnBox, ZnButton, ZnIcon, ZnScreen, ZnSelect, ZnSingleLineText, useDialogs } from '@zn-apps/ui-core'
 import { i18n } from '../i18n.js'
 import { useEntityLabels } from '../composables/useEntityLabels.js'
+import { useExternalStatuses } from '../composables/useExternalStatuses.js'
 import { useTasksStore } from '../stores/tasks.js'
 import { useUpdatesStore } from '../stores/updates.js'
 import { ALL_STATUSES, TASK_STATUSES } from '../helpers/tasks.js'
@@ -117,6 +129,7 @@ import UpdateDialog from '../components/UpdateDialog.vue'
 const t = (...args) => i18n.global.t(...args)
 const { confirm } = useDialogs()
 const { singular, plural } = useEntityLabels()
+const { options: externalStatusOptions } = useExternalStatuses()
 const store = useTasksStore()
 const updatesStore = useUpdatesStore()
 
@@ -130,6 +143,11 @@ const summary = computed(() => t('tasks.summary', { shown: store.shown, total: s
 const statusFilterOptions = computed(() => [
   { value: ALL_STATUSES, label: t('tasks.allStatuses') },
   ...statusOptions(t).filter((option) => TASK_STATUSES.includes(option.value))
+])
+
+const externalStatusFilterOptions = computed(() => [
+  { value: ALL_STATUSES, label: t('tasks.allStatuses') },
+  ...externalStatusOptions.value
 ])
 
 const sortOptions = computed(() => [
@@ -205,6 +223,10 @@ async function removeTask(task) {
   gap: 12px;
 }
 
+.task-filters--external {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 180px) minmax(0, 180px) auto;
+}
+
 /* Orden compacto: el selector y la dirección forman un solo bloque angosto. */
 .task-filters__sort {
   display: flex;
@@ -260,7 +282,7 @@ async function removeTask(task) {
 
 @media (max-width: 720px) {
   .task-filters {
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .task-filters__search {

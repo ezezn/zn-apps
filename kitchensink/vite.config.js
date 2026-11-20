@@ -34,6 +34,7 @@ export default defineConfig({
       '@zn-apps/ui-data-view': resolve(__dirname, '../shared/ui-data-view/src/index.js'),
       '@zn-apps/ui-data-editor': resolve(__dirname, '../shared/ui-data-editor/src/index.js'),
       '@zn-apps/ui-data-richtext': resolve(__dirname, '../shared/ui-data-richtext/src/index.js'),
+      '@zn-apps/ui-calendar': resolve(__dirname, '../shared/ui-calendar/src/index.js'),
     }
   },
   plugins: [

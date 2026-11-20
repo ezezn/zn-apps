@@ -22,7 +22,7 @@ Consumes `ui-core` inputs and the `ui-data-core` contract; `richtext` fields ren
 | `showActions` | Boolean | `true` | footer with Save/Cancel/Reset/Clear |
 | `saveLabel`/`cancelLabel`/`resetLabel`/`clearLabel` | String | `Save`/`Cancel`/`Reset`/`Clear` | |
 | `variant` | `outlined \| filled` | `outlined` | default for inputs; `schema.variant` wins |
-| `size` | `small \| medium \| large` | `medium` | default for inputs; `schema.size` wins |
+| `size` | `xsmall \| small \| medium \| large` | `medium` | default for inputs; `schema.size` wins |
 
 Events: `update:modelValue(value)` (save, live change, reset/clear with live), `change(value, path, fieldValue)`, `save(value)`, `cancel(initialValue)`, `reset(value)`, `clear({})`.
 Exposed methods: `save()`, `cancel()`, `reset()`, `clear()`, `value`.

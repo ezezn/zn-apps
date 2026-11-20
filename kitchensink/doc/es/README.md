@@ -7,7 +7,7 @@ Showroom de componentes, catálogo completo de iconos Material y blueprint para 
 
 ## Qué encontrarás
 
-1. **Showroom** — una página interactiva por cada componente de `ui-core`, `ui-data-*`, `ui-about`, `settings-core` y `pwa-integration`, con todas las variantes y tamaños MD3.
+1. **Showroom** — una página interactiva por cada componente de `ui-core`, `ui-data-*`, `ui-calendar`, `ui-about`, `settings-core` y `pwa-integration`, con todas las variantes y tamaños MD3.
 2. **Catálogo de iconos** — todos los glifos de Material Design en las cinco familias (`filled`, `outlined`, `round`, `sharp`, `two-tone`).
 3. **Blueprint** — la estructura de referencia para arrancar una app multi-pantalla.
 
@@ -19,6 +19,7 @@ Showroom de componentes, catálogo completo de iconos Material y blueprint para 
 | Controles | `/buttons`, `/cards`, `/switches`, `/dialogs` |
 | Entradas | `/inputs` más `/inputs/text`, `multiline`, `email`, `phone`, `number`, `date`, `time`, `datetime`, `select`, `chip`, `range`, `date-range`, `time-range`, `datetime-range` |
 | Datos | `/data/core`, `/data/form`, `/data/view`, `/data/editor`, `/data/richtext` |
+| Calendarios | `/calendar/month`, `/calendar/range`, `/calendar/week`, `/calendar/day` |
 | Recursos | `/icons`, `/legacy` |
 | Librerías | `/about`, `/settings`, `/pwa/color-scheme`, `/pwa/bar-styling`, `/pwa/install` |
 

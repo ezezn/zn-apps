@@ -70,11 +70,11 @@ const props = defineProps({
     default: 'outlined',
     validator: (value) => ['outlined', 'filled'].includes(value)
   },
-  /** `small` (48px, densidad -2 MD3), `medium` (56px) o `large` (64px). */
+  /** `xsmall` (40px), `small` (48px), `medium` (56px) o `large` (64px), en pasos de densidad MD3. */
   size: {
     type: String,
     default: 'medium',
-    validator: (value) => ['small', 'medium', 'large'].includes(value)
+    validator: (value) => ['xsmall', 'small', 'medium', 'large'].includes(value)
   }
 })
 

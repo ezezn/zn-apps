@@ -41,7 +41,7 @@ On desktop `ZnMasterSlaveLayout` shows the navigation beside the content. On mob
 | Prop | Values |
 |---|---|
 | `variant` | `outlined` (default) · `filled` |
-| `size` | `small` 48px · `medium` 56px (default) · `large` 64px |
+| `size` | `xsmall` 40px · `small` 48px · `medium` 56px (default) · `large` 64px |
 | common | `label`, `hint`, `error`, `placeholder`, `disabled`, `readonly`, `required`, `floatLabel` |
 | slots | `#leading`, `#trailing` |
 

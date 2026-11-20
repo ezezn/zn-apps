@@ -59,6 +59,49 @@
         </p>
       </ZnSection>
 
+      <ZnSection :title="t('settings.externalStatusSection')" :columns="1">
+        <p class="settings-hint">{{ t('settings.externalStatusHint') }}</p>
+
+        <p v-if="statuses.length === 0" class="settings-hint">
+          {{ t('settings.externalStatusEmpty') }}
+        </p>
+
+        <ul v-else class="status-list">
+          <li v-for="status in statuses" :key="status.value" class="status-list__item">
+            <span class="status-list__label">{{ labelFor(status.value) }}</span>
+            <ZnRow padding="0" gap="4px" class="status-list__actions">
+              <ZnButton
+                variant="text"
+                icon-only
+                :aria-label="t('common.edit')"
+                :title="t('common.edit')"
+                @click="editStatus(status)"
+              >
+                <ZnIcon name="edit" :size="20" />
+              </ZnButton>
+              <ZnButton
+                variant="text"
+                icon-only
+                :aria-label="t('common.delete')"
+                :title="t('common.delete')"
+                @click="deleteStatus(status)"
+              >
+                <ZnIcon name="delete" :size="20" />
+              </ZnButton>
+            </ZnRow>
+          </li>
+        </ul>
+
+        <ZnRow padding="0" gap="12px" wrap>
+          <ZnButton variant="outlined" @click="addStatus">
+            <template #icon>
+              <ZnIcon name="add" :size="18" />
+            </template>
+            {{ t('settings.externalStatusAdd') }}
+          </ZnButton>
+        </ZnRow>
+      </ZnSection>
+
       <ZnSection :title="t('settings.dataSection')" :columns="1">
         <p class="settings-hint">{{ t('settings.dataHint') }}</p>
 
@@ -114,6 +157,12 @@
       :saving="store.saving"
       @confirm="confirmImport"
     />
+
+    <ExternalStatusDialog
+      v-model="isStatusDialogOpen"
+      :status="editingStatus"
+      @submit="submitStatus"
+    />
   </ZnScreen>
 </template>
 
@@ -138,6 +187,12 @@ import { useTasksStore } from '../stores/tasks.js'
 import { useUpdatesStore } from '../stores/updates.js'
 import { backupFileName, parseBackup, serializeBackup } from '../helpers/backup.js'
 import TaskImportDialog from '../components/TaskImportDialog.vue'
+import ExternalStatusDialog from '../components/ExternalStatusDialog.vue'
+import {
+  removeExternalStatus,
+  saveExternalStatus,
+  useExternalStatuses
+} from '../composables/useExternalStatuses.js'
 
 const t = (...args) => i18n.global.t(...args)
 const { confirm } = useDialogs()
@@ -151,6 +206,9 @@ const fileInput = ref(null)
 const feedback = ref(null)
 const isImportOpen = ref(false)
 const pendingImport = ref([])
+const isStatusDialogOpen = ref(false)
+const editingStatus = ref(null)
+const { statuses, labelFor } = useExternalStatuses()
 
 const languageOptions = computed(() => [
   { value: 'en', label: t('settings.english') },
@@ -225,6 +283,34 @@ async function confirmImport() {
     : { type: 'error', message: t('settings.importError') }
 }
 
+function addStatus() {
+  editingStatus.value = null
+  isStatusDialogOpen.value = true
+}
+
+function editStatus(status) {
+  editingStatus.value = status
+  isStatusDialogOpen.value = true
+}
+
+function submitStatus(status) {
+  const saved = saveExternalStatus(status, { originalValue: editingStatus.value?.value ?? null })
+  if (saved) isStatusDialogOpen.value = false
+}
+
+async function deleteStatus(status) {
+  const accepted = await confirm(
+    t('settings.externalStatusDeleteMessage', { label: labelFor(status.value) }),
+    {
+      title: t('settings.externalStatusDeleteTitle'),
+      confirmText: t('common.delete'),
+      cancelText: t('common.cancel')
+    }
+  )
+  if (!accepted) return
+  removeExternalStatus(status.value)
+}
+
 async function deleteAllData() {
   const accepted = await confirm(
     t('settings.deleteAllConfirm', { count: store.total, entityPlural: plural.value }),
@@ -265,6 +351,38 @@ async function deleteAllData() {
 .settings-preview {
   font-weight: 500;
   color: var(--md-primary);
+}
+
+.status-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.status-list__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: var(--md-surface-container);
+}
+
+.status-list__label {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: var(--md-on-surface);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.status-list__actions {
+  flex: 0 0 auto;
+  width: auto;
 }
 
 .data-file-input {

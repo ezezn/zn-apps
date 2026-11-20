@@ -12,6 +12,7 @@
         'zn-field--multiline': multiline,
         'zn-field--outlined': variant === 'outlined',
         'zn-field--filled': variant === 'filled',
+        'zn-field--xsmall': size === 'xsmall',
         'zn-field--small': size === 'small',
         'zn-field--medium': size === 'medium',
         'zn-field--large': size === 'large'
@@ -86,14 +87,14 @@ const props = defineProps({
     validator: (value) => ['outlined', 'filled'].includes(value)
   },
   /**
-   * Tamaño MD3: `small` (48px, densidad -2), `medium` (56px, por defecto) o
-   * `large` (64px). MD3 desaconseja la densidad por defecto: úsala sólo en
-   * layouts que el usuario pueda alternar.
+   * Tamaño MD3: `xsmall` (40px, densidad -4), `small` (48px, densidad -2),
+   * `medium` (56px, por defecto) o `large` (64px). MD3 desaconseja la densidad
+   * por defecto: úsala sólo en layouts que el usuario pueda alternar.
    */
   size: {
     type: String,
     default: 'medium',
-    validator: (value) => ['small', 'medium', 'large'].includes(value)
+    validator: (value) => ['xsmall', 'small', 'medium', 'large'].includes(value)
   }
 })
 
@@ -457,8 +458,46 @@ const supportingId = computed(() => (props.error || props.hint ? `${props.forId 
 /* --------------------------------------------------------------------------
    Tamaños MD3
    `medium` es el tamaño por defecto (56dp). `small` aplica la densidad -2 de
-   MD3 (48dp) y `large` amplía el contenedor a 64dp conservando la tipografía.
+   MD3 (48dp), `xsmall` la densidad -4 (40dp) y `large` amplía el contenedor a
+   64dp conservando la tipografía.
    -------------------------------------------------------------------------- */
+.zn-field--xsmall .zn-field__content {
+  min-height: 40px;
+  padding: 2px 12px;
+}
+
+.zn-field--xsmall.zn-field--filled .zn-field__content {
+  min-height: 40px;
+  padding: 14px 12px 2px;
+}
+
+.zn-field--xsmall.zn-field--filled.zn-field--multiline .zn-field__content {
+  padding-top: 14px;
+}
+
+.zn-field--xsmall .zn-field__label {
+  left: 12px;
+  max-width: calc(100% - 24px);
+}
+
+.zn-field--xsmall.zn-field--has-leading:not(.zn-field--floating) .zn-field__label {
+  left: 40px;
+  max-width: calc(100% - 52px);
+}
+
+.zn-field--xsmall.zn-field--filled.zn-field--floating .zn-field__label {
+  top: 2px;
+  left: 12px;
+}
+
+.zn-field--xsmall .zn-field__supporting {
+  padding: 0 12px;
+}
+
+.zn-field--xsmall .zn-field__outline-edge--leading {
+  flex-basis: 8px;
+}
+
 .zn-field--small .zn-field__content {
   min-height: 48px;
   padding: 4px 12px;

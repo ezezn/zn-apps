@@ -20,7 +20,7 @@ See [`testing.md`](./testing.md).
 
 | Command | Action |
 |---|---|
-| `npm run build:shared` | Builds `ui-core`, `settings-core`, `ui-about`, `pwa-integration`, `ui-data-*` |
+| `npm run build:shared` | Builds `ui-core`, `settings-core`, `ui-about`, `pwa-integration`, `ui-data-*`, `ui-calendar` |
 | `npm run build:zound-box` | Builds `zound-box` → `zound-box/dist/` |
 | `npm run build:kitchensink` | Builds `kitchensink` → `kitchensink/dist/` |
 | `npm run build:daily-task-report` | Builds `daily-task-report` → `daily-task-report/dist/` |

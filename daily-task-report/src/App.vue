@@ -5,6 +5,10 @@
         <ZnScreen :title="t('app.title')" :subtitle="plural">
           <nav :aria-label="t('nav.navigation')">
             <div class="nav-group">
+              <router-link to="/" class="nav-link">
+                <ZnIcon name="home" :size="20" />
+                <span>{{ t('nav.home') }}</span>
+              </router-link>
               <router-link to="/tasks" class="nav-link">
                 <ZnIcon name="task_alt" :size="20" />
                 <span>{{ plural }}</span>

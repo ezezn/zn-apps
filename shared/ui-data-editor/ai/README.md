@@ -21,7 +21,7 @@
 | `emptyText` | String | `'—'` |
 | `trueText` / `falseText` | String | `'Yes'` / `'No'` |
 | `variant` | `outlined \| filled` | `outlined` (dialog input; `schema.variant` wins) |
-| `size` | `small \| medium \| large` | `medium` (dialog input; `schema.size` wins) |
+| `size` | `xsmall \| small \| medium \| large` | `medium` (dialog input; `schema.size` wins) |
 
 Events: `update:modelValue(value)` (confirmed edit with `live`, plus save/reset/clear), `change(value, path, fieldValue)`, `save`/`cancel`/`reset`/`clear`.
 Exposed: `save()`, `cancel()`, `reset()`, `clear()`, `value`.

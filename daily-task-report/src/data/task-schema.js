@@ -10,10 +10,26 @@ export function statusOptions(t) {
 }
 
 /**
+ * The external status is a closed list: its values come from Settings, so the
+ * dialog offers a selector instead of free text.
+ */
+function externalStatusField({ t, options = [], error }) {
+  return {
+    path: 'externalStatus',
+    type: FieldTypes.SELECT,
+    label: t('tasks.externalStatus'),
+    options,
+    disabled: options.length === 0,
+    hint: options.length === 0 ? t('tasks.noExternalStatuses') : undefined,
+    error
+  }
+}
+
+/**
  * Schema for the create/edit dialog (`ZnDataForm`) and the read-only expanded
  * card (`ZnDataView`). Both consume the same Task DTO.
  */
-export function taskFormSchema({ t, errors = {} }) {
+export function taskFormSchema({ t, errors = {}, externalStatusOptions = [] }) {
   return {
     variant: 'outlined',
     sections: [
@@ -43,12 +59,7 @@ export function taskFormSchema({ t, errors = {} }) {
             label: t('tasks.status'),
             options: statusOptions(t)
           },
-          {
-            path: 'externalStatus',
-            type: FieldTypes.TEXT,
-            label: t('tasks.externalStatus'),
-            maxlength: 120
-          },
+          externalStatusField({ t, options: externalStatusOptions }),
           {
             path: 'taskDate',
             type: FieldTypes.DATE,
@@ -83,7 +94,7 @@ export function taskFormSchema({ t, errors = {} }) {
   }
 }
 
-export function taskViewSchema({ t }) {
+export function taskViewSchema({ t, externalStatusOptions = [] }) {
   return {
     sections: [
       {
@@ -101,11 +112,7 @@ export function taskViewSchema({ t }) {
             label: t('tasks.status'),
             options: statusOptions(t)
           },
-          {
-            path: 'externalStatus',
-            type: FieldTypes.TEXT,
-            label: t('tasks.externalStatus')
-          },
+          externalStatusField({ t, options: externalStatusOptions }),
           {
             path: 'taskDate',
             type: FieldTypes.TEXT,

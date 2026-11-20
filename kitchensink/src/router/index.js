@@ -36,6 +36,10 @@ import DataFormPage from '../views/data/DataFormPage.vue'
 import DataViewPage from '../views/data/DataViewPage.vue'
 import DataEditorPage from '../views/data/DataEditorPage.vue'
 import DataRichTextPage from '../views/data/DataRichTextPage.vue'
+import CalendarMonthPage from '../views/calendar/MonthPage.vue'
+import CalendarRangePage from '../views/calendar/RangePage.vue'
+import CalendarWeekPage from '../views/calendar/WeekPage.vue'
+import CalendarDayPage from '../views/calendar/DayPage.vue'
 
 export const routes = [
   { path: '/', redirect: '/buttons' },
@@ -62,6 +66,10 @@ export const routes = [
   { path: '/data/view', name: 'data-view', component: DataViewPage },
   { path: '/data/editor', name: 'data-editor', component: DataEditorPage },
   { path: '/data/richtext', name: 'data-richtext', component: DataRichTextPage },
+  { path: '/calendar/month', name: 'calendar-month', component: CalendarMonthPage },
+  { path: '/calendar/range', name: 'calendar-range', component: CalendarRangePage },
+  { path: '/calendar/week', name: 'calendar-week', component: CalendarWeekPage },
+  { path: '/calendar/day', name: 'calendar-day', component: CalendarDayPage },
   { path: '/dialogs', name: 'dialogs', component: DialogsPage },
   { path: '/icons', name: 'icons', component: IconsPage },
   { path: '/layout', name: 'layout', component: LayoutPage },
