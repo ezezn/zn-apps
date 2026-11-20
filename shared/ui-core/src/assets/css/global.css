@@ -140,6 +140,13 @@ body, html {
 }
 
 
+/* Window Controls Overlay: utilidad para excluir controles interactivos de la
+   región arrastrable del titlebar (ver ZnScreen). No tiene efecto fuera de WCO. */
+.zn-no-drag {
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+}
+
 /*Grid system*/
 
 /* Clases de Utilidad de Expansión para Grillas (Span hasts 10 columnas) */

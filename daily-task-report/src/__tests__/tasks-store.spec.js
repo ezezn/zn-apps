@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { tasksRepository } from '../db/tasksRepository.js'
+import { backupRepository } from '../db/backupRepository.js'
 import { useTasksStore } from '../stores/tasks.js'
 
 vi.mock('../db/tasksRepository.js', () => ({
@@ -12,6 +13,10 @@ vi.mock('../db/tasksRepository.js', () => ({
     mergeAll: vi.fn(),
     clearAll: vi.fn()
   }
+}))
+
+vi.mock('../db/backupRepository.js', () => ({
+  backupRepository: { importBackup: vi.fn() }
 }))
 
 const storedTasks = [
@@ -103,6 +108,28 @@ describe('tasks store', () => {
     expect(result).toMatchObject({ added: 1, updated: 0, unchanged: 0 })
     expect(store.total).toBe(2)
     expect(store.saving).toBe(false)
+  })
+
+  it('restores a full backup through the backup repository', async () => {
+    const store = useTasksStore()
+    const backup = { tasks: [], updates: [], reports: [] }
+    const result = {
+      tasks: storedTasks,
+      added: 2,
+      updated: 0,
+      unchanged: 0,
+      updatesAdded: 3,
+      updatesSkipped: 0,
+      reportsAdded: 1,
+      reportsSkipped: 0
+    }
+
+    backupRepository.importBackup.mockResolvedValue(result)
+    expect(await store.importBackup(backup)).toBe(result)
+
+    expect(backupRepository.importBackup).toHaveBeenCalledWith(backup)
+    expect(store.total).toBe(2)
+    expect(store.loaded).toBe(true)
   })
 
   it('returns null and keeps the error key when a merge fails', async () => {

@@ -21,12 +21,12 @@ Any new app must be independently installable:
 
 1. `public/pwa-icon.svg` plus 192×192 and 512×512 PNG exports inside the maskable safe area.
 2. Both PNGs declared in `VitePWA({ manifest: { icons } })` with exact sizes, `type: "image/png"`, `purpose: "any maskable"` and app-relative paths.
-3. Valid `name`/`short_name`, `start_url`, `scope` and `display: "standalone"` for `/zn-apps/<app>/`.
+3. Valid `name`/`short_name`, `start_url`, `scope`, `display: "standalone"` and `display_override: ["window-controls-overlay", "standalone"]` (desktop title bar) for `/zn-apps/<app>/`.
 4. Include the app in the production build so `npm run validate:pwa` checks it.
 5. `initPwaInstallListener()`, `initPwaUpdateListener()` and `initPwaThemeSync()` in `src/main.js`.
 6. `ZnPwaInstallPrompt` and `ZnPwaUpdatePrompt` as **direct children of `ZnApp`**, never inside `ZnScreen` or a container with `transform`/`overflow`/`isolation`.
 7. Alias `@zn-apps/pwa-integration` to its source in `vite.config.js` (its CSS is emitted separately; `dist/` would render the popups unstyled and out of viewport).
-8. `theme_color` and `background_color` = `#FEF7FF` and `<meta name="theme-color" content="#FEF7FF">` in `index.html`.
+8. `theme_color` and `background_color` = `#FEF7FF` and `<meta name="theme-color" content="#FEF7FF">` in `index.html`; the native window controls zone must match the app background.
 9. i18n keys `install*`, `update*`, `pwa.*` in `en` and `es`.
 
 Updates use `registerType: 'prompt'`: the new worker waits, the app polls every 30 minutes and on foreground, and applying an update sends `SKIP_WAITING` and reloads.

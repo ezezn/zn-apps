@@ -26,6 +26,68 @@
         />
       </ZnSection>
 
+      <ZnSection :title="t('settings.workDaysSection')" :columns="1">
+        <p class="settings-hint">{{ t('settings.workDaysHint') }}</p>
+
+        <ul class="work-days">
+          <li v-for="day in days" :key="day" class="work-days__item">
+            <ZnSwitch
+              :model-value="isWorkDay(day)"
+              :label-left="weekdayLabel(day)"
+              :disabled="isLastWorkDay(day)"
+              @update:model-value="toggleWorkDay(day, $event)"
+            />
+          </li>
+        </ul>
+      </ZnSection>
+
+      <ZnSection :title="t('settings.templatesSection')" :columns="1">
+        <p class="settings-hint">{{ t('settings.templatesHint') }}</p>
+
+        <ul class="status-list">
+          <li class="status-list__item">
+            <span class="status-list__label">{{ defaultTemplate.name }}</span>
+            <span class="template-badge">{{ t('settings.templatesDefault') }}</span>
+          </li>
+          <li
+            v-for="template in userTemplates"
+            :key="template.id"
+            class="status-list__item"
+          >
+            <span class="status-list__label">{{ template.name }}</span>
+            <ZnRow padding="0" gap="4px" class="status-list__actions">
+              <ZnButton
+                variant="text"
+                icon-only
+                :aria-label="t('common.edit')"
+                :title="t('common.edit')"
+                @click="editTemplate(template)"
+              >
+                <ZnIcon name="edit" :size="20" />
+              </ZnButton>
+              <ZnButton
+                variant="text"
+                icon-only
+                :aria-label="t('common.delete')"
+                :title="t('common.delete')"
+                @click="deleteTemplate(template)"
+              >
+                <ZnIcon name="delete" :size="20" />
+              </ZnButton>
+            </ZnRow>
+          </li>
+        </ul>
+
+        <ZnRow padding="0" gap="12px" wrap>
+          <ZnButton variant="outlined" @click="addTemplate">
+            <template #icon>
+              <ZnIcon name="add" :size="18" />
+            </template>
+            {{ t('settings.templatesAdd') }}
+          </ZnButton>
+        </ZnRow>
+      </ZnSection>
+
       <ZnSection :title="t('settings.entitySection')" :columns="2">
         <p class="settings-hint zn-span-2">{{ t('settings.entityHint') }}</p>
 
@@ -121,7 +183,7 @@
           <ZnButton
             variant="text"
             class="data-danger"
-            :disabled="store.total === 0"
+            :disabled="store.total === 0 && reportsStore.total === 0"
             @click="deleteAllData"
           >
             <template #icon>
@@ -152,7 +214,9 @@
 
     <TaskImportDialog
       v-model="isImportOpen"
-      :tasks="pendingImport"
+      :tasks="pendingImport.tasks"
+      :updates="pendingImport.updates"
+      :reports="pendingImport.reports"
       :existing-tasks="store.tasks"
       :saving="store.saving"
       @confirm="confirmImport"
@@ -162,6 +226,12 @@
       v-model="isStatusDialogOpen"
       :status="editingStatus"
       @submit="submitStatus"
+    />
+
+    <ReportTemplateDialog
+      v-model="isTemplateDialogOpen"
+      :template="editingTemplate"
+      @submit="submitTemplate"
     />
   </ZnScreen>
 </template>
@@ -183,11 +253,20 @@ import { i18n } from '../i18n.js'
 import { useAppLocale } from '../composables/useAppLocale.js'
 import { useAppTheme } from '../composables/useAppTheme.js'
 import { entityNames, setEntityName, useEntityLabels } from '../composables/useEntityLabels.js'
+import { setWorkDay, useBusinessDays } from '../composables/useBusinessDays.js'
 import { useTasksStore } from '../stores/tasks.js'
 import { useUpdatesStore } from '../stores/updates.js'
+import { useReportsStore } from '../stores/reports.js'
 import { backupFileName, parseBackup, serializeBackup } from '../helpers/backup.js'
 import TaskImportDialog from '../components/TaskImportDialog.vue'
 import ExternalStatusDialog from '../components/ExternalStatusDialog.vue'
+import ReportTemplateDialog from '../components/ReportTemplateDialog.vue'
+import {
+  defaultReportTemplate,
+  removeReportTemplate,
+  saveReportTemplate,
+  useReportTemplates
+} from '../composables/useReportTemplates.js'
 import {
   removeExternalStatus,
   saveExternalStatus,
@@ -199,21 +278,49 @@ const { confirm } = useDialogs()
 const { useSystem, locale, setUseSystem, setLocale } = useAppLocale()
 const { preference, setPreference } = useAppTheme()
 const { singular, plural } = useEntityLabels()
+const { days, isWorkDay, isLastWorkDay } = useBusinessDays()
 const store = useTasksStore()
 const updatesStore = useUpdatesStore()
+const reportsStore = useReportsStore()
 
 const fileInput = ref(null)
 const feedback = ref(null)
 const isImportOpen = ref(false)
-const pendingImport = ref([])
+const pendingImport = ref({ tasks: [], updates: [], reports: [] })
 const isStatusDialogOpen = ref(false)
 const editingStatus = ref(null)
 const { statuses, labelFor } = useExternalStatuses()
+
+const isTemplateDialogOpen = ref(false)
+const editingTemplate = ref(null)
+const { templates } = useReportTemplates()
+const defaultTemplate = computed(() => defaultReportTemplate())
+const userTemplates = computed(() =>
+  templates.value.filter((template) => !template.isDefault)
+)
 
 const languageOptions = computed(() => [
   { value: 'en', label: t('settings.english') },
   { value: 'es', label: t('settings.spanish') }
 ])
+
+const WEEKDAY_KEYS = {
+  1: 'monday',
+  2: 'tuesday',
+  3: 'wednesday',
+  4: 'thursday',
+  5: 'friday',
+  6: 'saturday',
+  0: 'sunday'
+}
+
+function weekdayLabel(day) {
+  return t(`settings.weekdays.${WEEKDAY_KEYS[day]}`)
+}
+
+function toggleWorkDay(day, enabled) {
+  setWorkDay(day, Boolean(enabled))
+}
 
 const themeOptions = computed(() => [
   { value: 'system', label: t('settings.themeSystem') },
@@ -221,11 +328,26 @@ const themeOptions = computed(() => [
   { value: 'dark', label: t('settings.themeDark') }
 ])
 
-onMounted(() => store.load())
+onMounted(() => {
+  store.load()
+  updatesStore.load()
+  reportsStore.load()
+})
 
-function exportData() {
+async function exportData() {
   try {
-    const blob = new Blob([serializeBackup(store.tasks)], { type: 'application/json' })
+    // The backup carries the whole Dexie content, so make sure every store is loaded.
+    await Promise.all([store.load(), updatesStore.load(), reportsStore.load()])
+    const blob = new Blob(
+      [
+        serializeBackup({
+          tasks: store.tasks,
+          updates: updatesStore.updates,
+          reports: reportsStore.reports
+        })
+      ],
+      { type: 'application/json' }
+    )
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
@@ -258,7 +380,9 @@ async function onImportFile(event) {
     return
   }
 
-  if (imported.length === 0) {
+  const empty =
+    imported.tasks.length === 0 && imported.updates.length === 0 && imported.reports.length === 0
+  if (empty) {
     feedback.value = {
       type: 'error',
       message: t('settings.importEmpty', { entityPlural: plural.value })
@@ -272,15 +396,29 @@ async function onImportFile(event) {
 }
 
 async function confirmImport() {
-  const result = await store.mergeTasks(pendingImport.value)
+  const result = await store.importBackup(pendingImport.value)
   isImportOpen.value = false
 
-  feedback.value = result
-    ? {
-        type: 'success',
-        message: t('settings.importDone', { added: result.added, updated: result.updated })
-      }
-    : { type: 'error', message: t('settings.importError') }
+  if (!result) {
+    feedback.value = { type: 'error', message: t('settings.importError') }
+    return
+  }
+
+  // The repository wrote updates and reports directly; refresh their stores.
+  await Promise.all([
+    updatesStore.load({ force: true }),
+    reportsStore.load({ force: true })
+  ])
+
+  feedback.value = {
+    type: 'success',
+    message: t('settings.importDone', {
+      added: result.added,
+      updated: result.updated,
+      updates: result.updatesAdded,
+      reports: result.reportsAdded
+    })
+  }
 }
 
 function addStatus() {
@@ -311,6 +449,36 @@ async function deleteStatus(status) {
   removeExternalStatus(status.value)
 }
 
+function addTemplate() {
+  editingTemplate.value = null
+  isTemplateDialogOpen.value = true
+}
+
+function editTemplate(template) {
+  editingTemplate.value = template
+  isTemplateDialogOpen.value = true
+}
+
+function submitTemplate(template) {
+  const saved = saveReportTemplate(template, {
+    originalId: editingTemplate.value?.id ?? null
+  })
+  if (saved) isTemplateDialogOpen.value = false
+}
+
+async function deleteTemplate(template) {
+  const accepted = await confirm(
+    t('settings.templatesDeleteMessage', { name: template.name }),
+    {
+      title: t('settings.templatesDeleteTitle'),
+      confirmText: t('common.delete'),
+      cancelText: t('common.cancel')
+    }
+  )
+  if (!accepted) return
+  removeReportTemplate(template.id)
+}
+
 async function deleteAllData() {
   const accepted = await confirm(
     t('settings.deleteAllConfirm', { count: store.total, entityPlural: plural.value }),
@@ -323,8 +491,11 @@ async function deleteAllData() {
   if (!accepted) return
 
   const cleared = await store.clearTasks()
-  // El repositorio vació ambas tablas en una transacción.
-  if (cleared) updatesStore.forgetAll()
+  // El repositorio vació tareas, actualizaciones y reportes en una transacción.
+  if (cleared) {
+    updatesStore.forgetAll()
+    reportsStore.forgetAll()
+  }
   feedback.value = cleared
     ? { type: 'success', message: t('settings.deleteAllDone') }
     : { type: 'error', message: t('tasks.removeError') }
@@ -351,6 +522,21 @@ async function deleteAllData() {
 .settings-preview {
   font-weight: 500;
   color: var(--md-primary);
+}
+
+.work-days {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 8px 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.work-days__item {
+  display: flex;
+  align-items: center;
+  min-width: 0;
 }
 
 .status-list {
@@ -383,6 +569,16 @@ async function deleteAllData() {
 .status-list__actions {
   flex: 0 0 auto;
   width: auto;
+}
+
+.template-badge {
+  flex: 0 0 auto;
+  padding: 2px 10px;
+  border-radius: 10px;
+  background: var(--md-secondary-container, var(--md-surface-variant));
+  color: var(--md-on-secondary-container, var(--md-on-surface-variant));
+  font-size: 0.75rem;
+  font-weight: 500;
 }
 
 .data-file-input {

@@ -1,6 +1,7 @@
 import { computed, reactive, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { tasksRepository } from '../db/tasksRepository.js'
+import { backupRepository } from '../db/backupRepository.js'
 import {
   ALL_STATUSES,
   SORT_DIRECTIONS,
@@ -99,7 +100,24 @@ export const useTasksStore = defineStore('tasks', () => {
     }
   }
 
-  /** Merges an imported backup by external id (see `planMerge`). */
+  /** Restores tasks, updates and reports from a parsed backup file. */
+  async function importBackup(backup = {}) {
+    saving.value = true
+    error.value = null
+    try {
+      const result = await backupRepository.importBackup(backup)
+      tasks.value = result.tasks
+      loaded.value = true
+      return result
+    } catch {
+      error.value = 'saveError'
+      return null
+    } finally {
+      saving.value = false
+    }
+  }
+
+  /** Merges imported tasks by external id (see `planMerge`). */
   async function mergeTasks(payloads = []) {
     saving.value = true
     error.value = null
@@ -167,6 +185,7 @@ export const useTasksStore = defineStore('tasks', () => {
     createTask,
     updateTask,
     deleteTask,
+    importBackup,
     mergeTasks,
     clearTasks,
     findById,

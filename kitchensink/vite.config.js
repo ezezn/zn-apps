@@ -76,6 +76,9 @@ export default defineConfig({
         theme_color: '#FEF7FF',
         background_color: '#FEF7FF',
         display: 'standalone',
+        // Escritorio instalado: la Top App Bar ocupa la titlebar nativa.
+        // Navegadores/móvil ignoran el override y usan `standalone`.
+        display_override: ['window-controls-overlay', 'standalone'],
         icons: [
           {
             src: 'pwa-icon-192.png',

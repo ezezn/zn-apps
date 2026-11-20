@@ -56,9 +56,10 @@ export const tasksRepository = {
   },
 
   async clearAll() {
-    await db.transaction('rw', db.tasks, db.updates, async () => {
+    await db.transaction('rw', db.tasks, db.updates, db.reports, async () => {
       await db.updates.clear()
       await db.tasks.clear()
+      await db.reports.clear()
     })
   }
 }

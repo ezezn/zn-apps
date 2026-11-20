@@ -3,7 +3,8 @@
     class="zn-master-slave-layout"
     :class="{
       'zn-master-slave-layout--mobile': isMobile,
-      'zn-master-slave-layout--mobile-detail': isMobile && isSlaveVisible
+      'zn-master-slave-layout--mobile-detail': isMobile && isSlaveVisible,
+      'zn-master-slave-layout--wco': isWindowTitlebar
     }"
   >
     <!-- Escritorio: navegación acoplada al costado (MD3 standard drawer). -->
@@ -61,8 +62,9 @@
 </template>
 
 <script setup>
-import { provide, ref, watch, onMounted, onUnmounted } from 'vue'
+import { computed, provide, ref, watch, onMounted, onUnmounted } from 'vue'
 import { screenNavigationKey } from './screenNavigation.js'
+import { useWindowControlsOverlay } from '../../composables/useWindowControlsOverlay.js'
 import ZnDrawer from '../navigation/ZnDrawer.vue'
 
 const props = defineProps({
@@ -86,6 +88,10 @@ const mediaQuery = typeof window !== 'undefined' && typeof window.matchMedia ===
 
 const isMobile = ref(mediaQuery ? mediaQuery.matches : false)
 const isSlaveVisible = ref(false)
+// En WCO la ventana entera es nuestra: el layout reserva el hueco de los
+// controles nativos y todas las cabeceras pasan a medir el alto del titlebar.
+const { isOverlayVisible } = useWindowControlsOverlay()
+const isWindowTitlebar = computed(() => !isMobile.value && isOverlayVisible.value)
 const isDrawerOpen = ref(false)
 const slaveRef = ref(null)
 
@@ -198,8 +204,14 @@ function handleBreakpointChange(event) {
   background: var(--md-surface);
 }
 
-/* La navegación se comporta como Navigation Drawer MD3 en ambos layouts. */
+/*
+ * La navegación se comporta como Navigation Drawer MD3 en ambos layouts.
+ * El header conserva la geometría de ZnScreen (variables) para que su título
+ * quede en la misma línea base que el de la vista esclava: aquí solo se ajusta
+ * el padding horizontal, nunca la altura ni el padding vertical.
+ */
 .zn-master-slave-layout__master :deep(.zn-screen) {
+  --zn-screen-header-padding-inline: 16px;
   min-height: 100%;
   background: var(--md-surface);
   color: var(--md-on-surface);
@@ -208,9 +220,6 @@ function handleBreakpointChange(event) {
 .zn-master-slave-layout__master :deep(.zn-screen__header),
 .zn-master-slave-layout__master :deep(.zn-screen__header--scrolled) {
   position: sticky;
-  height: auto;
-  min-height: 72px;
-  padding: 16px;
   background: var(--md-surface);
   border-color: transparent;
   box-shadow: none;
@@ -267,6 +276,59 @@ function handleBreakpointChange(event) {
 .zn-master-slave-layout__master :deep([role='link'][aria-current='page']) {
   background: var(--md-primary-container);
   color: var(--md-on-primary-container);
+}
+
+/* ==========================================================================
+   Window Controls Overlay: los controles nativos viven en el padding, así que
+   ningún panel queda debajo de ellos. Windows/Linux los dejan a la derecha y
+   macOS a la izquierda; `env(titlebar-area-x)` y `-width` ya resuelven ambos.
+   */
+.zn-master-slave-layout--wco {
+  box-sizing: border-box;
+  height: 100dvh;
+  overflow: hidden;
+  padding-top: env(titlebar-area-y, 0px);
+  padding-left: env(titlebar-area-x, 0px);
+  padding-right: calc(100vw - env(titlebar-area-x, 0px) - env(titlebar-area-width, 100vw));
+}
+
+.zn-master-slave-layout--wco .zn-master-slave-layout__master--pane,
+.zn-master-slave-layout--wco .zn-master-slave-layout__slave {
+  height: 100%;
+  min-height: 0;
+}
+
+.zn-master-slave-layout--wco :deep(.zn-screen) {
+  height: 100%;
+}
+
+/* Ambas cabeceras miden lo mismo que la titlebar nativa y siguen alineadas. */
+.zn-master-slave-layout--wco :deep(.zn-screen) {
+  --zn-screen-header-height: env(titlebar-area-height, 40px);
+  --zn-screen-header-compact-height: env(titlebar-area-height, 40px);
+  --zn-screen-header-padding-inline: 12px;
+}
+
+.zn-master-slave-layout--wco :deep(.zn-screen__header),
+.zn-master-slave-layout--wco :deep(.zn-screen__header--scrolled) {
+  -webkit-app-region: drag;
+  app-region: drag;
+  height: env(titlebar-area-height, var(--zn-screen-header-height));
+  background: var(--md-surface);
+}
+
+.zn-master-slave-layout--wco :deep(.zn-screen__heading) {
+  gap: 0;
+}
+
+.zn-master-slave-layout--wco :deep(.zn-screen__title),
+.zn-master-slave-layout--wco :deep(.zn-screen__header--scrolled .zn-screen__title) {
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.zn-master-slave-layout--wco :deep(.zn-screen__subtitle) {
+  font-size: 0.7rem;
 }
 
 .zn-master-slave-layout__slave {
@@ -327,15 +389,19 @@ function handleBreakpointChange(event) {
 }
 
 /* El drawer modal ya aporta su propio header con cierre. */
+.zn-master-slave-layout__master--drawer :deep(.zn-screen) {
+  --zn-screen-header-height: 56px;
+  --zn-screen-header-compact-height: 56px;
+  --zn-screen-header-padding-inline: 16px;
+  --zn-screen-content-padding: 8px 12px 16px;
+}
+
 .zn-master-slave-layout__master--drawer :deep(.zn-screen__header),
 .zn-master-slave-layout__master--drawer :deep(.zn-screen__header--scrolled) {
   background: var(--md-surface-container-low, var(--md-surface));
-  min-height: 56px;
-  padding: 8px 16px;
 }
 
 .zn-master-slave-layout__master--drawer :deep(.zn-screen__content) {
-  padding: 8px 12px 16px;
   background: var(--md-surface-container-low, var(--md-surface));
 }
 

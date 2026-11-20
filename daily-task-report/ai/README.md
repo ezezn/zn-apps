@@ -10,8 +10,8 @@ Location: `daily-task-report/`, base `/zn-apps/daily-task-report/`.
 | Router | `createRouter` + `createWebHistory(import.meta.env.BASE_URL)` | `/` is the Home page (`home`); `/tasks`, `/updates`, `/settings`, `/about` under the deploy subpath; any unknown path (including the PWA `start_url` `index.html`) redirects to `/` |
 | Layout | `ZnMasterSlaveLayout` with `#master` nav + default `<router-view>` | master-slave shell, same as Kitchensink. `/` is the Home page and the entry point, so mobile starts **content-first**: the page keeps the focus and the hamburger opens the nav drawer (provided by ui-core). `main.js` mounts after `router.isReady()`, otherwise the first mobile frame would focus an empty slot. The `#master` nav separates the main `/`, `/tasks` and `/updates` entries from the secondary `/settings` and `/about` links, which are pushed to the bottom of the panel with `margin-top: auto` (ui-core stretches the `nav` to fill the visible drawer) |
 | Page state | Pinia (`src/stores/tasks.js`) | filters/sort/CRUD state lives per page, never cross-app |
-| Persistence | Dexie (IndexedDB, db `daily-task-report`, table `tasks`) | local-only user data; settings must **not** hold task data |
-| Settings | `settings-core`, namespace `daily-task-report` | locale, theme preference and entity naming |
+| Persistence | Dexie (IndexedDB, db `daily-task-report`, tables `tasks`, `updates`, `reports`) | local-only user data; settings must **not** hold task data |
+| Settings | `settings-core`, namespace `daily-task-report` | locale, theme preference, entity naming, business days, external statuses and report export templates |
 | Data UI | `ZnDataForm` (create/edit dialog) + `ZnDataView` (expanded card) | one schema per presentation, shared Task DTO |
 | i18n | Vue I18n `en`/`es`; locale from `settings.i18n.locale` → system → `en` | every user-facing string |
 
@@ -22,6 +22,7 @@ Location: `daily-task-report/`, base `/zn-apps/daily-task-report/`.
 | `/` | `home` | `HomePage.vue` (calendar + daily report) |
 | `/tasks` | `tasks` | `TasksPage.vue` |
 | `/updates` | `updates` | `UpdatesPage.vue` (full change log) |
+| `/reports` | `reports` | `ReportsPage.vue` (report documents, date-range filter, export, copy/delete) |
 | `/settings` | `settings` | `SettingsPage.vue` |
 | `/about` | `about` | `AboutPage.vue` |
 
@@ -71,6 +72,31 @@ interface TaskUpdate {
 
 The update log lives in its own table (`db.version(3)`), never inside the task row. Ordering is `createdAt desc` with `id desc` as tiebreaker, so the newest entry is always first.
 
+## Report DTO (`src/helpers/reports.js`)
+
+```ts
+interface Report {
+  id: number                 // Dexie autoincrement
+  createdAt: string          // 'YYYY-MM-DDTHH:mm' (local), also the report name
+  sections: {
+    yesterday: ReportItem[]  // what I did on the previous business day
+    today: ReportItem[]      // what I am working on
+    finish: ReportItem[]     // what I could finish today
+    blockers: ReportItem[]
+  }
+}
+
+interface ReportItem {
+  kind: 'update' | 'text'
+  taskId: number | null      // null for plain notes
+  updateId: number | null    // reference to the source update
+  taskName: string           // snapshot; keeps the report readable after deletion
+  description: string        // editable copy of the update text, or the note
+}
+```
+
+`REPORT_SECTION_KEYS` is the single ordered list of sections. Reports are **immutable snapshots**: creating only happens from Home, there is no edit screen, and deleting a task or an update never rewrites a report. Copying duplicates the four sections and stamps a new `createdAt`. Reports live in their own table (`db.version(4)`), not inside a task.
+
 ## Data flow
 
 ```
@@ -81,30 +107,45 @@ Dexie db  →  tasksRepository (src/db/)  →  useTasksStore (Pinia)  →  Tasks
               │                               └── helpers (filter/sort/validate/normalize)
               └──  updatesRepository  →  useUpdatesStore  →  UpdatesPage / TaskCard
                                               └── helpers/updates.js (normalize/validate/sort)
+
+reportsRepository  →  useReportsStore  →  ReportsPage
+                        │                    └── helpers/reports.js (filter/sort/duplicate)
+                        └── HomePage → ReportCreateDialog (createReportDraft from today + previous days)
 ```
 
 `HomePage` reuses both stores and derives its three lists with `helpers/daily-report.js` (pure function, no repository calls), so navigating between Home, Tasks and Updates keeps a single in-memory copy of each collection.
 
 | File | Role |
 |---|---|
-| `src/db/database.js` | `new Dexie('daily-task-report')`, v1 stores `tasks: '++id, externalId, name, status, taskDate, addedAt'`; v2 `upgrade()` maps legacy statuses to `active`/`inactive`; v3 adds `updates: '++id, taskId, createdAt'`; evolve with a new `version(n).upgrade()` |
+| `src/db/database.js` | `new Dexie('daily-task-report')`, v1 stores `tasks: '++id, externalId, name, status, taskDate, addedAt'`; v2 `upgrade()` maps legacy statuses to `active`/`inactive`; v3 adds `updates: '++id, taskId, createdAt'`; v4 adds `reports: '++id, createdAt'`; evolve with a new `version(n).upgrade()` |
 | `src/db/tasksRepository.js` | `list`, `create`, `update`, `remove`, `mergeAll`, `clearAll`; normalizes the DTO; `remove`/`clearAll` also delete the task's updates in the same transaction |
 | `src/db/updatesRepository.js` | `list`, `listByTask`, `create`, `update`, `remove`, `removeByTask`, `clearAll`; normalizes the update DTO |
 | `src/stores/updates.js` | `updates`, `loaded`, `loading`, `saving`, `error`, `sortedUpdates`, `total`, `isEmpty`, load/CRUD, `forTask(taskId)`, `forgetTask`, `forgetAll` (memory-only sync after a cascade) |
+| `src/db/reportsRepository.js` | `list`, `create`, `remove`, `clearAll` over the `reports` table; stores normalized document snapshots |
+| `src/stores/reports.js` | `reports`, `loaded`, `loading`, `saving`, `error`, `sortedReports`, `total`, `isEmpty`, `load`, `createReport`, `copyReport`, `deleteReport`, `forgetAll` |
+| `src/helpers/reports.js` | `REPORT_SECTION_KEYS`, `normalizeReport(Item)`, `createReportDraft` (seeds yesterday/today from updates), `createTextReportItem`, `createReportTaskItem` (task reference without an existing update), `pruneEmptyReportItems`, `reportItemCount`, `filterReports`, `sortReportsDesc`, `duplicateReport` |
+| `src/views/ReportsPage.vue` | report list newest first with two `ZnDateInput` filters (from/to, inclusive), four-section document view, export, copy and delete; **no create action**. When both filters select the same day and a report exists, an informational alert links to that card (anchor `#report-<id>`) |
+| `src/components/ReportCreateDialog.vue` | Home creation dialog: seeded sections, editable item descriptions, remove items, add notes to any section, save-time `createdAt` |
+| `src/helpers/report-export.js` | `renderReportItem` (`[name](url) -> text`, name-only without link, text-only for unknown task), `renderReportSection` (`* ` bullets, `No` when empty), `renderReportTemplate` (`{yesterday}`/`{today}`/`{finish}`/`{blockers}`, unknown tokens kept), `reportExportFileName` |
+| `src/composables/useReportTemplates.js` | `DEFAULT_REPORT_TEMPLATE`, reactive `reportTemplates` from `settings.reportTemplates`, `normalizeReportTemplate`, `validateReportTemplate`, `saveReportTemplate`, `removeReportTemplate`, `setLastReportTemplateId`/`rememberedReportTemplateId` (`settings.lastReportTemplateId`, falls back to the default when deleted), `useReportTemplates` (default template first) |
+| `src/components/ReportExportDialog.vue` | Export dialog: template selector, live markdown preview, clipboard copy (with `execCommand` fallback), `.md` download |
+| `src/components/ReportTemplateDialog.vue` + `src/data/report-template-schema.js` | Settings dialog to create/edit a template (`name` + markdown `body`) through `ZnDataForm` |
 | `src/helpers/updates.js` | `normalizeUpdate`, `createUpdateDraft`, `validateUpdate`, `sortUpdatesDesc`, `updatesForTask` |
 | `src/data/update-schema.js` | `updateFormSchema` for `ZnDataForm` (task select, datetime, description) |
 | `src/components/UpdateDialog.vue` | create/edit dialog shared by the Updates page and the expanded card |
 | `src/views/UpdatesPage.vue` | full change log newest first, with task name, edit and delete |
-| `src/views/HomePage.vue` | Entry point: `ZnCalendar` (week by default, month on demand, single selection that starts on today) + the three report lists; loads both stores on mount |
+| `src/views/HomePage.vue` | Entry point: `ZnCalendar` (week by default, month on demand, single selection that starts on today) + the three report lists; loads tasks, updates and reports on mount and passes the configured `workDays` to the report. Below the calendar, `ZnAlert` reports whether the selected date has a report: `success` with **Open report** when it exists (any date), `warning` (`home.reportNotCreated`) when the selected date is today without one, and `info` for other dates without one. The banner can be dismissed per `date:reportId` key and reappears when the date or report changes; **Open report** navigates to `/reports#report-<id>` |
 | `src/components/DailyTaskList.vue` | One Home list: title, count, empty state and `{ task, updates }` entries with the day's updates (newest first); `collapsible` + `expanded` drive the header toggle (`aria-expanded`/`aria-controls`) |
 | `src/helpers/daily-report.js` | `buildDailyReport({ tasks, updates, date })` → `{ current, previous, pending }`, `previousDateValue`, `updateDateValue` |
 | `src/stores/tasks.js` | `tasks`, `loaded`, `loading`, `saving`, `error` (i18n key suffix), `filters`, `visibleTasks`, `total`, `shown`, `isEmpty`, `hasActiveFilters`, CRUD, `resetFilters`, `setSortBy`, `toggleDirection` |
 | `src/helpers/tasks.js` | `TASK_STATUSES`, `normalizeTask`, `createTaskDraft`, `validateTask`, `filterTasks`, `sortTasks`, `absoluteUrl` |
 | `src/helpers/dates.js` | local `date`/`datetime-local` values, parsing and display formatting |
-| `src/helpers/backup.js` | `buildBackup`, `serializeBackup`, `parseBackup`, `backupFileName` for the JSON backup |
+| `src/helpers/backup.js` | v2 JSON backup: `buildBackup({tasks,updates,reports})`, `serializeBackup`, `parseBackup` → `{tasks,updates,reports}`, `backupFileName`; each task gets a stable `ref` (`externalId`, else `task-<id>`) that updates and report items point to |
+| `src/db/backupRepository.js` | `importBackup` in one Dexie transaction: tasks merge by external id, `ref` → local id, updates deduped by `taskId+createdAt+description`, reports deduped by `createdAt` + item contents (ids stripped from the dedupe key) |
 | `src/helpers/merge.js` | `taskKey` (external id, case-insensitive) and `planMerge` → `entries[{task,status:'new'|'update'|'unchanged',existingId?}]` + counts |
-| `src/components/TaskImportDialog.vue` | import review window: merge summary, state per row, confirm/cancel |
+| `src/components/TaskImportDialog.vue` | import review window: task merge summary, updates/reports counts, state per row, confirm/cancel |
 | `src/data/task-schema.js` | `taskFormSchema` (dialog), `taskViewSchema` (expanded card), `statusOptions` |
+| `src/composables/useBusinessDays.js` | `workDays` (settings mirror, JS day numbers, Monday–Friday by default), `WEEK_DAYS` (Monday first), `normalizeWorkDays`, `setWorkDays`, `setWorkDay`, `useBusinessDays` → `days`, `isWorkDay`, `isLastWorkDay`. The list never stays empty: disabling the last day is rejected and an empty stored value falls back to the defaults |
 | `src/composables/useExternalStatuses.js` | `externalStatuses` (settings mirror), `normalizeExternalStatus`, `validateExternalStatus`, `saveExternalStatus`, `removeExternalStatus`, `externalStatusLabel`; `useExternalStatuses` → localized `options`, `labelFor`, `optionsWithCurrent` |
 | `src/data/external-status-schema.js` | `externalStatusFormSchema` for the external status dialog |
 | `src/components/ExternalStatusDialog.vue` | create/edit dialog for one external status (value locked when editing) |
@@ -117,14 +158,17 @@ Dexie db  →  tasksRepository (src/db/)  →  useTasksStore (Pinia)  →  Tasks
 4. Sorting supports `name`, `taskDate`, `addedAt` and `asc`/`desc`; entries without a value always go last. Default: `addedAt desc`.
 5. Delete asks for confirmation (`useDialogs().confirm`) and removes the row from Dexie and the store.
 6. The collapsed card shows name, external id, internal status and external status; the name is an `<a target="_blank" rel="noopener noreferrer">` to the external app when `absoluteUrl(externalUrl)` resolves. The `Show details` toggle shares the status row (`.task-card__meta`) pushed right with `margin-left: auto`; expanding shows the remaining fields through `ZnDataView` plus an external-link button.
-7. Data never leaves the device: no network calls for task data. Settings offers a JSON backup (`export`) and a `restore`, both client-side. The backup still covers tasks only; extending it to updates needs a merge key (task external id + createdAt) — do it as a single change in `helpers/backup.js` + `planMerge`.
-8. Import validates the file (`app: 'daily-task-report'`, `tasks` array) and **merges by external id** (case-insensitive): matching rows are updated with the imported values, otherwise they are added. Duplicated ids inside the file keep the last occurrence; entries without an external id are added. The repository applies it in one Dexie transaction (`mergeAll`) and reports `{added, updated, unchanged}`.
-9. Before merging, `TaskImportDialog` shows the plan (`planMerge`) row by row and the confirm button stays disabled when nothing would change.
+7. Data never leaves the device: no network calls for task data. Settings offers a JSON backup (v2) and a restore, both client-side and covering everything Dexie stores: `tasks`, `updates` and `reports`. Local ids are dropped; the linkage uses a per-file task `ref` (`externalId` when present, otherwise `task-<id>`), which updates carry and report items reference.
+8. Import validates the file (`app: 'daily-task-report'`, `tasks` array; `updates`/`reports` optional for v1 files) and **merges tasks by external id** (case-insensitive): matching rows are updated with the imported values, otherwise they are added. Duplicated ids inside the file keep the last occurrence; entries without an external id are added. `backupRepository.importBackup` applies all three tables in one transaction: it resolves each `ref` to the resulting local id and reports `{added, updated, unchanged, updatesAdded, updatesSkipped, reportsAdded, reportsSkipped}`. Repeated imports are safe: updates are skipped when `taskId+createdAt+description` already exists and reports when `createdAt` plus their item contents match an existing one. Updates whose `ref` matches no task in the file or the DB are skipped; report items keep their `taskName` snapshot and get `taskId: null` when the case no longer exists.
+9. Before merging, `TaskImportDialog` shows the task plan (`planMerge`) row by row plus the number of updates and reports; the confirm button stays enabled when any of the three would be restored.
 10. "Delete all data" asks for confirmation
 11. External statuses are configurable in Settings → External statuses: list, add, edit and delete entries `{ value, labels: { en, es } }`. `value` is an automatic, hidden unique id that never changes; only labels are shown. The English label is required; Spanish is optional and falls back to English (then to the id). With no configured statuses the task field is a disabled selector showing `tasks.noExternalStatuses`. Editing or deleting a status never rewrites existing tasks.
 12. Every task can have a log of updates (`taskId`, `description`, `createdAt`). Both the Updates section and the expanded card show it newest first; each entry can be edited (task, description and date) and deleted from the section.
-13. Deleting a task deletes its updates in the same Dexie transaction; deleting all data clears both tables. The store mirrors that cascade with `forgetTask` / `forgetAll`.
-14. Home reports on the selected calendar day (`YYYY-MM-DD`, initially today): **Current work** = tasks with at least one update whose `createdAt` day matches; **Previous day** = the same for the day before; **Pending** = `active` tasks that appear in neither list (no updates on either day). Lists are ordered by name; each entry shows only that day's updates, newest first. Days are compared on the `YYYY-MM-DD` prefix, so the report never mixes time zones. The three lists are collapsible sections: **Current work** and **Previous day** start expanded, **Pending** starts collapsed (each keeps its own state while the page is mounted). `DailyTaskList` emits `create-update(task)` and `edit-update(update)`; HomePage opens the shared `UpdateDialog` for both and writes through the updates store, so the three lists re-derive with no extra reload. When creating from a card, HomePage passes the task's newest update as `previousUpdate`, which `UpdateDialog` renders read-only (date + text) with **copy to clipboard** (`navigator.clipboard`, `execCommand` fallback, 2s “copied” state) and **use this text** (assigns `draft.description`, which the form picks up through its `modelValue` watch).
+13. Deleting a task deletes its updates in the same Dexie transaction; reports are snapshots and survive. Deleting all data clears tasks, updates and reports. The stores mirror that cascade with `forgetTask` / `forgetAll`.
+14. Home reports on the selected calendar day (`YYYY-MM-DD`, initially today): **Current work** = tasks with at least one update whose `createdAt` day matches; **Previous day** = the same for the nearest **business day** before it; **Pending** = `active` tasks that appear in neither list (no updates on either day). Business days are `settings.workDays` (JS day numbers, Monday–Friday by default) and are configured per weekday in Settings → Business days; `previousDateValue` walks back up to seven days and skips weekends or any other unchecked day, while an empty list falls back to the plain calendar day. Lists are ordered by name; each entry shows only that day's updates, newest first. Days are compared on the `YYYY-MM-DD` prefix, so the report never mixes time zones. The three lists are collapsible sections: **Current work** and **Previous day** start expanded, **Pending** starts collapsed (each keeps its own state while the page is mounted). `DailyTaskList` emits `create-update(task)` and `edit-update(update)`; HomePage opens the shared `UpdateDialog` for both and writes through the updates store, so the three lists re-derive with no extra reload. When creating from a card, HomePage passes the task's newest update as `previousUpdate`, which `UpdateDialog` renders read-only (date + text) with **copy to clipboard** (`navigator.clipboard`, `execCommand` fallback, 2s “copied” state) and **use this text** (assigns `draft.description`, which the form picks up through its `modelValue` watch).
+15. Home's **New report** action opens `ReportCreateDialog` with the selected day and `report.previousDate` (the nearest business day): `createReportDraft` turns the previous-day updates into **yesterday** and the selected day's updates into **today** item-by-item (`{ kind: 'update', taskId, updateId, taskName, description }`). The dialog edits descriptions, removes items and appends `{ kind: 'text' }` notes in any section; **finish** and **blockers** start empty. **Finish** also offers a case selector + **Add case**, which appends `{ kind: 'update', taskId, updateId: null, taskName }` with the task description as text: a reference that simulates an update that does not exist yet. Saving prunes empty plain notes (task references are kept even without text), requires at least one item, stamps `createdAt` with the save time and writes through `useReportsStore`. Reports are listed newest first in `/reports`, filtered inclusively by `from`/`to` `ZnDateInput` values (no calendar); when both filters are the same day, a notice links to the existing report. Only **export**, **copy** (new `createdAt`, same sections) and **delete** are available there. `/reports#report-<id>` scrolls to the matching card after loading, which is how Home's **Open report** action reaches it.
+
+16. **Export** on a report card opens `ReportExportDialog` with the built-in template plus the user templates from Settings (`settings.reportTemplates`, `{ id, name, body }`). The preview re-renders on template change: each item becomes `* ` + text, updates resolve the task's `externalUrl` from `useTasksStore` (the report only snapshots `taskId`/`taskName`), and empty sections render as `No`. Actions copy the text or download `report-YYYY-MM-DD-HHmm.md`. The dialog reopens with the last template used on the device (`settings.lastReportTemplateId`) and saves each new selection.
 
 ## Settings shape
 
@@ -133,7 +177,8 @@ settings.define({
   i18n: { useSystem: true, locale: null },
   theme: { preference: 'system' },   // system | light | dark
   entity: { names: { en: { singular, plural }, es: { singular, plural } } },
-  externalStatuses: []               // [{ value, labels: { en, es } }]
+  externalStatuses: [],              // [{ value, labels: { en, es } }]
+  workDays: [1, 2, 3, 4, 5]          // JS day numbers, 0 = Sunday
 })
 ```
 
@@ -155,18 +200,24 @@ After changing icon usage run `cd daily-task-report && npm run scan:icons && npm
 |---|---|
 | `tasks.spec.js` | normalization, validation, drafts, filter, sort, URL, dates |
 | `tasks-store.spec.js` | Pinia store (load, filters, sort, CRUD, errors) with a mocked repository |
-| `backup.spec.js` | export shape, round-trip, invalid files, file name |
+| `backup.spec.js` | v2 export shape, task refs on updates and report items, round-trip, v1 files, invalid files, file name |
 | `merge.spec.js` | new/update/unchanged plan, case-insensitive ids, duplicates, missing ids |
 | `TaskImportDialog.spec.js` | summary, preview rows, disabled states, confirm/cancel |
 | `TaskCard.spec.js` | collapsed/expanded content, external link, edit/delete events |
 | `TaskDialog.spec.js` | create/edit mode, required-field errors, normalized payload, cancel |
 | `router.spec.js` | route table and Home as the entry point |
-| `daily-report.spec.js` | previous-day maths, day grouping, current/previous/pending split, unknown tasks, empty date |
+| `daily-report.spec.js` | previous-day maths (calendar and business days), day grouping, current/previous/pending split, unknown tasks, empty date |
+| `business-days.spec.js` | default Monday–Friday, normalization, per-day toggles, persistence, last-day guard |
 | `updates.spec.js` | update DTO, draft, validation, newest-first sort and per-task filter |
 | `updates-store.spec.js` | load/force reload, per-task getter, CRUD, cascade sync |
 | `UpdateDialog.spec.js` | create/edit modes, required validation, normalized payload |
 | `UpdatesPage.spec.js` | newest-first list, task names, edit dialog, empty state |
 | `external-statuses.spec.js` | normalization, required/duplicate validation, CRUD persistence, localized labels and options |
+| `reports.spec.js` | item/report normalization, draft seeding from updates, pruning, inclusive range filter, sort and duplication |
+| `reports-store.spec.js` | load, create, copy, delete, errors and `forgetAll` with a mocked repository |
+| `ReportsPage.spec.js` | four-section rendering, date filters, no-results state and copy |
+| `ReportCreateDialog.spec.js` | seeded text, edited comments, added blocker note, empty validation and cancel |
+| `report-export.spec.js` | update links, name/text fallbacks, empty sections, default-template expansion, unknown tokens, file name |
 
 The Dexie repository needs IndexedDB, so it is exercised through the mocked store integration, not directly.
 

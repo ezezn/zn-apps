@@ -5,10 +5,33 @@ export function updateDateValue(createdAt) {
   return String(createdAt ?? '').slice(0, 10)
 }
 
-/** Local `YYYY-MM-DD` of the day before `dateValue`; `''` when invalid. */
-export function previousDateValue(dateValue) {
+/** JS weekday (`0` Sunday … `6` Saturday) of a local `YYYY-MM-DD`; `null` when invalid. */
+export function weekdayOf(dateValue) {
+  const [year, month, day] = String(dateValue ?? '').split('-').map(Number)
+  if (!year || !month || !day) return null
+  return new Date(year, month - 1, day).getDay()
+}
+
+/**
+ * Local `YYYY-MM-DD` of the nearest business day before `dateValue`.
+ * Without `workDays` (or with an empty list) it is the plain calendar day
+ * before; with configured business days, weekends and other non-working days
+ * are skipped. Returns `''` when `dateValue` is invalid.
+ */
+export function previousDateValue(dateValue, workDays = []) {
   const [year, month, day] = String(dateValue ?? '').split('-').map(Number)
   if (!year || !month || !day) return ''
+
+  const days = Array.isArray(workDays) ? workDays.map(Number) : []
+  if (days.length === 0) return toDateInputValue(new Date(year, month - 1, day - 1))
+
+  const cursor = new Date(year, month - 1, day)
+  for (let step = 0; step < 7; step += 1) {
+    cursor.setDate(cursor.getDate() - 1)
+    if (days.includes(cursor.getDay())) return toDateInputValue(cursor)
+  }
+
+  // Unreachable with at least one valid weekday: keep the calendar day.
   return toDateInputValue(new Date(year, month - 1, day - 1))
 }
 
@@ -33,14 +56,20 @@ function updatesByTaskAndDay(updates = []) {
 /**
  * Builds the three Home lists for `date`:
  * - `current`: tasks with at least one update created on `date`.
- * - `previous`: tasks with at least one update created on the day before.
+ * - `previous`: tasks with at least one update created on the nearest business
+ *   day before `date` (`workDays`, Monday–Friday by default).
  * - `pending`: active tasks that appear in neither list (no recent updates).
  *
  * `current` and `previous` are `{ task, updates }` entries; `pending` is a list
  * of tasks. Ordering is left to the view.
  */
-export function buildDailyReport({ tasks = [], updates = [], date = '' } = {}) {
-  const dayBefore = previousDateValue(date)
+export function buildDailyReport({
+  tasks = [],
+  updates = [],
+  date = '',
+  workDays = [1, 2, 3, 4, 5]
+} = {}) {
+  const dayBefore = previousDateValue(date, workDays)
   const byTask = updatesByTaskAndDay(updates)
 
   function entriesFor(day) {

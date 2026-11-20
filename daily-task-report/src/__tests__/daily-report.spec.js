@@ -2,7 +2,8 @@ import { describe, it, expect } from 'vitest'
 import {
   buildDailyReport,
   previousDateValue,
-  updateDateValue
+  updateDateValue,
+  weekdayOf
 } from '../helpers/daily-report.js'
 
 const task = (id, overrides = {}) => ({
@@ -33,6 +34,39 @@ describe('daily-report helpers', () => {
     expect(previousDateValue('2026-03-01')).toBe('2026-02-28')
     expect(previousDateValue('2026-01-01')).toBe('2025-12-31')
     expect(previousDateValue('')).toBe('')
+  })
+
+  it('reads the local weekday of a date', () => {
+    expect(weekdayOf('2026-11-20')).toBe(5)
+    expect(weekdayOf('2026-11-22')).toBe(0)
+    expect(weekdayOf('')).toBeNull()
+  })
+
+  it('skips non-working days when looking back to the previous business day', () => {
+    expect(previousDateValue('2026-11-23', [1, 2, 3, 4, 5])).toBe('2026-11-20')
+    expect(previousDateValue('2026-11-22', [1, 2, 3, 4, 5])).toBe('2026-11-20')
+    expect(previousDateValue('2026-11-21', [1, 2, 3, 4, 5])).toBe('2026-11-20')
+    // No configured business days keeps the plain calendar day.
+    expect(previousDateValue('2026-11-23', [])).toBe('2026-11-22')
+  })
+
+  it('uses the configured business days for the previous list', () => {
+    const tasks = [task(1, { name: 'Friday' }), task(2, { name: 'Thursday' })]
+    const updates = [
+      update(10, 1, '2026-11-20T09:00'),
+      update(11, 2, '2026-11-19T09:00')
+    ]
+
+    const report = buildDailyReport({
+      tasks,
+      updates,
+      date: '2026-11-23',
+      workDays: [1, 2, 3, 4, 5]
+    })
+
+    expect(report.previousDate).toBe('2026-11-20')
+    expect(report.previous.map((entry) => entry.task.id)).toEqual([1])
+    expect(report.pending.map((item) => item.id)).toEqual([2])
   })
 
   it('splits tasks into current, previous and pending', () => {

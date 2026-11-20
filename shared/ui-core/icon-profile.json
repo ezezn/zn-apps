@@ -3,5 +3,10 @@
     "arrow_drop_down",
     "check"
   ],
-  "manual": []
+  "manual": [
+    "check_circle",
+    "error",
+    "info",
+    "warning"
+  ]
 }

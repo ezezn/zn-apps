@@ -12,6 +12,10 @@
         {{ t('settings.importSummary', { added: plan.added, updated: plan.updated, unchanged: plan.unchanged }) }}
       </p>
 
+      <p v-if="extrasCount > 0" class="import-dialog__summary">
+        {{ t('settings.importExtras', { updates: updates.length, reports: reports.length }) }}
+      </p>
+
       <h3 v-if="plan.total > 0" class="import-dialog__title">{{ t('settings.importPreview') }}</h3>
 
       <ul v-if="plan.total > 0" class="import-list">
@@ -33,11 +37,14 @@
         </li>
       </ul>
 
-      <p v-else class="import-dialog__empty">
+      <p v-else-if="extrasCount === 0" class="import-dialog__empty">
         {{ t('settings.importEmpty', { entityPlural: plural }) }}
       </p>
 
-      <p v-if="plan.total > 0 && plan.added + plan.updated === 0" class="import-dialog__note">
+      <p
+        v-if="plan.total > 0 && plan.added + plan.updated === 0 && extrasCount === 0"
+        class="import-dialog__note"
+      >
         {{ t('settings.importUpToDate') }}
       </p>
     </div>
@@ -63,6 +70,10 @@ const props = defineProps({
   modelValue: { type: Boolean, default: false },
   /** Tasks parsed from the selected backup file. */
   tasks: { type: Array, default: () => [] },
+  /** Updates parsed from the file (already linked by task ref). */
+  updates: { type: Array, default: () => [] },
+  /** Reports parsed from the file. */
+  reports: { type: Array, default: () => [] },
   /** Current local tasks, used to compute the merge preview. */
   existingTasks: { type: Array, default: () => [] },
   saving: { type: Boolean, default: false }
@@ -74,7 +85,10 @@ const t = (...args) => i18n.global.t(...args)
 const { plural } = useEntityLabels()
 
 const plan = computed(() => planMerge(props.existingTasks, props.tasks))
-const canImport = computed(() => plan.value.added + plan.value.updated > 0)
+const extrasCount = computed(() => props.updates.length + props.reports.length)
+const canImport = computed(
+  () => plan.value.added + plan.value.updated > 0 || extrasCount.value > 0
+)
 
 function stateLabel(status) {
   if (status === 'update') return t('settings.importStatusUpdate')

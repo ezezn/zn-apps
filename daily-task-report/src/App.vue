@@ -17,6 +17,10 @@
                 <ZnIcon name="system_update" :size="20" />
                 <span>{{ t('nav.updates') }}</span>
               </router-link>
+              <router-link to="/reports" class="nav-link">
+                <ZnIcon name="description" :size="20" />
+                <span>{{ t('nav.reports') }}</span>
+              </router-link>
             </div>
 
             <!-- Opciones secundarias: ancladas al final del panel visible. -->

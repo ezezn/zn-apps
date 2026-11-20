@@ -31,3 +31,10 @@ db.version(3).stores({
   tasks: '++id, externalId, name, status, taskDate, addedAt',
   updates: '++id, taskId, createdAt'
 })
+
+// v4: reports — immutable document snapshots built from a day's updates.
+db.version(4).stores({
+  tasks: '++id, externalId, name, status, taskDate, addedAt',
+  updates: '++id, taskId, createdAt',
+  reports: '++id, createdAt'
+})

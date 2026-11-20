@@ -24,6 +24,7 @@ export { default as ZnBox } from './components/containers/ZnBox.vue'
 export { default as ZnRow } from './components/containers/ZnRow.vue'
 export { default as ZnSection } from './components/containers/ZnSection.vue'
 export { default as ZnCard } from './components/containers/ZnCard.vue'
+export { default as ZnAlert } from './components/feedback/ZnAlert.vue'
 
 // Controles (interacción del usuario)
 export { default as ZnButton } from './components/controls/ZnButton.vue'
@@ -70,5 +71,6 @@ export {
 
 // Componentes Atómicos e Utilidades previos
 export { useOnlineStatus } from './composables/useOnlineStatus.js'
+export { useWindowControlsOverlay } from './composables/useWindowControlsOverlay.js'
 export { useDialogs } from './composables/useDialogs.js'
 export { formatDate } from './utils/helpers.js'

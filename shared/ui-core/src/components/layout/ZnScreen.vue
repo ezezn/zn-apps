@@ -1,5 +1,5 @@
 <template>
-  <section class="zn-screen">
+  <section class="zn-screen" :class="{ 'zn-screen--wco': isWindowTitlebar }">
     <ZnScrollArea class="zn-screen__scroll-area" :label="title || 'Contenido de pantalla'">
       <div ref="sentinelRef" class="zn-screen__sentinel"></div>
 
@@ -51,6 +51,7 @@
 <script setup>
 import { computed, inject, ref, onMounted, onUnmounted } from 'vue'
 import { screenNavigationKey } from './screenNavigation.js'
+import { useWindowControlsOverlay } from '../../composables/useWindowControlsOverlay.js'
 import ZnScrollArea from './ZnScrollArea.vue'
 
 defineProps({
@@ -79,6 +80,10 @@ const showMenuButton = computed(() => Boolean(
   navigation?.isSlaveVisible.value &&
   typeof navigation?.openDrawer === 'function'
 ))
+// Un ZnScreen dentro de un shell (master-esclavo, panel embebido) no es la
+// titlebar de la ventana: el shell administra la geometría WCO de sus paneles.
+const { isOverlayVisible } = useWindowControlsOverlay()
+const isWindowTitlebar = computed(() => !navigation && isOverlayVisible.value)
 let observer = null
 
 onMounted(() => {
@@ -106,7 +111,19 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+/*
+ * Geometría pública del header. Cualquier contexto que incruste un ZnScreen
+ * (master de ZnMasterSlaveLayout, drawer, shells propias) debe sobrescribir
+ * estas variables —nunca `height` ni `padding` del header— para que los
+ * títulos de todos los paneles compartan la misma línea base.
+ */
 .zn-screen {
+  --zn-screen-header-height: 72px;
+  --zn-screen-header-padding-inline: 24px;
+  --zn-screen-header-compact-height: 60px;
+  --zn-screen-header-compact-padding-inline: 16px;
+  --zn-screen-content-padding: 24px;
+
   position: relative;
   width: 100%;
   height: 100dvh;
@@ -149,8 +166,8 @@ onUnmounted(() => {
   align-items: center;
   justify-content: space-between;
   
-  height: 72px; 
-  padding: 0 24px;
+  height: var(--zn-screen-header-height);
+  padding: 0 var(--zn-screen-header-padding-inline);
   
   /* En reposo absoluto toma el color de fondo exacto de la app */
   background-color: var(--md-background);
@@ -165,6 +182,26 @@ onUnmounted(() => {
     padding 0.3s cubic-bezier(0.4, 0, 0.2, 1),
     box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
     border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Región arrastrable del sistema: el header mueve la ventana en WCO y los
+   controles interactivos quedan excluidos (los slots se excluyen con :deep). */
+.zn-screen__header {
+  -webkit-app-region: drag;
+  app-region: drag;
+}
+
+.zn-screen__header :deep(a),
+.zn-screen__header :deep(button),
+.zn-screen__header :deep(input),
+.zn-screen__header :deep(select),
+.zn-screen__header :deep(textarea),
+.zn-screen__header :deep([role='button']),
+.zn-screen__header :deep([role='link']),
+.zn-screen__header :deep([tabindex]:not([tabindex='-1'])),
+.zn-screen__header :deep(.zn-no-drag) {
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
 }
 
 .zn-screen__branding {
@@ -252,8 +289,8 @@ onUnmounted(() => {
    TOP APP BAR - ESTADO SCROLLED (Elevado y contenedor MD3)
    ========================================================================== */
 .zn-screen__header--scrolled {
-  height: 60px; /* Se condensa */
-  padding: 0 16px; /* Se compacta horizontalmente */
+  height: var(--zn-screen-header-compact-height); /* Se condensa */
+  padding: 0 var(--zn-screen-header-compact-padding-inline); /* Se compacta */
   
   /* Pasa a usar la tonalidad 'surface' del tema actual */
   background-color: var(--md-surface); 
@@ -275,17 +312,65 @@ onUnmounted(() => {
    ========================================================================== */
 .zn-screen__content {
   flex: 1 0 auto;
-  padding: 24px;
+  padding: var(--zn-screen-content-padding);
   box-sizing: border-box;
 }
 
+/* ==========================================================================
+   WINDOW CONTROLS OVERLAY (PWA de escritorio instalada)
+   ==========================================================================
+   La Top App Bar pasa a ser la titlebar de la ventana: ocupa exactamente el
+   área libre que el SO deja entre los controles nativos (env(titlebar-area-*)),
+   por lo que funciona igual con controles a la derecha (Windows/Linux) o a la
+   izquierda (macOS). El contenido se desplaza debajo del área de título. */
+.zn-screen--wco .zn-screen__header,
+.zn-screen--wco .zn-screen__header--scrolled {
+  position: fixed;
+  top: env(titlebar-area-y, 0px);
+  left: env(titlebar-area-x, 0px);
+  width: env(titlebar-area-width, 100%);
+  height: env(titlebar-area-height, var(--zn-screen-header-height));
+  padding: 0 var(--zn-screen-header-padding-inline);
+  background-color: var(--md-surface);
+}
+
+.zn-screen--wco .zn-screen__scroll-area {
+  padding-top: calc(env(titlebar-area-y, 0px) + env(titlebar-area-height, 0px));
+}
+
+.zn-screen--wco .zn-screen__heading {
+  gap: 0;
+}
+
+.zn-screen--wco .zn-screen__title,
+.zn-screen--wco .zn-screen__header--scrolled .zn-screen__title {
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.zn-screen--wco .zn-screen__subtitle {
+  font-size: 0.7rem;
+}
+
+.zn-screen--wco .zn-screen__actions :deep(.zn-button) {
+  height: 32px;
+  min-height: 32px;
+}
+
+.zn-screen--wco .zn-screen__actions :deep(.zn-button--icon-only) {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  min-height: 32px;
+}
+
 @media (max-width: 600px) {
-  .zn-screen__header {
-    height: 64px;
-    padding: 0 16px;
-  }
-  .zn-screen__content {
-    padding: 16px;
+  .zn-screen {
+    --zn-screen-header-height: 64px;
+    --zn-screen-header-compact-height: 64px;
+    --zn-screen-header-padding-inline: 16px;
+    --zn-screen-header-compact-padding-inline: 16px;
+    --zn-screen-content-padding: 16px;
   }
 }
 </style>

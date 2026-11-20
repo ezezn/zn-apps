@@ -1,5 +1,14 @@
 <template>
   <ZnScreen :title="t('home.title')" :subtitle="selectedDateLabel">
+    <template #actions>
+      <ZnButton variant="filled" @click="openReportDialog">
+        <template #icon>
+          <ZnIcon name="description" :size="20" />
+        </template>
+        <span class="new-report-label">{{ t('reports.newReport') }}</span>
+      </ZnButton>
+    </template>
+
     <div class="home-page">
       <section class="home-calendar">
         <div class="home-calendar__toolbar">
@@ -20,11 +29,29 @@
         />
       </section>
 
+      <ZnAlert
+        :model-value="reportBannerVisible"
+        :variant="reportBannerVariant"
+        size="small"
+        :dismiss-label="t('common.dismiss')"
+        @update:model-value="dismissReportBanner"
+      >
+        {{ reportBannerMessage }}
+        <template v-if="selectedReport" #actions>
+          <ZnButton variant="text" @click="openSelectedReport">
+            {{ t('home.openReport') }}
+          </ZnButton>
+        </template>
+      </ZnAlert>
+
       <p v-if="tasksStore.error" class="home-alert" role="alert">
         {{ t(`tasks.${tasksStore.error}`) }}
       </p>
       <p v-else-if="updatesStore.error" class="home-alert" role="alert">
         {{ t(`updates.${updatesStore.error}`) }}
+      </p>
+      <p v-else-if="reportsStore.error" class="home-alert" role="alert">
+        {{ t(`reports.${reportsStore.error}`) }}
       </p>
 
       <p v-if="loading" class="home-state">{{ t('home.loading') }}</p>
@@ -59,6 +86,16 @@
       </template>
     </div>
 
+    <ReportCreateDialog
+      v-model="isReportDialogOpen"
+      :today="selectedDate"
+      :previous-date="report.previousDate"
+      :tasks="tasksStore.tasks"
+      :updates="updatesStore.updates"
+      :saving="reportsStore.saving"
+      @submit="submitReport"
+    />
+
     <UpdateDialog
       v-model="isUpdateDialogOpen"
       :update="editingUpdate"
@@ -73,22 +110,30 @@
 
 <script setup>
 import { computed, onMounted, ref } from 'vue'
-import { ZnButton, ZnButtonGroup, ZnScreen } from '@zn-apps/ui-core'
+import { useRouter } from 'vue-router'
+import { ZnAlert, ZnButton, ZnButtonGroup, ZnIcon, ZnScreen } from '@zn-apps/ui-core'
 import { ZnCalendar } from '@zn-apps/ui-calendar'
 import { i18n } from '../i18n.js'
 import { useEntityLabels } from '../composables/useEntityLabels.js'
+import { useBusinessDays } from '../composables/useBusinessDays.js'
 import { useTasksStore } from '../stores/tasks.js'
 import { useUpdatesStore } from '../stores/updates.js'
+import { useReportsStore } from '../stores/reports.js'
 import { buildDailyReport } from '../helpers/daily-report.js'
+import { reportDateValue } from '../helpers/reports.js'
 import { sortTasks } from '../helpers/tasks.js'
 import { formatTaskDate, toDateInputValue } from '../helpers/dates.js'
 import DailyTaskList from '../components/DailyTaskList.vue'
 import UpdateDialog from '../components/UpdateDialog.vue'
+import ReportCreateDialog from '../components/ReportCreateDialog.vue'
 
 const t = (...args) => i18n.global.t(...args)
+const router = useRouter()
 const { plural } = useEntityLabels()
+const { workDays } = useBusinessDays()
 const tasksStore = useTasksStore()
 const updatesStore = useUpdatesStore()
+const reportsStore = useReportsStore()
 
 /** Single selection: `YYYY-MM-DD`; the day starts on today. */
 const selectedDate = ref(toDateInputValue())
@@ -101,6 +146,8 @@ const loading = computed(() => tasksStore.loading || updatesStore.loading)
 const isUpdateDialogOpen = ref(false)
 const editingUpdate = ref(null)
 const updateTaskId = ref(null)
+const isReportDialogOpen = ref(false)
+const dismissedReportBannerKey = ref('')
 
 /** Newest update of the card being extended, shown as read-only reference. */
 const previousUpdate = computed(() => {
@@ -108,6 +155,30 @@ const previousUpdate = computed(() => {
   return updatesStore.forTask(updateTaskId.value)[0] ?? null
 })
 const selectedDateLabel = computed(() => formatTaskDate(selectedDate.value, locale.value))
+
+/** Latest report of the selected day, if any. */
+const selectedReport = computed(
+  () =>
+    reportsStore.sortedReports.find(
+      (item) => reportDateValue(item) === selectedDate.value
+    ) ?? null
+)
+const isToday = computed(() => selectedDate.value === toDateInputValue())
+const reportBannerKey = computed(
+  () => `${selectedDate.value}:${selectedReport.value?.id ?? 'none'}`
+)
+const reportBannerVisible = computed(
+  () => reportsStore.loaded && dismissedReportBannerKey.value !== reportBannerKey.value
+)
+const reportBannerVariant = computed(() => {
+  if (selectedReport.value) return 'success'
+  return isToday.value ? 'warning' : 'info'
+})
+const reportBannerMessage = computed(() => {
+  if (selectedReport.value) return t('home.reportReady', { date: selectedDateLabel.value })
+  if (isToday.value) return t('home.reportNotCreated')
+  return t('home.reportMissing', { date: selectedDateLabel.value })
+})
 
 const calendarLabels = computed(() => ({
   today: t('home.today'),
@@ -122,7 +193,8 @@ const report = computed(() =>
   buildDailyReport({
     tasks: tasksStore.tasks,
     updates: updatesStore.updates,
-    date: selectedDate.value
+    date: selectedDate.value,
+    workDays: workDays.value
   })
 )
 
@@ -146,7 +218,27 @@ const pendingEntries = computed(() =>
 onMounted(() => {
   tasksStore.load()
   updatesStore.load()
+  reportsStore.load()
 })
+
+function dismissReportBanner(value) {
+  if (!value) dismissedReportBannerKey.value = reportBannerKey.value
+}
+
+function openSelectedReport() {
+  if (!selectedReport.value) return
+  router.push({ name: 'reports', hash: `#report-${selectedReport.value.id}` })
+}
+
+function openReportDialog() {
+  isReportDialogOpen.value = true
+}
+
+async function submitReport(payload) {
+  const saved = await reportsStore.createReport(payload)
+  if (!saved) return
+  isReportDialogOpen.value = false
+}
 
 function openCreateUpdate(task) {
   editingUpdate.value = null
@@ -218,6 +310,10 @@ async function submitUpdate(payload) {
 @media (max-width: 720px) {
   .home-calendar__toolbar {
     justify-content: flex-start;
+  }
+
+  .new-report-label {
+    display: none;
   }
 }
 </style>

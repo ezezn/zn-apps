@@ -1,5 +1,35 @@
 # Changelog
 
+## [0.2.0] - 2026-11-20
+
+### Español
+#### Tipo de cambio: Nuevas funcionalidades
+- **Resumen**: Historial de actualizaciones por tarea, reportes diarios con exportación a markdown y copia de seguridad completa de la base local.
+- **Detalles**:
+  - Historial de **actualizaciones** por tarea: página propia para crear, editar y eliminar entradas, y las más recientes visibles en la tarjeta de la tarea.
+  - **Inicio** con calendario semanal y mensual: listas de trabajo actual, día laboral anterior y pendientes para la fecha seleccionada, con las actualizaciones de cada día.
+  - **Días laborales** configurables por día de la semana en Configuración; el día anterior salta fines de semana y días no laborales.
+  - Aviso sobre el estado del reporte de la fecha seleccionada, con acción para abrirlo desde Inicio.
+  - **Reportes**: creación desde Inicio a partir de las listas de hoy y ayer, con cuatro secciones (qué hice ayer, en qué trabajo hoy, qué podría finalizar hoy y bloqueos), referencias a casos con comentario editable y comentarios simples. La página de reportes filtra por día o rango con campos de fecha, copia un reporte con fecha y hora nuevas y elimina con confirmación.
+  - **Exportación de reportes** a markdown: selector de plantillas, vista previa, copiar al portapapeles y descarga `.md`. Plantillas editables en Configuración y la última usada se recuerda en el dispositivo.
+  - **Estados externos** configurables, con etiquetas en inglés y español y un identificador oculto por estado.
+  - Copia de seguridad JSON **v2** con tareas, actualizaciones y reportes, incluidos sus vínculos; la importación restaura todo en una transacción, evita duplicar actualizaciones y reportes y sigue aceptando archivos v1.
+  - Tests para actualizaciones, reportes, días laborales, exportación de reportes, copia de seguridad y la nueva página de reportes.
+
+### English
+#### Change type: New features
+- **Summary**: Per-task update log, daily reports with markdown export and a complete local-database backup.
+- **Details**:
+  - Per-task **update log**: dedicated page to create, edit and delete entries, with the latest ones shown on the task card.
+  - **Home** with week and month calendars: current work, previous business day and pending lists for the selected date, with each day's updates.
+  - **Business days** configurable per weekday in Settings; the previous day skips weekends and other non-working days.
+  - Notice about the report status of the selected date, with an action to open it from Home.
+  - **Reports**: created from Home using the today and yesterday lists, with four sections (what I did yesterday, what I am working on today, what I could finish today and blockers), case references with editable comments and plain notes. The Reports page filters by day or range with date fields, copies a report with a new timestamp and deletes with confirmation.
+  - **Report export** to markdown: template selector, live preview, clipboard copy and `.md` download. Templates are editable in Settings and the last one used is remembered on the device.
+  - Configurable **external statuses** with English/Spanish labels and a hidden identifier per status.
+  - **v2 JSON backup** with tasks, updates and reports, including their links; import restores everything in one transaction, skips duplicate updates and reports and still accepts v1 files.
+  - Tests for updates, reports, business days, report export, backup and the new Reports page.
+
 ## [0.1.0] - 2026-11-16
 
 ### Español

@@ -1,14 +1,18 @@
 import { describe, it, expect } from 'vitest'
 import { flushPromises, mount } from '@vue/test-utils'
+import { createMemoryHistory, createRouter } from 'vue-router'
 import { ZnCalendar } from '@zn-apps/ui-calendar'
+import { routes } from '../router/index.js'
 import HomePage from '../views/HomePage.vue'
 import DailyTaskList from '../components/DailyTaskList.vue'
 import { i18n } from '../i18n.js'
 import { pinia } from '../stores/index.js'
+import { useReportsStore } from '../stores/reports.js'
 import { toDateInputValue } from '../helpers/dates.js'
 
 function mountHome() {
-  return mount(HomePage, { global: { plugins: [i18n, pinia] } })
+  const router = createRouter({ history: createMemoryHistory(), routes })
+  return mount(HomePage, { global: { plugins: [i18n, pinia, router] } })
 }
 
 describe('Home page', () => {
@@ -19,6 +23,39 @@ describe('Home page', () => {
     expect(calendar.props('typeView')).toBe('week')
     expect(calendar.props('selectionMode')).toBe('single')
     expect(calendar.props('modelValue')).toBe(toDateInputValue())
+
+    wrapper.unmount()
+  })
+
+  it('shows the report banner for the selected date and can dismiss it', async () => {
+    i18n.global.locale.value = 'en'
+    const wrapper = mountHome()
+    await flushPromises()
+
+    const reportsStore = useReportsStore(pinia)
+    reportsStore.reports = []
+    reportsStore.loaded = true
+    await flushPromises()
+
+    expect(wrapper.find('.zn-alert--warning').exists()).toBe(true)
+    expect(wrapper.text()).toContain('Report not created yet.')
+    expect(wrapper.find('.zn-alert__actions').exists()).toBe(false)
+
+    reportsStore.reports = [
+      {
+        id: 12,
+        createdAt: `${toDateInputValue()}T09:00`,
+        sections: { yesterday: [], today: [], finish: [], blockers: [] }
+      }
+    ]
+    await flushPromises()
+
+    const alert = wrapper.find('.zn-alert--success')
+    expect(alert.exists()).toBe(true)
+    expect(alert.text()).toContain('Open report')
+
+    await alert.find('.zn-alert__dismiss').trigger('click')
+    expect(wrapper.find('.zn-alert').exists()).toBe(false)
 
     wrapper.unmount()
   })

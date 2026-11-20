@@ -55,7 +55,7 @@ source (.vue)  --scan:icons-->  icon-profile.json {scanned, manual}
 ## PWA checklist for any app
 
 1. `public/pwa-icon.svg` + `public/pwa-icon-192.png` + `public/pwa-icon-512.png` (art inside the maskable safe area ~80%).
-2. `VitePWA({ registerType: 'prompt', manifest: { ... } })` with both PNGs declared exactly (`type: 'image/png'`, `purpose: 'any maskable'`, app-relative paths), valid `start_url`/`scope`/`display: 'standalone'`.
+2. `VitePWA({ registerType: 'prompt', manifest: { ... } })` with both PNGs declared exactly (`type: 'image/png'`, `purpose: 'any maskable'`, app-relative paths), valid `start_url`/`scope`/`display: 'standalone'`, plus `display_override: ['window-controls-overlay', 'standalone']` so the installed desktop app uses the native title bar with the MD3 top app bar (`ui-core` handles it automatically).
 3. `theme_color` and `background_color` = `#FEF7FF`; `<meta name="theme-color" content="#FEF7FF">` in `index.html` (prevents the blue boot flash).
 4. `src/main.js`: `initPwaInstallListener()`, `initPwaUpdateListener()`, `initPwaThemeSync()`.
 5. `src/App.vue`: mount `ZnPwaInstallPrompt` and `ZnPwaUpdatePrompt` as **direct children of `ZnApp`** — never inside `ZnScreen` or a container with `transform`/`overflow`/`isolation` (they are `position: fixed`).

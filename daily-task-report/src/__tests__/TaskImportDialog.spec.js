@@ -55,6 +55,16 @@ describe('TaskImportDialog', () => {
     expect(actionButton(wrapper, 'Import').attributes('disabled')).toBeUndefined()
   })
 
+  it('summarizes updates and reports and allows importing only those', () => {
+    const wrapper = mountDialog({
+      reports: [{ createdAt: '2026-11-20T18:00', sections: { yesterday: [], today: [], finish: [], blockers: [] } }],
+      updates: [{ ref: 'EXT-1', description: 'Avance', createdAt: '2026-11-20T10:00' }]
+    })
+
+    expect(wrapper.text()).toContain('1 updates · 1 reports')
+    expect(actionButton(wrapper, 'Import').attributes('disabled')).toBeUndefined()
+  })
+
   it('disables the action when everything is unchanged', () => {
     const wrapper = mountDialog({
       existingTasks: existing,
