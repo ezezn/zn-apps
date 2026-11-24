@@ -234,10 +234,16 @@ function saveEdit() {
       v-if="!isShared && showFilters"
       class="zn-data-grid__filters"
       :grid="localGrid"
+      :view="effectiveView"
+      :show-view-switch="showViewSwitch"
       :clear-label="clearFiltersLabel"
+      :view-switch-label="viewSwitchLabel"
+      :table-view-label="tableViewLabel"
+      :card-view-label="cardViewLabel"
+      @update:view="setView"
     />
 
-    <div v-if="showViewSwitch" class="zn-data-grid__toolbar">
+    <div v-if="showViewSwitch && (isShared || !showFilters)" class="zn-data-grid__toolbar">
       <div
         class="zn-data-grid__view-switch"
         role="group"
@@ -549,6 +555,8 @@ function saveEdit() {
   gap: 12px;
   width: 100%;
   min-width: 0;
+  /* Keeps the card view separated from the filters, also when they are siblings. */
+  padding-top: 12px;
 }
 
 .zn-data-grid__card {

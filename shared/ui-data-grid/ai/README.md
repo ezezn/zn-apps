@@ -49,7 +49,9 @@ Rules:
 { key: 'createdAt', label: 'Created', type: 'date-range', startLabel: 'From', endLabel: 'To' }
 ```
 
-`DataGridFilterTypes` = `text | select | date | date-range`; `text` is the default. Filters render with `ZnSingleLineText`, `ZnSelect`, `ZnDateInput`, `ZnDateRangeInput` at `size="small"` and wrap inline (`flex: 1 1 180px`).
+`DataGridFilterTypes` = `text | select | date | date-range`; `text` is the default. Filters render with `ZnSingleLineText`, `ZnSelect`, `ZnDateInput`, `ZnDateRangeInput` at `size="xsmall"` (compact) and wrap inline sharing the remaining width (`flex: 1 1 150px`; ranges `1 1 280px`). Each definition may override `size`.
+
+`ZnDataGridFilters` can also render the clear action and the table/card switch inside the same row, after the fields (`margin-left: auto`). Both are `ZnButton variant="text" icon-only`: `filter_alt_off` for clear and `table_rows`/`view_agenda` for the switch. The bar renders when there are fields or `showViewSwitch` is on; the clear action only appears when `showClear` and at least one filter exist.
 
 ## `ZnDataGrid` props
 
@@ -60,6 +62,9 @@ Rules:
 | `filters` | `[]` | Standalone filter bar |
 | `pageSize` | `10` | Standalone |
 | `showFilters` / `showPagination` | `true` | Standalone only |
+| `view` | `'auto'` | `auto|table|card`; `auto` uses cards below `cardBreakpoint` (720) |
+| `showViewSwitch` | `true` | Standalone with filters: the switch lives in the filter bar. Shared or `showFilters=false`: the grid renders its own toolbar. Set it to `false` on the grid when an external `ZnDataGridFilters` owns the switch |
+| `viewSwitchLabel` / `tableViewLabel` / `cardViewLabel` | `'View'` / `'Table view'` / `'Card view'` | Switch labels (translated by the app) |
 | `editable` | `false` | Opens the dialog on non-custom columns |
 | `emptyText` | `'No data'` | No rows |
 | `noResultsText` | `'No results match the filters'` | Filters hide every row |
@@ -69,7 +74,18 @@ Rules:
 | `editLabel` / `editTitle` | `'Edit'` / `''` | Title defaults to `Edit <column label>` |
 | `saveLabel` / `cancelLabel` | `'Save'` / `'Cancel'` | Dialog actions |
 
-Events: `update:data(rows)` after a confirmed edit (new array, `writeAt` copy-on-write), `cell-change({ row, rowIndex, key, value })`.
+Events: `update:data(rows)` after a confirmed edit (new array, `writeAt` copy-on-write), `cell-change({ row, rowIndex, key, value })`, `update:view('table'|'card')`.
+
+## `ZnDataGridFilters` props
+
+| Prop | Default | Notes |
+|---|---|---|
+| `grid` | required | State from `useDataGrid` |
+| `size` | `'xsmall'` | Field density; a filter's own `size` wins |
+| `showClear` | `true` | Icon-only clear action, disabled without active filters; needs at least one filter |
+| `showViewSwitch` | `false` | Inline table/card icon switch |
+| `view` | `'table'` | Selected view for the switch; pair with `update:view` / `v-model:view` |
+| `clearLabel`, `viewSwitchLabel`, `tableViewLabel`, `cardViewLabel` | English defaults | Translated by the app |
 
 `ZnDataGridFilters` and `ZnDataGridPagination` require `grid`; pagination labels: `previousLabel`, `nextLabel`, `ofLabel`, `pageLabel`.
 
@@ -78,6 +94,8 @@ Events: `update:data(rows)` after a confirmed edit (new array, `writeAt` copy-on
 - Transparent background, no outer margin/radius: fits `ZnCard`, `ZnSection`, `ZnBox` and any `ui-core` container.
 - Uses `--md-on-background`, `--md-on-surface-variant`, `--md-outline` (mixed), `--md-surface-container-highest`, `--md-primary`; header 52px, body `bodyMedium`.
 - Horizontal overflow scrolls inside the grid; below 600px paddings shrink. The empty state is a centered icon + message (`role="status"`).
+- Filter bar: below 720px the date range takes a full row and fields may shrink to 0; below 480px every filter stacks full width and the icon actions move to their own right-aligned row.
+- The card view has `padding-top: 12px`, which keeps it separated from the filter bar both in standalone composition and when `ZnDataGridFilters` is a sibling container.
 - One `ZnDialog` per grid (not per cell) to avoid hundreds of dialog nodes.
 
 ## Imports

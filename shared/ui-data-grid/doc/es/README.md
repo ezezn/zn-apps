@@ -74,16 +74,23 @@ const filters = [
 ]
 
 const grid = useDataGrid({ data: rows, columns, filters, pageSize: 10 })
+const view = ref('table')
 </script>
 
 <template>
   <ZnCard>
-    <ZnDataGridFilters :grid="grid" />
+    <ZnDataGridFilters
+      :grid="grid"
+      show-view-switch
+      v-model:view="view"
+    />
   </ZnCard>
 
   <ZnCard>
     <ZnDataGrid
       :grid="grid"
+      :show-view-switch="false"
+      v-model:view="view"
       editable
       edit-label="Editar"
       save-label="Guardar"
@@ -142,6 +149,30 @@ const columns = [
 | `date-range` | Rango inclusivo; cualquiera de los extremos puede quedar vacío |
 
 Cada filtro declara `key`, `label` y `type` (por defecto `text`); `select` necesita `options`, `date-range` acepta `startLabel`/`endLabel` y todos admiten `placeholder`. Usa `filter.match(query, row)` para un criterio propio.
+
+Los campos de la barra son compactos (`size="xsmall"` por defecto) y crecen hasta ocupar el ancho restante. `ZnDataGridFilters` también dibuja el limpiar y el selector tabla/tarjetas en línea con los fields, como botones de texto sólo icono:
+
+```vue
+<ZnDataGridFilters
+  :grid="grid"
+  show-view-switch
+  :show-clear="false"
+  v-model:view="view"
+  clear-label="Limpiar filtros"
+  table-view-label="Vista de tabla"
+  card-view-label="Vista de tarjetas"
+/>
+```
+
+| Prop | Por defecto | Descripción |
+|---|---|---|
+| `showClear` | `true` | Muestra el icono de limpiar mientras exista al menos un filtro |
+| `showViewSwitch` | `false` | Muestra el selector tabla/tarjetas en línea |
+| `view` | `'table'` | Vista seleccionada; usa `v-model:view` para compartirla con la grilla |
+| `size` | `'xsmall'` | Densidad de los campos; el `size` de cada filtro tiene prioridad |
+| `clearLabel`, `viewSwitchLabel`, `tableViewLabel`, `cardViewLabel` | Inglés | Etiquetas accesibles, traducidas por la app |
+
+Cuando la barra de filtros controla el selector, pon `:show-view-switch="false"` en `ZnDataGrid` para no duplicarlo.
 
 ## Edición
 

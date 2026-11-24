@@ -229,7 +229,7 @@ describe('ZnDataGrid', () => {
   it('switches between table and cards and emits the chosen view', async () => {
     const wrapper = mount(ZnDataGrid, { props: { data: rows, columns } })
 
-    const [tableButton, cardButton] = wrapper.findAll('.zn-data-grid__view-button')
+    const [tableButton, cardButton] = wrapper.findAll('.zn-data-grid-filters__view-button')
     expect(tableButton.attributes('aria-pressed')).toBe('true')
     expect(wrapper.find('.zn-data-grid__table').exists()).toBe(true)
 
@@ -253,10 +253,9 @@ describe('ZnDataGrid', () => {
     const { wrapper, grid } = mountShared({ gridColumns: filteredColumns })
 
     expect(wrapper.findAll('.zn-data-grid-filters .zn-field')).toHaveLength(2)
+    expect(wrapper.findAll('.zn-data-grid-filters .zn-field--xsmall')).toHaveLength(2)
     const clear = () =>
-      wrapper.findAll('.zn-data-grid-filters button').find((button) =>
-        button.text().includes('Clear filters')
-      )
+      wrapper.find('.zn-data-grid-filters button[aria-label="Clear filters"]')
 
     expect(clear().attributes('disabled')).toBeDefined()
 
@@ -267,6 +266,34 @@ describe('ZnDataGrid', () => {
     await clear().trigger('click')
     expect(wrapper.findAll('.zn-data-grid__row')).toHaveLength(2)
     expect(grid.filterValues.name).toBe('')
+  })
+
+  it('shows the inline clear and view actions on demand', async () => {
+    const textFilter = { key: 'name', label: 'Name', type: DataGridFilterTypes.TEXT }
+    const sharedGrid = useDataGrid({ data: rows, columns, filters: [textFilter] })
+    const wrapper = mount(ZnDataGridFilters, {
+      props: {
+        grid: sharedGrid,
+        showClear: false,
+        showViewSwitch: true,
+        view: 'table'
+      }
+    })
+
+    expect(wrapper.find('button[aria-label="Clear filters"]').exists()).toBe(false)
+
+    const [tableButton, cardButton] = wrapper.findAll('.zn-data-grid-filters__view-button')
+    expect(tableButton.attributes('aria-pressed')).toBe('true')
+
+    await cardButton.trigger('click')
+    expect(wrapper.emitted('update:view')[0]).toEqual(['card'])
+
+    const withoutFilters = useDataGrid({ data: rows, columns })
+    const switchOnly = mount(ZnDataGridFilters, {
+      props: { grid: withoutFilters, showViewSwitch: true }
+    })
+    expect(switchOnly.find('.zn-data-grid-filters__view-switch').exists()).toBe(true)
+    expect(switchOnly.find('button[aria-label="Clear filters"]').exists()).toBe(false)
   })
 
   it('supports an extra keywords filter across several row properties', async () => {

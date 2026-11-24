@@ -74,16 +74,23 @@ const filters = [
 ]
 
 const grid = useDataGrid({ data: rows, columns, filters, pageSize: 10 })
+const view = ref('table')
 </script>
 
 <template>
   <ZnCard>
-    <ZnDataGridFilters :grid="grid" />
+    <ZnDataGridFilters
+      :grid="grid"
+      show-view-switch
+      v-model:view="view"
+    />
   </ZnCard>
 
   <ZnCard>
     <ZnDataGrid
       :grid="grid"
+      :show-view-switch="false"
+      v-model:view="view"
       editable
       edit-label="Edit"
       save-label="Save"
@@ -142,6 +149,30 @@ const columns = [
 | `date-range` | Inclusive range; either end may be empty |
 
 Each filter definition has `key`, `label` and `type` (default `text`); `select` needs `options`, `date-range` accepts `startLabel`/`endLabel`, and all accept `placeholder`. Use `filter.match(query, row)` for a custom predicate.
+
+The filter fields are compact (`size="xsmall"` by default) and grow to fill the remaining width. `ZnDataGridFilters` also renders the clear action and the table/card switch inline with the fields, as icon-only text buttons:
+
+```vue
+<ZnDataGridFilters
+  :grid="grid"
+  show-view-switch
+  :show-clear="false"
+  v-model:view="view"
+  clear-label="Limpiar filtros"
+  table-view-label="Vista de tabla"
+  card-view-label="Vista de tarjetas"
+/>
+```
+
+| Prop | Default | Description |
+|---|---|---|
+| `showClear` | `true` | Shows the clear icon while at least one filter exists |
+| `showViewSwitch` | `false` | Shows the inline table/card switch |
+| `view` | `'table'` | Selected view; use `v-model:view` to share it with the grid |
+| `size` | `'xsmall'` | Field density; a filter's own `size` wins |
+| `clearLabel`, `viewSwitchLabel`, `tableViewLabel`, `cardViewLabel` | English | Accessible labels, translated by the app |
+
+When the filter bar owns the switch, set `:show-view-switch="false"` on `ZnDataGrid` to avoid a second switch.
 
 ## Editing
 

@@ -30,16 +30,26 @@
         <code>useDataGrid</code> crea un estado reactivo compartido. Cada pieza
         (<code>ZnDataGridFilters</code>, <code>ZnDataGrid</code> y
         <code>ZnDataGridPagination</code>) puede vivir en un contenedor distinto
-        y todas reaccionan a los mismos filtros, orden y página.
+        y todas reaccionan a los mismos filtros, orden y página. La barra de
+        filtros muestra el limpiar y el selector tabla/cards en línea con los
+        fields mediante <code>show-clear</code> y
+        <code>show-view-switch</code>; <code>v-model:view</code> comparte la
+        vista con la grilla.
       </p>
 
       <ZnBox variant="outlined" class="grid-piece">
-        <ZnDataGridFilters :grid="grid" />
+        <ZnDataGridFilters
+          :grid="grid"
+          show-view-switch
+          v-model:view="sharedView"
+        />
       </ZnBox>
 
       <ZnCard variant="outlined" class="grid-card">
         <ZnDataGrid
           :grid="grid"
+          :show-view-switch="false"
+          v-model:view="sharedView"
           editable
           label="Tareas con estado compartido"
           edit-label="Editar"
@@ -75,7 +85,34 @@
       />
     </ZnSection>
 
-    <ZnSection title="4. Columnas y filtros (JSON)" collapsible :expanded="false" :columns="1">
+    <ZnSection title="4. Barra de filtros compacta" collapsible :columns="1">
+      <p class="section-desc">
+        Los fields de la barra usan <code>size="xsmall"</code> por defecto y
+        ocupan el ancho restante. Con <code>show-view-switch</code> se agregan
+        los botones de tabla/cards y con <code>:show-clear="false"</code> se
+        oculta el limpiar; ambos son acciones de texto, sólo icono, alineadas
+        con los fields.
+      </p>
+
+      <ZnBox variant="outlined" class="grid-piece">
+        <ZnDataGridFilters
+          :grid="compactGrid"
+          show-view-switch
+          :show-clear="false"
+          v-model:view="compactView"
+        />
+      </ZnBox>
+
+      <ZnCard variant="outlined" class="grid-card">
+        <ZnDataGrid
+          :grid="compactGrid"
+          :show-view-switch="false"
+          :view="compactView"
+        />
+      </ZnCard>
+    </ZnSection>
+
+    <ZnSection title="5. Columnas y filtros (JSON)" collapsible :expanded="false" :columns="1">
       <p class="section-desc">
         <code>filter.match(query, row)</code> permite un filtro propio; las
         columnas <code>custom-render</code> exponen
@@ -149,8 +186,17 @@ const filters = [
 
 const standaloneRows = ref(clone(demoRows))
 const sharedRows = ref(clone(demoRows))
+const compactRows = ref(clone(demoRows))
+const sharedView = ref('table')
+const compactView = ref('table')
 const grid = useDataGrid({
   data: sharedRows,
+  columns,
+  filters,
+  pageSize: 4
+})
+const compactGrid = useDataGrid({
+  data: compactRows,
   columns,
   filters,
   pageSize: 4
