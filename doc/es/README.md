@@ -38,6 +38,7 @@ Esta carpeta es el punto de entrada para personas. Cada app y librería mantiene
 | `@zn-apps/ui-data-form` | Formularios por secciones derivados de un esquema, con borrador o doble binding | [ES](../../shared/ui-data-form/doc/es/README.md) · [EN](../../shared/ui-data-form/doc/en/README.md) |
 | `@zn-apps/ui-data-view` | Presentación de sólo lectura del mismo esquema | [ES](../../shared/ui-data-view/doc/es/README.md) · [EN](../../shared/ui-data-view/doc/en/README.md) |
 | `@zn-apps/ui-data-editor` | Presentación tipo vista con edición por campo en un diálogo | [ES](../../shared/ui-data-editor/doc/es/README.md) · [EN](../../shared/ui-data-editor/doc/en/README.md) |
+| `@zn-apps/ui-data-grid` | Tabla de datos MD3 paginada con filtros, orden y edición por celda | [ES](../../shared/ui-data-grid/doc/es/README.md) · [EN](../../shared/ui-data-grid/doc/en/README.md) |
 | `@zn-apps/ui-data-richtext` | Editor y vista de texto enriquecido con valor Markdown | [ES](../../shared/ui-data-richtext/doc/es/README.md) · [EN](../../shared/ui-data-richtext/doc/en/README.md) |
 | `@zn-apps/ui-calendar` | Calendarios MD3: vistas de mes/semana/día, selección única o por rango y eventos | [ES](../../shared/ui-calendar/doc/es/README.md) · [EN](../../shared/ui-calendar/doc/en/README.md) |
 

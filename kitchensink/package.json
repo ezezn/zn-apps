@@ -23,6 +23,7 @@
     "@zn-apps/ui-data-form": "*",
     "@zn-apps/ui-data-view": "*",
     "@zn-apps/ui-data-editor": "*",
+    "@zn-apps/ui-data-grid": "*",
     "@zn-apps/ui-data-richtext": "*",
     "@zn-apps/ui-calendar": "*",
     "vue": "^3.5.34",

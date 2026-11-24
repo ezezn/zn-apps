@@ -44,6 +44,7 @@ const SHARED_LIBRARIES = [
   'ui-data-form',
   'ui-data-view',
   'ui-data-editor',
+  'ui-data-grid',
   'ui-data-richtext'
 ]
 

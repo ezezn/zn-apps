@@ -12,11 +12,12 @@
 | [`ui-data-form/`](./ui-data-form) | `@zn-apps/ui-data-form` | Schema-driven forms with draft/live binding | [EN](./ui-data-form/doc/en/README.md) · [ES](./ui-data-form/doc/es/README.md) | [`ai/`](./ui-data-form/ai/README.md) |
 | [`ui-data-view/`](./ui-data-view) | `@zn-apps/ui-data-view` | Read-only presentation with top/inline labels | [EN](./ui-data-view/doc/en/README.md) · [ES](./ui-data-view/doc/es/README.md) | [`ai/`](./ui-data-view/ai/README.md) |
 | [`ui-data-editor/`](./ui-data-editor) | `@zn-apps/ui-data-editor` | View-like presentation with per-field dialog editing | [EN](./ui-data-editor/doc/en/README.md) · [ES](./ui-data-editor/doc/es/README.md) | [`ai/`](./ui-data-editor/ai/README.md) |
+| [`ui-data-grid/`](./ui-data-grid) | `@zn-apps/ui-data-grid` | Paginated MD3 data table with shared filters, sorting and cell editing | [EN](./ui-data-grid/doc/en/README.md) · [ES](./ui-data-grid/doc/es/README.md) | [`ai/`](./ui-data-grid/ai/README.md) |
 | [`ui-data-richtext/`](./ui-data-richtext) | `@zn-apps/ui-data-richtext` | Markdown-backed rich text editor and view | [EN](./ui-data-richtext/doc/en/README.md) · [ES](./ui-data-richtext/doc/es/README.md) | [`ai/`](./ui-data-richtext/ai/README.md) |
 
 ## Rules
 
-- Libraries are isolated except for explicit composition: `ui-about → ui-core`, `ui-data-form/view/editor → ui-core + ui-data-core`, `ui-data-editor → ui-data-form + ui-data-view`, `ui-data-richtext → ui-core`.
+- Libraries are isolated except for explicit composition: `ui-about → ui-core`, `ui-data-form/view/editor → ui-core + ui-data-core`, `ui-data-editor → ui-data-form + ui-data-view`, `ui-data-grid → ui-core + ui-data-core + ui-data-form + ui-data-view`, `ui-data-richtext → ui-core`.
 - Apps depend on a library by workspace name (`"@zn-apps/ui-core": "*"`).
 - Build all shared libraries from the root with `npm run build:shared`.
 - A field feature must exist in form, view and editor in the same change.

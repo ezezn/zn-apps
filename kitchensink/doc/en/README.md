@@ -18,7 +18,7 @@ Component showroom, full Material icon catalog and the blueprint for new apps in
 | Layout & navigation | `/tabs`, `/navigation-layout`, `/layout`, `/sections`, `/screen` |
 | Controls | `/buttons`, `/cards`, `/switches`, `/dialogs` |
 | Inputs | `/inputs` plus `/inputs/text`, `multiline`, `email`, `phone`, `number`, `date`, `time`, `datetime`, `select`, `chip`, `range`, `date-range`, `time-range`, `datetime-range` |
-| Data | `/data/core`, `/data/form`, `/data/view`, `/data/editor`, `/data/richtext` |
+| Data | `/data/core`, `/data/form`, `/data/view`, `/data/editor`, `/data/grid`, `/data/richtext` |
 | Calendars | `/calendar/month`, `/calendar/range`, `/calendar/week`, `/calendar/day` |
 | Resources | `/icons`, `/legacy` |
 | Libraries | `/about`, `/settings`, `/pwa/color-scheme`, `/pwa/bar-styling`, `/pwa/install` |
@@ -32,7 +32,7 @@ Component showroom, full Material icon catalog and the blueprint for new apps in
 | Router | `vue-router` with `createWebHistory()`; every demo is deep-linkable |
 | Layout | `ZnMasterSlaveLayout`: grouped navigation on the left, demo on the right; on mobile the demo keeps the focus and the hamburger opens the navigation drawer |
 | Icon profile | `manual` declares the full catalog (~2100 glyphs) so all icons are browsable |
-| Data demos | one schema and one value shared by form, view and editor (`src/data/data-demo.js`) |
+| Data demos | one schema and one value shared by form, view and editor (`src/data/data-demo.js`); the data grid demo covers standalone and separated filter/pagination layouts |
 | i18n | shell, navigation, theme and install popup are translated; static strings inside demo pages are being migrated |
 
 ## Icon catalog

@@ -88,6 +88,10 @@ export const demoViews = [
     sections: [{ title: 'ZnDataEditor', content: 'Haz click en un valor para editarlo con el input de su tipo.' }]
   },
   {
+    key: 'data-grid', title: 'Grilla de datos (ui-data-grid)', subtitle: 'Tabla paginada, filtros, orden y edición por celda',
+    sections: [{ title: 'ZnDataGrid', content: 'Una tabla MD3 que compone filtros, orden y paginación, o los reparte en contenedores separados con useDataGrid.' }]
+  },
+  {
     key: 'data-richtext', title: 'Texto enriquecido (ui-data-richtext)', subtitle: 'Editor WYSIWYG con valor Markdown y toolbar MD3',
     sections: [{ title: 'ZnRichTextEditor', content: 'Formato inline, encabezados, párrafos, alineación, tablas y edición de Markdown crudo.' }]
   },

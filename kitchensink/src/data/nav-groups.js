@@ -85,6 +85,7 @@ export const navGroups = [
           { key: 'data-form', label: 'Formularios (ui-data-form)', to: '/data/form' },
           { key: 'data-view', label: 'Presentación (ui-data-view)', to: '/data/view' },
           { key: 'data-editor', label: 'Editor por campo (ui-data-editor)', to: '/data/editor' },
+          { key: 'data-grid', label: 'Grilla de datos (ui-data-grid)', to: '/data/grid' },
           { key: 'data-richtext', label: 'Texto enriquecido (ui-data-richtext)', to: '/data/richtext' }
         ]
       }

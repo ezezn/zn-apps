@@ -23,6 +23,7 @@ import DataCorePage from '../views/data/DataCorePage.vue'
 import DataFormPage from '../views/data/DataFormPage.vue'
 import DataViewPage from '../views/data/DataViewPage.vue'
 import DataEditorPage from '../views/data/DataEditorPage.vue'
+import DataGridPage from '../views/data/DataGridPage.vue'
 import ChipPage from '../views/inputs/ChipPage.vue'
 import CalendarMonthPage from '../views/calendar/MonthPage.vue'
 import CalendarRangePage from '../views/calendar/RangePage.vue'
@@ -162,7 +163,8 @@ describe('Kitchensink App & Router', () => {
     ['/data/core', DataCorePage, 'Utilidades compartidas'],
     ['/data/form', DataFormPage, 'Valor confirmado'],
     ['/data/view', DataViewPage, 'Presentación de sólo lectura'],
-    ['/data/editor', DataEditorPage, 'Edición por campo']
+    ['/data/editor', DataEditorPage, 'Edición por campo'],
+    ['/data/grid', DataGridPage, 'Grilla completa']
   ])('monta la demo de ui-data en %s', async (path, page, expectedText) => {
     const { wrapper } = await mountAt(path)
 

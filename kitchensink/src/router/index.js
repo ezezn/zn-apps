@@ -35,6 +35,7 @@ import DataCorePage from '../views/data/DataCorePage.vue'
 import DataFormPage from '../views/data/DataFormPage.vue'
 import DataViewPage from '../views/data/DataViewPage.vue'
 import DataEditorPage from '../views/data/DataEditorPage.vue'
+import DataGridPage from '../views/data/DataGridPage.vue'
 import DataRichTextPage from '../views/data/DataRichTextPage.vue'
 import CalendarMonthPage from '../views/calendar/MonthPage.vue'
 import CalendarRangePage from '../views/calendar/RangePage.vue'
@@ -65,6 +66,7 @@ export const routes = [
   { path: '/data/form', name: 'data-form', component: DataFormPage },
   { path: '/data/view', name: 'data-view', component: DataViewPage },
   { path: '/data/editor', name: 'data-editor', component: DataEditorPage },
+  { path: '/data/grid', name: 'data-grid', component: DataGridPage },
   { path: '/data/richtext', name: 'data-richtext', component: DataRichTextPage },
   { path: '/calendar/month', name: 'calendar-month', component: CalendarMonthPage },
   { path: '/calendar/range', name: 'calendar-range', component: CalendarRangePage },

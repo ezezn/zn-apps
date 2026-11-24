@@ -30,7 +30,7 @@ Compact, English-only documentation for AI agents. **Load only what the task nee
 
 1. Vue 3 `<script setup>` only. Shared components live in `shared/ui-core/src/components/` with the `Zn` prefix and consume `--md-*` tokens.
 2. Apps are autonomous PWAs: own `package.json`, `vite.config.js`, service worker, base `/zn-apps/<app>/`. Never share Pinia state across apps.
-3. Shared libraries build independently (`vite build --lib`) and must not import each other; only apps compose them (`ui-about` → `ui-core` and `ui-calendar` → `ui-core` are the allowed edges; `ui-data-editor` reuses form/view renderers).
+3. Shared libraries build independently (`vite build --lib`) and must not import each other; only apps compose them (`ui-about` → `ui-core` and `ui-calendar` → `ui-core` are the allowed edges; `ui-data-editor` and `ui-data-grid` reuse form/view renderers).
 4. Field parity is mandatory: a feature on a field must exist in form, view and editor in the same change.
 5. Verify with the narrowest useful command. Full suite/build only for cross-project or release-level changes. Documentation-only changes: no tests, no builds.
 6. After adding a feature or making a decision, update the docs that changed — see [`docs-maintenance.md`](./docs-maintenance.md).
@@ -47,6 +47,7 @@ Compact, English-only documentation for AI agents. **Load only what the task nee
 | `@zn-apps/ui-data-form` (`shared/ui-data-form/`) | [ai/README.md](../shared/ui-data-form/ai/README.md) | [EN](../shared/ui-data-form/doc/en/README.md) · [ES](../shared/ui-data-form/doc/es/README.md) |
 | `@zn-apps/ui-data-view` (`shared/ui-data-view/`) | [ai/README.md](../shared/ui-data-view/ai/README.md) | [EN](../shared/ui-data-view/doc/en/README.md) · [ES](../shared/ui-data-view/doc/es/README.md) |
 | `@zn-apps/ui-data-editor` (`shared/ui-data-editor/`) | [ai/README.md](../shared/ui-data-editor/ai/README.md) | [EN](../shared/ui-data-editor/doc/en/README.md) · [ES](../shared/ui-data-editor/doc/es/README.md) |
+| `@zn-apps/ui-data-grid` (`shared/ui-data-grid/`) | [ai/README.md](../shared/ui-data-grid/ai/README.md) | [EN](../shared/ui-data-grid/doc/en/README.md) · [ES](../shared/ui-data-grid/doc/es/README.md) |
 | `@zn-apps/ui-data-richtext` (`shared/ui-data-richtext/`) | [ai/README.md](../shared/ui-data-richtext/ai/README.md) | [EN](../shared/ui-data-richtext/doc/en/README.md) · [ES](../shared/ui-data-richtext/doc/es/README.md) |
 | `@zn-apps/ui-calendar` (`shared/ui-calendar/`) | [ai/README.md](../shared/ui-calendar/ai/README.md) | [EN](../shared/ui-calendar/doc/en/README.md) · [ES](../shared/ui-calendar/doc/es/README.md) |
 | Zound Box (`zound-box/`) | [ai/README.md](../zound-box/ai/README.md) | [EN](../zound-box/doc/en/README.md) · [ES](../zound-box/doc/es/README.md) |
