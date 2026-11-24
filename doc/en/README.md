@@ -41,6 +41,7 @@ This folder is the human entry point. Each app and library keeps its own user ma
 | `@zn-apps/ui-data-grid` | Paginated MD3 data table with filters, sorting and cell editing | [EN](../../shared/ui-data-grid/doc/en/README.md) · [ES](../../shared/ui-data-grid/doc/es/README.md) |
 | `@zn-apps/ui-data-richtext` | Markdown-backed rich text editor and view | [EN](../../shared/ui-data-richtext/doc/en/README.md) · [ES](../../shared/ui-data-richtext/doc/es/README.md) |
 | `@zn-apps/ui-calendar` | MD3 calendars: month/week/day views, single or range selection, events | [EN](../../shared/ui-calendar/doc/en/README.md) · [ES](../../shared/ui-calendar/doc/es/README.md) |
+| `@zn-apps/ui-data-charts` | Declarative SVG charts: bars, lines, areas, pie and donut with MD3 colors and click popups | [EN](../../shared/ui-data-charts/doc/en/README.md) · [ES](../../shared/ui-data-charts/doc/es/README.md) |
 
 ## Documentation layout
 

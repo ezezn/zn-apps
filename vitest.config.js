@@ -14,6 +14,7 @@ export default defineConfig({
       'shared/ui-data-grid/vitest.config.js',
       'shared/ui-data-richtext/vitest.config.js',
       'shared/ui-calendar/vitest.config.js',
+      'shared/ui-data-charts/vitest.config.js',
       'zound-box/vitest.config.js',
       'kitchensink/vitest.config.js',
       'daily-task-report/vitest.config.js',

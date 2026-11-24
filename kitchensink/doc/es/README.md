@@ -18,7 +18,7 @@ Showroom de componentes, catálogo completo de iconos Material y blueprint para 
 | Layout y navegación | `/tabs`, `/navigation-layout`, `/layout`, `/sections`, `/screen` |
 | Controles | `/buttons`, `/cards`, `/switches`, `/dialogs` |
 | Entradas | `/inputs` más `/inputs/text`, `multiline`, `email`, `phone`, `number`, `date`, `time`, `datetime`, `select`, `chip`, `range`, `date-range`, `time-range`, `datetime-range` |
-| Datos | `/data/core`, `/data/form`, `/data/view`, `/data/editor`, `/data/grid`, `/data/richtext` |
+| Datos | `/data/core`, `/data/form`, `/data/view`, `/data/editor`, `/data/grid`, `/data/richtext`, `/data/charts`, `/data/charts-data`, `/data/dashlets`, `/data/dashlets-data` |
 | Calendarios | `/calendar/month`, `/calendar/range`, `/calendar/week`, `/calendar/day` |
 | Recursos | `/icons`, `/legacy` |
 | Librerías | `/about`, `/settings`, `/pwa/color-scheme`, `/pwa/bar-styling`, `/pwa/install` |
@@ -33,6 +33,8 @@ Showroom de componentes, catálogo completo de iconos Material y blueprint para 
 | Layout | `ZnMasterSlaveLayout`: navegación agrupada a la izquierda, demo a la derecha; en móvil la demo conserva el foco y el botón hamburguesa abre el drawer de navegación |
 | Perfil de iconos | `manual` declara el catálogo completo (~2100 glifos) para poder explorarlos todos |
 | Demos de datos | un esquema y un valor compartidos por formulario, vista y editor (`src/data/data-demo.js`); la demo de grilla cubre el layout integrado y el de filtros/paginación separados |
+| Demos de gráficos | `/data/charts` es la galería de `ui-data-charts` (controles en vivo y miniaturas `ZnChartShape`) y `/data/charts-data` imprime los objetos `data` y `config` exactos de cada ejemplo (`src/data/charts-demo.js`) |
+| Demos de dashlets | `/data/dashlets` es la galería de `ui-data-dashlet` de cards de contador y resumen con variantes en vivo, y `/data/dashlets-data` imprime los objetos `data` y `config` exactos de cada ejemplo (`src/data/dashlets-demo.js`) |
 | i18n | shell, navegación, tema y popup de instalación traducidos; las cadenas estáticas de las demos están en migración |
 
 ## Catálogo de iconos

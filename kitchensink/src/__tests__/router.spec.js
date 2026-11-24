@@ -24,6 +24,8 @@ import DataFormPage from '../views/data/DataFormPage.vue'
 import DataViewPage from '../views/data/DataViewPage.vue'
 import DataEditorPage from '../views/data/DataEditorPage.vue'
 import DataGridPage from '../views/data/DataGridPage.vue'
+import ChartsPage from '../views/data/ChartsPage.vue'
+import ChartsDataPage from '../views/data/ChartsDataPage.vue'
 import ChipPage from '../views/inputs/ChipPage.vue'
 import CalendarMonthPage from '../views/calendar/MonthPage.vue'
 import CalendarRangePage from '../views/calendar/RangePage.vue'
@@ -164,12 +166,34 @@ describe('Kitchensink App & Router', () => {
     ['/data/form', DataFormPage, 'Valor confirmado'],
     ['/data/view', DataViewPage, 'Presentación de sólo lectura'],
     ['/data/editor', DataEditorPage, 'Edición por campo'],
-    ['/data/grid', DataGridPage, 'Grilla completa']
+    ['/data/grid', DataGridPage, 'Grilla completa'],
+    ['/data/charts', ChartsPage, 'Gráficos SVG'],
+    ['/data/charts-data', ChartsDataPage, 'Objetos de ejemplo']
   ])('monta la demo de ui-data en %s', async (path, page, expectedText) => {
     const { wrapper } = await mountAt(path)
 
     expect(wrapper.findComponent(page).exists()).toBe(true)
     expect(wrapper.text()).toContain(expectedText)
+  })
+
+  it('monta la galería de gráficos con todas las variantes', async () => {
+    const { wrapper } = await mountAt('/data/charts')
+
+    expect(wrapper.findComponent(ChartsPage).exists()).toBe(true)
+    expect(wrapper.findAll('.zn-chart')).toHaveLength(6)
+    expect(wrapper.findAll('[data-chart-mark="bar"]').length).toBeGreaterThan(0)
+    expect(wrapper.findAll('[data-chart-mark="slice"]').length).toBeGreaterThan(0)
+    // Seis miniaturas en tarjetas + seis en tamaño icono.
+    expect(wrapper.findAll('.zn-chart-shape')).toHaveLength(12)
+  })
+
+  it('muestra los objetos data y config de cada ejemplo de gráficos', async () => {
+    const { wrapper } = await mountAt('/data/charts-data')
+
+    expect(wrapper.findComponent(ChartsDataPage).exists()).toBe(true)
+    expect(wrapper.findAll('.chart-payload')).toHaveLength(18)
+    expect(wrapper.text()).toContain('"type": "bar-stacked"')
+    expect(wrapper.text()).toContain('"month": "Ene"')
   })
 
   it.each([

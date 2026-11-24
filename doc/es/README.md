@@ -41,6 +41,7 @@ Esta carpeta es el punto de entrada para personas. Cada app y librería mantiene
 | `@zn-apps/ui-data-grid` | Tabla de datos MD3 paginada con filtros, orden y edición por celda | [ES](../../shared/ui-data-grid/doc/es/README.md) · [EN](../../shared/ui-data-grid/doc/en/README.md) |
 | `@zn-apps/ui-data-richtext` | Editor y vista de texto enriquecido con valor Markdown | [ES](../../shared/ui-data-richtext/doc/es/README.md) · [EN](../../shared/ui-data-richtext/doc/en/README.md) |
 | `@zn-apps/ui-calendar` | Calendarios MD3: vistas de mes/semana/día, selección única o por rango y eventos | [ES](../../shared/ui-calendar/doc/es/README.md) · [EN](../../shared/ui-calendar/doc/en/README.md) |
+| `@zn-apps/ui-data-charts` | Gráficos SVG declarativos: barras, líneas, áreas, pie y donut con colores MD3 y detalles al hacer clic | [ES](../../shared/ui-data-charts/doc/es/README.md) · [EN](../../shared/ui-data-charts/doc/en/README.md) |
 
 ## Estructura de la documentación
 

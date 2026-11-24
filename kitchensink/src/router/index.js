@@ -37,6 +37,8 @@ import DataViewPage from '../views/data/DataViewPage.vue'
 import DataEditorPage from '../views/data/DataEditorPage.vue'
 import DataGridPage from '../views/data/DataGridPage.vue'
 import DataRichTextPage from '../views/data/DataRichTextPage.vue'
+import ChartsPage from '../views/data/ChartsPage.vue'
+import ChartsDataPage from '../views/data/ChartsDataPage.vue'
 import CalendarMonthPage from '../views/calendar/MonthPage.vue'
 import CalendarRangePage from '../views/calendar/RangePage.vue'
 import CalendarWeekPage from '../views/calendar/WeekPage.vue'
@@ -68,6 +70,10 @@ export const routes = [
   { path: '/data/editor', name: 'data-editor', component: DataEditorPage },
   { path: '/data/grid', name: 'data-grid', component: DataGridPage },
   { path: '/data/richtext', name: 'data-richtext', component: DataRichTextPage },
+  { path: '/data/dashlets', name: 'data-dashlets', component: DashletsPage },
+  { path: '/data/dashlets-data', name: 'data-dashlets-data', component: DashletsDataPage },
+  { path: '/data/charts', name: 'data-charts', component: ChartsPage },
+  { path: '/data/charts-data', name: 'data-charts-data', component: ChartsDataPage },
   { path: '/calendar/month', name: 'calendar-month', component: CalendarMonthPage },
   { path: '/calendar/range', name: 'calendar-range', component: CalendarRangePage },
   { path: '/calendar/week', name: 'calendar-week', component: CalendarWeekPage },

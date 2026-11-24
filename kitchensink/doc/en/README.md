@@ -18,7 +18,7 @@ Component showroom, full Material icon catalog and the blueprint for new apps in
 | Layout & navigation | `/tabs`, `/navigation-layout`, `/layout`, `/sections`, `/screen` |
 | Controls | `/buttons`, `/cards`, `/switches`, `/dialogs` |
 | Inputs | `/inputs` plus `/inputs/text`, `multiline`, `email`, `phone`, `number`, `date`, `time`, `datetime`, `select`, `chip`, `range`, `date-range`, `time-range`, `datetime-range` |
-| Data | `/data/core`, `/data/form`, `/data/view`, `/data/editor`, `/data/grid`, `/data/richtext` |
+| Data | `/data/core`, `/data/form`, `/data/view`, `/data/editor`, `/data/grid`, `/data/richtext`, `/data/charts`, `/data/charts-data`, `/data/dashlets`, `/data/dashlets-data` |
 | Calendars | `/calendar/month`, `/calendar/range`, `/calendar/week`, `/calendar/day` |
 | Resources | `/icons`, `/legacy` |
 | Libraries | `/about`, `/settings`, `/pwa/color-scheme`, `/pwa/bar-styling`, `/pwa/install` |
@@ -33,6 +33,8 @@ Component showroom, full Material icon catalog and the blueprint for new apps in
 | Layout | `ZnMasterSlaveLayout`: grouped navigation on the left, demo on the right; on mobile the demo keeps the focus and the hamburger opens the navigation drawer |
 | Icon profile | `manual` declares the full catalog (~2100 glyphs) so all icons are browsable |
 | Data demos | one schema and one value shared by form, view and editor (`src/data/data-demo.js`); the data grid demo covers standalone and separated filter/pagination layouts |
+| Chart demos | `/data/charts` is the `ui-data-charts` gallery (live toggles plus the `ZnChartShape` miniatures) and `/data/charts-data` prints the exact `data` and `config` objects of every example (`src/data/charts-demo.js`) |
+| Dashlet demos | `/data/dashlets` is the `ui-data-dashlet` gallery of counter and summary cards with live variants, and `/data/dashlets-data` prints the exact `data` and `config` objects of every example (`src/data/dashlets-demo.js`) |
 | i18n | shell, navigation, theme and install popup are translated; static strings inside demo pages are being migrated |
 
 ## Icon catalog

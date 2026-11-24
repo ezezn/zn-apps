@@ -96,6 +96,14 @@ export const demoViews = [
     sections: [{ title: 'ZnRichTextEditor', content: 'Formato inline, encabezados, párrafos, alineación, tablas y edición de Markdown crudo.' }]
   },
   {
+    key: 'data-charts', title: 'Gráficos SVG (ui-data-charts)', subtitle: 'Barras, líneas, áreas, pie y donut con datos y configuración declarativos',
+    sections: [{ title: 'ZnChart', content: 'Una colección de datos más un config de mapeo, series, ejes y colores; el detalle se abre al hacer clic en una marca y se cierra al repetir el clic o pulsar Esc.' }]
+  },
+  {
+    key: 'data-charts-data', title: 'Datos y config de los gráficos', subtitle: 'Los objetos data y config que recibe cada ejemplo de ui-data-charts',
+    sections: [{ title: 'Objetos de ejemplo', content: 'Cada tarjeta muestra el arreglo data y el objeto config exactos que usa la galería; puedes copiarlos como punto de partida.' }]
+  },
+  {
     key: 'dialogs', title: 'Diálogos (ZnDialog)', subtitle: 'Diálogos modales nativos con estilo Material Design 3',
     sections: [{ title: 'Diálogos', content: 'Abre diálogos base y prueba alertas, confirmaciones y preguntas.' }]
   },

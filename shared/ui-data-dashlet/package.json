@@ -1,0 +1,25 @@
+{
+  "name": "@zn-apps/ui-data-dashlet",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/ui-data-dashlet.js",
+  "module": "./dist/ui-data-dashlet.js",
+  "exports": {
+    ".": {
+      "import": "./dist/ui-data-dashlet.js"
+    },
+    "./dist/*": "./dist/*"
+  },
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite build --watch"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.0",
+    "vite": "^6.0.0"
+  },
+  "peerDependencies": {
+    "vue": "^3.0.0"
+  }
+}

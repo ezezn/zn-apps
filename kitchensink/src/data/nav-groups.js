@@ -86,7 +86,9 @@ export const navGroups = [
           { key: 'data-view', label: 'Presentación (ui-data-view)', to: '/data/view' },
           { key: 'data-editor', label: 'Editor por campo (ui-data-editor)', to: '/data/editor' },
           { key: 'data-grid', label: 'Grilla de datos (ui-data-grid)', to: '/data/grid' },
-          { key: 'data-richtext', label: 'Texto enriquecido (ui-data-richtext)', to: '/data/richtext' }
+          { key: 'data-richtext', label: 'Texto enriquecido (ui-data-richtext)', to: '/data/richtext' },
+          { key: 'data-charts', label: 'Gráficos SVG (ui-data-charts)', to: '/data/charts' },
+          { key: 'data-charts-data', label: 'Datos y config de gráficos', to: '/data/charts-data' }
         ]
       }
     ]

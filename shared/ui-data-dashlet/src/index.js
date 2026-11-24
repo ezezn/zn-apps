@@ -1,0 +1,5 @@
+export { default as ZnDashlet } from './components/ZnDashlet.vue'
+export { default as ZnDashletCounter } from './components/ZnDashletCounter.vue'
+export { default as ZnDashletSummary } from './components/ZnDashletSummary.vue'
+export { default as ZnDashletSparkline } from './components/ZnDashletSparkline.vue'
+export { default as ZnDashletProgress } from './components/ZnDashletProgress.vue'

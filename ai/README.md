@@ -22,6 +22,7 @@ Compact, English-only documentation for AI agents. **Load only what the task nee
 | PWA popups, system bars, theme sync | [`../shared/pwa-integration/ai/README.md`](../shared/pwa-integration/ai/README.md) |
 | About panel / changelog UI | [`../shared/ui-about/ai/README.md`](../shared/ui-about/ai/README.md) |
 | Calendars, date/range selection, calendar events | [`../shared/ui-calendar/ai/README.md`](../shared/ui-calendar/ai/README.md) |
+| Charts, series/axis config, palette, click popups | [`../shared/ui-data-charts/ai/README.md`](../shared/ui-data-charts/ai/README.md) |
 | Work in Zound Box | [`../zound-box/ai/README.md`](../zound-box/ai/README.md) |
 | Work in Daily Task Report (Pinia + Dexie, entity naming) | [`../daily-task-report/ai/README.md`](../daily-task-report/ai/README.md) |
 | Work in Kitchensink, or copy it as a blueprint | [`../kitchensink/ai/README.md`](../kitchensink/ai/README.md) |
@@ -50,6 +51,7 @@ Compact, English-only documentation for AI agents. **Load only what the task nee
 | `@zn-apps/ui-data-grid` (`shared/ui-data-grid/`) | [ai/README.md](../shared/ui-data-grid/ai/README.md) | [EN](../shared/ui-data-grid/doc/en/README.md) · [ES](../shared/ui-data-grid/doc/es/README.md) |
 | `@zn-apps/ui-data-richtext` (`shared/ui-data-richtext/`) | [ai/README.md](../shared/ui-data-richtext/ai/README.md) | [EN](../shared/ui-data-richtext/doc/en/README.md) · [ES](../shared/ui-data-richtext/doc/es/README.md) |
 | `@zn-apps/ui-calendar` (`shared/ui-calendar/`) | [ai/README.md](../shared/ui-calendar/ai/README.md) | [EN](../shared/ui-calendar/doc/en/README.md) · [ES](../shared/ui-calendar/doc/es/README.md) |
+| `@zn-apps/ui-data-charts` (`shared/ui-data-charts/`) | [ai/README.md](../shared/ui-data-charts/ai/README.md) | [EN](../shared/ui-data-charts/doc/en/README.md) · [ES](../shared/ui-data-charts/doc/es/README.md) |
 | Zound Box (`zound-box/`) | [ai/README.md](../zound-box/ai/README.md) | [EN](../zound-box/doc/en/README.md) · [ES](../zound-box/doc/es/README.md) |
 | Kitchensink (`kitchensink/`) | [ai/README.md](../kitchensink/ai/README.md) | [EN](../kitchensink/doc/en/README.md) · [ES](../kitchensink/doc/es/README.md) |
 | Daily Task Report (`daily-task-report/`) | [ai/README.md](../daily-task-report/ai/README.md) | [EN](../daily-task-report/doc/en/README.md) · [ES](../daily-task-report/doc/es/README.md) |

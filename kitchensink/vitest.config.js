@@ -17,7 +17,9 @@ export default defineConfig({
       { find: '@zn-apps/ui-data-editor', replacement: resolve(__dirname, '../shared/ui-data-editor/src/index.js') },
       { find: '@zn-apps/ui-data-grid', replacement: resolve(__dirname, '../shared/ui-data-grid/src/index.js') },
       { find: '@zn-apps/ui-data-richtext', replacement: resolve(__dirname, '../shared/ui-data-richtext/src/index.js') },
-      { find: '@zn-apps/ui-calendar', replacement: resolve(__dirname, '../shared/ui-calendar/src/index.js') },
+    { find: '@zn-apps/ui-calendar', replacement: resolve(__dirname, '../shared/ui-calendar/src/index.js') },
+      { find: '@zn-apps/ui-data-dashlet', replacement: resolve(__dirname, '../shared/ui-data-dashlet/src/index.js') },
+    { find: '@zn-apps/ui-data-charts', replacement: resolve(__dirname, '../shared/ui-data-charts/src/index.js') },
     ],
   },
   test: {

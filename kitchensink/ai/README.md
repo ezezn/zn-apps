@@ -14,12 +14,13 @@ Location: `kitchensink/`, base `/zn-apps/kitchensink/`.
 | Settings | `createSettings` demo on `/settings` |
 | Data | `/data/*` share one schema/value across form, view and editor (`src/data/data-demo.js`); `/data/grid` shows the table with integrated and separated filter/pagination pieces |
 | Calendar | `/calendar/*` demo month, range, week and day views with shared events (`src/data/calendar-demo.js`) |
+| Charts | `/data/charts` gallery of `ui-data-charts` (live toggles + `ZnChartShape` gallery) and `/data/charts-data` printing each example's `data`/`config`; payloads live in `src/data/charts-demo.js` (`chartExamples`, `shapeExamples`) |
 | i18n | shell/nav/theme/install popup translated; static strings inside demo views are still Spanish and must be migrated (remove this note once done) |
 
 ## Routes (`src/router/index.js`)
 
 - ui-core: `/buttons`, `/cards`, `/switches`, `/inputs` (+ `/inputs/text`, `multiline`, `email`, `phone`, `number`, `date`, `time`, `datetime`, `select`, `chip`, `range`, `date-range`, `time-range`, `datetime-range`), `/dialogs`, `/tabs`, `/layout`, `/sections`, `/screen`, `/navigation-layout`, `/icons`, `/legacy`
-- ui-data: `/data/core`, `/data/form`, `/data/view`, `/data/editor`, `/data/grid`, `/data/richtext`
+- ui-data: `/data/core`, `/data/form`, `/data/view`, `/data/editor`, `/data/grid`, `/data/richtext`, `/data/charts`, `/data/charts-data`, `/data/dashlets`, `/data/dashlets-data`
 - ui-calendar: `/calendar/month`, `/calendar/range`, `/calendar/week`, `/calendar/day`
 - ui-about: `/about`; settings-core: `/settings`; pwa-integration: `/pwa/color-scheme`, `/pwa/bar-styling`, `/pwa/install`
 - `/` redirects to `/buttons`
@@ -55,4 +56,4 @@ npm run generate:icons
 
 ## Tests
 
-`src/__tests__/router.spec.js` (route/nav integrity) → `npm run test:kitchensink`.
+`src/__tests__/router.spec.js` (route/nav integrity; six-chart `/data/charts` gallery with 12 shapes and the 18 payloads of `/data/charts-data`; dashlet gallery with 6 shapes and 12 payloads of `/data/dashlets-data`) → `npm run test:kitchensink`.
