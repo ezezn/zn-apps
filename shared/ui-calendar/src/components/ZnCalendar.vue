@@ -235,7 +235,7 @@ const props = defineProps({
   today: { type: [String, Date], default: null }
 })
 
-const emit = defineEmits(['update:modelValue', 'select', 'event-click'])
+const emit = defineEmits(['update:modelValue', 'select', 'event-click', 'cursor-change'])
 
 const labels = computed(() => ({ ...DEFAULT_LABELS, ...props.labels }))
 const resolvedLocale = computed(
@@ -249,6 +249,11 @@ const selectedStart = computed(() => selection.value.start)
 const selectedEnd = computed(() => selection.value.end)
 
 const cursor = ref(startOfDay(selection.value.start || resolvedToday.value))
+
+// The visible period is owned here (navigation, pickers, external selection).
+// Consumers that render something for the shown month can follow `cursor`
+// instead of duplicating the navigation.
+watch(cursor, (value) => emit('cursor-change', toISODate(value)))
 
 watch(
   () => [selectedStart.value?.getTime(), props.typeView],

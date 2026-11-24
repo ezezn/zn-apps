@@ -69,7 +69,7 @@ Events: `start` with a time (`2026-11-18T09:00`) is a timed event; without a tim
 
 The optional selection fields and the month/year pickers use the compact `xsmall` field size (40px) by design: they support the grid without taking visual prominence. On narrow screens (≤600px) the title and the navigation buttons stay on one line and the fields split the available width evenly, so the calendar header remains a single compact strip.
 
-Emits: `update:model-value`, `select` and `event-click` (with the normalized event).
+Emits: `update:model-value`, `select`, `event-click` (with the normalized event) and `cursor-change` (the visible day as `YYYY-MM-DD` after navigating, using the month/year pickers or setting the value from outside; handy to render a list for the shown month).
 
 ## Selection rules
 

@@ -50,6 +50,43 @@ describe('daily-report helpers', () => {
     expect(previousDateValue('2026-11-23', [])).toBe('2026-11-22')
   })
 
+  it('skips configured non-working days when looking back', () => {
+    expect(previousDateValue('2026-11-23', [1, 2, 3, 4, 5], ['2026-11-20'])).toBe('2026-11-19')
+    expect(
+      previousDateValue('2026-11-23', [1, 2, 3, 4, 5], new Set(['2026-11-20', '2026-11-19']))
+    ).toBe('2026-11-18')
+    // Holidays are skipped even without configured business days.
+    expect(previousDateValue('2026-11-23', [], ['2026-11-22'])).toBe('2026-11-21')
+    // A whole holiday week does not fall through to the plain calendar day.
+    expect(
+      previousDateValue(
+        '2026-11-16',
+        [1, 2, 3, 4, 5],
+        ['2026-11-09', '2026-11-10', '2026-11-11', '2026-11-12', '2026-11-13']
+      )
+    ).toBe('2026-11-06')
+  })
+
+  it('uses the configured business days and non-working days for the previous list', () => {
+    const tasks = [task(1, { name: 'Thursday' }), task(2, { name: 'Wednesday' })]
+    const updates = [
+      update(10, 1, '2026-11-19T09:00'),
+      update(11, 2, '2026-11-18T09:00')
+    ]
+
+    const report = buildDailyReport({
+      tasks,
+      updates,
+      date: '2026-11-23',
+      workDays: [1, 2, 3, 4, 5],
+      nonWorkingDates: ['2026-11-20']
+    })
+
+    expect(report.previousDate).toBe('2026-11-19')
+    expect(report.previous.map((entry) => entry.task.id)).toEqual([1])
+    expect(report.pending.map((item) => item.id)).toEqual([2])
+  })
+
   it('uses the configured business days for the previous list', () => {
     const tasks = [task(1, { name: 'Friday' }), task(2, { name: 'Thursday' })]
     const updates = [

@@ -3,6 +3,7 @@ import HomePage from '../views/HomePage.vue'
 import TasksPage from '../views/TasksPage.vue'
 import UpdatesPage from '../views/UpdatesPage.vue'
 import ReportsPage from '../views/ReportsPage.vue'
+import DaysOffPage from '../views/DaysOffPage.vue'
 import SettingsPage from '../views/SettingsPage.vue'
 import AboutPage from '../views/AboutPage.vue'
 
@@ -12,6 +13,7 @@ export const routes = [
   { path: '/tasks', name: 'tasks', component: TasksPage },
   { path: '/updates', name: 'updates', component: UpdatesPage },
   { path: '/reports', name: 'reports', component: ReportsPage },
+  { path: '/days-off', name: 'daysOff', component: DaysOffPage },
   { path: '/settings', name: 'settings', component: SettingsPage },
   { path: '/about', name: 'about', component: AboutPage },
   // Cualquier entrada directa (por ejemplo `.../index.html`, que es el

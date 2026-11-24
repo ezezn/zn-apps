@@ -16,19 +16,32 @@ export function weekdayOf(dateValue) {
  * Local `YYYY-MM-DD` of the nearest business day before `dateValue`.
  * Without `workDays` (or with an empty list) it is the plain calendar day
  * before; with configured business days, weekends and other non-working days
- * are skipped. Returns `''` when `dateValue` is invalid.
+ * are skipped. `nonWorkingDates` holds extra `YYYY-MM-DD` values (the
+ * configured non-working days, e.g. holidays or vacations) that are skipped
+ * too, even when no business days are configured. Returns `''` when
+ * `dateValue` is invalid.
  */
-export function previousDateValue(dateValue, workDays = []) {
+export function previousDateValue(dateValue, workDays = [], nonWorkingDates = []) {
   const [year, month, day] = String(dateValue ?? '').split('-').map(Number)
   if (!year || !month || !day) return ''
 
   const days = Array.isArray(workDays) ? workDays.map(Number) : []
-  if (days.length === 0) return toDateInputValue(new Date(year, month - 1, day - 1))
+  const blocked =
+    nonWorkingDates instanceof Set
+      ? nonWorkingDates
+      : new Set((Array.isArray(nonWorkingDates) ? nonWorkingDates : []).map(String))
+
+  if (days.length === 0 && blocked.size === 0) {
+    return toDateInputValue(new Date(year, month - 1, day - 1))
+  }
 
   const cursor = new Date(year, month - 1, day)
-  for (let step = 0; step < 7; step += 1) {
+  // A long stretch of holidays must never fall through to the plain day.
+  for (let step = 0; step < 366; step += 1) {
     cursor.setDate(cursor.getDate() - 1)
-    if (days.includes(cursor.getDay())) return toDateInputValue(cursor)
+    const value = toDateInputValue(cursor)
+    if (blocked.has(value)) continue
+    if (days.length === 0 || days.includes(cursor.getDay())) return value
   }
 
   // Unreachable with at least one valid weekday: keep the calendar day.
@@ -62,14 +75,18 @@ function updatesByTaskAndDay(updates = []) {
  *
  * `current` and `previous` are `{ task, updates }` entries; `pending` is a list
  * of tasks. Ordering is left to the view.
+ *
+ * `nonWorkingDates` are extra days (holidays, vacations…) skipped when looking
+ * back to the previous business day.
  */
 export function buildDailyReport({
   tasks = [],
   updates = [],
   date = '',
-  workDays = [1, 2, 3, 4, 5]
+  workDays = [1, 2, 3, 4, 5],
+  nonWorkingDates = []
 } = {}) {
-  const dayBefore = previousDateValue(date, workDays)
+  const dayBefore = previousDateValue(date, workDays, nonWorkingDates)
   const byTask = updatesByTaskAndDay(updates)
 
   function entriesFor(day) {

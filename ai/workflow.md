@@ -40,7 +40,7 @@ source (.vue)  --scan:icons-->  icon-profile.json {scanned, manual}
 
 - `npm run scan:icons` — scans `<ZnIcon name="...">` usages; keeps `manual`.
 - `npm run generate:icons` — writes the five family sprites from `@material-design-icons/svg`.
-- App chunks include the icons used by shared components (`ui-core`, `pwa-integration`).
+- App chunks include the icons used by the shared libraries they compose (`ui-core`, `pwa-integration`, `ui-data-*` and `ui-calendar`), so an app never has to redeclare an icon a shared component renders.
 - `ZnIcon` downloads a family sprite once and injects it into `#zn-icon-sprite-host`.
 - Profiles/sprites are committed; production never generates them.
 

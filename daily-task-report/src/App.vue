@@ -21,6 +21,10 @@
                 <ZnIcon name="description" :size="20" />
                 <span>{{ t('nav.reports') }}</span>
               </router-link>
+              <router-link to="/days-off" class="nav-link">
+                <ZnIcon name="event_busy" :size="20" />
+                <span>{{ t('nav.daysOff') }}</span>
+              </router-link>
             </div>
 
             <!-- Opciones secundarias: ancladas al final del panel visible. -->

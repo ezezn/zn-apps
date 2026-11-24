@@ -1,7 +1,7 @@
 {
   "name": "daily-task-report",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Track and edit the tasks reported from an external work system.",
   "author": "ZN Apps",
   "type": "module",
