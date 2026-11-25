@@ -34,7 +34,7 @@ Views are presentational: they receive precomputed `weeks`/`days`/`day`, the nor
 | `labels` | Object | `{}` | Merged over English defaults: `today`, `previous`, `next`, `month`, `year`, `date`, `startDate`, `endDate`, `noEvents`, `allDay`, `selectDay` (`{date}` placeholder) |
 | `today` | String \| Date | `null` | Overrides the reference "today" (tests, SSR) |
 
-Emits: `update:modelValue`, `select` (same payload as the model), `event-click` (normalized event).
+Emits: `update:modelValue`, `select` (same payload as the model), `event-click` (normalized event) and `cursor-change` (visible day as `YYYY-MM-DD` whenever navigation, the pickers or an external selection move the cursor; use it to render a list for the shown month).
 
 ## Behavior rules
 

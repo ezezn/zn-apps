@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest'
 import { routes } from '../router/index.js'
 
 describe('Daily Task Report routes', () => {
-  it('exposes the home, tasks, updates, reports, settings and about screens', () => {
-    expect(routes.map((route) => route.path)).toEqual(['/', '/tasks', '/updates', '/reports', '/settings', '/about', '/:pathMatch(.*)*'])
+  it('exposes the home, tasks, updates, reports, days off, settings and about screens', () => {
+    expect(routes.map((route) => route.path)).toEqual(['/', '/tasks', '/updates', '/reports', '/days-off', '/settings', '/about', '/:pathMatch(.*)*'])
   })
 
   it('starts on the home page', () => {
@@ -14,7 +14,7 @@ describe('Daily Task Report routes', () => {
 
   it('names and resolves every screen component', () => {
     const named = routes.filter((route) => route.name)
-    expect(named.map((route) => route.name)).toEqual(['home', 'tasks', 'updates', 'reports', 'settings', 'about'])
+    expect(named.map((route) => route.name)).toEqual(['home', 'tasks', 'updates', 'reports', 'daysOff', 'settings', 'about'])
     named.forEach((route) => expect(route.component).toBeTruthy())
   })
 })

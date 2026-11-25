@@ -69,7 +69,7 @@ Eventos: un `start` con hora (`2026-11-18T09:00`) es un evento con horario; sin 
 
 Los campos de selección y los selectores de mes y año usan el tamaño compacto `xsmall` (40px) a propósito: acompañan a la cuadrícula sin robarle protagonismo. En pantallas estrechas (≤600px) el título y los botones de navegación comparten una sola línea y los campos reparten el ancho disponible, de modo que la cabecera del calendario sigue siendo una franja compacta.
 
-Emite: `update:model-value`, `select` y `event-click` (con el evento normalizado).
+Emite: `update:model-value`, `select`, `event-click` (con el evento normalizado) y `cursor-change` (el día visible como `YYYY-MM-DD` al navegar, usar los selectores de mes y año o cambiar el valor desde fuera; útil para listar algo del mes mostrado).
 
 ## Reglas de selección
 

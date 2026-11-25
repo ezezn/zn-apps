@@ -45,7 +45,8 @@ const SHARED_LIBRARIES = [
   'ui-data-view',
   'ui-data-editor',
   'ui-data-grid',
-  'ui-data-richtext'
+  'ui-data-richtext',
+  'ui-calendar'
 ]
 
 const scriptDir = dirname(fileURLToPath(import.meta.url))

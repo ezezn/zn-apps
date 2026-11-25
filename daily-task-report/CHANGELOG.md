@@ -1,5 +1,33 @@
 # Changelog
 
+## [0.3.0] - 2026-11-24
+
+### Español
+#### Tipo de cambio: Nuevas funcionalidades
+- **Resumen**: Nueva sección de días no trabajados, con calendario mensual, colección editable de ausencias, próximos días y su efecto en el día laboral anterior.
+- **Detalles**:
+  - Nueva pantalla **Días no trabajados** en la navegación, con un calendario mensual que permite cambiar de mes y de año y, debajo, la lista de registros que se superponen con el mes visible.
+  - Colección editable de ausencias con motivo, nota opcional y fechas: **enfermedad, mudanza, matrimonio, sin goce de sueldo, vacaciones, cumpleaños, feriado nacional** y **día no laborable**, cada uno con su color en el calendario. Se agregan, editan y eliminan desde la misma página, con confirmación al borrar.
+  - Cada registro puede ser de un solo día o de varios, con fecha de inicio y fecha final inclusiva; un rango invertido se normaliza al guardar.
+  - Sección **Próximos días** debajo del mes, con las ausencias en curso o futuras ordenadas por cercanía, independientes del mes que se esté viendo.
+  - El subtítulo de la página anuncia cuánto falta para el próximo día no laboral en meses, semanas y días («Próximo día no laboral en 3 meses y 6 días»), indica «hoy» mientras una ausencia está en curso y vuelve al resumen del mes cuando no hay registros próximos.
+  - Los mismos eventos se marcan en el calendario de **Inicio** y todos los días que cubren se omiten al calcular el **día anterior**, igual que los días laborales configurados, para que un feriado o unas vacaciones no se conviertan en el día de referencia.
+  - Corrección de los iconos de las flechas del calendario (mes y semana): el chunk de iconos de la app ahora incluye los iconos que usan las librerías compartidas, no sólo `ui-core` y `ui-data-*`.
+  - Tests para los helpers de días no trabajados, la distancia legible, la página con calendario, lista del mes, próximos días y estados vacíos, además de la omisión de días no trabajados en el cálculo del día anterior.
+
+### English
+#### Change type: New features
+- **Summary**: New non-working days section with a monthly calendar, editable collection of absences, upcoming days and their effect on the previous business day.
+- **Details**:
+  - New **Non-working days** screen in the navigation, with a month calendar that can change month and year and, below it, the entries overlapping the visible month.
+  - Editable collection of absences with a reason, an optional note and dates: **sick leave, moving, marriage, unpaid leave, vacation, birthday, national holiday** and **non-working day**, each with its own calendar color. They are added, edited and deleted from the same page, with confirmation on delete.
+  - Every entry is a single day or several days with a start and an inclusive end date; a reversed range is normalized on save.
+  - **Upcoming days** section below the month, with the absences that are running or still ahead, sorted by proximity and independent of the month on screen.
+  - The page subtitle announces the distance to the next non-working day in months, weeks and days (“Next non-working day in 3 months and 6 days”), says “today” while an absence is running and falls back to the month summary when nothing is upcoming.
+  - The same events are marked on the **Home** calendar and every day they cover is skipped when computing the **previous day**, just like the configured business days, so a holiday or a vacation never becomes the reference day.
+  - Fixed the calendar arrow icons (month and week): the app icon chunk now includes the icons rendered by the shared libraries, not only `ui-core` and `ui-data-*`.
+  - Tests for the non-working day helpers, the readable distance, the page with calendar, month list, upcoming days and empty states, plus the skip of non-working days in the previous-day calculation.
+
 ## [0.2.0] - 2026-11-20
 
 ### Español

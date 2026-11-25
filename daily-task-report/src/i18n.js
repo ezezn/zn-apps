@@ -14,6 +14,7 @@ export const messages = {
       tasks: 'Tasks',
       updates: 'Updates',
       reports: 'Reports',
+      daysOff: 'Non-working days',
       settings: 'Settings',
       about: 'About'
     },
@@ -170,6 +171,44 @@ export const messages = {
         blockers: 'Blockers'
       }
     },
+    daysOff: {
+      title: 'Non-working days',
+      summary: '{count} in {month}',
+      hint: 'Days you did not work: holidays, vacations, sick leave or any other reason. They are marked on the Home calendar and skipped when looking back to the previous business day.',
+      add: 'Add day',
+      editTitle: 'Edit non-working day',
+      listTitle: 'Non-working days in {month}',
+      emptyMonth: 'No non-working days in {month}.',
+      upcomingTitle: 'Upcoming days',
+      emptyUpcoming: 'No upcoming non-working days.',
+      nextIn: 'Next non-working day in {distance}',
+      nextToday: 'Next non-working day: today',
+      duration: {
+        month: '{count} month | {count} months',
+        week: '{count} week | {count} weeks',
+        day: '{count} day | {count} days',
+        and: 'and'
+      },
+      type: 'Type',
+      startDate: 'Start date',
+      endDate: 'End date',
+      endDateHint: 'Optional. Leave it empty for a single day.',
+      note: 'Note',
+      notePlaceholder: 'Optional detail…',
+      dialogHint: 'Pick the reason and the dates. A range covers every day between the start and end dates, both included.',
+      deleteTitle: 'Delete non-working day',
+      deleteMessage: 'Delete “{name}” ({range})? This cannot be undone.',
+      types: {
+        sick: 'Sick leave',
+        moving: 'Moving',
+        marriage: 'Marriage',
+        unpaid: 'Unpaid leave',
+        vacation: 'Vacation',
+        birthday: 'Birthday',
+        nationalHoliday: 'National holiday',
+        nonWorking: 'Non-working day'
+      }
+    },
     status: {
       active: 'Active',
       inactive: 'Inactive'
@@ -190,7 +229,7 @@ export const messages = {
       themeLight: 'Light',
       themeDark: 'Dark',
       workDaysSection: 'Business days',
-      workDaysHint: 'The previous-day report skips the days you do not work: it looks back to the nearest business day before the selected date.',
+      workDaysHint: 'The previous-day report skips the days you do not work: it looks back to the nearest business day before the selected date. Days saved in Non-working days are skipped too.',
       templatesSection: 'Report export templates',
       templatesHint: 'Templates offered by the Export button on the Reports page. Write them in markdown; the section tokens yesterday, today, finish and blockers written between braces are replaced with the items of that section, one per line. Empty sections become “No”.',
       templatesDefault: 'Default',
@@ -281,6 +320,7 @@ export const messages = {
       tasks: 'Tareas',
       updates: 'Actualizaciones',
       reports: 'Reportes',
+      daysOff: 'Días no trabajados',
       settings: 'Configuración',
       about: 'Acerca de'
     },
@@ -437,6 +477,44 @@ export const messages = {
         blockers: 'Bloqueos'
       }
     },
+    daysOff: {
+      title: 'Días no trabajados',
+      summary: '{count} en {month}',
+      hint: 'Días en los que no trabajaste: feriados, vacaciones, enfermedad o cualquier otro motivo. Se marcan en el calendario de Inicio y se omiten al buscar el día laboral anterior.',
+      add: 'Agregar día',
+      editTitle: 'Editar día no trabajado',
+      listTitle: 'Días no trabajados en {month}',
+      emptyMonth: 'No hay días no trabajados en {month}.',
+      upcomingTitle: 'Próximos días',
+      emptyUpcoming: 'No hay días no trabajados próximos.',
+      nextIn: 'Próximo día no laboral en {distance}',
+      nextToday: 'Próximo día no laboral: hoy',
+      duration: {
+        month: '{count} mes | {count} meses',
+        week: '{count} semana | {count} semanas',
+        day: '{count} día | {count} días',
+        and: 'y'
+      },
+      type: 'Tipo',
+      startDate: 'Fecha de inicio',
+      endDate: 'Fecha de fin',
+      endDateHint: 'Opcional. Déjala vacía si es un solo día.',
+      note: 'Nota',
+      notePlaceholder: 'Detalle opcional…',
+      dialogHint: 'Elige el motivo y las fechas. Un rango incluye todos los días entre el inicio y el fin.',
+      deleteTitle: 'Eliminar día no trabajado',
+      deleteMessage: '¿Eliminar “{name}” ({range})? No se puede deshacer.',
+      types: {
+        sick: 'Enfermedad',
+        moving: 'Mudanza',
+        marriage: 'Matrimonio',
+        unpaid: 'Sin goce de sueldo',
+        vacation: 'Vacaciones',
+        birthday: 'Cumpleaños',
+        nationalHoliday: 'Feriado nacional',
+        nonWorking: 'Día no laborable'
+      }
+    },
     status: {
       active: 'Activa',
       inactive: 'Inactiva'
@@ -457,7 +535,7 @@ export const messages = {
       themeLight: 'Claro',
       themeDark: 'Oscuro',
       workDaysSection: 'Días laborales',
-      workDaysHint: 'El reporte del día anterior omite los días en que no trabajas: busca el día laboral más cercano antes de la fecha seleccionada.',
+      workDaysHint: 'El reporte del día anterior omite los días en que no trabajas: busca el día laboral más cercano antes de la fecha seleccionada. Los días guardados en Días no trabajados también se omiten.',
       templatesSection: 'Plantillas de exportación',
       templatesHint: 'Plantillas disponibles en el botón Exportar de la página Reportes. Se escriben en markdown; los nombres de sección yesterday, today, finish y blockers entre llaves se reemplazan por los elementos de esa sección, uno por línea. Las secciones vacías se muestran como «No».',
       templatesDefault: 'Predeterminada',
@@ -559,7 +637,8 @@ settings.define({
     }
   },
   externalStatuses: [],
-  workDays: [1, 2, 3, 4, 5]
+  workDays: [1, 2, 3, 4, 5],
+  daysOff: []
 })
 
 export function resolveInitialLocale() {

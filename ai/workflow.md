@@ -40,7 +40,7 @@ source (.vue)  --scan:icons-->  icon-profile.json {scanned, manual}
 
 - `npm run scan:icons` — scans `<ZnIcon name="...">` usages; keeps `manual`.
 - `npm run generate:icons` — writes the five family sprites from `@material-design-icons/svg`.
-- App chunks include the icons used by shared components (`ui-core`, `pwa-integration`).
+- App chunks include the icons used by the shared libraries they compose (`ui-core`, `pwa-integration`, `ui-data-*` and `ui-calendar`), so an app never has to redeclare an icon a shared component renders.
 - `ZnIcon` downloads a family sprite once and injects it into `#zn-icon-sprite-host`.
 - Profiles/sprites are committed; production never generates them.
 
@@ -72,4 +72,9 @@ Updates (`registerType: 'prompt'`): `utils/pwaUpdate.js` reports an already-wait
 
 ## CI/CD
 
-`.github/workflows/deploy.yml`, on `push: main` → Node 24 + npm cache → `npm install` → `npm run test:run` → `npm run build:production` → inject `404.html` fallbacks → publish `dist/` to GitHub Pages `/zn-apps/`.
+`.github/workflows/deploy.yml`, on `push: main` (or `workflow_dispatch`), two jobs:
+
+- `build` → Node 24 + npm cache → `npm install` → `npm run test:run` → `npm run build:production` → guard that `dist/` is non-empty and symlink-free → inject `404.html` per app + root → `actions/upload-pages-artifact@v4` (`path: ./dist`, artifact `github-pages`).
+- `deploy` → `needs: build`, `environment: github-pages` → `actions/deploy-pages@v4`.
+
+Keep upload and deploy in the same workflow run and never change the artifact name: `deploy-pages` only looks for `github-pages` in its own run, so an empty/skipped upload shows up as `No artifacts named "github-pages" were found`. Concurrency group `pages`, `cancel-in-progress: false`.

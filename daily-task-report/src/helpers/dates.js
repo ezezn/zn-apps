@@ -39,6 +39,45 @@ export function formatTaskDateTime(value, locale = 'en') {
   return format(value, locale, { dateStyle: 'medium', timeStyle: 'short' })
 }
 
+/**
+ * Whole calendar days between two local `YYYY-MM-DD` values (`to - from`).
+ * Built on UTC midnights so DST changes never add or drop a day; `null` when
+ * either value is invalid.
+ */
+export function dayCountBetween(from, to) {
+  const start = parseLocalDate(from)
+  const end = parseLocalDate(to)
+  if (!start || !end) return null
+  const startUtc = Date.UTC(start.getFullYear(), start.getMonth(), start.getDate())
+  const endUtc = Date.UTC(end.getFullYear(), end.getMonth(), end.getDate())
+  return Math.round((endUtc - startUtc) / 86400000)
+}
+
+/** Largest unit first; a month counts as 30 days and a week as 7. */
+export const DURATION_UNITS = Object.freeze([
+  ['month', 30],
+  ['week', 7],
+  ['day', 1]
+])
+
+/**
+ * Readable decomposition of a day count: `96 → [3 months, 6 days]`,
+ * `10 → [1 week, 3 days]`. Zero units are skipped, so `0 → []`.
+ */
+export function durationParts(days) {
+  let remaining = Math.max(0, Math.trunc(Number(days) || 0))
+  const parts = []
+
+  DURATION_UNITS.forEach(([unit, size]) => {
+    const value = Math.floor(remaining / size)
+    if (value <= 0) return
+    parts.push({ unit, value })
+    remaining -= value * size
+  })
+
+  return parts
+}
+
 /** Time only, for entries already grouped under a known day. */
 export function formatTaskTime(value, locale = 'en') {
   if (!value) return ''

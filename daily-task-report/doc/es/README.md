@@ -47,6 +47,15 @@ En el código las entidades se llaman **Tasks**. En Configuración puedes cambia
 8. **Leer el día**: abre **Inicio**, cambia entre la vista de semana y la de mes y haz clic en un día. Las tres listas se actualizan a la vez y cada una muestra las actualizaciones del día que cubre; la lista de pendientes muestra las tareas activas que no se actualizaron ni el día seleccionado ni el día laboral anterior.
 9. **Crear un reporte**: en **Inicio**, selecciona el día y usa **Nuevo reporte** en el encabezado. El borrador ya trae las actualizaciones de ayer en **Qué hice ayer** y las del día seleccionado en **En qué trabajo hoy**. Revisa o extiende cada texto, quita las líneas que no necesites, agrega comentarios (por ejemplo en **Bloqueos** o **Qué podría finalizar hoy**) y confirma. El reporte se guarda con la fecha y hora actuales como nombre.
 10. **Consultar reportes**: abre **Reportes**, filtra por un solo día (completa sólo *Desde* o *Hasta*) o por un rango, y usa la acción de copiar para crear un documento nuevo con la fecha y hora actuales. Para descartar uno, usa la acción de eliminar y confirma.
+11. **Registrar un día no trabajado**: abre **Días no trabajados**, elige el mes y agrega cada ausencia con su motivo y fechas. El reporte ya las tiene en cuenta (ver abajo).
+
+## Días no trabajados
+
+La sección **Días no trabajados** guarda los días en los que no trabajaste, sea cual sea el motivo: enfermedad, mudanza, matrimonio, sin goce de sueldo, vacaciones, cumpleaños, feriado nacional o cualquier otro día no laborable. Cada registro es un evento con un motivo, una nota opcional y un rango de fechas: un solo día si sólo completas la fecha de inicio, o varios días con inicio y fin (ambos incluidos).
+
+El calendario mensual muestra esos eventos, cada motivo con su propio color, y sus flechas y selectores de mes y año permiten ir a cualquier mes. La lista de abajo siempre muestra los registros que se superponen con el mes que estás viendo. Debajo, **Próximos días** lista desde hoy las ausencias que siguen en curso o empiezan más adelante, aunque pertenezcan a otro mes, para que veas lo que viene sin cambiar de mes. El subtítulo de la página siempre indica cuánto falta para la próxima, en meses, semanas y días («Próximo día no laboral en 3 meses y 6 días»); mientras una ausencia está en curso dice «hoy», y sin registros próximos muestra el resumen del mes en pantalla. Usa el botón del encabezado para agregar uno y los iconos de cada fila para editarlo o eliminarlo.
+
+Los mismos eventos se marcan en el calendario de Inicio, y todos los días que cubren se omiten en **Día anterior**: el reporte busca el día más cercano que no sea un día no laborable de la semana ni un día configurado como no trabajado. Así, un feriado en medio de la semana o dos semanas de vacaciones no se convierten en el día de referencia.
 
 ## Reportes
 
@@ -77,7 +86,7 @@ El texto de las plantillas se edita en **Configuración → Plantillas de export
 | Estados externos | Listar, agregar, editar y eliminar los valores posibles del campo de estado externo |
 | Datos | Exportar una copia JSON de tareas, actualizaciones y reportes, fusionar una o borrar todos los datos locales |
 
-Los interruptores de **Días laborales** deciden qué días considera laborales el reporte. **Día anterior** siempre busca el día laboral más cercano antes de la fecha seleccionada, así que un lunes se compara contra el viernes (y cada día de un fin de semana largo contra el último día trabajado). Al menos un día debe quedar activo.
+Los interruptores de **Días laborales** deciden qué días considera laborales el reporte. **Día anterior** siempre busca el día laboral más cercano antes de la fecha seleccionada, así que un lunes se compara contra el viernes (y cada día de un fin de semana largo contra el último día trabajado). Los días guardados en **Días no trabajados** también se omiten, así que los feriados y las vacaciones desplazan el día de referencia. Al menos un día debe quedar activo.
 
 Si vacías el singular o el plural, se restaura el valor por defecto de ese idioma (`Task/Tasks`, `Tarea/Tareas`).
 

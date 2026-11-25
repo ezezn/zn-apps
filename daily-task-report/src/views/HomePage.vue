@@ -25,7 +25,7 @@
           selection-mode="single"
           :locale="locale"
           :labels="calendarLabels"
-          :show-events="false"
+          :events="dayOffEvents"
         />
       </section>
 
@@ -116,6 +116,7 @@ import { ZnCalendar } from '@zn-apps/ui-calendar'
 import { i18n } from '../i18n.js'
 import { useEntityLabels } from '../composables/useEntityLabels.js'
 import { useBusinessDays } from '../composables/useBusinessDays.js'
+import { useDaysOff } from '../composables/useDaysOff.js'
 import { useTasksStore } from '../stores/tasks.js'
 import { useUpdatesStore } from '../stores/updates.js'
 import { useReportsStore } from '../stores/reports.js'
@@ -131,6 +132,7 @@ const t = (...args) => i18n.global.t(...args)
 const router = useRouter()
 const { plural } = useEntityLabels()
 const { workDays } = useBusinessDays()
+const { events: dayOffEvents, dates: nonWorkingDates } = useDaysOff()
 const tasksStore = useTasksStore()
 const updatesStore = useUpdatesStore()
 const reportsStore = useReportsStore()
@@ -194,7 +196,9 @@ const report = computed(() =>
     tasks: tasksStore.tasks,
     updates: updatesStore.updates,
     date: selectedDate.value,
-    workDays: workDays.value
+    workDays: workDays.value,
+    // Holidays, vacations and any other configured non-working day.
+    nonWorkingDates: nonWorkingDates.value
   })
 )
 

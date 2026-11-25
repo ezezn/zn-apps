@@ -47,6 +47,15 @@ The code calls the entities **Tasks**. In Settings you can rename how they are s
 8. **Read the day**: open **Home**, switch between the week and month views and click a day. The three lists update at once, each showing the updates of the day it covers; the pending list shows the active tasks that were not updated on the selected day or the business day before.
 9. **Create a report**: on **Home**, select the day and use **New report** in the header. The draft already contains yesterday's updates under **What I did yesterday** and the selected day's updates under **What I am working on today**. Review or extend every text, remove the lines you do not need, add notes (for example under **Blockers** or **What I could finish today**) and confirm. The report is saved with the current date and time as its name.
 10. **Review reports**: open **Reports**, filter by a single day (fill only *From* or *To*) or by a range, and use the copy action to create a new document with the current date and time. To discard one, use the delete action and confirm.
+11. **Record a day off**: open **Non-working days**, pick the month and add each absence with its reason and dates. The report already takes them into account (see below).
+
+## Non-working days
+
+The **Non-working days** section keeps the days you did not work, whatever the reason: sick leave, moving, marriage, unpaid leave, vacation, birthday, a national holiday or any other non-working day. Every entry is an event with a reason, an optional note and a date range: a single day when you only fill the start date, or several days with a start and an end (both included).
+
+The month calendar shows those events, each reason with its own color, and its arrows and month/year selectors move to any month. The list below always shows the entries that overlap the month you are looking at. Under it, **Upcoming days** lists from today onward the absences that are still running or start later, even when they belong to another month, so you can check what comes next without changing the month. The page subtitle always tells you how far away the next one is, in months, weeks and days (“Next non-working day in 3 months and 6 days”); while an absence is running it says “today”, and without upcoming entries it shows the summary of the month on screen. Use the header button to add one and the icons of each row to edit or delete it.
+
+The same events are marked on the Home calendar, and every day they cover is skipped by **Previous day**: the report walks back to the nearest day that is neither a non-working weekday nor a configured non-working day. A holiday in the middle of the week or a two-week vacation therefore do not become the reference day.
 
 ## Reports
 
@@ -77,7 +86,7 @@ The template text is editable in **Settings → Report export templates**. The s
 | External statuses | List, add, edit and delete the possible values of the external status field |
 | Data | Export a JSON backup of tasks, updates and reports, merge one back, or delete all local data |
 
-The **Business days** switches decide which days the report treats as working days. **Previous day** always looks back to the nearest business day before the selected date, so a Monday compares against Friday (and every day of a long weekend against the last working day). At least one day must stay on.
+The **Business days** switches decide which days the report treats as working days. **Previous day** always looks back to the nearest business day before the selected date, so a Monday compares against Friday (and every day of a long weekend against the last working day). Days saved in **Non-working days** are skipped too, so holidays and vacations shift the reference day. At least one day must stay on.
 
 Clearing the singular/plural field restores that language's default (`Task/Tasks`, `Tarea/Tareas`).
 
