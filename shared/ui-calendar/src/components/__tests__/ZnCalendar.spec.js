@@ -97,28 +97,44 @@ describe('ZnCalendar', () => {
     expect(pills[1].classes()).toContain('zn-calendar-month__range--end')
   })
 
-  it('renders single-day events as chips and multi-day events as one bar per week', () => {
+  it('keeps single-day and multi-day events on the same band', () => {
     const detailed = mountCalendar({ modelValue: '2026-11-10', events: EVENTS })
 
-    expect(detailed.findAll('.zn-calendar-month__event').map((node) => node.text())).toEqual([
-      'Kickoff'
-    ])
-
     const bars = detailed.findAll('.zn-calendar-month__bar')
-    expect(bars).toHaveLength(1)
-    expect(bars[0].text()).toBe('Trip')
+    expect(bars.map((node) => node.text())).toEqual(['Trip', 'Kickoff'])
     expect(bars[0].attributes('style')).toContain('span 3')
+
+    // Una sola banda por semana: ningún evento queda dentro de la celda del día.
+    const band = detailed.find('.zn-calendar-month__bars')
+    expect(band.exists()).toBe(true)
+    expect(band.findAll('.zn-calendar-month__bar')).toHaveLength(2)
+    expect(detailed.findAll('.zn-calendar-month__cell .zn-calendar-month__bar')).toHaveLength(0)
   })
 
-  it('renders events as dots and lines when details are hidden', () => {
+  it('places the event band above or below the day numbers', () => {
+    const below = mountCalendar({ modelValue: '2026-11-10', events: EVENTS })
+    expect(below.findAll('.zn-calendar-month__week--below').length).toBeGreaterThan(0)
+    expect(below.find('.zn-calendar-month__week--above').exists()).toBe(false)
+
+    const above = mountCalendar({
+      modelValue: '2026-11-10',
+      events: EVENTS,
+      eventsPosition: 'above'
+    })
+    expect(above.findAll('.zn-calendar-month__week--above').length).toBeGreaterThan(0)
+    expect(above.find('.zn-calendar-month__week--below').exists()).toBe(false)
+    // La banda sigue siendo una sola y contiene todos los eventos.
+    expect(above.find('.zn-calendar-month__bars').findAll('.zn-calendar-month__bar')).toHaveLength(2)
+  })
+
+  it('renders every event as a line when details are hidden', () => {
     const dots = mountCalendar({
       modelValue: '2026-11-10',
       events: EVENTS,
       showEventDetails: false
     })
 
-    expect(dots.findAll('.zn-calendar-month__dot')).toHaveLength(1)
-    expect(dots.findAll('.zn-calendar-month__bar--line')).toHaveLength(1)
+    expect(dots.findAll('.zn-calendar-month__bar--line')).toHaveLength(2)
     expect(dots.text()).not.toContain('Kickoff')
 
     const hidden = mountCalendar({
@@ -126,7 +142,6 @@ describe('ZnCalendar', () => {
       events: EVENTS,
       showEvents: false
     })
-    expect(hidden.find('.zn-calendar-month__events').exists()).toBe(false)
     expect(hidden.find('.zn-calendar-month__bars').exists()).toBe(false)
   })
 
@@ -137,8 +152,7 @@ describe('ZnCalendar', () => {
       eventVariant: 'filled'
     })
 
-    expect(wrapper.find('.zn-calendar-month__bar--filled').exists()).toBe(true)
-    expect(wrapper.find('.zn-calendar-month__event--filled').exists()).toBe(true)
+    expect(wrapper.findAll('.zn-calendar-month__bar--filled')).toHaveLength(2)
     expect(wrapper.find('.zn-calendar-month__bar').attributes('style')).toContain(
       '--zn-calendar-event-text'
     )

@@ -104,6 +104,14 @@ export const demoViews = [
     sections: [{ title: 'Objetos de ejemplo', content: 'Cada tarjeta muestra el arreglo data y el objeto config exactos que usa la galería; puedes copiarlos como punto de partida.' }]
   },
   {
+    key: 'dashlets', title: 'Dashlets (ui-data-dashlet)', subtitle: 'Cards de dashboard para métricas KPI, resúmenes, sparklines y progreso',
+    sections: [{ title: 'ZnDashlet', content: 'Cards con variantes de color MD3, modo relleno u outline y altura configurable; los componentes Counter, Summary, Sparkline y Progress los componen.' }]
+  },
+  {
+    key: 'dashlets-data', title: 'Datos y config de los dashlets', subtitle: 'Los objetos data y config que recibe cada ejemplo de ui-data-dashlet',
+    sections: [{ title: 'Objetos de ejemplo', content: 'Cada tarjeta muestra el arreglo data y el objeto config exactos que usa la galería; puedes copiarlos como punto de partida.' }]
+  },
+  {
     key: 'dialogs', title: 'Diálogos (ZnDialog)', subtitle: 'Diálogos modales nativos con estilo Material Design 3',
     sections: [{ title: 'Diálogos', content: 'Abre diálogos base y prueba alertas, confirmaciones y preguntas.' }]
   },

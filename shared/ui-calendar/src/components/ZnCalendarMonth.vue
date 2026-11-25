@@ -13,6 +13,7 @@
         v-for="(week, weekIndex) in weeks"
         :key="toISODate(week[0])"
         class="zn-calendar-month__week"
+        :class="`zn-calendar-month__week--${eventsPosition}`"
         role="row"
       >
         <div
@@ -80,39 +81,6 @@
             >
               <span class="zn-calendar-month__number">{{ day.getDate() }}</span>
             </button>
-
-            <div
-              v-if="showEvents && singleDayEvents(day).length"
-              class="zn-calendar-month__events"
-            >
-              <template v-if="showEventDetails">
-                <button
-                  v-for="event in visibleEvents(day)"
-                  :key="event.id"
-                  type="button"
-                  :class="[
-                    'zn-calendar-month__event',
-                    `zn-calendar-month__event--${eventVariant}`
-                  ]"
-                  :style="eventStyle(event)"
-                  :title="event.title"
-                  @click.stop="$emit('event-click', event)"
-                >{{ event.title }}</button>
-                <span
-                  v-if="singleDayEvents(day).length > visibleCount"
-                  class="zn-calendar-month__more-inline"
-                >+{{ singleDayEvents(day).length - visibleCount }}</span>
-              </template>
-
-              <span v-else class="zn-calendar-month__dots">
-                <span
-                  v-for="event in visibleEvents(day)"
-                  :key="event.id"
-                  class="zn-calendar-month__dot"
-                  :style="eventStyle(event)"
-                />
-              </span>
-            </div>
           </div>
         </div>
       </div>
@@ -123,7 +91,6 @@
 <script setup>
 import {
   calendarEventStyle,
-  eventsForDay,
   formatDayLong,
   isMultiDayEvent,
   isSameDay,
@@ -142,6 +109,16 @@ const props = defineProps({
   events: { type: Array, default: () => [] },
   showEvents: { type: Boolean, default: true },
   showEventDetails: { type: Boolean, default: true },
+  /**
+   * Where the single event band sits relative to the day numbers: `below`
+   * (default) keeps every event under its week, `above` puts it before the
+   * numbers. All events share the same band, so they never alternate sides.
+   */
+  eventsPosition: {
+    type: String,
+    default: 'below',
+    validator: (value) => ['above', 'below'].includes(value)
+  },
   eventVariant: { type: String, default: 'accent' },
   locale: { type: String, default: 'en' },
   labels: { type: Object, default: () => ({}) }
@@ -149,7 +126,6 @@ const props = defineProps({
 
 defineEmits(['select', 'event-click'])
 
-const visibleCount = 2
 const maxLanes = 2
 
 function isToday(day) {
@@ -188,18 +164,6 @@ function dayClasses(day) {
 function dayLabel(day) {
   const label = props.labels.selectDay || 'Select {date}'
   return label.replace('{date}', formatDayLong(day, props.locale))
-}
-
-function singleDayEvents(day) {
-  return eventsForDay(props.events, day).filter((event) => !isMultiDayEvent(event))
-}
-
-function visibleEvents(day) {
-  return singleDayEvents(day).slice(0, visibleCount)
-}
-
-function eventStyle(event) {
-  return calendarEventStyle(event, props.eventVariant)
 }
 
 /**
@@ -265,57 +229,77 @@ function rangeStyle(segment) {
 }
 
 /**
- * Multi-day events become one continuous bar per week: it starts on the event
- * start (or the first visible day) and spans to the end (or the last day).
+ * Every event of the week lives in the same band, packed into lanes by
+ * column: multi-day events become one continuous bar (from the start or the
+ * first visible day to the end or the last day) and single-day events occupy
+ * their own column. Sharing the band keeps all events on the same line, so a
+ * chip never jumps above the day number while the next one sits below it.
  */
 function weekBars(week) {
   if (!week.length) return { bars: [], hiddenCount: 0 }
 
   const weekStart = week[0]
   const weekEnd = week[week.length - 1]
-  const overlapping = props.events
-    .filter(
-      (event) =>
-        isMultiDayEvent(event) &&
-        event.startDate.getTime() <= weekEnd.getTime() &&
-        event.endDate.getTime() >= weekStart.getTime()
-    )
-    .sort((a, b) => a.startDate - b.startDate || b.endDate - a.endDate)
+  const entries = []
+
+  for (const event of props.events) {
+    if (isMultiDayEvent(event)) {
+      if (
+        event.startDate.getTime() > weekEnd.getTime() ||
+        event.endDate.getTime() < weekStart.getTime()
+      ) {
+        continue
+      }
+      const from = Math.max(0, week.findIndex((day) => isSameDay(day, event.startDate)))
+      const endIndex = week.findIndex((day) => isSameDay(day, event.endDate))
+      const to = endIndex === -1 ? week.length - 1 : endIndex
+      if (to < from) continue
+
+      entries.push({
+        event,
+        from,
+        to,
+        span: to - from + 1,
+        multiDay: true,
+        continuesStart: event.startDate.getTime() < weekStart.getTime(),
+        continuesEnd: event.endDate.getTime() > weekEnd.getTime()
+      })
+      continue
+    }
+
+    const index = week.findIndex((day) => isSameDay(day, event.startDate))
+    if (index === -1) continue
+    entries.push({
+      event,
+      from: index,
+      to: index,
+      span: 1,
+      multiDay: false,
+      continuesStart: false,
+      continuesEnd: false
+    })
+  }
+
+  // Long bars first so the short chips fill the gaps they leave behind.
+  entries.sort((a, b) => {
+    if (a.multiDay !== b.multiDay) return a.multiDay ? -1 : 1
+    if (a.multiDay) return a.from - b.from || b.span - a.span
+    return a.from - b.from
+  })
 
   const laneEnds = []
   const bars = []
 
-  for (const event of overlapping) {
-    const from = Math.max(0, week.findIndex((day) => isSameDay(day, event.startDate)))
-    const endIndex = week.findIndex((day) => isSameDay(day, event.endDate))
-    const to = endIndex === -1 ? week.length - 1 : endIndex
-    if (to < from) continue
-
-    let lane = laneEnds.findIndex((lastColumn) => lastColumn < from)
-    if (lane === -1) {
-      lane = laneEnds.length
-      laneEnds.push(to)
-    } else {
-      laneEnds[lane] = to
-    }
-
+  for (const entry of entries) {
+    let lane = laneEnds.findIndex((lastColumn) => lastColumn < entry.from)
+    if (lane === -1) lane = laneEnds.length
     if (lane >= maxLanes) continue
 
-    bars.push({
-      event,
-      lane,
-      from,
-      to,
-      span: to - from + 1,
-      continuesStart: event.startDate.getTime() < weekStart.getTime(),
-      continuesEnd: event.endDate.getTime() > weekEnd.getTime()
-    })
+    laneEnds[lane] = entry.to
+    bars.push({ ...entry, lane })
   }
 
-  return {
-    bars,
-    hiddenCount: overlapping.length - bars.length
-  }
+  return { bars, hiddenCount: entries.length - bars.length }
 }
 
 function barStyle(bar) {
@@ -364,6 +348,17 @@ function barStyle(bar) {
   display: flex;
   flex-direction: column;
   gap: 2px;
+}
+
+/* The band is rendered once; its order decides whether it sits below or above
+   the day numbers, so every event always shares the same line. */
+.zn-calendar-month__week--below .zn-calendar-month__cells {
+  order: 1;
+}
+
+.zn-calendar-month__week--below .zn-calendar-month__bars {
+  order: 2;
+  padding: 0 2px 2px;
 }
 
 .zn-calendar-month__bars {
@@ -532,62 +527,6 @@ function barStyle(bar) {
   background: color-mix(in srgb, var(--md-on-surface) 16%, transparent);
 }
 
-.zn-calendar-month__events {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: 0 2px 2px;
-  overflow: hidden;
-}
-
-.zn-calendar-month__event {
-  display: block;
-  width: 100%;
-  padding: 1px 4px;
-  overflow: hidden;
-  border: 0;
-  border-radius: 4px;
-  font: inherit;
-  font-size: 0.6875rem;
-  line-height: 1.3;
-  text-align: left;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  cursor: pointer;
-}
-
-.zn-calendar-month__event--accent {
-  border-left: 3px solid var(--zn-calendar-event-color, var(--md-primary));
-  background: color-mix(in srgb, var(--zn-calendar-event-color, var(--md-primary)) 18%, transparent);
-  color: var(--md-on-surface);
-}
-
-.zn-calendar-month__event--filled {
-  background: var(--zn-calendar-event-color, var(--md-primary));
-  color: var(--zn-calendar-event-text, var(--md-on-primary));
-}
-
-.zn-calendar-month__more-inline {
-  padding-left: 4px;
-  color: var(--md-on-surface-variant);
-  font-size: 0.6875rem;
-}
-
-.zn-calendar-month__dots {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 3px;
-  justify-content: center;
-  padding: 2px 0 4px;
-}
-
-.zn-calendar-month__dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--zn-calendar-event-color, var(--md-primary));
-}
-
 @media (max-width: 600px) {
   .zn-calendar-month__cell {
     min-height: 52px;
@@ -598,7 +537,6 @@ function barStyle(bar) {
     height: 26px;
   }
 
-  .zn-calendar-month__event,
   .zn-calendar-month__bar {
     font-size: 0.625rem;
   }

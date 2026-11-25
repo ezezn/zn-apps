@@ -31,6 +31,18 @@ describe('ZnDashletCounter', () => {
     expect(wrapper.find('.zn-dashlet-counter__subtitle').exists()).toBe(false)
   })
 
+  it('renders the icon name from the icon prop', () => {
+    const wrapper = mount(ZnDashletCounter)
+    expect(wrapper.find('.zn-dashlet-counter__icon use').attributes('href')).toBe(
+      '#zn-icon-filled-trending_up'
+    )
+
+    const custom = mount(ZnDashletCounter, { props: { icon: 'people' } })
+    expect(custom.find('.zn-dashlet-counter__icon use').attributes('href')).toBe(
+      '#zn-icon-filled-people'
+    )
+  })
+
   it('applies the correct variant', () => {
     const wrapper = mount(ZnDashletCounter, { props: { variant: 'success' } })
     expect(wrapper.find('.zn-dashlet--success').exists()).toBe(true)

@@ -10,28 +10,9 @@
     </template>
 
     <div class="home-page">
-      <section class="home-calendar">
-        <div class="home-calendar__toolbar">
-          <p class="home-calendar__hint">{{ t('home.calendarHint') }}</p>
-          <ZnButtonGroup v-model="view" mandatory variant="outlined" density="small">
-            <ZnButton value="week">{{ t('home.weekView') }}</ZnButton>
-            <ZnButton value="month">{{ t('home.monthView') }}</ZnButton>
-          </ZnButtonGroup>
-        </div>
-
-        <ZnCalendar
-          v-model="selectedDate"
-          :type-view="view"
-          selection-mode="single"
-          :locale="locale"
-          :labels="calendarLabels"
-          :events="dayOffEvents"
-        />
-      </section>
-
       <ZnAlert
         :model-value="reportBannerVisible"
-        :variant="reportBannerVariant"
+        variant="info"
         size="small"
         :dismiss-label="t('common.dismiss')"
         @update:model-value="dismissReportBanner"
@@ -43,6 +24,25 @@
           </ZnButton>
         </template>
       </ZnAlert>
+
+      <section class="home-calendar">
+        <div class="home-calendar__toolbar">
+          <p class="home-calendar__hint">{{ t('home.calendarHint') }}</p>
+          <ZnButtonGroup v-model="view" mandatory variant="outlined" density="small">
+            <ZnButton value="week">{{ t('home.weekView') }}</ZnButton>
+            <ZnButton value="month">{{ t('home.monthView') }}</ZnButton>
+          </ZnButtonGroup>
+        </div>
+
+        <!-- El calendario solo selecciona el día: los eventos no se dibujan aquí. -->
+        <ZnCalendar
+          v-model="selectedDate"
+          :type-view="view"
+          selection-mode="single"
+          :locale="locale"
+          :labels="calendarLabels"
+        />
+      </section>
 
       <p v-if="tasksStore.error" class="home-alert" role="alert">
         {{ t(`tasks.${tasksStore.error}`) }}
@@ -117,13 +117,14 @@ import { i18n } from '../i18n.js'
 import { useEntityLabels } from '../composables/useEntityLabels.js'
 import { useBusinessDays } from '../composables/useBusinessDays.js'
 import { useDaysOff } from '../composables/useDaysOff.js'
+import { upcomingDayOffs, formatDuration } from '../helpers/days-off.js'
 import { useTasksStore } from '../stores/tasks.js'
 import { useUpdatesStore } from '../stores/updates.js'
 import { useReportsStore } from '../stores/reports.js'
 import { buildDailyReport } from '../helpers/daily-report.js'
 import { reportDateValue } from '../helpers/reports.js'
 import { sortTasks } from '../helpers/tasks.js'
-import { formatTaskDate, toDateInputValue } from '../helpers/dates.js'
+import { dayCountBetween, formatTaskDate, toDateInputValue } from '../helpers/dates.js'
 import DailyTaskList from '../components/DailyTaskList.vue'
 import UpdateDialog from '../components/UpdateDialog.vue'
 import ReportCreateDialog from '../components/ReportCreateDialog.vue'
@@ -132,7 +133,7 @@ const t = (...args) => i18n.global.t(...args)
 const router = useRouter()
 const { plural } = useEntityLabels()
 const { workDays } = useBusinessDays()
-const { events: dayOffEvents, dates: nonWorkingDates } = useDaysOff()
+const { sorted: sortedDayOffs, dates: nonWorkingDates, titleFor: dayOffTitle } = useDaysOff()
 const tasksStore = useTasksStore()
 const updatesStore = useUpdatesStore()
 const reportsStore = useReportsStore()
@@ -172,15 +173,35 @@ const reportBannerKey = computed(
 const reportBannerVisible = computed(
   () => reportsStore.loaded && dismissedReportBannerKey.value !== reportBannerKey.value
 )
-const reportBannerVariant = computed(() => {
-  if (selectedReport.value) return 'success'
-  return isToday.value ? 'warning' : 'info'
-})
-const reportBannerMessage = computed(() => {
+/** Status of the selected day's report, or an empty string when irrelevant. */
+const reportStatusMessage = computed(() => {
   if (selectedReport.value) return t('home.reportReady', { date: selectedDateLabel.value })
   if (isToday.value) return t('home.reportNotCreated')
   return t('home.reportMissing', { date: selectedDateLabel.value })
 })
+
+/** Next configured non-working day from today onward, if any. */
+const nextDayOff = computed(() => upcomingDayOffs(sortedDayOffs.value, toDateInputValue())[0] ?? null)
+
+/** “Next non-working day in 3 days (New year's day)”. */
+const nextDayOffMessage = computed(() => {
+  const next = nextDayOff.value
+  if (!next) return ''
+
+  const today = toDateInputValue()
+  const date = next.start < today ? today : next.start
+  const days = dayCountBetween(today, date)
+  if (days === null) return ''
+
+  const title = dayOffTitle(next)
+  if (days <= 0) return t('home.nextDayOffToday', { title })
+  return t('home.nextDayOff', { distance: formatDuration(days, t), title })
+})
+
+/** One info banner: report status plus the countdown to the next day off. */
+const reportBannerMessage = computed(() =>
+  [reportStatusMessage.value, nextDayOffMessage.value].filter(Boolean).join(' · ')
+)
 
 const calendarLabels = computed(() => ({
   today: t('home.today'),

@@ -22,7 +22,7 @@ Every app and library also ships `<project>/ai/README.md` (agent context, Englis
 
 1. **Read before writing** — inspect the `ai/` files of the projects involved; they record architecture and decisions already taken.
 2. **Independent PWAs** — each app has its own `package.json`, `vite.config.js`, service worker, base `/zn-apps/<app>/`. Never share Pinia state between apps.
-3. **Isolated libraries** — `shared/*` builds independently and does not import other libraries except the documented composition edges (`ui-about → ui-core`, `ui-data-* → ui-core`/`ui-data-core`, `ui-data-editor → form + view`).
+3. **Libraries build independently and reuse, not duplicate** — `shared/*` keeps its own `package.json`/`vite.config.js`/`vitest.config.js`, and composes lower-level libraries for UI instead of reimplementing it (`ui-core` is the visual base: `ZnCard`, `ZnIcon`, `ZnButton`…; `ui-data-*` may also compose `ui-data-core`). Edges are one-way and acyclic — a library never imports a library that imports it, never imports an app — and must be declared in its `package.json` + `vite.config.js` `external`.
 4. **MD3** — components live in `shared/ui-core/src/components/`, use the `Zn` prefix, consume `--md-*` tokens and are imported from the package barrel. Theme switching only through `<ZnApp>`.
 5. **Field parity** — any field feature must exist in form, view and editor in the same change; a new `FieldTypes` value needs implementations in all three.
 6. **i18n** — every app ships `en` and `es`; resolve locale as `settings.i18n.locale` → system base → `en`.

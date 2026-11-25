@@ -25,10 +25,15 @@ See [`testing.md`](./testing.md).
 | `npm run build:kitchensink` | Builds `kitchensink` → `kitchensink/dist/` |
 | `npm run build:daily-task-report` | Builds `daily-task-report` → `daily-task-report/dist/` |
 | `npm run build:all` / `build:production` | Clean `dist/`, copy landing + `sw.js`, build shared + apps, move to `dist/<app>/`, run `validate:pwa` |
+| `npm run build:changed` | Selective build: only workspaces touched by `BASE_SHA..HEAD_SHA`; requires `RESTORE_OK=1` (previous site already in `dist/`). Env: `DRY_RUN=1`, `FULL_BUILD=1` |
 | `npm run validate:pwa` | Checks generated manifests and 192/512 PNGs |
 | `npm run build:icons` | `scan:icons` + `generate:icons` (run before committing new icon usage) |
 
-Production order: shared → zound-box → kitchensink → daily-task-report. CI runs `build:production`, which consumes the **versioned** sprites and never regenerates icons.
+Production order: shared → zound-box → kitchensink → daily-task-report. Production consumes the **versioned** sprites and never regenerates icons.
+
+CI runs `build:changed` (`scripts/build-changed.mjs`) instead of `build:production`. It diffs `github.event.before..github.sha`, maps each file to its workspace (longest directory prefix) and builds only those, libraries in dependency order. It falls back to a full `build:production` when there is no restored `dist/`, when `BASE_SHA` cannot be resolved, or when the change touches global inputs (`package.json`, `package-lock.json`, `vitest*.js`, `index.html`, `sw.js`, `scripts/`). Docs/`ai/` changes build nothing.
+
+Two consequences to keep in mind: untouched apps are preserved from the previous Pages artifact, and an app that bundles a changed library **is not** rebuilt automatically (apps alias shared sources), so CI logs an `aviso` listing them — rebuild those apps in the same push or run `FULL_BUILD=1`.
 
 ## Icon pipeline
 
@@ -74,7 +79,7 @@ Updates (`registerType: 'prompt'`): `utils/pwaUpdate.js` reports an already-wait
 
 `.github/workflows/deploy.yml`, on `push: main` (or `workflow_dispatch`), two jobs:
 
-- `build` → Node 24 + npm cache → `npm install` → `npm run test:run` → `npm run build:production` → guard that `dist/` is non-empty and symlink-free → inject `404.html` per app + root → `actions/upload-pages-artifact@v4` (`path: ./dist`, artifact `github-pages`).
+- `build` → checkout `fetch-depth: 0` → Node 24 + npm cache → `npm install` → `npm run test:run` → restore the previous `github-pages` artifact into `dist/` → `node scripts/build-changed.mjs` (selective) → `validate:pwa` → guard that `dist/` is non-empty and symlink-free → inject `404.html` per app present + root → `actions/upload-pages-artifact@v4` (`path: ./dist`, artifact `github-pages`).
 - `deploy` → `needs: build`, `environment: github-pages` → `actions/deploy-pages@v4`.
 
 Keep upload and deploy in the same workflow run and never change the artifact name: `deploy-pages` only looks for `github-pages` in its own run, so an empty/skipped upload shows up as `No artifacts named "github-pages" were found`. Concurrency group `pages`, `cancel-in-progress: false`.

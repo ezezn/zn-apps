@@ -43,8 +43,9 @@ describe('Non-working days page', () => {
     const calendar = wrapper.findComponent(ZnCalendar)
 
     expect(calendar.props('typeView')).toBe('month')
+    // El evento se etiqueta con la nota (título), no con el tipo de día.
     expect(calendar.props('events')).toEqual([
-      expect.objectContaining({ id: 'a', title: 'Vacation', start: monthDate(0, 5) })
+      expect.objectContaining({ id: 'a', title: 'Beach', start: monthDate(0, 5) })
     ])
 
     wrapper.unmount()

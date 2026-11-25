@@ -89,10 +89,18 @@ export function useDaysOff() {
   /** Optional `YYYY-MM-DD` values skipped when looking back a business day. */
   const dates = computed(() => dayOffDates(daysOff.value))
 
-  /** Calendar-ready entries with the localized type as title. */
+  /**
+   * Heading of an entry: its note (the human title) and, when empty, the
+   * localized type label as fallback.
+   */
+  function titleFor(entry) {
+    return entry?.note || labelFor(entry?.type)
+  }
+
+  /** Calendar-ready entries: the title is the note, never the type alone. */
   const events = computed(() =>
-    daysOff.value.map((entry) => dayOffCalendarEvent(entry, labelFor(entry.type)))
+    daysOff.value.map((entry) => dayOffCalendarEvent(entry, titleFor(entry)))
   )
 
-  return { locale, entries: daysOff, sorted, dates, events, typeOptions, labelFor }
+  return { locale, entries: daysOff, sorted, dates, events, typeOptions, labelFor, titleFor }
 }

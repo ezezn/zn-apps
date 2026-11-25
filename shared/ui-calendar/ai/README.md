@@ -8,7 +8,7 @@ Location: `shared/ui-calendar/`. Apps import `@zn-apps/ui-calendar` and `@zn-app
 | Export | Purpose |
 |---|---|
 | `ZnCalendar` | Orchestrator: header, navigation, optional selection fields, active view |
-| `ZnCalendarMonth` | 6×7 month grid; day selection, bars for multi-day events and chips for single-day events |
+| `ZnCalendarMonth` | 6×7 month grid; day selection plus one event band (multi-day bars and single-day chips share the same lanes) |
 | `ZnCalendarWeek` | Compact horizontal day tabs (one selected day) + that day's agenda |
 | `ZnCalendarDay` | Single-day agenda; day selection + events |
 | utils | `parseDate`, `toISODate`, `toISODateTime`, `addDays`, `addMonths`, `startOfWeek`, `startOfMonth`, `buildMonthMatrix`, `buildWeek`, `normalizeEvents`, `eventsForDay`, `readSelection`, `orderRange`, `format*`, `monthOptions`, `yearOptions`, `weekdayLabels` |
@@ -27,7 +27,8 @@ Views are presentational: they receive precomputed `weeks`/`days`/`day`, the nor
 | `showNavigation` | Boolean | `true` | Prev/next arrows and month+year (or date) pickers |
 | `showFields` | Boolean | `false` | Optional selection fields above the grid |
 | `showEvents` | Boolean | `true` | `false` → calendar only selects days |
-| `showEventDetails` | Boolean | `true` | `false` → events render as color dots and lines |
+| `showEventDetails` | Boolean | `true` | `false` → every event renders as a thin color line |
+| `eventsPosition` | String | `'below'` | Month view: `below`/`above` place the single event band under/over the day numbers |
 | `eventVariant` | String | `'accent'` | `accent` (colored notch over a tinted surface) \| `filled` (event color background, automatic contrast text) |
 | `locale` | String | `''` | `''` → `navigator.language` → `en`; drives `Intl` month/weekday/time text |
 | `weekStartsOn` | Number | `1` | 0 = Sunday … 6 = Saturday |
@@ -41,12 +42,12 @@ Emits: `update:modelValue`, `select` (same payload as the model), `event-click` 
 1. Values are local ISO strings. `YYYY-MM-DD` for days, `YYYY-MM-DDTHH:mm` for timed events; `end` without a time means the event covers whole days (inclusive).
 2. Range: first click sets `start` (and clears `end`), second click completes the range ordered (`start <= end`), a click on a full range starts a new one. Range days are joined by one continuous primary pill per week, exactly the same 30px box as the day markers and aligned to the same top offset (the day button uses `box-sizing: border-box` so its 1px border does not make the circle 2px taller); it spans from the first marker's left edge to the last marker's right edge and only the real range start/end get rounded caps, so weeks in between stay square (`weekRangeSegments`). Cells are not shaded; intermediate day numbers use `on-primary` for contrast.
 3. Month grid is always 42 days (six weeks) starting on `weekStartsOn`; leading/trailing days are still selectable but dimmed.
-4. Single-day events render as chips under the day number (up to 2, then `+N`). Multi-day events render once per week as a continuous bar spanning their columns, with two lanes per week before collapsing into `+N`.
+4. Month events live in **one band per week** (`eventsPosition` decides whether it sits above or below the day numbers) — never inside the cells, so chips and bars cannot alternate sides. Multi-day events become a continuous bar across their columns; single-day events take one column. Both are packed into two lanes (`maxLanes`) by column, and the leftovers collapse into `+N`.
 5. `eventVariant` applies to chips, bars and agenda rows. `filled` uses `contrastTextColor()` (WCAG relative luminance) to set `--zn-calendar-event-text` to black or white.
 6. Navigation unit follows `typeView`: month → month, week → week, day → day. Month/year selects jump to the first day of the chosen month; day view replaces them with a date field. All navigation and selection fields use `size="xsmall"` (40px) and never stretch to the full container width. Below 600px the header keeps title and actions on one line (wrapping only if they cannot fit) and the fields share the row evenly (`flex: 1 1`), so the compact 40px height keeps the header to a single strip on phones.
 7. Week view is a horizontal tab strip of the 7 days plus the agenda of the active day; clicking a tab selects that day and moves the agenda.
 8. The cursor follows an external selection change, so setting the value from outside navigates the visible period.
-9. `showEvents=false` hides all event markup; `showEventDetails=false` keeps colored dots (month) and lines (multi-day bars). In the week view `showEvents=false` also removes the day panel (header + agenda), so a selection-only calendar ends at the day strip instead of reserving empty agenda space.
+9. `showEvents=false` hides all event markup; `showEventDetails=false` keeps the band but draws every event as a thin color line. In the week view `showEvents=false` also removes the day panel (header + agenda), so a selection-only calendar ends at the day strip instead of reserving empty agenda space.
 10. No i18n dependency: month/weekday/time labels come from `Intl`, UI captions from `labels`. Apps with `vue-i18n` should pass translated `labels`.
 11. Icons used: `chevron_left`, `chevron_right` (declared in `icon-profile.json`).
 

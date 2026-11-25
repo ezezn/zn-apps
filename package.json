@@ -17,7 +17,8 @@
     "shared/ui-data-grid",
     "shared/ui-data-richtext",
     "shared/ui-calendar",
-    "shared/ui-data-charts"
+    "shared/ui-data-charts",
+    "shared/ui-data-dashlet"
   ],
   "scripts": {
     "test": "vitest",
@@ -35,6 +36,7 @@
     "build:kitchensink": "cd kitchensink && npm run build",
     "build:daily-task-report": "cd daily-task-report && npm run build",
     "validate:pwa": "node scripts/validate-pwa.mjs",
+    "build:changed": "node scripts/build-changed.mjs",
     "check:docs": "node scripts/check-docs-links.mjs",
     "build:production": "rm -rf dist && mkdir dist && cp index.html dist/index.html && cp sw.js dist/sw.js && npm run build:shared && npm run build:zound-box && npm run build:kitchensink && npm run build:daily-task-report && cp -r zound-box/dist dist/zound-box && cp -r kitchensink/dist dist/kitchensink && cp -r daily-task-report/dist dist/daily-task-report && npm run validate:pwa",
     "build:all": "npm run build:production"

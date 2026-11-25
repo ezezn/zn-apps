@@ -11,7 +11,7 @@ zn-apps/
 ├── vitest.config.js             # Vitest projects (root orchestration)
 ├── ai/                          # AI context (this folder)
 ├── doc/{en,es}/                 # user docs: architecture & guidelines
-├── shared/                      # isolated libraries (own package.json / vite.config / vitest.config)
+├── shared/                      # independently built libraries (own package.json / vite.config / vitest.config)
 │   ├── ui-core/                 # design system, tokens, Zn* components, icons
 │   ├── settings-core/           # deep JSON settings proxy (no Vue, no DOM)
 │   ├── ui-about/                # ZnAbout, metadata helpers (composes ui-core)
@@ -23,7 +23,8 @@ zn-apps/
 │   ├── ui-data-grid/            # paginated data table (ZnDataGrid)
 │   ├── ui-data-richtext/        # Markdown-backed rich text editor/view
 │   ├── ui-calendar/             # MD3 calendars: month/week/day, single/range, events
-│   └── ui-data-charts/          # declarative SVG charts (bars/lines/areas/pie/donut)
+│   ├── ui-data-charts/          # declarative SVG charts (bars/lines/areas/pie/donut)
+│   └── ui-data-dashlet/         # dashboard KPI cards (composes ui-core ZnCard/ZnIcon)
 ├── zound-box/                   # product PWA (single screen, no router)
 ├── daily-task-report/           # product PWA (master-slave, Pinia + Dexie)
 └── kitchensink/                 # showroom, icon catalog, blueprint for new apps
@@ -50,7 +51,7 @@ Each project also holds `ai/` (agent context, English) and `doc/{en,es}/` (user 
 ## Non-negotiable principles
 
 1. **App independence** — own `package.json`, `vite.config.js`, `index.html`, service worker, deployed at `/zn-apps/<app>/`. Never share state (Pinia or other) across apps.
-2. **Isolated libraries** — each `shared/*` builds as an ES module on its own. Libraries do not import each other except the explicit composition edges: `ui-about → ui-core`, `ui-calendar → ui-core`, `ui-data-form/view/editor → ui-core + ui-data-core`, `ui-data-editor → ui-data-form + ui-data-view`, `ui-data-grid → ui-core + ui-data-core + ui-data-form + ui-data-view`, `ui-data-richtext → ui-core`, `ui-data-charts` → no shared library (Vue only, reads `--md-*` tokens from CSS). Apps compose libraries; libraries never import apps.
+2. **Libraries build independently and reuse instead of duplicating** — each `shared/*` builds as an ES module on its own. Sealing functionality is fine, but a library must not reimplement UI that already exists in a lower-level library: visual components compose `ui-core` (`ZnCard`, `ZnIcon`, `ZnButton`…) and data components may also compose `ui-data-core`. Edges are one-way and acyclic: a library never imports a library that imports it, and never imports an app. Every edge is declared in the library's `package.json` (`dependencies`) and in `vite.config.js` (`build.rollupOptions.external`). Current edges: `ui-about → ui-core`, `ui-calendar → ui-core`, `ui-data-form/view/editor → ui-core + ui-data-core`, `ui-data-editor → ui-data-form + ui-data-view`, `ui-data-grid → ui-core + ui-data-core + ui-data-form + ui-data-view`, `ui-data-richtext → ui-core`, `ui-data-dashlet → ui-core`, `ui-data-charts` → no shared library (Vue only, reads `--md-*` tokens from CSS). Apps compose libraries; libraries never import apps.
 3. **MD3 is centralized** — tokens and theme switching live only in `ui-core`. Theme toggling happens exclusively through `<ZnApp mode="light|dark|system">`, which writes `zn-theme-light`/`zn-theme-dark` on `<body>`.
 4. **Icon chunks are generated, never bundled whole** — each project declares `icon-profile.json` (`scanned` + `manual`); `ZnIcon` lazily fetches `<BASE_URL>icons/sprite-<family>.svg`.
 5. **i18n everywhere** — every app ships `en` and `es` messages. Initial locale: `settings.i18n.locale` → base of `navigator.language` → `en`. Each app uses its own `settings-core` namespace.

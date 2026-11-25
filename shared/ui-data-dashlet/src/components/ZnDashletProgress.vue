@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import ZnDashlet from './ZnDashlet.vue'
 
 /**
  * ZnDashletProgress - Progress bar for dashboard cards.
@@ -38,51 +39,69 @@ const props = defineProps({
     default: true
   }
 })
-</script>
 
-<template>
-  <div class="zn-dashlet"
-       :class="`zn-dashlet--${props.variant} ${props.class}`"
-       style="
-         height: ${props.height}px;
-         background: ${props.filled ? 'var(--zn-dashlet-bg)' : 'transparent'};
-         color: ${props.filled ? 'var(--zn-dashlet-fg)' : 'inherit'};
-         border-radius: 4px;
-         overflow: hidden;
-         font-size: 0;
-       ">
-  </div>
-</template>
-
-<style scoped>
-/* Progress bar background track */
-.zn-dashlet-progress {
-  height: 100%;
-  width: 100%;
-  background: currentColor;
-  opacity: 0.1;
-}
-
-/* Progress fill */
-.zn-dashlet-progress__fill {
-  height: 100%;
-  width: 0%;
-  background: currentColor;
-  transition: width 0.3s ease;
-}
-
-/* Variant colors for progress fill */
-.zn-dashlet--primary .zn-dashlet-progress__fill { background: var(--md-primary, #6750A4); }
-.zn-dashlet--success .zn-dashlet-progress__fill { background: var(--md-success, #2e7d32); }
-.zn-dashlet--warning .zn-dashlet-progress__fill { background: var(--md-warning, #f57f17); }
-.zn-dashlet--error .zn-dashlet-progress__fill { background: var(--md-error, #b00020); }
-.zn-dashlet--info .zn-dashlet-progress__fill { background: var(--md-info, #0288d1); }
-.zn-dashlet--neutral .zn-dashlet-progress__fill { background: var(--md-on-surface-variant, #787878); }
-</style>
-
-<script setup>
 const percentage = computed(() => {
   if (props.max <= 0) return 0
   return Math.min(100, Math.max(0, (props.value / props.max) * 100))
 })
+
+const cardHeight = computed(() => props.height + (props.showValue ? 16 : 0))
 </script>
+
+<template>
+  <ZnDashlet
+    :variant="variant"
+    :filled="filled"
+    :height="cardHeight"
+    class="zn-dashlet-progress-card"
+  >
+    <div class="zn-dashlet-progress-wrapper">
+      <span v-if="showValue" class="zn-dashlet-progress__value">
+        {{ Math.round(percentage) }}%
+      </span>
+      <div class="zn-dashlet-progress" :style="{ height: `${height}px` }">
+        <div
+          class="zn-dashlet-progress__fill"
+          :style="{
+            width: `${percentage}%`,
+            background: filled ? 'var(--zn-dashlet-bg)' : 'currentColor'
+          }"
+        />
+      </div>
+    </div>
+  </ZnDashlet>
+</template>
+
+<style scoped>
+.zn-dashlet-progress-card :deep(.zn-card__content) {
+  justify-content: center;
+  padding: 0 12px;
+}
+
+.zn-dashlet-progress-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.zn-dashlet-progress__value {
+  align-self: flex-end;
+  font-size: 0.75rem;
+  line-height: 1;
+  color: var(--md-on-surface-variant, #787878);
+}
+
+.zn-dashlet-progress {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--md-surface-variant, #e7e0ec);
+}
+
+.zn-dashlet-progress__fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+</style>

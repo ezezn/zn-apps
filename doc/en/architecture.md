@@ -28,7 +28,7 @@ zn-apps/
 ├── vitest.config.js             central Vitest projects
 ├── doc/{en,es}/                 this documentation
 ├── ai/                          AI agent context
-├── shared/                      isolated libraries
+├── shared/                      independently built libraries
 │   ├── ui-core/                 design system, tokens, components, icons
 │   ├── settings-core/           deep settings proxy
 │   ├── ui-about/                About panel (composes ui-core)
@@ -40,6 +40,7 @@ zn-apps/
 │   ├── ui-data-grid/            paginated data table
 │   ├── ui-data-richtext/        Markdown-backed rich text
 │   ├── ui-calendar/             MD3 calendars: month/week/day, ranges, events
+│   ├── ui-data-dashlet/         dashboard KPI cards (composes ui-core)
 │   └── ui-data-charts/          declarative SVG charts: bars, lines, areas, pie, donut
 ├── zound-box/                   product PWA (single screen)
 ├── daily-task-report/           product PWA (master-slave, Pinia + Dexie)
@@ -53,8 +54,8 @@ Every project also holds `ai/` (agent context) and `doc/{en,es}/` (user manual).
 ### 1. Applications are fully independent
 Each app owns `package.json`, `vite.config.js`, `index.html`, service worker and `dist/`. **Never share state between apps** (no cross-app Pinia). Deployment subpaths are `/zn-apps/<app>/`.
 
-### 2. Shared libraries are isolated
-Each `shared/*` library has its own manifest, Vite library build and tests. Libraries do not import each other except explicit composition edges: `ui-about → ui-core`, `ui-calendar → ui-core`, the `ui-data-*` family over `ui-core` and `ui-data-core`, `ui-data-editor → ui-data-form + ui-data-view`, `ui-data-grid → ui-core + ui-data-core + ui-data-form + ui-data-view`, `ui-data-richtext → ui-core`; `ui-data-charts` imports no other shared library (Vue only) and styles itself with the `--md-*` variables. Infrastructure libraries (`settings-core`, `ui-data-core`) depend on neither Vue nor the DOM.
+### 2. Shared libraries build independently and reuse, not duplicate
+Each `shared/*` library has its own manifest, Vite library build and tests. A library seals its own functionality but must not reimplement UI that a lower-level library already provides: visual components compose `ui-core` (`ZnCard`, `ZnIcon`, `ZnButton`…), and data components may also compose `ui-data-core`. Dependencies are one-way and acyclic — a library never imports a library that imports it, and never imports an app — and every edge is declared in its `package.json` and `vite.config.js` `external`. Current edges: `ui-about → ui-core`, `ui-calendar → ui-core`, the `ui-data-*` family over `ui-core` and `ui-data-core`, `ui-data-editor → ui-data-form + ui-data-view`, `ui-data-grid → ui-core + ui-data-core + ui-data-form + ui-data-view`, `ui-data-richtext → ui-core`, `ui-data-dashlet → ui-core`; `ui-data-charts` imports no other shared library (Vue only) and styles itself with the `--md-*` variables. Infrastructure libraries (`settings-core`, `ui-data-core`) depend on neither Vue nor the DOM.
 
 ### 3. Material Design 3, centralized
 Tokens live in `shared/ui-core/src/assets/css/global.css`. Theme switching happens only through `<ZnApp mode="light|dark|system">`, which applies `zn-theme-light`/`zn-theme-dark` to `<body>`.

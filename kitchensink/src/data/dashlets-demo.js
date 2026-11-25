@@ -1,9 +1,263 @@
 /** Datos de ejemplo para la galería de @zn-apps/ui-data-dashlet. */
 
-/** Contador de ejemplo: valor, label y subtítulo */\nexport const counterExample = {\n  data: [{ value: 128 }],\n  config: {\n    value: 128,\n    label: 'Usuarios',\n    subtitle: 'Activos',\n    icon: 'people',\n    variant: 'primary',\n    filled: true\n  }\n}
+/** Contador de ejemplo: valor, label y subtítulo */
+export const counterExample = {
+  data: [{ value: 128 }],
+  config: {
+    value: 128,
+    label: 'Usuarios',
+    subtitle: 'Activos',
+    icon: 'people',
+    variant: 'primary',
+    filled: true
+  }
+}
 
-/** Resumen de ejemplo: dos filas */\nexport const summaryExample = {\n  data: [{ value: 250, secondaryValue: 75 }],\n  config: {\n    value: 250,\n    subtitle: 'Objetivo',\n    secondaryValue: 75,\n    secondaryLabel: 'Avance',\n    secondarySubtitle: 'Progreso',\n    variant: 'success',\n    filled: true,\n    layout: 'double-row'\n  }\n}
+/** Resumen de ejemplo: dos filas */
+export const summaryExample = {
+  data: [{ value: 250, secondaryValue: 75 }],
+  config: {
+    value: 250,
+    subtitle: 'Objetivo',
+    secondaryValue: 75,
+    secondaryLabel: 'Avance',
+    secondarySubtitle: 'Progreso',
+    variant: 'success',
+    filled: true,
+    layout: 'double-row'
+  }
+}
 
-/** Ejemplo side-by-side */\nexport const sideBySideExample = {\n  data: [{ value: 150, secondaryValue: 80 }],\n  config: {\n    value: 150,\n    subtitle: 'Ventas',\n    secondaryValue: 80,\n    secondaryLabel: 'Meta',\n    secondarySubtitle: 'Meta trimestral',\n    variant: 'info',\n    filled: true,\n    layout: 'side-by-side'\n  }\n}
+/** Ejemplo side-by-side */
+export const sideBySideExample = {
+  data: [{ value: 150, secondaryValue: 80 }],
+  config: {
+    value: 150,
+    subtitle: 'Ventas',
+    secondaryValue: 80,
+    secondaryLabel: 'Meta',
+    secondarySubtitle: 'Meta trimestral',
+    variant: 'info',
+    filled: true,
+    layout: 'side-by-side'
+  }
+}
 
-/** Variantes de color */\nexport const variantsExamples = [\n  { key: 'primary', label: 'Primary', variant: 'primary' },\n  { key: 'warning', label: 'Warning', variant: 'warning' },\n  { key: 'info', label: 'Info', variant: 'info' },\n  { key: 'success', label: 'Success', variant: 'success' },\n  { key: 'error', label: 'Error', variant: 'error' },\n  { key: 'neutral', label: 'Neutral', variant: 'neutral' }\n]\n\n/** Ejemplos de sparkline */\nexport const sparklineExamples = [\n  {\n    key: 'sparkline-primary',\n    label: 'Sparkline primary',\n    data: [{ data: [10, 15, 12, 20, 18] }],\n    config: { data: [10, 15, 12, 20, 18], variant: 'primary', filled: true, height: 40, width: 120 }\n  },\n  {\n    key: 'sparkline-success',\n    label: 'Sparkline success',\n    data: [{ data: [5, 8, 12, 7, 10] }],\n    config: { data: [5, 8, 12, 7, 10], variant: 'success', filled: true, height: 40, width: 120 }\n  }\n]\n\n/** Ejemplos de progress */\nexport const progressExamples = [\n  {\n    key: 'progress-primary',\n    label: 'Progress primary',\n    data: [{ value: 75 }],\n    config: { value: 75, max: 100, variant: 'primary', filled: true, height: 8 }\n  },\n  {\n    key: 'progress-success',\n    label: 'Progress success',\n    data: [{ value: 50 }],\n    config: { value: 50, max: 100, variant: 'success', filled: true, height: 8 }\n  }\n]\n\n/**\n * Payloads exactos de la galería: cada entrada es el `data` y el `config` que\n * recibe `ZnDashlet`, `ZnDashletCounter`, `ZnDashletSummary`, `ZnDashletSparkline` y\n * `ZnDashletProgress`. La página de datos muestra estos mismos objetos.\n */\nexport const dashletExamples = [\n  {\n    key: 'counter',\n    title: 'Contador',\n    description: 'Card de contador con ícono, número y subtítulo.',\n    data: [{ value: 128 }],\n    config: {\n      value: 128,\n      label: 'Usuarios',\n      subtitle: 'Activos',\n      icon: 'people',\n      variant: 'primary',\n      filled: true\n    }\n  },\n  {\n    key: 'summary',\n    title: 'Resumen',\n    description: 'Card de resumen con dos filas: valor grande y subtítulo arriba, número menor abajo.',\n    data: [{ value: 250, secondaryValue: 75 }],\n    config: {\n      value: 250,\n      subtitle: 'Objetivo',\n      secondaryValue: 75,\n      secondaryLabel: 'Avance',\n      secondarySubtitle: 'Progreso',\n      variant: 'success',\n      filled: true,\n      layout: 'double-row'\n    }\n  },\n  {\n    key: 'side-by-side',\n    title: 'Side-by-side',\n    description: 'Dos valores uno al lado del otro en layout horizontal.',\n    data: [{ value: 150, secondaryValue: 80 }],\n    config: {\n      value: 150,\n      subtitle: 'Ventas',\n      secondaryValue: 80,\n      secondaryLabel: 'Meta',\n      secondarySubtitle: 'Meta trimestral',\n      variant: 'info',\n      filled: true,\n      layout: 'side-by-side'\n    }\n  },\n  ...variantsExamples.map((v) => (\n    {\n      key: `variant-${v.key}`,\n      title: `Variante ${v.label}`,\n      description: 'Card de dashboard con la variante de color indicada.',\n      data: [{ value: 100 }],\n      config: {\n        value: 100,\n        label: v.label,\n        icon: 'trending_up',\n        variant: v.variant,\n        filled: true\n      }\n    }\n  ))\n]\n  ...sparklineExamples.map((s) => (\n    {\n      key: `sparkline-${s.key}`,\n      title: s.label,\n      description: 'Sparkline de tendencia con los datos y configuración indicados.',\n      data: s.data,\n      config: s.config\n    }\n  ))\n  ...progressExamples.map((p) => (\n    {\n      key: `progress-${p.key}`,\n      title: p.label,\n      description: 'Barra de progreso con el valor y configuración indicados.',\n      data: p.data,\n      config: p.config\n    }\n  ))\n]\n\n/** Configuraciones reducidas para las miniaturas de `ZnDashlet`. */\nexport const shapeExamples = [\n  {\n    key: 'shape-counter',\n    label: 'Contador',\n    data: [{ value: 128 }],\n    config: { value: 128, label: 'Usuarios', subtitle: 'Activos', icon: 'people', variant: 'primary', filled: true }\n  },\n  {\n    key: 'shape-summary',\n    label: 'Resumen',\n    data: [{ value: 250, secondaryValue: 75 }],\n    config: { value: 250, subtitle: 'Objetivo', secondaryValue: 75, secondaryLabel: 'Avance', secondarySubtitle: 'Progreso', variant: 'success', filled: true, layout: 'double-row' }\n  },\n  {\n    key: 'shape-side-by-side',\n    label: 'Side-by-side',\n    data: [{ value: 150, secondaryValue: 80 }],\n    config: { value: 150, subtitle: 'Ventas', secondaryValue: 80, secondaryLabel: 'Meta', secondarySubtitle: 'Meta trimestral', variant: 'info', filled: true, layout: 'side-by-side' }\n  },\n  {\n    key: 'shape-primary',\n    label: 'Primary',\n    data: [{ value: 100 }],\n    config: { value: 100, label: 'Primary', icon: 'trending_up', variant: 'primary', filled: true }\n  },\n  {\n    key: 'shape-warning',\n    label: 'Warning',\n    data: [{ value: 100 }],\n    config: { value: 100, label: 'Warning', icon: 'trending_up', variant: 'warning', filled: true }\n  },\n  {\n    key: 'shape-success',\n    label: 'Success',\n    data: [{ value: 100 }],\n    config: { value: 100, label: 'Success', icon: 'trending_up', variant: 'success', filled: true }\n  },\n  {\n    key: 'shape-error',\n    label: 'Error',\n    data: [{ value: 100 }],\n    config: { value: 100, label: 'Error', icon: 'trending_up', variant: 'error', filled: true }\n  },\n  {\n    key: 'shape-neutral',\n    label: 'Neutral',\n    data: [{ value: 100 }],\n    config: { value: 100, label: 'Neutral', icon: 'trending_up', variant: 'neutral', filled: true }\n  },\n  {\n    key: 'shape-sparkline-primary',\n    label: 'Sparkline primary',\n    data: [{ data: [10, 15, 12, 20, 18] }],\n    config: { data: [10, 15, 12, 20, 18], variant: 'primary', filled: true, height: 40, width: 120 }\n  },\n  {\n    key: 'shape-sparkline-success',\n    label: 'Sparkline success',\n    data: [{ data: [5, 8, 12, 7, 10] }],\n    config: { data: [5, 8, 12, 7, 10], variant: 'success', filled: true, height: 40, width: 120 }\n  },\n  {\n    key: 'shape-progress-primary',\n    label: 'Progress primary',\n    data: [{ value: 75 }],\n    config: { value: 75, max: 100, variant: 'primary', filled: true, height: 8 }\n  },\n  {\n    key: 'shape-progress-success',\n    label: 'Progress success',\n    data: [{ value: 50 }],\n    config: { value: 50, max: 100, variant: 'success', filled: true, height: 8 }\n  }\n]\n
+/** Variantes de color */
+export const variantsExamples = [
+  { key: 'primary', label: 'Primary', variant: 'primary' },
+  { key: 'warning', label: 'Warning', variant: 'warning' },
+  { key: 'info', label: 'Info', variant: 'info' },
+  { key: 'success', label: 'Success', variant: 'success' },
+  { key: 'error', label: 'Error', variant: 'error' },
+  { key: 'neutral', label: 'Neutral', variant: 'neutral' }
+]
+
+/** Ejemplos de sparkline */
+export const sparklineExamples = [
+  {
+    key: 'sparkline-primary',
+    label: 'Sparkline primary',
+    data: [{ data: [10, 15, 12, 20, 18] }],
+    config: {
+      data: [10, 15, 12, 20, 18],
+      variant: 'primary',
+      filled: true,
+      height: 40,
+      width: 120
+    }
+  },
+  {
+    key: 'sparkline-success',
+    label: 'Sparkline success',
+    data: [{ data: [5, 8, 12, 7, 10] }],
+    config: {
+      data: [5, 8, 12, 7, 10],
+      variant: 'success',
+      filled: true,
+      height: 40,
+      width: 120
+    }
+  }
+]
+
+/** Ejemplos de progress */
+export const progressExamples = [
+  {
+    key: 'progress-primary',
+    label: 'Progress primary',
+    data: [{ value: 75 }],
+    config: { value: 75, max: 100, variant: 'primary', filled: true, height: 8 }
+  },
+  {
+    key: 'progress-success',
+    label: 'Progress success',
+    data: [{ value: 50 }],
+    config: { value: 50, max: 100, variant: 'success', filled: true, height: 8 }
+  }
+]
+
+/**
+ * Payloads exactos de la galería: cada entrada es el `data` y el `config` que
+ * recibe `ZnDashlet`, `ZnDashletCounter`, `ZnDashletSummary`, `ZnDashletSparkline` y
+ * `ZnDashletProgress`. La página de datos muestra estos mismos objetos.
+ */
+export const dashletExamples = [
+  {
+    key: 'counter',
+    title: 'Contador',
+    description: 'Card de contador con ícono, número y subtítulo.',
+    data: [{ value: 128 }],
+    config: {
+      value: 128,
+      label: 'Usuarios',
+      subtitle: 'Activos',
+      icon: 'people',
+      variant: 'primary',
+      filled: true
+    }
+  },
+  {
+    key: 'summary',
+    title: 'Resumen',
+    description:
+      'Card de resumen con dos filas: valor grande y subtítulo arriba, número menor abajo.',
+    data: [{ value: 250, secondaryValue: 75 }],
+    config: {
+      value: 250,
+      subtitle: 'Objetivo',
+      secondaryValue: 75,
+      secondaryLabel: 'Avance',
+      secondarySubtitle: 'Progreso',
+      variant: 'success',
+      filled: true,
+      layout: 'double-row'
+    }
+  },
+  {
+    key: 'side-by-side',
+    title: 'Side-by-side',
+    description: 'Dos valores uno al lado del otro en layout horizontal.',
+    data: [{ value: 150, secondaryValue: 80 }],
+    config: {
+      value: 150,
+      subtitle: 'Ventas',
+      secondaryValue: 80,
+      secondaryLabel: 'Meta',
+      secondarySubtitle: 'Meta trimestral',
+      variant: 'info',
+      filled: true,
+      layout: 'side-by-side'
+    }
+  },
+  ...variantsExamples.map((v) => ({
+    key: `variant-${v.key}`,
+    title: `Variante ${v.label}`,
+    description: 'Card de dashboard con la variante de color indicada.',
+    data: [{ value: 100 }],
+    config: {
+      value: 100,
+      label: v.label,
+      icon: 'trending_up',
+      variant: v.variant,
+      filled: true
+    }
+  })),
+  ...sparklineExamples.map((s) => ({
+    key: s.key,
+    title: s.label,
+    description: 'Sparkline de tendencia con los datos y configuración indicados.',
+    data: s.data,
+    config: s.config
+  })),
+  ...progressExamples.map((p) => ({
+    key: p.key,
+    title: p.label,
+    description: 'Barra de progreso con el valor y configuración indicados.',
+    data: p.data,
+    config: p.config
+  }))
+]
+
+/** Configuraciones reducidas para las miniaturas de `ZnDashlet`. */
+export const shapeExamples = [
+  {
+    key: 'shape-counter',
+    label: 'Contador',
+    data: [{ value: 128 }],
+    config: {
+      value: 128,
+      label: 'Usuarios',
+      subtitle: 'Activos',
+      icon: 'people',
+      variant: 'primary',
+      filled: true
+    }
+  },
+  {
+    key: 'shape-summary',
+    label: 'Resumen',
+    data: [{ value: 250, secondaryValue: 75 }],
+    config: {
+      value: 250,
+      subtitle: 'Objetivo',
+      secondaryValue: 75,
+      secondaryLabel: 'Avance',
+      secondarySubtitle: 'Progreso',
+      variant: 'success',
+      filled: true,
+      layout: 'double-row'
+    }
+  },
+  {
+    key: 'shape-side-by-side',
+    label: 'Side-by-side',
+    data: [{ value: 150, secondaryValue: 80 }],
+    config: {
+      value: 150,
+      subtitle: 'Ventas',
+      secondaryValue: 80,
+      secondaryLabel: 'Meta',
+      secondarySubtitle: 'Meta trimestral',
+      variant: 'info',
+      filled: true,
+      layout: 'side-by-side'
+    }
+  },
+  {
+    key: 'shape-sparkline-primary',
+    label: 'Sparkline primary',
+    data: [{ data: [10, 15, 12, 20, 18] }],
+    config: {
+      data: [10, 15, 12, 20, 18],
+      variant: 'primary',
+      filled: true,
+      height: 40,
+      width: 120
+    }
+  },
+  {
+    key: 'shape-sparkline-success',
+    label: 'Sparkline success',
+    data: [{ data: [5, 8, 12, 7, 10] }],
+    config: {
+      data: [5, 8, 12, 7, 10],
+      variant: 'success',
+      filled: true,
+      height: 40,
+      width: 120
+    }
+  },
+  {
+    key: 'shape-progress-primary',
+    label: 'Progress primary',
+    data: [{ value: 75 }],
+    config: { value: 75, max: 100, variant: 'primary', filled: true, height: 8 }
+  },
+  {
+    key: 'shape-progress-success',
+    label: 'Progress success',
+    data: [{ value: 50 }],
+    config: { value: 50, max: 100, variant: 'success', filled: true, height: 8 }
+  }
+]

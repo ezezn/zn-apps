@@ -85,13 +85,8 @@ import { computed, ref } from 'vue'
 import { ZnButton, ZnIcon, ZnScreen, useDialogs } from '@zn-apps/ui-core'
 import { ZnCalendar, formatMonthYear } from '@zn-apps/ui-calendar'
 import { i18n } from '../i18n.js'
-import { dayOffsInMonth, upcomingDayOffs } from '../helpers/days-off.js'
-import {
-  dayCountBetween,
-  durationParts,
-  formatTaskDate,
-  toDateInputValue
-} from '../helpers/dates.js'
+import { dayOffsInMonth, formatDuration, upcomingDayOffs } from '../helpers/days-off.js'
+import { dayCountBetween, formatTaskDate, toDateInputValue } from '../helpers/dates.js'
 import { removeDayOff, saveDayOff, useDaysOff } from '../composables/useDaysOff.js'
 import DayOffDialog from '../components/DayOffDialog.vue'
 import DayOffItem from '../components/DayOffItem.vue'
@@ -133,21 +128,8 @@ const subtitle = computed(() => {
   const days = dayCountBetween(today, date)
   if (days === null) return summary.value
   if (days <= 0) return t('daysOff.nextToday')
-  return t('daysOff.nextIn', { distance: formatDuration(days) })
+  return t('daysOff.nextIn', { distance: formatDuration(days, t) })
 })
-
-/** “3 months and 6 days”; zero units are skipped and the last one joins with “and”. */
-function formatDuration(days) {
-  const parts = durationParts(days).map(({ unit, value }) =>
-    i18n.global.t(`daysOff.duration.${unit}`, value, { count: value })
-  )
-  if (parts.length === 0) return ''
-
-  const last = parts[parts.length - 1]
-  const leading = parts.slice(0, -1)
-  if (leading.length === 0) return last
-  return `${leading.join(', ')} ${t('daysOff.duration.and')} ${last}`
-}
 
 const calendarLabels = computed(() => ({
   today: t('home.today'),

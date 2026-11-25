@@ -1,5 +1,6 @@
 <script setup>
-import { computed } from 'vue'
+import { ZnIcon } from '@zn-apps/ui-core'
+import ZnDashlet from './ZnDashlet.vue'
 
 /**
  * ZnDashletCounter - Card de resumen tipo contador para dashboards.
@@ -8,9 +9,12 @@ import { computed } from 'vue'
  *  - value: number | string - el número principal a mostrar
  *  - label: string - etiqueta descriptiva (ej. "Ventas", "Usuarios")
  *  - subtitle: string | null - subtítulo opcional debajo del número
- *  - icon: string - nombre de icono Material Design (ej. 'trending_up', 'people')
+ *  - icon: string - nombre de icono Material Design (ej. 'trending_up', 'people').
+ *    Se dibuja con `ZnIcon` de ui-core, que carga el sprite del proyecto
+ *    consumidor; el icono debe existir en su perfil de iconos.
  *  - variant: variant of ZnDashlet ('primary' | 'warning' | 'info' | 'success' | 'error' | 'neutral')
  *  - filled: boolean - si la card debe llenarse con color
+ *  - height: number - altura en px (default 120)
  */
 const props = defineProps({
   value: {
@@ -36,56 +40,52 @@ const props = defineProps({
   filled: {
     type: Boolean,
     default: true
+  },
+  height: {
+    type: Number,
+    default: 120
   }
 })
 </script>
 
 <template>
-  <div class="zn-dashlet"
-       :class="`zn-dashlet--${props.variant} ${props.class}`"
-       style="
-         height: ${props.height}px;
-         background: ${props.filled ? 'var(--zn-dashlet-bg)' : 'transparent'};
-         color: ${props.filled ? 'var(--zn-dashlet-fg)' : 'inherit'};
-       ">
+  <ZnDashlet :variant="variant" :filled="filled" :height="height">
     <div class="zn-dashlet-counter">
-      <span class="zn-dashlet-counter__icon">📊</span>
+      <ZnIcon :name="props.icon" :size="40" class="zn-dashlet-counter__icon" />
       <div class="zn-dashlet-counter__details">
         <div class="zn-dashlet-counter__value">{{ value }}</div>
-        <template v-if="subtitle">
-          <span class="zn-dashlet-counter__label">{{ label }}</span>
-          <span class="zn-dashlet-counter__subtitle">{{ subtitle }}</span>
-        </template>
-        <template v-else>
-          <span class="zn-dashlet-counter__label">{{ label }}</span>
-        </template>
+        <span class="zn-dashlet-counter__label">{{ label }}</span>
+        <span v-if="subtitle" class="zn-dashlet-counter__subtitle">{{ subtitle }}</span>
       </div>
     </div>
-  </div>
+  </ZnDashlet>
 </template>
 
 <style scoped>
 .zn-dashlet-counter {
   display: flex;
   align-items: center;
-  gap: 12px;
+  /* Reparte icono y datos a los extremos cuando la card se ensancha. */
+  justify-content: space-between;
+  gap: 16px;
   width: 100%;
+  min-width: 0;
 }
 
 .zn-dashlet-counter__icon {
-  flex-shrink: 0;
-  width: 32px;
-  height: 32px;
-  font-size: 1.5rem;
+  flex: none;
   color: var(--md-primary, #6750A4);
-  flex-shrink: 0;
 }
 
 .zn-dashlet-counter__details {
-  flex: 1;
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  align-items: flex-end;
+  gap: 2px;
+  min-width: 0;
+  text-align: right;
 }
 
 .zn-dashlet-counter__value {

@@ -1,4 +1,4 @@
-import { parseLocalDate, toDateInputValue } from './dates.js'
+import { durationParts, parseLocalDate, toDateInputValue } from './dates.js'
 
 /**
  * Why a day was not worked. The labels live in i18n
@@ -142,6 +142,22 @@ export function dayOffsInMonth(entries = [], month = {}) {
       if (a.start !== b.start) return a.start < b.start ? -1 : 1
       return a.end < b.end ? -1 : a.end > b.end ? 1 : 0
     })
+}
+
+/**
+ * “3 months and 6 days”; zero units are skipped and the last one joins with the
+ * localized conjunction. `t` is the i18n translator.
+ */
+export function formatDuration(days, t) {
+  const parts = durationParts(days).map(({ unit, value }) =>
+    t(`daysOff.duration.${unit}`, value, { count: value })
+  )
+  if (parts.length === 0) return ''
+
+  const last = parts[parts.length - 1]
+  const leading = parts.slice(0, -1)
+  if (leading.length === 0) return last
+  return `${leading.join(', ')} ${t('daysOff.duration.and')} ${last}`
 }
 
 /** `{ id, title, start, end, color }` as expected by `ZnCalendar`. */

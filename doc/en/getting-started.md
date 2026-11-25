@@ -55,6 +55,7 @@ npm run build:zound-box
 npm run build:kitchensink
 npm run build:daily-task-report
 npm run build:production   # full monorepo -> dist/
+npm run build:changed      # only workspaces changed in BASE_SHA..HEAD_SHA
 npm run validate:pwa       # manifest + 192/512 PNG validation
 ```
 
@@ -70,7 +71,9 @@ npm run build:icons        # both; commit profiles + sprites afterwards
 
 ## Deployment
 
-`.github/workflows/deploy.yml` runs on every push to `main`: install → `npm run test:run` → `npm run build:production` → inject `404.html` fallbacks → publish to GitHub Pages under `/zn-apps/`.
+`.github/workflows/deploy.yml` runs on every push to `main`: install → `npm run test:run` → restore the previous Pages artifact → `npm run build:changed` → `validate:pwa` → inject `404.html` fallbacks → publish to GitHub Pages under `/zn-apps/`.
+
+`build:changed` (`scripts/build-changed.mjs`) compares `github.event.before..github.sha` and rebuilds only the apps and libraries whose files changed, keeping the rest of the site from the previous deployment. It automatically falls back to a full `build:production` when there is no previous artifact or when the change touches global files (`package.json`, lockfile, `vitest*.js`, `index.html`, `sw.js`, `scripts/`). Since apps bundle shared libraries from source, an app that uses a changed library is not rebuilt automatically — the script lists those apps, so rebuild them in the same push or set `FULL_BUILD=1`.
 
 ## Where to go next
 

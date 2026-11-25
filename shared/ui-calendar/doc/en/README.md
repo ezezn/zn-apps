@@ -58,7 +58,8 @@ Navigation follows the view: arrows move one month, one week or one day. `month`
 | `show-navigation` | Boolean | `true` | Arrows, month/year selects or date field |
 | `show-fields` | Boolean | `false` | Optional fields to type the selection |
 | `show-events` | Boolean | `true` | `false` turns the calendar into a day picker |
-| `show-event-details` | Boolean | `true` | `false` draws single-day events as dots and multi-day events as lines |
+| `show-event-details` | Boolean | `true` | `false` draws every event as a thin color line instead of its title |
+| `events-position` | String | `'below'` | Month view only: `below` stacks the event band under the day numbers, `above` over them. All events (single- and multi-day) share that band, so they never alternate between both sides |
 | `event-variant` | String | `'accent'` | `accent` uses a colored notch over a tinted surface; `filled` paints the event with its color and picks black or white text automatically |
 | `locale` | String | system | BCP 47 locale for month, weekday and time text |
 | `week-starts-on` | Number | `1` | 0 = Sunday … 6 = Saturday |

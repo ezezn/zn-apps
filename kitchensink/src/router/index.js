@@ -1,107 +1,64 @@
 // kitchensink/src/router/index.js
 import { createRouter, createWebHistory } from 'vue-router'
-import ButtonsPage from '../views/ButtonsPage.vue'
-import CardsPage from '../views/CardsPage.vue'
-import SwitchesPage from '../views/SwitchesPage.vue'
-import InputsPage from '../views/InputsPage.vue'
-import TextPage from '../views/inputs/TextPage.vue'
-import MultilinePage from '../views/inputs/MultilinePage.vue'
-import EmailPage from '../views/inputs/EmailPage.vue'
-import PhonePage from '../views/inputs/PhonePage.vue'
-import NumberPage from '../views/inputs/NumberPage.vue'
-import DatePage from '../views/inputs/DatePage.vue'
-import TimePage from '../views/inputs/TimePage.vue'
-import DateTimePage from '../views/inputs/DateTimePage.vue'
-import SelectPage from '../views/inputs/SelectPage.vue'
-import ChipPage from '../views/inputs/ChipPage.vue'
-import RangePage from '../views/inputs/RangePage.vue'
-import DateRangePage from '../views/inputs/DateRangePage.vue'
-import TimeRangePage from '../views/inputs/TimeRangePage.vue'
-import DateTimeRangePage from '../views/inputs/DateTimeRangePage.vue'
-import IconsPage from '../views/IconsPage.vue'
-import LayoutPage from '../views/LayoutPage.vue'
-import SectionsPage from '../views/SectionsPage.vue'
-import ScreenPage from '../views/ScreenPage.vue'
-import NavigationLayoutPage from '../views/NavigationLayoutPage.vue'
-import LegacyPage from '../views/LegacyPage.vue'
-import DialogsPage from '../views/DialogsPage.vue'
-import TabsPage from '../views/TabsPage.vue'
-import AboutPage from '../views/AboutPage.vue'
-import SettingsPage from '../views/SettingsPage.vue'
-import ColorSchemePage from '../views/ColorSchemePage.vue'
-import PwaMetaPage from '../views/PwaMetaPage.vue'
-import PwaInstallPage from '../views/PwaInstallPage.vue'
-import DataCorePage from '../views/data/DataCorePage.vue'
-import DataFormPage from '../views/data/DataFormPage.vue'
-import DataViewPage from '../views/data/DataViewPage.vue'
-import DataEditorPage from '../views/data/DataEditorPage.vue'
-import DataGridPage from '../views/data/DataGridPage.vue'
-import DataRichTextPage from '../views/data/DataRichTextPage.vue'
-import ChartsPage from '../views/data/ChartsPage.vue'
-import ChartsDataPage from '../views/data/ChartsDataPage.vue'
-import CalendarMonthPage from '../views/calendar/MonthPage.vue'
-import CalendarRangePage from '../views/calendar/RangePage.vue'
-import CalendarWeekPage from '../views/calendar/WeekPage.vue'
-import CalendarDayPage from '../views/calendar/DayPage.vue'
 
 export const routes = [
   { path: '/', redirect: '/buttons' },
-  { path: '/buttons', name: 'buttons', component: ButtonsPage },
-  { path: '/cards', name: 'cards', component: CardsPage },
-  { path: '/switches', name: 'switches', component: SwitchesPage },
-  { path: '/inputs', name: 'inputs', component: InputsPage },
-  { path: '/inputs/text', name: 'input-text', component: TextPage },
-  { path: '/inputs/multiline', name: 'input-multiline', component: MultilinePage },
-  { path: '/inputs/email', name: 'input-email', component: EmailPage },
-  { path: '/inputs/phone', name: 'input-phone', component: PhonePage },
-  { path: '/inputs/number', name: 'input-number', component: NumberPage },
-  { path: '/inputs/date', name: 'input-date', component: DatePage },
-  { path: '/inputs/time', name: 'input-time', component: TimePage },
-  { path: '/inputs/datetime', name: 'input-datetime', component: DateTimePage },
-  { path: '/inputs/select', name: 'input-select', component: SelectPage },
-  { path: '/inputs/chip', name: 'input-chip', component: ChipPage },
-  { path: '/inputs/range', name: 'input-range', component: RangePage },
-  { path: '/inputs/date-range', name: 'input-date-range', component: DateRangePage },
-  { path: '/inputs/time-range', name: 'input-time-range', component: TimeRangePage },
-  { path: '/inputs/datetime-range', name: 'input-datetime-range', component: DateTimeRangePage },
-  { path: '/data/core', name: 'data-core', component: DataCorePage },
-  { path: '/data/form', name: 'data-form', component: DataFormPage },
-  { path: '/data/view', name: 'data-view', component: DataViewPage },
-  { path: '/data/editor', name: 'data-editor', component: DataEditorPage },
-  { path: '/data/grid', name: 'data-grid', component: DataGridPage },
-  { path: '/data/richtext', name: 'data-richtext', component: DataRichTextPage },
-  { path: '/data/dashlets', name: 'data-dashlets', component: DashletsPage },
-  { path: '/data/dashlets-data', name: 'data-dashlets-data', component: DashletsDataPage },
-  { path: '/data/charts', name: 'data-charts', component: ChartsPage },
-  { path: '/data/charts-data', name: 'data-charts-data', component: ChartsDataPage },
-  { path: '/calendar/month', name: 'calendar-month', component: CalendarMonthPage },
-  { path: '/calendar/range', name: 'calendar-range', component: CalendarRangePage },
-  { path: '/calendar/week', name: 'calendar-week', component: CalendarWeekPage },
-  { path: '/calendar/day', name: 'calendar-day', component: CalendarDayPage },
-  { path: '/dialogs', name: 'dialogs', component: DialogsPage },
-  { path: '/icons', name: 'icons', component: IconsPage },
-  { path: '/layout', name: 'layout', component: LayoutPage },
-  { path: '/sections', name: 'sections', component: SectionsPage },
-  { path: '/screen', name: 'screen', component: ScreenPage },
-  { path: '/tabs', name: 'tabs', component: TabsPage },
-  { path: '/navigation-layout', name: 'navigation-layout', component: NavigationLayoutPage },
-  { path: '/legacy', name: 'legacy', component: LegacyPage },
-  { path: '/about', name: 'about', component: AboutPage },
-  { path: '/settings', name: 'settings', component: SettingsPage },
+  { path: '/buttons', name: 'buttons', component: () => import('../views/ButtonsPage.vue') },
+  { path: '/cards', name: 'cards', component: () => import('../views/CardsPage.vue') },
+  { path: '/switches', name: 'switches', component: () => import('../views/SwitchesPage.vue') },
+  { path: '/inputs', name: 'inputs', component: () => import('../views/InputsPage.vue') },
+  { path: '/inputs/text', name: 'input-text', component: () => import('../views/inputs/TextPage.vue') },
+  { path: '/inputs/multiline', name: 'input-multiline', component: () => import('../views/inputs/MultilinePage.vue') },
+  { path: '/inputs/email', name: 'input-email', component: () => import('../views/inputs/EmailPage.vue') },
+  { path: '/inputs/phone', name: 'input-phone', component: () => import('../views/inputs/PhonePage.vue') },
+  { path: '/inputs/number', name: 'input-number', component: () => import('../views/inputs/NumberPage.vue') },
+  { path: '/inputs/date', name: 'input-date', component: () => import('../views/inputs/DatePage.vue') },
+  { path: '/inputs/time', name: 'input-time', component: () => import('../views/inputs/TimePage.vue') },
+  { path: '/inputs/datetime', name: 'input-datetime', component: () => import('../views/inputs/DateTimePage.vue') },
+  { path: '/inputs/select', name: 'input-select', component: () => import('../views/inputs/SelectPage.vue') },
+  { path: '/inputs/chip', name: 'input-chip', component: () => import('../views/inputs/ChipPage.vue') },
+  { path: '/inputs/range', name: 'input-range', component: () => import('../views/inputs/RangePage.vue') },
+  { path: '/inputs/date-range', name: 'input-date-range', component: () => import('../views/inputs/DateRangePage.vue') },
+  { path: '/inputs/time-range', name: 'input-time-range', component: () => import('../views/inputs/TimeRangePage.vue') },
+  { path: '/inputs/datetime-range', name: 'input-datetime-range', component: () => import('../views/inputs/DateTimeRangePage.vue') },
+  { path: '/data/core', name: 'data-core', component: () => import('../views/data/DataCorePage.vue') },
+  { path: '/data/form', name: 'data-form', component: () => import('../views/data/DataFormPage.vue') },
+  { path: '/data/view', name: 'data-view', component: () => import('../views/data/DataViewPage.vue') },
+  { path: '/data/editor', name: 'data-editor', component: () => import('../views/data/DataEditorPage.vue') },
+  { path: '/data/grid', name: 'data-grid', component: () => import('../views/data/DataGridPage.vue') },
+  { path: '/data/richtext', name: 'data-richtext', component: () => import('../views/data/DataRichTextPage.vue') },
+  { path: '/data/dashlets', name: 'data-dashlets', component: () => import('../views/data/DashletsPage.vue') },
+  { path: '/data/dashlets-data', name: 'data-dashlets-data', component: () => import('../views/data/DashletsDataPage.vue') },
+  { path: '/data/charts', name: 'data-charts', component: () => import('../views/data/ChartsPage.vue') },
+  { path: '/data/charts-data', name: 'data-charts-data', component: () => import('../views/data/ChartsDataPage.vue') },
+  { path: '/calendar/month', name: 'calendar-month', component: () => import('../views/calendar/MonthPage.vue') },
+  { path: '/calendar/range', name: 'calendar-range', component: () => import('../views/calendar/RangePage.vue') },
+  { path: '/calendar/week', name: 'calendar-week', component: () => import('../views/calendar/WeekPage.vue') },
+  { path: '/calendar/day', name: 'calendar-day', component: () => import('../views/calendar/DayPage.vue') },
+  { path: '/dialogs', name: 'dialogs', component: () => import('../views/DialogsPage.vue') },
+  { path: '/icons', name: 'icons', component: () => import('../views/IconsPage.vue') },
+  { path: '/layout', name: 'layout', component: () => import('../views/LayoutPage.vue') },
+  { path: '/sections', name: 'sections', component: () => import('../views/SectionsPage.vue') },
+  { path: '/screen', name: 'screen', component: () => import('../views/ScreenPage.vue') },
+  { path: '/tabs', name: 'tabs', component: () => import('../views/TabsPage.vue') },
+  { path: '/navigation-layout', name: 'navigation-layout', component: () => import('../views/NavigationLayoutPage.vue') },
+  { path: '/legacy', name: 'legacy', component: () => import('../views/LegacyPage.vue') },
+  { path: '/about', name: 'about', component: () => import('../views/AboutPage.vue') },
+  { path: '/settings', name: 'settings', component: () => import('../views/SettingsPage.vue') },
   {
     path: '/pwa/color-scheme',
     name: 'pwa-color-scheme',
-    component: ColorSchemePage
+    component: () => import('../views/ColorSchemePage.vue')
   },
   {
     path: '/pwa/bar-styling',
     name: 'pwa-bar-styling',
-    component: PwaMetaPage
+    component: () => import('../views/PwaMetaPage.vue')
   },
   {
     path: '/pwa/install',
     name: 'pwa-install',
-    component: PwaInstallPage
+    component: () => import('../views/PwaInstallPage.vue')
   }
 ]
 

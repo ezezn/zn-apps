@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import ZnDashlet from './ZnDashlet.vue'
 
 /**
  * ZnDashletSummary - Card de resumen tipo resumen para dashboards.
@@ -13,8 +13,9 @@ import { computed } from 'vue'
  *  - variant: variant of ZnDashlet
  *  - filled: boolean - si la card debe llenarse con color
  *  - layout: 'double-row' | 'side-by-side' - disposición de las filas
+ *  - height: number - altura en px (default 120)
  */
-const props = defineProps({
+defineProps({
   value: {
     type: [Number, String],
     default: 0
@@ -47,53 +48,53 @@ const props = defineProps({
     type: String,
     validator: (v) => ['double-row', 'side-by-side'].includes(v),
     default: 'double-row'
+  },
+  height: {
+    type: Number,
+    default: 120
   }
 })
 </script>
 
 <template>
-  <div class="zn-dashlet"
-       :class="`zn-dashlet--${props.variant} ${props.class}`"
-       style="
-         height: ${props.height}px;
-         background: ${props.filled ? 'var(--zn-dashlet-bg)' : 'transparent'};
-         color: ${props.filled ? 'var(--zn-dashlet-fg)' : 'inherit'};
-       ">
+  <ZnDashlet :variant="variant" :filled="filled" :height="height">
     <div class="zn-dashlet-summary">
-      <template v-if="props.layout === 'double-row'">
-        <!-- Fila superior: número grande con subtítulo -->
-        <div class="zn-dashlet-summary__row">
+      <div v-if="layout === 'double-row'" class="zn-dashlet-summary__row">
+        <div class="zn-dashlet-summary__value-large">{{ value }}</div>
+        <span class="zn-dashlet-summary__label-large">{{ subtitle }}</span>
+        <div class="zn-dashlet-summary__row--bottom">
+          <div class="zn-dashlet-summary__value-small">{{ secondaryValue }}</div>
+          <span class="zn-dashlet-summary__label-small">
+            {{ secondarySubtitle || secondaryLabel }}
+          </span>
+        </div>
+      </div>
+
+      <div v-else class="zn-dashlet-summary__row side-by-side">
+        <div class="zn-dashlet-summary__item-left">
           <div class="zn-dashlet-summary__value-large">{{ value }}</div>
           <span class="zn-dashlet-summary__label-large">{{ subtitle }}</span>
         </div>
-        <!-- Fila inferior: número menor con subtítulo -->
-        <div class="zn-dashlet-summary__row--bottom">
+        <div class="zn-dashlet-summary__item-right">
           <div class="zn-dashlet-summary__value-small">{{ secondaryValue }}</div>
-          <span class="zn-dashlet-summary__label-small">{{ secondarySubtitle }}</span>
+          <span class="zn-dashlet-summary__label-small">
+            {{ secondarySubtitle || secondaryLabel }}
+          </span>
         </div>
-      </template>
-      <template v-else="props.layout === 'side-by-side'">
-        <!-- Dos números uno al lado del otro -->
-        <div class="zn-dashlet-summary__row">
-          <div class="zn-dashlet-summary__item-left">
-            <div class="zn-dashlet-summary__value-large">{{ value }}</div>
-            <span class="zn-dashlet-summary__label-large">{{ subtitle }}</span>
-          </div>
-          <div class="zn-dashlet-summary__item-right">
-            <div class="zn-dashlet-summary__value-small">{{ secondaryValue }}</div>
-            <span class="zn-dashlet-summary__label-small">{{ secondarySubtitle }}</span>
-          </div>
-        </div>
-      </template>
+      </div>
     </div>
-  </div>
+  </ZnDashlet>
 </template>
 
 <style scoped>
 .zn-dashlet-summary {
   display: flex;
   flex-direction: column;
+  /* Separa el bloque principal del secundario cuando la card crece en alto. */
+  justify-content: space-between;
   gap: 8px;
+  width: 100%;
+  min-width: 0;
   height: 100%;
 }
 
@@ -101,6 +102,8 @@ const props = defineProps({
   display: flex;
   flex-direction: column;
   gap: 4px;
+  width: 100%;
+  min-width: 0;
 }
 
 .zn-dashlet-summary__row--bottom {
@@ -137,28 +140,23 @@ const props = defineProps({
 /* Layout side-by-side */
 .zn-dashlet-summary__row.side-by-side {
   flex-direction: row;
+  /* Cada columna ocupa la mitad y se reparte el ancho disponible. */
   justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
 }
 
 .zn-dashlet-summary__item-left,
 .zn-dashlet-summary__item-right {
-  width: 48%;
+  flex: 1 1 0;
+  min-width: 0;
 }
 
 .zn-dashlet-summary__item-left {
-  float: left;
   text-align: left;
 }
 
 .zn-dashlet-summary__item-right {
-  float: right;
   text-align: right;
-}
-
-/* Clearfix for the summary container */
-.zn-dashlet-summary::after {
-  content: "";
-  display: table;
-  clear: both;
 }
 </style>

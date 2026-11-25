@@ -55,6 +55,7 @@ npm run build:zound-box
 npm run build:kitchensink
 npm run build:daily-task-report
 npm run build:production   # monorepo completo -> dist/
+npm run build:changed      # solo los workspaces modificados en BASE_SHA..HEAD_SHA
 npm run validate:pwa       # valida manifiestos y PNG 192/512
 ```
 
@@ -70,7 +71,9 @@ npm run build:icons        # ambos; luego haz commit de perfiles y sprites
 
 ## Despliegue
 
-`.github/workflows/deploy.yml` se ejecuta en cada push a `main`: install → `npm run test:run` → `npm run build:production` → inyección de `404.html` → publicación en GitHub Pages bajo `/zn-apps/`.
+`.github/workflows/deploy.yml` se ejecuta en cada push a `main`: install → `npm run test:run` → restauración del artefacto anterior de Pages → `npm run build:changed` → `validate:pwa` → inyección de `404.html` → publicación en GitHub Pages bajo `/zn-apps/`.
+
+`build:changed` (`scripts/build-changed.mjs`) compara `github.event.before..github.sha` y recompila solo las apps y librerías con archivos modificados, conservando el resto del sitio desde el despliegue anterior. Cae automáticamente a `build:production` cuando no hay artefacto previo o cuando el cambio toca archivos globales (`package.json`, lockfile, `vitest*.js`, `index.html`, `sw.js`, `scripts/`). Como las apps empaquetan las librerías desde su código fuente, una app que usa una librería modificada no se recompila sola: el script las lista, así que recompílalas en el mismo push o usa `FULL_BUILD=1`.
 
 ## Siguientes pasos
 

@@ -27,6 +27,7 @@
     "@zn-apps/ui-data-richtext": "*",
     "@zn-apps/ui-calendar": "*",
     "@zn-apps/ui-data-charts": "*",
+    "@zn-apps/ui-data-dashlet": "*",
     "vue": "^3.5.34",
     "vue-i18n": "^11.4.18",
     "vue-router": "^4.6.4"

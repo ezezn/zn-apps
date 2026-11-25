@@ -28,7 +28,7 @@ zn-apps/
 ├── vitest.config.js             proyectos Vitest centralizados
 ├── doc/{en,es}/                 esta documentación
 ├── ai/                          contexto para agentes de IA
-├── shared/                      librerías aisladas
+├── shared/                      librerías con build independiente
 │   ├── ui-core/                 sistema de diseño, tokens, componentes, iconos
 │   ├── settings-core/           proxy profundo de configuración
 │   ├── ui-about/                panel Acerca de (compone ui-core)
@@ -40,6 +40,7 @@ zn-apps/
 │   ├── ui-data-grid/            tabla de datos paginada
 │   ├── ui-data-richtext/        texto enriquecido con valor Markdown
 │   ├── ui-calendar/             calendarios MD3: mes/semana/día, rangos y eventos
+│   ├── ui-data-dashlet/         tarjetas KPI para dashboards (compone ui-core)
 │   └── ui-data-charts/          gráficos SVG declarativos: barras, líneas, áreas, pie, donut
 ├── zound-box/                   PWA productiva (mono-pantalla)
 ├── daily-task-report/           PWA productiva (maestro-esclavo, Pinia + Dexie)
@@ -53,8 +54,8 @@ Cada proyecto incluye además `ai/` (contexto de agentes) y `doc/{en,es}/` (manu
 ### 1. Aplicaciones totalmente independientes
 Cada app tiene su `package.json`, `vite.config.js`, `index.html`, service worker y `dist/`. **Nunca se comparte estado entre apps** (ni Pinia cross-app). Las subrutas son `/zn-apps/<app>/`.
 
-### 2. Librerías compartidas aisladas
-Cada librería en `shared/*` tiene su manifiesto, build de librería en Vite y tests. Las librerías no se importan entre sí salvo las composiciones explícitas: `ui-about → ui-core`, `ui-calendar → ui-core`, la familia `ui-data-*` sobre `ui-core` y `ui-data-core`, `ui-data-editor → ui-data-form + ui-data-view`, `ui-data-grid → ui-core + ui-data-core + ui-data-form + ui-data-view`, `ui-data-richtext → ui-core`; `ui-data-charts` no importa ninguna otra librería compartida (sólo Vue) y se estiliza con las variables `--md-*`. Las de infraestructura (`settings-core`, `ui-data-core`) no dependen de Vue ni del DOM.
+### 2. Librerías compartidas: build independiente y reutilización, no duplicación
+Cada librería en `shared/*` tiene su manifiesto, build de librería en Vite y tests. Una librería aísla su funcionalidad, pero no debe reimplementar UI que ya existe en una librería de nivel inferior: los componentes visuales componen `ui-core` (`ZnCard`, `ZnIcon`, `ZnButton`…) y los de datos pueden componer además `ui-data-core`. Las dependencias son unidireccionales y sin ciclos: una librería nunca importa a otra que la importe a ella, ni a una app; cada arista se declara en su `package.json` y en el `external` de `vite.config.js`. Aristas actuales: `ui-about → ui-core`, `ui-calendar → ui-core`, la familia `ui-data-*` sobre `ui-core` y `ui-data-core`, `ui-data-editor → ui-data-form + ui-data-view`, `ui-data-grid → ui-core + ui-data-core + ui-data-form + ui-data-view`, `ui-data-richtext → ui-core`, `ui-data-dashlet → ui-core`; `ui-data-charts` no importa ninguna otra librería compartida (sólo Vue) y se estiliza con las variables `--md-*`. Las de infraestructura (`settings-core`, `ui-data-core`) no dependen de Vue ni del DOM.
 
 ### 3. Material Design 3 centralizado
 Los tokens viven en `shared/ui-core/src/assets/css/global.css`. El cambio de tema ocurre sólo en `<ZnApp mode="light|dark|system">`, que aplica `zn-theme-light`/`zn-theme-dark` en `<body>`.

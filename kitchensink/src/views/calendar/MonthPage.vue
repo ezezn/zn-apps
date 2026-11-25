@@ -35,15 +35,23 @@
     <ZnSection title="2. Eventos en el mes" collapsible>
       <p class="section-desc">
         Los eventos con hora se muestran con su título y los de varios días se dibujan
-        como una barra continua por semana. <code>event-variant</code> alterna entre la
-        muesca de color y el fondo de color con texto de contraste automático. Con
-        <code>show-event-details="false"</code> se reducen a puntos y líneas, y con
+        como una barra continua por semana. Todos los eventos comparten una sola banda
+        por semana, así que nunca aparecen alternando arriba y abajo del número de día;
+        <code>events-position</code> decide si esa banda va encima (<code>above</code>)
+        o debajo (<code>below</code>) de los números. <code>event-variant</code> alterna
+        entre la muesca de color y el fondo de color con texto de contraste automático.
+        Con <code>show-event-details="false"</code> se reducen a líneas finas, y con
         <code>show-events="false"</code> el calendario vuelve a ser solo un selector.
       </p>
 
       <div class="calendar-controls">
         <ZnSwitch v-model="showEventDetails" label-right="Detalle de eventos" />
         <ZnSwitch v-model="showEvents" label-right="Mostrar eventos" />
+        <ZnSwitch
+          :model-value="eventsPosition === 'above'"
+          label-right="Eventos encima del número"
+          @update:model-value="eventsPosition = $event ? 'above' : 'below'"
+        />
         <ZnSelect
           v-model="eventVariant"
           class="calendar-controls__select"
@@ -60,6 +68,7 @@
         :show-event-details="showEventDetails"
         :show-events="showEvents"
         :event-variant="eventVariant"
+        :events-position="eventsPosition"
         :labels="calendarDemoLabels"
         locale="es"
       />
@@ -98,6 +107,7 @@ const showFields = ref(true)
 const showEventDetails = ref(true)
 const showEvents = ref(true)
 const eventVariant = ref('accent')
+const eventsPosition = ref('below')
 
 const variantOptions = [
   { value: 'accent', label: 'Muesca de color' },

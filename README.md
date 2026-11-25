@@ -69,12 +69,13 @@ npm run build:zound-box
 npm run build:kitchensink
 npm run build:daily-task-report
 npm run build:production   # full dist/ + validate:pwa
+npm run build:changed      # only apps/libraries changed in BASE_SHA..HEAD_SHA
 npm run build:icons        # scan + generate icon sprites (commit the result)
 ```
 
 ## 🚢 Deployment
 
-`.github/workflows/deploy.yml` runs on every push to `main`: install → `npm run test:run` → `npm run build:production` → `404.html` fallbacks → GitHub Pages at `/zn-apps/`.
+`.github/workflows/deploy.yml` runs on every push to `main`: install → `npm run test:run` → restore previous Pages artifact → `npm run build:changed` (only the apps/libraries touched by the push; full build as fallback) → `404.html` fallbacks → GitHub Pages at `/zn-apps/`.
 
 ---
 

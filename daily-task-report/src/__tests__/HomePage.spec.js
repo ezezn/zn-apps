@@ -5,9 +5,10 @@ import { ZnCalendar } from '@zn-apps/ui-calendar'
 import { routes } from '../router/index.js'
 import HomePage from '../views/HomePage.vue'
 import DailyTaskList from '../components/DailyTaskList.vue'
-import { i18n } from '../i18n.js'
+import { i18n, settings } from '../i18n.js'
 import { pinia } from '../stores/index.js'
 import { useReportsStore } from '../stores/reports.js'
+import { daysOff } from '../composables/useDaysOff.js'
 import { toDateInputValue } from '../helpers/dates.js'
 
 function mountHome() {
@@ -27,8 +28,10 @@ describe('Home page', () => {
     wrapper.unmount()
   })
 
-  it('shows the report banner for the selected date and can dismiss it', async () => {
+  it('shows an info report banner above the calendar and can dismiss it', async () => {
     i18n.global.locale.value = 'en'
+    settings.set('daysOff', [])
+    daysOff.value = []
     const wrapper = mountHome()
     await flushPromises()
 
@@ -37,9 +40,15 @@ describe('Home page', () => {
     reportsStore.loaded = true
     await flushPromises()
 
-    expect(wrapper.find('.zn-alert--warning').exists()).toBe(true)
-    expect(wrapper.text()).toContain('Report not created yet.')
+    const alert = wrapper.find('.zn-alert')
+    expect(alert.classes()).toContain('zn-alert--info')
+    expect(alert.text()).toContain('Report not created yet.')
     expect(wrapper.find('.zn-alert__actions').exists()).toBe(false)
+
+    // El banner va encima del calendario, dentro de la misma columna.
+    const firstChild = wrapper.find('.home-page').element.firstElementChild
+    expect(firstChild.classList.contains('zn-alert')).toBe(true)
+    expect(firstChild.compareDocumentPosition(wrapper.find('.home-calendar').element) & 4).toBe(4)
 
     reportsStore.reports = [
       {
@@ -50,14 +59,50 @@ describe('Home page', () => {
     ]
     await flushPromises()
 
-    const alert = wrapper.find('.zn-alert--success')
-    expect(alert.exists()).toBe(true)
-    expect(alert.text()).toContain('Open report')
+    const ready = wrapper.find('.zn-alert')
+    expect(ready.classes()).toContain('zn-alert--info')
+    expect(ready.text()).toContain('Open report')
 
-    await alert.find('.zn-alert__dismiss').trigger('click')
+    await ready.find('.zn-alert__dismiss').trigger('click')
     expect(wrapper.find('.zn-alert').exists()).toBe(false)
 
     wrapper.unmount()
+  })
+
+  it('does not pass events to the calendar', async () => {
+    const wrapper = mountHome()
+    await flushPromises()
+
+    expect(wrapper.findComponent(ZnCalendar).props('events')).toEqual([])
+
+    wrapper.unmount()
+  })
+
+  it('announces the next non-working day with its title', async () => {
+    i18n.global.locale.value = 'en'
+    const today = new Date()
+    const inThreeDays = toDateInputValue(
+      new Date(today.getFullYear(), today.getMonth(), today.getDate() + 3)
+    )
+    settings.set('daysOff', [])
+    daysOff.value = [
+      { id: 'off-1', type: 'nationalHoliday', start: inThreeDays, end: inThreeDays, note: 'Year end' }
+    ]
+
+    const wrapper = mountHome()
+    await flushPromises()
+    const reportsStore = useReportsStore(pinia)
+    reportsStore.reports = []
+    reportsStore.loaded = true
+    await flushPromises()
+
+    expect(wrapper.find('.zn-alert').text()).toContain(
+      'Next non-working day in 3 days (Year end)'
+    )
+
+    wrapper.unmount()
+    daysOff.value = []
+    settings.set('daysOff', [])
   })
 
   it('renders the current, previous and pending lists', () => {

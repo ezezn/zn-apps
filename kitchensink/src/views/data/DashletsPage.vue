@@ -1,46 +1,46 @@
 <template>
   <DemoView view="dashlets">
-    <ZnSection title="1. Contador" collapsible>
-      <p class="section-desc">Card de contador con ícono grande a la izquierda, número grande a la derecha y subtítulo opcional debajo.</p>
+    <ZnSection title="1. Contador" collapsible :columns="2">
+      <p class="section-desc section-desc--full">Card de contador con ícono grande a la izquierda, número grande a la derecha y subtítulo opcional debajo.</p>
 
       <ZnDashletCounter
         :value="128"
         :label="'Usuarios'"
         :subtitle="'Activos'"
         :icon="'people'"
-        :variant=" 'primary' "
+        variant="primary"
         :filled="true"
       />
 
-      <p class="chart-value">Selección: 128 usuarios activos</p>
+      <p class="chart-value chart-value--full">Selección: 128 usuarios activos</p>
     </ZnSection>
 
-    <ZnSection title="2. Resumen" collapsible>
-      <p class="section-desc">Card de resumen con dos filas: una grande con número y subtítulo, y otra inferior con número de menor importancia.</p>
+    <ZnSection title="2. Resumen" collapsible :columns="2">
+      <p class="section-desc section-desc--full">Card de resumen con dos filas: una grande con número y subtítulo, y otra inferior con número de menor importancia.</p>
 
       <ZnDashletSummary
         :value="250"
         :subtitle="'Objetivo'"
         :secondaryValue="75"
         :secondaryLabel="'Avance'"
-        :secondarySubtitle="Progreso"
-        :variant=" 'success' "
+        secondarySubtitle="Progreso"
+        variant="success"
         :filled="true"
       />
     </ZnSection>
 
-    <ZnSection title="3. Modo apilado" collapsible>
-      <p class="section-desc">Layout side-by-side con dos cards uno al lado del otro.</p>
+    <ZnSection title="3. Modo apilado" collapsible :columns="2">
+      <p class="section-desc section-desc--full">Layout side-by-side con dos cards uno al lado del otro.</p>
 
       <ZnDashletSummary
         :value="150"
         :subtitle="'Ventas'"
         :secondaryValue="80"
-        :secondaryLabel="Meta"
-        :secondarySubtitle="Meta trimestral"
-        :variant=" 'info' "
+        secondaryLabel="Meta"
+        secondarySubtitle="Meta trimestral"
+        variant="info"
         :filled="true"
-        :layout=" 'side-by-side' "
+        layout="side-by-side"
       />
     </ZnSection>
 
@@ -101,6 +101,37 @@
 import { ref } from 'vue'
 import DemoView from '../../components/DemoView.vue'
 import { ZnSection } from '@zn-apps/ui-core'
-import { ZnDashletCounter, ZnDashletSummary } from '@zn-apps/ui-data-dashlet'
+import {
+  ZnDashletCounter,
+  ZnDashletSummary,
+  ZnDashletSparkline,
+  ZnDashletProgress
+} from '@zn-apps/ui-data-dashlet'
 
 const variants = ref(['primary', 'warning', 'info', 'success', 'error', 'neutral'])
+</script>
+
+<style scoped>
+.section-desc {
+  margin: 0 0 16px;
+  color: var(--md-on-surface-variant);
+  line-height: 1.5;
+}
+
+.chart-value {
+  margin: 12px 0 0;
+  color: var(--md-on-surface-variant);
+  font-size: 0.875rem;
+}
+
+.chart-value--full {
+  grid-column: 1 / -1;
+  margin-top: 0;
+}
+
+.chart-shapes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+}
+</style>

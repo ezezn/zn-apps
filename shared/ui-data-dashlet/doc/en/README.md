@@ -11,7 +11,7 @@ Dashboard widget cards for KPI metrics, summaries and statistics. Three main com
 import { ZnDashlet, ZnDashletCounter, ZnDashletSummary, ZnDashletSparkline, ZnDashletProgress } from '@zn-apps/ui-data-dashlet'
 ```
 
-The library has no dependency on `ui-core`; it only reads the `--md-*` CSS variables when present, so it also works with a custom theme. If your build aliases shared sources, alias `@zn-apps/ui-data-dashlet` to `shared/ui-data-dashlet/src/index.js` in `vite.config.js` and `vitest.config.js`.
+The library composes `@zn-apps/ui-core` instead of reimplementing UI: `ZnCard` provides the MD3 card surface and `ZnIcon` renders the counter icon from the project's sprite. It is declared as a dependency and kept external in the library build, so the consuming app must provide both packages. If your build aliases shared sources, alias `@zn-apps/ui-data-dashlet` **and** `@zn-apps/ui-core` to their `src/index.js` in `vite.config.js` and `vitest.config.js`.
 
 ## ZnDashlet
 
@@ -53,9 +53,10 @@ A counter card with large icon on the left, large number on the right, and optio
 | `value` | `number \| string` | `0` | The main number to display. |
 | `label` | `string` | `''` | Descriptive label (e.g. "Usuarios", "Ventas"). |
 | `subtitle` | `string` | `''` | Subtitle displayed below the label. |
-| `icon` | `string` | `'trending_up'` | Material Design icon name (e.g. `'people'`, `'trending_up'`). |
+| `icon` | `string` | `'trending_up'` | Material Design icon name (e.g. `'people'`, `'trending_up'`). Drawn from the icon sprite that `ZnIcon` injects, as `<use href="#zn-icon-filled-<icon>">`; the name must exist in the consuming project's icon profile. |
 | `variant` | `'primary' \| 'warning' \| 'info' \| 'success' \| 'error' \| 'neutral'` | `'primary'` | Variant color scheme. |
 | `filled` | `boolean` | `true` | Whether the card should be filled with the variant color. |
+| `height` | `number` | `120` | Card height in pixels. |
 
 ### Usage
 
@@ -91,6 +92,7 @@ A summary card with two-row layout. Default `double-row` layout has a larger row
 | `variant` | `'primary' \| 'warning' \| 'info' \| 'success' \| 'error' \| 'neutral'` | `'primary'` | Variant color scheme. |
 | `filled` | `boolean` | `true` | Whether the card should be filled with the variant color. |
 | `layout` | `'double-row' \| 'side-by-side'` | `'double-row'` | Layout mode. `double-row` stacks vertically; `side-by-side` places items horizontally. |
+| `height` | `number` | `120` | Card height in pixels. |
 
 ### Usage - double-row (default)
 
@@ -197,7 +199,8 @@ import { ZnDashletProgress } from '@zn-apps/ui-data-dashlet'
 
 - **Colors**: All components use MD3 color tokens (`--md-primary`, `--md-success`, `--md-warning`, `--md-error`, `--md-info`) via CSS custom properties. The first color entry defaults to `var(--md-primary, #6750A4)`, so series inherit the app theme automatically.
 - **Outline mode**: Set `filled=false` to render cards/bars with borders only and `currentColor` stroke/fill.
-- **Responsive**: Components are width-fluid by height-constrained. Place inside `ZnCard` or `ZnSection` for MD3 surface styling.
+- **Responsive**: Components are width-fluid by height-constrained. Place inside `ZnCard` or `ZnSection` for MD3 surface styling. To keep each dashlet in a single grid column, use `<ZnSection :columns="2">` (or more) instead of letting it span the full width; the inner content spreads to both edges (`space-between`), and `side-by-side` summaries split the available width between their two columns with a 16px gap.
+- **Icons**: `ZnDashletCounter` draws its 40px icon from the consuming app's icon sprite (`#zn-icon-filled-<name>`).
 
 ## Examples
 

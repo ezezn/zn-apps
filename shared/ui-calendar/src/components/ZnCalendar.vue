@@ -107,6 +107,7 @@
         :show-events="showEvents"
         :show-event-details="showEventDetails"
         :event-variant="eventVariant"
+        :events-position="eventsPosition"
         :locale="resolvedLocale"
         :labels="labels"
         @select="handleSelect"
@@ -217,8 +218,18 @@ const props = defineProps({
   showFields: { type: Boolean, default: false },
   /** Renders events on the grid; when false the calendar only selects days. */
   showEvents: { type: Boolean, default: true },
-  /** Shows event titles and times; when false events render as color dots. */
+  /** Shows event titles; when false the month band draws thin color lines. */
   showEventDetails: { type: Boolean, default: true },
+  /**
+   * Month view: where the single event band sits relative to the day numbers.
+   * Every event (single- or multi-day) shares that band, so events never
+   * alternate between above and below the numbers.
+   */
+  eventsPosition: {
+    type: String,
+    default: 'below',
+    validator: (value) => ['above', 'below'].includes(value)
+  },
   /** `accent` = colored notch over a tinted surface; `filled` = event color background. */
   eventVariant: {
     type: String,

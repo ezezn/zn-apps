@@ -37,6 +37,7 @@ export default defineConfig({
       '@zn-apps/ui-data-richtext': resolve(__dirname, '../shared/ui-data-richtext/src/index.js'),
       '@zn-apps/ui-calendar': resolve(__dirname, '../shared/ui-calendar/src/index.js'),
       '@zn-apps/ui-data-charts': resolve(__dirname, '../shared/ui-data-charts/src/index.js'),
+      '@zn-apps/ui-data-dashlet': resolve(__dirname, '../shared/ui-data-dashlet/src/index.js'),
     }
   },
   plugins: [

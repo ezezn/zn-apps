@@ -9,6 +9,7 @@ permissions:
   contents: read
   pages: write
   id-token: write
+  actions: read # descargar el artefacto del despliegue anterior
 
 # Un despliegue de Pages a la vez. No se cancela el que está en curso:
 # cortar un deploy a mitad deja el artefacto publicado en estado inconsistente.
@@ -17,12 +18,16 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # Job de build: compila el monorepo y publica dist/ como artefacto "github-pages".
+  # Job de build: compila lo necesario y publica dist/ como artefacto "github-pages".
   build:
     runs-on: ubuntu-latest
     steps:
       # Paso 1: Descargar el código del repositorio
+      # `fetch-depth: 0` da acceso al commit anterior del push, necesario para
+      # detectar qué apps y librerías cambiaron.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       # Paso 2: Configurar el entorno de Node 24
       - uses: actions/setup-node@v4
@@ -38,12 +43,44 @@ jobs:
       - name: Ejecutar Tests Unitarios
         run: npm run test:run
 
-      # Los sprites se generan localmente con `npm run build:icons` y se versionan.
-      # El build de producción solo consume los archivos del repositorio.
-      - name: Ejecutar Compilación Unificada
-        run: npm run build:production
+      # Paso 5: Recuperar el sitio publicado para conservar las apps que no
+      # se recompilan. Si no hay artefacto previo, el build selectivo cae a
+      # `build:production` automáticamente.
+      - name: Restaurar Despliegue Anterior
+        id: restore
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          run_id=$(gh run list --workflow=deploy.yml --branch=main --status=success \
+            --limit=1 --json databaseId --jq '.[0].databaseId')
+          if [ -z "$run_id" ]; then
+            echo "No hay despliegue previo que restaurar."
+            exit 1
+          fi
+          rm -rf .previous-site && mkdir -p .previous-site dist
+          gh run download "$run_id" -n github-pages -D .previous-site
+          if [ -f .previous-site/artifact.tar ]; then
+            tar -xf .previous-site/artifact.tar -C dist
+          else
+            cp -R .previous-site/. dist/
+          fi
+          test -f dist/index.html
 
-      # Paso 5: Comprobar que dist/ tiene contenido. Si el build "pasa" pero no
+      # Solo compilan las apps y librerías tocadas por el push. Los sprites se
+      # generan localmente con `npm run build:icons` y se versionan; el build
+      # de producción nunca los regenera.
+      - name: Compilar Apps y Librerías Modificadas
+        env:
+          BASE_SHA: ${{ github.event.before }}
+          HEAD_SHA: ${{ github.sha }}
+          RESTORE_OK: ${{ steps.restore.outcome == 'success' && '1' || '0' }}
+        run: node scripts/build-changed.mjs
+
+      - name: Validar PWA
+        run: npm run validate:pwa
+
+      # Paso 6: Comprobar que dist/ tiene contenido. Si el build "pasa" pero no
       # deja archivos, el fallo se veía recién en deploy-pages como
       # "No artifacts named github-pages were found", que no dice nada del build.
       - name: Verificar Salida del Build
@@ -61,15 +98,17 @@ jobs:
             exit 1
           fi
 
-      # Paso 6: Copiar los enrutamientos de error 404 de cada PWA
+      # Paso 7: Copiar los enrutamientos de error 404 de cada PWA presente
       - name: Inyectar Enrutamientos Fallback 404
         run: |
-          cp dist/zound-box/index.html dist/zound-box/404.html
-          cp dist/kitchensink/index.html dist/kitchensink/404.html
-          cp dist/daily-task-report/index.html dist/daily-task-report/404.html
+          for app_dir in dist/*/; do
+            if [ -f "${app_dir}index.html" ]; then
+              cp "${app_dir}index.html" "${app_dir}404.html"
+            fi
+          done
           cp dist/index.html dist/404.html
 
-      # Paso 7: Empaquetar dist/ como el artefacto "github-pages"
+      # Paso 8: Empaquetar dist/ como el artefacto "github-pages"
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:

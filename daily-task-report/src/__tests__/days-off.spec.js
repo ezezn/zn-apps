@@ -174,4 +174,16 @@ describe('days off collection', () => {
     expect(labelFor('vacation')).toBe('Vacaciones')
     expect(useDaysOff().events.value[0].title).toBe('Vacaciones')
   })
+
+  it('titles calendar events with the note and falls back to the type label', () => {
+    daysOff.value = [
+      { id: 'a', type: 'vacation', start: '2026-11-20', end: '2026-11-22', note: 'Beach' },
+      { id: 'b', type: 'nationalHoliday', start: '2026-11-25', end: '2026-11-25', note: '' }
+    ]
+
+    const { events, titleFor } = useDaysOff()
+
+    expect(events.value.map((event) => event.title)).toEqual(['Beach', 'National holiday'])
+    expect(titleFor(daysOff.value[0])).toBe('Beach')
+  })
 })

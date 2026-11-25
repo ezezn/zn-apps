@@ -58,7 +58,8 @@ La navegación sigue a la vista: las flechas avanzan un mes, una semana o un dí
 | `show-navigation` | Boolean | `true` | Flechas, selectores de mes/año o campo de fecha |
 | `show-fields` | Boolean | `false` | Campos opcionales para escribir la selección |
 | `show-events` | Boolean | `true` | `false` convierte el calendario en un selector de días |
-| `show-event-details` | Boolean | `true` | `false` dibuja los eventos de un día como puntos y los de varios días como líneas |
+| `show-event-details` | Boolean | `true` | `false` dibuja todos los eventos como líneas finas de color en lugar de su título |
+| `events-position` | String | `'below'` | Solo vista de mes: `below` apila la banda de eventos debajo de los números de día, `above` encima. Todos los eventos (de uno o varios días) comparten esa banda, así que nunca alternan de lado |
 | `event-variant` | String | `'accent'` | `accent` usa una muesca de color sobre una superficie tenue; `filled` pinta el evento con su color y elige texto negro o blanco automáticamente |
 | `locale` | String | sistema | Locale BCP 47 para meses, días de la semana y horas |
 | `week-starts-on` | Number | `1` | 0 = domingo … 6 = sábado |
